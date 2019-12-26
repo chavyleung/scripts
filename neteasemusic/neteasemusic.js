@@ -4,7 +4,7 @@
  * music.163.com
  *
  * [Script]
- * http-request ^http://music.163.com/ script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/neteasemusic/neteasemusic.cookie.js
+ * http-request ^https?:\/\/music\.163\.com\/ script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/neteasemusic/neteasemusic.cookie.js
  * cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/neteasemusic/neteasemusic.js
  *
  */
@@ -39,7 +39,6 @@ function sign() {
 
 function log(title, data) {
   let result = JSON.parse(data)
-  console.log(result)
   if (result.code == 200) {
     console.log(`签到成功: ${title}`)
   } else {
