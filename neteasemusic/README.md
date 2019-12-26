@@ -7,7 +7,7 @@
 music.163.com
 
 [Script]
-http-request ^http://music.163.com/ script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/neteasemusic/neteasemusic.cookie.js
+http-request ^http://music.163.com script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/neteasemusic/neteasemusic.cookie.js
 cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/neteasemusic/neteasemusic.js
 ```
 
@@ -16,7 +16,7 @@ cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scr
 1. 先把`music.163.com`加到`[MITM]`
 2. 再把两条远程脚本放到`[Script]`
 3. 浏览器访问并登录: https://music.163.com/m/login
-4. 再用浏览器访问下: https://music.163.com/m/login
+4. 再用浏览器访问下: http://music.163.com （注意了, 是 http, 没有 s）
 5. `Surge`提示: `Cookie [网易云音乐] 写入成功`
 6. 最后就可以把第 1 条脚本注释掉了
 
