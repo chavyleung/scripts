@@ -16,7 +16,7 @@ cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scr
 1. 先把`*.v2ex.com`加到`[MITM]`
 2. 再把两条远程脚本放到`[Script]`
 3. 浏览器访问并登录: https://www.v2ex.com
-4. 打开浏览器访问: https://www.v2ex.com/mission/daily （注意了, 是 http, 没有 s）
+4. 打开浏览器访问: https://www.v2ex.com/mission/daily
 5. `Surge`提示: `Cookie [V2EX] 写入成功`
 6. 最后就可以把第 1 条脚本注释掉了
 
@@ -30,7 +30,6 @@ cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scr
 
    - 检查 Surge 系统通知权限放开了没
    - 如果你用的是 Safari, 请尝试在浏览地址栏`手动输入网址`(不要用复制粘贴)
-   - 注意: 写入 Cookie 的网址是`http`开头的(不是 https, 没有 s, 没有 s, 没有要)
 
 2. 写入 Cookie 成功, 但签到不成功
 
