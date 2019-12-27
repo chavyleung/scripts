@@ -4,7 +4,7 @@
  * tieba.baidu.com
  *
  * [Script]
- * http-request ^http://tieba.baidu.com script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/tieba/tieba.cookie.js
+ * http-request ^http:\/\/tieba\.baidu\.com script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/tieba/tieba.cookie.js
  * cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/tieba/tieba.js
  *
  */
@@ -44,9 +44,7 @@ function signBar(bar) {
     if (result.no == 0) {
       console.log(`正在签到: ${bar[1]}, 签到成功`)
     } else {
-      console.log(
-        `正在签到: ${bar[1]}, 错误编码: ${result.no}, 错误原因: ${result.error}`
-      )
+      console.log(`正在签到: ${bar[1]}, 错误编码: ${result.no}, 错误原因: ${result.error}`)
     }
   })
 }
