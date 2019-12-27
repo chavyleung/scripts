@@ -4,7 +4,7 @@
  * music.163.com
  *
  * [Script]
- * http-request ^http://music.163.com script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/neteasemusic/neteasemusic.cookie.js
+ * http-request ^http:\/\/music\.163\.com script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/neteasemusic/neteasemusic.cookie.js
  * cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/neteasemusic/neteasemusic.js
  *
  */
@@ -41,10 +41,13 @@ function log(title, data) {
   let result = JSON.parse(data)
   if (result.code == 200) {
     console.log(`签到成功: ${title}`)
+    $notification.post('签到成功', title, '')
+  } else if (result.code == -2) {
+    console.log(`签到跳过: ${title}, 编码: ${result.code}, 原因: ${result.msg}`)
+    $notification.post('签到跳过', title, `原因: ${result.msg}`)
   } else {
-    console.log(
-      `签到失败: ${title}, 错误编码: ${result.code}, 错误原因: ${result.msg}`
-    )
+    console.log(`签到失败: ${title}, 编码: ${result.code}, 原因: ${result.msg}`)
+    $notification.post('签到失败', title, `原因: ${result.msg}`)
   }
 }
 

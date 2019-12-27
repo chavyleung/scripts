@@ -4,7 +4,7 @@
  * music.163.com
  *
  * [Script]
- * http-request ^http://music.163.com script-path=scripts/neteasemusic/neteasemusic.cookie.js
+ * http-request ^http:\/\/music\.163\.com script-path=scripts/neteasemusic/neteasemusic.cookie.js
  * cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/neteasemusic/neteasemusic.js
  *
  */
