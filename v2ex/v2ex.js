@@ -11,8 +11,8 @@ function sign() {
   }
   $httpClient.get(url, (error, response, data) => {
     if (data.indexOf('每日登录奖励已领取') >= 0) {
-      let title = `签到结果: ${cookieName}`
-      let subTitle = `签到跳过`
+      let title = `${cookieName}`
+      let subTitle = `签到结果: 签到跳过`
       let detail = `今天已经签过了`
       console.log(`${title}, ${subTitle}, ${detail}`)
       $notification.post(title, subTitle, detail)
@@ -33,14 +33,14 @@ function signMission(code) {
   }
   $httpClient.get(url, (error, response, data) => {
     if (data.indexOf('每日登录奖励已领取') >= 0) {
-      let title = `签到结果: ${cookieName}`
-      let subTitle = `签到成功`
+      let title = `${cookieName}`
+      let subTitle = `签到结果: 签到成功`
       let detail = ``
       console.log(`${title}, ${subTitle}, ${detail}`)
       $notification.post(title, subTitle, detail)
     } else {
-      let title = `签到结果: ${cookieName}`
-      let subTitle = `签到失败`
+      let title = `${cookieName}`
+      let subTitle = `签到结果: 签到失败`
       let detail = `详见日志`
       console.log(`签到失败: ${cookieName}, error: ${error}, response: ${response}, data: ${data}`)
       $notification.post(title, subTitle, detail)

@@ -68,15 +68,15 @@ function signBar(bar, tbs, cb) {
 
 function check(forums, signinfo, checkms = 0) {
   if (signinfo.forumCnt == signinfo.signedCnt) {
-    let title = `签到结果: ${cookieName}`
+    let title = `${cookieName}`
     let subTitle = ``
     let detail = `今日共签: ${signinfo.signedCnt}, 本次成功: ${signinfo.successCnt}, 失败: ${signinfo.failedCnt}, 跳过: ${signinfo.skipedCnt}`
 
-    // 成功数+跳过数=总数 = 全部签到完成
+    // 成功数+跳过数=总数 = 全部签到成功
     if (signinfo.successCnt + signinfo.skipedCnt == signinfo.signedCnt) {
-      subTitle = `全部签到完成`
+      subTitle = `签到结果: 全部签到成功`
     } else {
-      subTitle = `部分签到完成`
+      subTitle = `签到结果: 部分签到成功`
     }
     console.log(`${title}, ${subTitle}, ${detail}`)
     $notify(title, subTitle, detail)
