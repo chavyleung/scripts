@@ -1,42 +1,91 @@
-const cookieName = "百度贴吧";
-const cookieKey = "chavy_cookie_tieba";
-const cookieVal = $prefs.valueForKey(cookieKey);
+const cookieName = '百度贴吧'
+const cookieKey = 'chavy_cookie_tieba'
+const cookieVal = $prefs.valueForKey(cookieKey)
 
 function sign() {
   let url = {
-    url: `http://tieba.baidu.com/f/like/mylike`,
+    url: `https://tieba.baidu.com/mo/q/newmoindex`,
     headers: {
       Cookie: cookieVal
     }
-  };
-  $task.fetch(url).then(response => {
-    let data = response.body;
-    let regex = /\/f\?kw=([^{'"}]*)/g;
-    let cnt = 0;
-    for (const bar of data.matchAll(regex)) {
-      cnt += 1;
-      setTimeout(() => signBar(bar), cnt * 500);
+  }
+
+  $task.fetch(url).then((response) => {
+    let data = response.body
+    let result = JSON.parse(data)
+    let tbs = result.data.tbs
+    let forums = result.data.like_forum
+    let signinfo = {
+      forumCnt: forums.length,
+      signedCnt: 0,
+      successCnt: 0,
+      failedCnt: 0,
+      skipedCnt: 0
     }
-  });
+
+    let singIndex = 0
+    for (const bar of forums) {
+      // 已签
+      if (bar.is_sign == 1) {
+        signinfo.signedCnt += 1
+        signinfo.skipedCnt += 1
+        console.log(`签到跳过: ${bar.forum_name}, 原因: 重复签到`)
+      }
+      // 未签
+      else {
+        singIndex += 1
+        setTimeout(
+          () =>
+            signBar(bar, tbs, (response) => {
+              let data = response.body
+              let signresult = JSON.parse(data)
+              if (signresult.no == 0 || signresult.no == 1011) {
+                signinfo.signedCnt += 1
+                signinfo.successCnt += 1
+                console.log(`签到成功: ${bar.forum_name}`)
+              } else {
+                signinfo.failedCnt += 1
+                console.log(`签到失败: ${bar[1]}, 编码: ${signresult.no}, 原因: ${signresult.error}`)
+              }
+            }),
+          singIndex * 100
+        )
+      }
+    }
+    check(forums, signinfo)
+  })
 }
 
-function signBar(bar) {
+function signBar(bar, tbs, cb) {
   let url = {
-    url: `http://tieba.baidu.com/sign/add?ie=utf-8&kw=${bar[1]}`,
-    method: "POST",
-    headers: { Cookie: cookieVal }
-  };
-  $task.fetch(url).then(response => {
-    let data = response.body;
-    let result = JSON.parse(data);
-    if (result.no == 0) {
-      console.log(`正在签到: ${bar[1]}, 签到成功`);
-    } else {
-      console.log(
-        `正在签到: ${bar[1]}, 错误编码: ${result.no}, 错误原因: ${result.error}`
-      );
-    }
-  });
+    url: `http://tieba.baidu.com/sign/add`,
+    method: 'POST',
+    headers: { Cookie: cookieVal },
+    body: `ie=utf-8&kw=${bar.forum_name}&tbs=${tbs}`
+  }
+  $task.fetch(url).then(cb)
 }
 
-sign();
+function check(forums, signinfo, checkms = 0) {
+  if (signinfo.forumCnt == signinfo.signedCnt) {
+    let title = `签到结果: ${cookieName}`
+    let subTitle = ``
+    let detail = `今日共签: ${signinfo.signedCnt}, 本次成功: ${signinfo.successCnt}, 失败: ${signinfo.failedCnt}, 跳过: ${signinfo.skipedCnt}`
+
+    // 成功数+跳过数=总数 = 全部签到完成
+    if (signinfo.successCnt + signinfo.skipedCnt == signinfo.signedCnt) {
+      subTitle = `全部签到完成`
+    } else {
+      subTitle = `部分签到完成`
+    }
+    console.log(`${title}, ${subTitle}, ${detail}`)
+    $notify(title, subTitle, detail)
+  } else {
+    if (checkms > 5000) {
+    } else {
+      setTimeout(() => check(forums, signinfo, checkms + 100), 100)
+    }
+  }
+}
+
+sign()
