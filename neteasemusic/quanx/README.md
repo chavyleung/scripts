@@ -7,7 +7,7 @@
 music.163.com
 
 [rewrite_local]
-^https:\/\/music\.163\.com\/m\/ url script-response-body neteasemusic.cookie.js
+^https:\/\/music\.163\.com\/m\/?.? url script-response-body neteasemusic.cookie.js
 
 [task_local]
 1 0 * * * neteasemusic.js
@@ -19,7 +19,7 @@ music.163.com
 2. 把`neteasemusic.cookie.js`和`neteasemusic.js`传到`On My iPhone - Quantumult X - Scripts` (传到 iCloud 相同目录也可, 注意要打开 quanx 的 iCloud 开关)
 3. 再把两条脚本分别放到`[rewrite_local]`和`[task_local]`
 4. 浏览器访问并登录: https://music.163.com/m/login
-5. 打开浏览器访问: http://music.163.com （注意了, 是 http, 没有 s）
+5. 打开浏览器访问: https://music.163.com/m/
 6. `QuanX`提示: `Cookie [网易云音乐] 写入成功`
 7. 最后就可以把`[rewrite_local]`的脚本注释掉了
 
@@ -33,7 +33,6 @@ music.163.com
 
    - 检查 QuanX 系统通知权限放开了没
    - 如果你用的是 Safari, 请尝试在浏览地址栏`手动输入网址`(不要用复制粘贴)
-   - 注意: 写入 Cookie 的网址是`http`开头的(不是 https, 没有 s, 没有 s, 没有要)
 
 2. 写入 Cookie 成功, 但签到不成功
 
@@ -69,12 +68,6 @@ music.163.com
 
      */60 * * * * xxx.js # 每60分执行一次
      ```
-
-4. 为什么百度贴吧签到没有系统通知
-
-   - 百度貌似用的 GBK 编码目前无法优雅地解码，所以就算提示出来吧名也是乱码的
-   - 我有 20 个吧不想被消息轰炸
-   - 目前考虑提示`本次成功:3, 本次失败:4, 今天共签5`这种提示形式，但代码层面受限制，还在想办法实现
 
 ## 感谢
 
