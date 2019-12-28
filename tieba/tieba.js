@@ -69,7 +69,7 @@ function check(forums, signinfo, checkms = 0) {
   if (signinfo.forumCnt == signinfo.signedCnt) {
     let title = `签到结果: ${cookieName}`
     let subTitle = ``
-    let detail = `今日共签: ${signinfo.signedCnt}, 本次成功: ${signinfo.successCnt}, 本次失败: ${signinfo.failedCnt}, 本次跳过: ${signinfo.skipedCnt}`
+    let detail = `今日共签: ${signinfo.signedCnt}, 本次成功: ${signinfo.successCnt}, 失败: ${signinfo.failedCnt}, 跳过: ${signinfo.skipedCnt}`
 
     // 成功数+跳过数=总数 = 全部签到完成
     if (signinfo.successCnt + signinfo.skipedCnt == signinfo.signedCnt) {
