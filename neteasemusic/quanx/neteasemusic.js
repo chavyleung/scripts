@@ -61,13 +61,13 @@ function check(signinfo, checkms = 0) {
 function log(signinfo) {
   let title = `${cookieName}`
   let subTitle = ``
-  let detail = `今日共签: ${signinfo.signedCnt}, 本次成功: ${signinfo.successCnt}, 失败: ${signinfo.failedCnt}, 跳过: ${signinfo.skipedCnt}`
+  let detail = `今日共签: ${signinfo.signedCnt}, 本次成功: ${signinfo.successCnt}, 本次失败: ${signinfo.failedCnt}`
 
   if (signinfo.pc.success && signinfo.app.success) {
-    subTitle = `签到结果: 全部签到成功`
+    subTitle = `签到结果: 全部成功`
     detail = `PC: ${signinfo.pc.success ? '成功' : '失败'}, APP: ${signinfo.app.success ? '成功' : '失败'}`
   } else if (!signinfo.pc.success && !signinfo.app.success) {
-    subTitle = `签到结果: 全部签到失败`
+    subTitle = `签到结果: 全部失败`
     detail = `PC: ${signinfo.pc.success ? '成功' : '失败'}, APP: ${signinfo.app.success ? '成功' : '失败'}, 详见日志!`
   } else {
     subTitle = ``
