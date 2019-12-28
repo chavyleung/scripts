@@ -43,7 +43,7 @@ function sign() {
                 console.log(`签到成功: ${bar.forum_name}`)
               } else {
                 signinfo.failedCnt += 1
-                console.log(`签到失败: ${bar[1]}, 编码: ${signresult.no}, 原因: ${signresult.error}`)
+                console.log(`签到失败: ${bar.forum_name}, 编码: ${signresult.no}, 原因: ${signresult.error}`)
               }
             }),
           singIndex * 100
@@ -61,6 +61,7 @@ function signBar(bar, tbs, cb) {
     headers: { Cookie: cookieVal },
     body: `ie=utf-8&kw=${bar.forum_name}&tbs=${tbs}`
   }
+  url.headers['Content-Type'] = 'application/x-www-form-urlencoded'
   $httpClient.post(url, cb)
 }
 
