@@ -7,7 +7,7 @@
 music.163.com
 
 [Script]
-http-request ^http:\/\/music\.163\.com script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/neteasemusic/neteasemusic.cookie.js
+http-request ^https?:\/\/music\.163\.com\/?.? script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/neteasemusic/neteasemusic.cookie.js
 cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/neteasemusic/neteasemusic.js
 ```
 
@@ -16,7 +16,7 @@ cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scr
 1. 先把`music.163.com`加到`[MITM]`
 2. 再把两条远程脚本放到`[Script]`
 3. 浏览器访问并登录: https://music.163.com/m/login
-4. 打开浏览器访问: http://music.163.com （注意了, 是 http, 没有 s）
+4. 登录成功后再用浏览器访问一下: https://music.163.com/
 5. `Surge`提示: `Cookie [网易云音乐] 写入成功`
 6. 最后就可以把第 1 条脚本注释掉了
 
@@ -30,7 +30,6 @@ cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scr
 
    - 检查 Surge 系统通知权限放开了没
    - 如果你用的是 Safari, 请尝试在浏览地址栏`手动输入网址`(不要用复制粘贴)
-   - 注意: 写入 Cookie 的网址是`http`开头的(不是 https, 没有 s, 没有 s, 没有要)
 
 2. 写入 Cookie 成功, 但签到不成功
 
@@ -66,12 +65,6 @@ cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scr
 
      */60 * * * * xxx.js # 每60分执行一次
      ```
-
-4. 为什么百度贴吧签到没有系统通知
-
-   - 百度貌似用的 GBK 编码目前无法优雅地解码，所以就算提示出来吧名也是乱码的
-   - 我有 20 个吧不想被消息轰炸
-   - 目前考虑提示`本次成功:3, 本次失败:4, 今天共签5`这种提示形式，但代码层面受限制，还在想办法实现
 
 ## 感谢
 
