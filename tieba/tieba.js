@@ -14,7 +14,6 @@ function sign() {
     let result = JSON.parse(data)
     let tbs = result.data.tbs
     let forums = result.data.like_forum
-    console.log(forums.length)
     let signinfo = {
       forumCnt: forums.length,
       signedCnt: 0,
@@ -25,12 +24,11 @@ function sign() {
 
     let singIndex = 0
     for (const bar of forums) {
-      let barName = decodeURIComponent(decodeURIComponent(bar.forum_name))
       // 已签
       if (bar.is_sign == 1) {
         signinfo.signedCnt += 1
         signinfo.skipedCnt += 1
-        console.log(`签到跳过: ${barName}, 原因: 重复签到`)
+        console.log(`签到跳过: ${bar.forum_name}, 原因: 重复签到`)
       }
       // 未签
       else {
@@ -38,12 +36,11 @@ function sign() {
         setTimeout(
           () =>
             signBar(bar, tbs, (error, response, data) => {
-              console.log(data)
               let signresult = JSON.parse(data)
               if (signresult.no == 0 || signresult.no == 1011) {
                 signinfo.signedCnt += 1
                 signinfo.successCnt += 1
-                console.log(`签到成功: ${barName}`)
+                console.log(`签到成功: ${bar.forum_name}`)
               } else {
                 signinfo.failedCnt += 1
                 console.log(`签到失败: ${bar[1]}, 编码: ${signresult.no}, 原因: ${signresult.error}`)
@@ -59,8 +56,10 @@ function sign() {
 
 function signBar(bar, tbs, cb) {
   let url = {
-    url: `http://tieba.baidu.com/sign/add?ie=utf-8&kw=${bar.forum_name}&tbs=${tbs}`,
-    headers: { Cookie: cookieVal }
+    url: `http://tieba.baidu.com/sign/add`,
+    method: 'POST',
+    headers: { Cookie: cookieVal },
+    body: `ie=utf-8&kw=${bar.forum_name}&tbs=${tbs}`
   }
   $httpClient.post(url, cb)
 }
