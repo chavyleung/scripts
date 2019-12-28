@@ -73,7 +73,7 @@ function check(forums, signinfo, checkms = 0) {
     let detail = `今日共签: ${signinfo.signedCnt}, 本次成功: ${signinfo.successCnt}, 失败: ${signinfo.failedCnt}, 跳过: ${signinfo.skipedCnt}`
 
     // 成功数+跳过数=总数 = 全部签到成功
-    if (signinfo.successCnt + signinfo.skipedCnt == signinfo.signedCnt) {
+    if (signinfo.successCnt + signinfo.skipedCnt == signinfo.forumCnt) {
       subTitle = `签到结果: 全部签到成功`
     } else {
       subTitle = `签到结果: 部分签到成功`
