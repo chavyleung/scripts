@@ -66,12 +66,6 @@ cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scr
      */60 * * * * xxx.js # 每60分执行一次
      ```
 
-4. 为什么百度贴吧签到没有系统通知
-
-   - 百度貌似用的 GBK 编码目前无法优雅地解码，所以就算提示出来吧名也是乱码的
-   - 我有 20 个吧不想被消息轰炸
-   - 目前考虑提示`本次成功:3, 本次失败:4, 今天共签5`这种提示形式，但代码层面受限制，还在想办法实现
-
 ## 感谢
 
 [@NobyDa](https://github.com/NobyDa)
