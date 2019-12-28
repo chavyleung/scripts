@@ -56,12 +56,11 @@ function sign() {
 
 function signBar(bar, tbs, cb) {
   let url = {
-    url: `http://tieba.baidu.com/sign/add`,
+    url: `https://tieba.baidu.com/sign/add`,
     method: 'POST',
     headers: { Cookie: cookieVal },
     body: `ie=utf-8&kw=${bar.forum_name}&tbs=${tbs}`
   }
-  url.headers['Content-Type'] = 'application/x-www-form-urlencoded'
   $httpClient.post(url, cb)
 }
 
@@ -69,13 +68,13 @@ function check(forums, signinfo, checkms = 0) {
   if (signinfo.forumCnt == signinfo.signedCnt + signinfo.failedCnt) {
     let title = `${cookieName}`
     let subTitle = ``
-    let detail = `今日共签: ${signinfo.signedCnt}, 本次成功: ${signinfo.successCnt}, 失败: ${signinfo.failedCnt}, 跳过: ${signinfo.skipedCnt}`
+    let detail = `今日共签: ${signinfo.signedCnt}/${signinfo.forumCnt}, 本次成功: ${signinfo.successCnt}, 本次失败: ${signinfo.failedCnt}`
 
     // 成功数+跳过数=总数 = 全部签到成功
     if (signinfo.successCnt + signinfo.skipedCnt == signinfo.forumCnt) {
-      subTitle = `签到结果: 全部签到成功`
+      subTitle = `签到结果: 全部成功`
     } else {
-      subTitle = `签到结果: 部分签到成功`
+      subTitle = `签到结果: 部分成功`
     }
     console.log(`${title}, ${subTitle}, ${detail}`)
     $notification.post(title, subTitle, detail)
