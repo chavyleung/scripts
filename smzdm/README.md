@@ -1,5 +1,14 @@
 # 什么值得买
 
+# 注意！注意！注意！
+
+目前是不完美:
+
+1. 签到后系统提示“签到结果: 未知”
+2. 签到后手机 APP 上显示未签到（但实际上你用 pc 浏览器登录是会显示已经签到的）
+
+上述两个问题待跟进
+
 ## 配置
 
 ```properties
@@ -17,7 +26,7 @@ cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scr
 2. 再把两条远程脚本放到`[Script]`
 3. 浏览器访问并登录: https://zhiyou.smzdm.com/user/login
 4. 打开浏览器访问: https://www.smzdm.com
-5. `Surge`提示: `Cookie [V2EX] 写入成功`
+5. `Surge`提示: `Cookie [什么值得买] 写入成功`
 6. 最后就可以把第 1 条脚本注释掉了
 
 > 第 1 条脚本是用来获取 cookie 的, 用浏览器访问一次获取 cookie 成功后就可以删掉或注释掉了, 但请确保在`登录成功`后再获取 cookie.
