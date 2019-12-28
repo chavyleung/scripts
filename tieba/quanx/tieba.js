@@ -67,7 +67,7 @@ function signBar(bar, tbs, cb) {
 }
 
 function check(forums, signinfo, checkms = 0) {
-  if (signinfo.forumCnt == signinfo.signedCnt) {
+  if (signinfo.forumCnt == signinfo.signedCnt + signinfo.failedCnt) {
     let title = `${cookieName}`
     let subTitle = ``
     let detail = `今日共签: ${signinfo.signedCnt}, 本次成功: ${signinfo.successCnt}, 失败: ${signinfo.failedCnt}, 跳过: ${signinfo.skipedCnt}`
