@@ -15,7 +15,7 @@ cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scr
 
 1. 先把`*.smzdm.com`加到`[MITM]`
 2. 再把两条远程脚本放到`[Script]`
-3. 浏览器访问并登录: `(先登录! 先登录! 先登录!)`
+3. 浏览器访问并登录: https://zhiyou.smzdm.com/user/login
 4. 打开浏览器访问: https://www.smzdm.com
 5. `Surge`提示: `Cookie [V2EX] 写入成功`
 6. 最后就可以把第 1 条脚本注释掉了
