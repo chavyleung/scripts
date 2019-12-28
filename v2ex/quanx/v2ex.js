@@ -45,7 +45,7 @@ function signMission(code) {
       let title = `${cookieName}`
       let subTitle = `签到结果: 签到失败`
       let detail = `详见日志`
-      console.log(`签到失败: ${cookieName}, error: ${error}, response: ${response}, data: ${data}`)
+      console.log(`签到失败: ${cookieName}, data: ${data}`)
       $notify(title, subTitle, detail)
     }
   })
