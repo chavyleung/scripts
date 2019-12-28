@@ -7,7 +7,7 @@
 tieba.baidu.com
 
 [Script]
-http-request ^http:\/\/tieba\.baidu\.com script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/tieba/tieba.cookie.js
+http-request ^https?:\/\/tieba\.baidu\.com\/?.? script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/tieba/tieba.cookie.js
 cron "10 0 0 * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/tieba/tieba.js
 ```
 
@@ -15,9 +15,9 @@ cron "10 0 0 * *" script-path=https://raw.githubusercontent.com/chavyleung/scrip
 
 1. 先把`tieba.baidu.com`加到`[MITM]`
 2. 再把两条远程脚本放到`[Script]`
-3. 先用浏览器登录: https://tieba.baidu.com
-4. 再用浏览器访问一下: http://tieba.baidu.com （注意了, 是 http, 没有 s）
-5. `Surge`提示: `Cookie [百度贴吧] 写入成功`
+3. 先在浏览器登录 `(先登录! 先登录! 先登录!)`
+4. 再用浏览器访问一下: https://tieba.baidu.com 或者 https://tieba.baidu.com/index/
+5. `Surge`提示: `Cookie [百度贴吧] 写入成功` (如果提示多条写入成功，忽略就好)
 6. 最后就可以把第 1 条脚本注释掉了
 
 > 第 1 条脚本是用来获取 cookie 的, 用浏览器访问一次获取 cookie 成功后就可以删掉或注释掉了, 但请确保在`登录成功`后再获取 cookie.
@@ -30,7 +30,6 @@ cron "10 0 0 * *" script-path=https://raw.githubusercontent.com/chavyleung/scrip
 
    - 检查 Surge 系统通知权限放开了没
    - 如果你用的是 Safari, 请尝试在浏览地址栏`手动输入网址`(不要用复制粘贴)
-   - 注意: 写入 Cookie 的网址是`http`开头的(不是 https, 没有 s, 没有 s, 没有要)
 
 2. 写入 Cookie 成功, 但签到不成功
 
@@ -66,12 +65,6 @@ cron "10 0 0 * *" script-path=https://raw.githubusercontent.com/chavyleung/scrip
 
      */60 * * * * xxx.js # 每60分执行一次
      ```
-
-4. 为什么百度贴吧签到没有系统通知
-
-   - 百度貌似用的 GBK 编码目前无法优雅地解码，所以就算提示出来吧名也是乱码的
-   - 我有 20 个吧不想被消息轰炸
-   - 目前考虑提示`本次成功:3, 本次失败:4, 今天共签5`这种提示形式，但代码层面受限制，还在想办法实现
 
 ## 感谢
 
