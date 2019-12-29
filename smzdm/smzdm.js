@@ -4,7 +4,7 @@ const cookieVal = $persistentStore.read(cookieKey)
 
 function sign() {
   let url = {
-    url: `https://zhiyou.smzdm.com/user/checkin/jsonp_checkin?callback=jQuery112405819534189067781_1474859317229&_=1474859317231`,
+    url: `https://zhiyou.smzdm.com/user/checkin/jsonp_checkin`,
     headers: {
       Cookie: cookieVal
     }
@@ -13,8 +13,21 @@ function sign() {
   url.headers['User-Agent'] = 'Mozilla/5.0 (Windows NT 5.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.132 Safari/537.36'
 
   $httpClient.get(url, (error, response, data) => {
-    $notification.post(cookieName, '签到结果: 未知', '详见日志')
-    console.log(`${cookieName}, error: ${error}, response: ${response}, data: ${data}`)
+    let result = JSON.parse(data)
+    let title = `${cookieName}`
+    // 签到成功
+    if (result && result.data && result.error_code == 0) {
+      let subTitle = `签到结果: 成功 (第${result.data.rank}名)`
+      let detail = `累计: ${result.data.checkin_num}次, 经验: ${result.data.exp}, 金币: ${result.data.gold}`
+      $notification.post(title, subTitle, detail)
+    }
+    // 签到失败
+    else {
+      let subTitle = `签到结果: 失败`
+      let detail = `请把日志中的输出反馈到Github`
+      $notification.post(title, subTitle, detail)
+    }
+    console.log(`${cookieName}, data: ${data}`)
   })
 
   $done({})

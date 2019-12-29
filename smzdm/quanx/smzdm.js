@@ -4,7 +4,7 @@ const cookieVal = $prefs.valueForKey(cookieKey)
 
 function sign() {
   let url = {
-    url: `https://zhiyou.smzdm.com/user/checkin/jsonp_checkin?callback=jQuery112405819534189067781_1474859317229&_=1474859317231`,
+    url: `https://zhiyou.smzdm.com/user/checkin/jsonp_checkin`,
     headers: {
       Cookie: cookieVal
     }
@@ -14,8 +14,21 @@ function sign() {
 
   $task.fetch(url).then((response) => {
     let data = response.body
-    $notify(cookieName, '签到结果: 未知', '详见日志')
-    console.log(`${cookieName} data: ${data}`)
+    let result = JSON.parse(data)
+    let title = `${cookieName}`
+    // 签到成功
+    if (result && result.data && result.error_code == 0) {
+      let subTitle = `签到结果: 成功 (第${result.data.rank}名)`
+      let detail = `累计: ${result.data.checkin_num}次, 经验: ${result.data.exp}, 金币: ${result.data.gold}`
+      $notify(title, subTitle, detail)
+    }
+    // 签到失败
+    else {
+      let subTitle = `签到结果: 失败`
+      let detail = `请把日志中的输出反馈到Github`
+      $notify(title, subTitle, detail)
+    }
+    console.log(`${cookieName}, data: ${data}`)
   })
 }
 
