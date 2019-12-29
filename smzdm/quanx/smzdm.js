@@ -18,7 +18,7 @@ function sign() {
     let title = `${cookieName}`
     // 签到成功
     if (result && result.data && result.error_code == 0) {
-      let subTitle = `签到结果: 成功 (第${result.data.rank}名)`
+      let subTitle = `签到结果: 成功`
       let detail = `累计: ${result.data.checkin_num}次, 经验: ${result.data.exp}, 金币: ${result.data.gold}`
       $notify(title, subTitle, detail)
     }
