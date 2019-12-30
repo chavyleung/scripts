@@ -2,6 +2,8 @@
 
 > 代码已同时兼容 Surge&Quan, 使用同一份签到脚本即可
 
+> 目前只签 bilibili 直播 (直播!直播!直播!)
+
 ## 配置 (Surge)
 
 ```properties
