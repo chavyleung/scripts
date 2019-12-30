@@ -34,7 +34,7 @@ cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scr
    - Surge: 把两条远程脚本放到`[Script]`
    - QuanX: 把`bilibili.cookie.js`和`bilibili.js`传到`On My iPhone - Quantumult X - Scripts` (传到 iCloud 相同目录也可, 注意要打开 quanx 的 iCloud 开关)
 4. 打开浏览器访问: https://www.bilibili.com 或 https://live.bilibili.com
-5. `Surge`提示: `Cookie [威锋网] 写入成功`
+5. `Surge`提示: `Cookie [bilibili] 写入成功`
 6. 最后就可以把第 1 条脚本注释掉了
 
 > 第 1 条脚本是用来获取 cookie 的, 用浏览器访问一次获取 cookie 成功后就可以删掉或注释掉了, 但请确保在`登录成功`后再获取 cookie.
