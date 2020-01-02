@@ -6,6 +6,7 @@
  * const cookieVal = chavy.getdata(cookieKey)
  *
  * $httpClient.get => chavy.get
+ * $httpClient.post => chavy.post
  * $notification.post => chavy.msg
  * console.log => chavy.log
  * $done({}) => chavy.done()
