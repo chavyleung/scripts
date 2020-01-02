@@ -6,13 +6,13 @@ const cookieVal = chavy.getdata(cookieKey)
 sign()
 
 function sign() {
-  let url = {
-    url: `https://tieba.baidu.com/mo/q/newmoindex`,
-    headers: {
-      Cookie: cookieVal
-    }
-  }
+  signTieba()
+  signWenku()
+  signZhidao()
+}
 
+function signTieba() {
+  let url = { url: `https://tieba.baidu.com/mo/q/newmoindex`, headers: { Cookie: cookieVal } }
   chavy.post(url, (error, response, data) => {
     let result = JSON.parse(data)
     let tbs = result.data.tbs
@@ -54,11 +54,67 @@ function sign() {
 function signBar(bar, tbs, cb) {
   let url = {
     url: `https://tieba.baidu.com/sign/add`,
-    method: 'POST',
     headers: { Cookie: cookieVal },
     body: `ie=utf-8&kw=${bar.forum_name.split('&').join('%26')}&tbs=${tbs}`
   }
   chavy.post(url, cb)
+}
+
+function signWenku() {
+  let url = { url: `https://wenku.baidu.com/task/submit/signin`, headers: { Cookie: cookieVal } }
+  url.headers['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
+  chavy.get(url, (error, response, data) => {
+    const signresult = JSON.parse(data)
+    const title = '百度文库'
+    let subTitle = ''
+    let detail = ''
+    if (signresult.errno == '0') {
+      subTitle = '签到结果: 成功'
+      chavy.msg(title, subTitle, detail)
+      chavy.log(`[${title}] ${subTitle}`)
+    } else {
+      subTitle = '签到结果: 未知'
+      detail = '详见日志'
+      chavy.msg(title, subTitle, detail)
+      chavy.log(`[${title}] 签到结果: 未知, ${data}`)
+    }
+  })
+}
+
+function signZhidao() {
+  let url = {
+    url: `https://zhidao.baidu.com/`,
+    headers: { Cookie: cookieVal }
+  }
+  chavy.get(url, (error, response, data) => {
+    const timestamp = Date.parse(new Date())
+    const utdata = `61,61,7,0,0,0,12,61,5,2,12,4,24,5,4,1,4,${timestamp}`
+    const stoken = [...data.matchAll(/"stoken"[^"]*"([^"]*)"/g)][0][1]
+    const signurl = { url: `https://zhidao.baidu.com/submit/user`, headers: { Cookie: cookieVal }, body: {} }
+    signurl.body = `cm=100509&utdata=${utdata}&stoken=${stoken}`
+    chavy.post(signurl, (signerror, signresp, signdata) => {
+      const signresult = JSON.parse(signdata)
+      const title = '百度知道'
+      let subTitle = ''
+      let detail = ''
+      if (signresult.errorNo == 0) {
+        subTitle = '签到结果: 成功'
+        detail = `活跃: ${signresult.data.signInDataNum}天, 说明: ${signresult.errorMsg}`
+        chavy.msg(title, subTitle, detail)
+        chavy.log(`[${title}] ${subTitle}, ${signdata}`)
+      } else if (signresult.errorNo == 2) {
+        subTitle = `签到结果: 成功 (重复签到)`
+        detail = `活跃: ${signresult.data.signInDataNum}天, 说明: ${signresult.errorMsg}`
+        chavy.msg(title, subTitle, detail)
+        chavy.log(`[${title}] ${subTitle}, ${signdata}`)
+      } else {
+        subTitle = '签到结果: 失败'
+        detail = `说明: ${signresult.errorMsg}`
+        chavy.msg(title, subTitle, detail)
+        chavy.log(`[${title}] ${subTitle}`)
+      }
+    })
+  })
 }
 
 function check(forums, signinfo, checkms = 0) {
