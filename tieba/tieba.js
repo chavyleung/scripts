@@ -1,6 +1,9 @@
 const cookieName = '百度贴吧'
 const cookieKey = 'chavy_cookie_tieba'
-const cookieVal = $persistentStore.read(cookieKey)
+const chavy = init()
+const cookieVal = chavy.getdata(cookieKey)
+
+sign()
 
 function sign() {
   let url = {
@@ -10,7 +13,7 @@ function sign() {
     }
   }
 
-  $httpClient.post(url, (error, response, data) => {
+  chavy.post(url, (error, response, data) => {
     let result = JSON.parse(data)
     let tbs = result.data.tbs
     let forums = result.data.like_forum
@@ -22,32 +25,26 @@ function sign() {
       skipedCnt: 0
     }
 
-    let singIndex = 0
     for (const bar of forums) {
       // 已签
       if (bar.is_sign == 1) {
         signinfo.signedCnt += 1
         signinfo.skipedCnt += 1
-        console.log(`签到跳过: ${bar.forum_name}, 原因: 重复签到`)
+        chavy.log(`[${cookieName}] \"${bar.forum_name}\"签到结果: 跳过, 原因: 重复签到`)
       }
       // 未签
       else {
-        singIndex += 1
-        setTimeout(
-          () =>
-            signBar(bar, tbs, (error, response, data) => {
-              let signresult = JSON.parse(data)
-              if (signresult.no == 0 || signresult.no == 1011) {
-                signinfo.signedCnt += 1
-                signinfo.successCnt += 1
-                console.log(`签到成功: ${bar.forum_name}`)
-              } else {
-                signinfo.failedCnt += 1
-                console.log(`签到失败: ${bar.forum_name}, 编码: ${signresult.no}, 原因: ${signresult.error}`)
-              }
-            }),
-          singIndex * 100
-        )
+        signBar(bar, tbs, (error, response, data) => {
+          let signresult = JSON.parse(data)
+          if (signresult.no == 0 || signresult.no == 1011) {
+            signinfo.signedCnt += 1
+            signinfo.successCnt += 1
+            chavy.log(`[${cookieName}] \"${bar.forum_name}\"签到结果: 成功`)
+          } else {
+            signinfo.failedCnt += 1
+            chavy.log(`[${cookieName}] \"${bar.forum_name}\"签到结果: 失败, 编码: ${signresult.no}, 原因: ${signresult.error}`)
+          }
+        })
       }
     }
     check(forums, signinfo)
@@ -59,33 +56,77 @@ function signBar(bar, tbs, cb) {
     url: `https://tieba.baidu.com/sign/add`,
     method: 'POST',
     headers: { Cookie: cookieVal },
-    body: `ie=utf-8&kw=${bar.forum_name}&tbs=${tbs}`
+    body: `ie=utf-8&kw=${bar.forum_name.split('&').join('%26')}&tbs=${tbs}`
   }
-  $httpClient.post(url, cb)
+  chavy.post(url, cb)
 }
 
 function check(forums, signinfo, checkms = 0) {
+  let title = `${cookieName}`
+  let subTitle = ``
+  let detail = `今日共签: ${signinfo.signedCnt}/${signinfo.forumCnt}, 本次成功: ${signinfo.successCnt}, 本次失败: ${signinfo.failedCnt}`
   if (signinfo.forumCnt == signinfo.signedCnt + signinfo.failedCnt) {
-    let title = `${cookieName}`
-    let subTitle = ``
-    let detail = `今日共签: ${signinfo.signedCnt}/${signinfo.forumCnt}, 本次成功: ${signinfo.successCnt}, 本次失败: ${signinfo.failedCnt}`
-
     // 成功数+跳过数=总数 = 全部签到成功
     if (signinfo.successCnt + signinfo.skipedCnt == signinfo.forumCnt) {
       subTitle = `签到结果: 全部成功`
     } else {
       subTitle = `签到结果: 部分成功`
     }
-    console.log(`${title}, ${subTitle}, ${detail}`)
-    $notification.post(title, subTitle, detail)
-    $done({})
+    chavy.log(`${title}, ${subTitle}, ${detail}`)
+    chavy.msg(title, subTitle, detail)
+    chavy.done()
   } else {
-    if (checkms > 5000) {
-      $done({})
+    if (checkms > 9000) {
+      subTitle = `签到结果: 超时退出 (请重试)`
+      chavy.log(`${title}, ${subTitle}, ${detail}`)
+      chavy.msg(title, subTitle, detail)
+      chavy.done()
     } else {
-      setTimeout(() => check(forums, signinfo, checkms + 100), 100)
+      setTimeout(() => check(forums, signinfo, checkms + 50), 50)
     }
   }
 }
 
-sign()
+function init() {
+  isSurge = () => {
+    return undefined === this.$httpClient ? false : true
+  }
+  isQuanX = () => {
+    return undefined === this.$task ? false : true
+  }
+  getdata = (key) => {
+    if (isSurge()) return $persistentStore.read(key)
+    if (isQuanX()) return $prefs.valueForKey(key)
+  }
+  setdata = (key, val) => {
+    if (isSurge()) return $persistentStore.write(key, val)
+    if (isQuanX()) return $prefs.setValueForKey(key, val)
+  }
+  msg = (title, subtitle, body) => {
+    if (isSurge()) $notification.post(title, subtitle, body)
+    if (isQuanX()) $notify(title, subtitle, body)
+  }
+  log = (message) => console.log(message)
+  get = (url, cb) => {
+    if (isSurge()) {
+      $httpClient.get(url, cb)
+    }
+    if (isQuanX()) {
+      url.method = 'GET'
+      $task.fetch(url).then((resp) => cb(null, {}, resp.body))
+    }
+  }
+  post = (url, cb) => {
+    if (isSurge()) {
+      $httpClient.post(url, cb)
+    }
+    if (isQuanX()) {
+      url.method = 'POST'
+      $task.fetch(url).then((resp) => cb(null, {}, resp.body))
+    }
+  }
+  done = (value = {}) => {
+    $done(value)
+  }
+  return { isSurge, isQuanX, msg, log, getdata, setdata, get, post, done }
+}
