@@ -7,7 +7,7 @@ sign()
 
 function sign() {
   signTieba()
-  // signWenku()
+  signWenku()
   signZhidao()
 }
 
