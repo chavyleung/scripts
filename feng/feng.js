@@ -82,7 +82,7 @@ function showSurgeMsg(signResult) {
 }
 
 function getToken() {
-  const userInfo = decodeURIComponent(decodeURIComponent([...cookieVal.matchAll(/userInfo=(\{[^;]*)/g)][0][1]))
+  const userInfo = decodeURIComponent(decodeURIComponent(cookieVal.match(/userInfo=(\{[^;]*)/)[1]))
   return JSON.parse(userInfo).accessToken
 }
 

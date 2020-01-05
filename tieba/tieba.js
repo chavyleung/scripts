@@ -89,7 +89,7 @@ function signZhidao() {
   chavy.get(url, (error, response, data) => {
     const timestamp = Date.parse(new Date())
     const utdata = `61,61,7,0,0,0,12,61,5,2,12,4,24,5,4,1,4,${timestamp}`
-    const stoken = [...data.matchAll(/"stoken"[^"]*"([^"]*)"/g)][0][1]
+    const stoken = data.match(/"stoken"[^"]*"([^"]*)"/)[1]
     const signurl = { url: `https://zhidao.baidu.com/submit/user`, headers: { Cookie: cookieVal }, body: {} }
     signurl.body = `cm=100509&utdata=${utdata}&stoken=${stoken}`
     chavy.post(signurl, (signerror, signresp, signdata) => {

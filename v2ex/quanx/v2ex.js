@@ -19,10 +19,7 @@ function sign() {
       console.log(`${title}, ${subTitle}, ${detail}`)
       $notify(title, subTitle, detail)
     } else {
-      let regex = /<input[^>]*\/mission\/daily\/redeem\?once=(\d+)[^>]*>/g
-      for (const code of data.matchAll(regex)) {
-        signMission(code[1])
-      }
+      signMission(data.match(/<input[^>]*\/mission\/daily\/redeem\?once=(\d+)[^>]*>/)[1])
     }
   })
 }
