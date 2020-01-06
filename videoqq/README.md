@@ -31,6 +31,7 @@ v.qq.com
 ## 说明
 
 1. 先在浏览器登录 `(先登录! 先登录! 先登录!)`
+   - 可以随便找个 vip 视频触发登录: https://m.v.qq.com/x/cover/r/rj8uc45tm8a17wm.html
 2. 先把`v.qq.com`加到`[MITM]`
 3. 再配置重写规则:
    - Surge: 把两条远程脚本放到`[Script]`
