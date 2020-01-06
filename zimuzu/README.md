@@ -1,8 +1,6 @@
-# 腾讯视频 (Surge & QuanX 二合一签到脚本)
+# 字幕组 (Surge & QuanX 二合一签到脚本)
 
 > 代码已同时兼容 Surge & QuanX, 使用同一份签到脚本即可
-
-> 需要 VIP 会员才能签到 (需要 VIP!需要 VIP!需要 VIP!)
 
 ## 配置 (Surge)
 
