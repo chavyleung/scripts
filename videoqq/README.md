@@ -5,6 +5,7 @@
 **2020.1.7 从 APP 获取 Cookie，目测有效期能撑一段时间 (需要观察)**
 
 **2020.1.8 如果从 APP 获取 Cookie 还发现失败，请尝试新的正则 (详见下面 Surge & QuanX 配置内容)**
+**2020.1.8 增加 Cookie 心跳器, 尝试每 1 小时或 2 小时运行一次来保持 Cookie 活性 (详见下面 Surge & QuanX 配置内容)**
 
 > 代码已同时兼容 Surge & QuanX, 使用同一份签到脚本即可
 
@@ -14,7 +15,7 @@
 
 ```properties
 [MITM]
-vip.video.qq.com
+*.video.qq.com
 
 [Script]
 # App Cookie
@@ -22,13 +23,15 @@ http-request ^https:\/\/vip\.video\.qq\.com\/?.? script-path=https://raw.githubu
 # 页面 Cookie (如果App Cookie还是容易失效, 尝试这个正则, 手机页面访问v.qq.com随便看一个vip视频触发)
 http-request ^https:\/\/access\.video\.qq.com\/user\/auth_refresh script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/videoqq/videoqq.cookie.js
 cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/videoqq/videoqq.js
+# 新的尝试: 尝试每1小时或2小时运行下面脚本来保持Cookie的活性 (效果未知)
+cron "* */1 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/videoqq/videoqq.cookie.keeper.js
 ```
 
 ## 配置 (QuanX)
 
 ```properties
 [MITM]
-vip.video.qq.com
+*.video.qq.com
 
 [rewrite_local]
 # App Cookie
@@ -38,11 +41,13 @@ vip.video.qq.com
 
 [task_local]
 1 0 * * * videoqq.js
+# 新的尝试: 尝试每1小时或2小时运行下面脚本来保持Cookie的活性 (效果未知)
+* */1 * * * videoqq.cookie.keeper.js
 ```
 
 ## 说明
 
-1. 先把`vip.video.qq.com`加到`[MITM]`
+1. 先把`*.video.qq.com`加到`[MITM]`
 2. 再配置重写规则:
    - Surge: 把两条远程脚本放到`[Script]`
    - QuanX: 把`videoqq.cookie.js`和`videoqq.js`传到`On My iPhone - Quantumult X - Scripts` (传到 iCloud 相同目录也可, 注意要打开 quanx 的 iCloud 开关)
