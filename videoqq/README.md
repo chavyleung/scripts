@@ -8,6 +8,8 @@
 
 **2020.1.8 增加 Cookie 心跳器, 尝试每 1 小时或 2 小时运行一次来保持 Cookie 活性 (详见下面 Surge & QuanX 配置内容)**
 
+**2020.1.8 MITM、Rewrite 正则都有改动**
+
 > 代码已同时兼容 Surge & QuanX, 使用同一份签到脚本即可
 
 > 需要 VIP 会员才能签到 (需要 VIP!需要 VIP!需要 VIP!)
