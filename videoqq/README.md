@@ -1,10 +1,8 @@
 # 腾讯视频 (Surge & QuanX 二合一签到脚本)
 
-**由于获取的 Cookie 只有 2 小时有效期，目前此脚本使用意义不大，先弃坑**
+**2020.1.6** **~~从 网页 获取 Cookie 只有 2 小时有效期，使用意义不大，先弃坑~~**
 
-**由于获取的 Cookie 只有 2 小时有效期，目前此脚本使用意义不大，先弃坑**
-
-**由于获取的 Cookie 只有 2 小时有效期，目前此脚本使用意义不大，先弃坑**
+**2020.1.7 从 APP 获取 Cookie，目测有效期能撑一段时间 (需要观察)**
 
 > 代码已同时兼容 Surge & QuanX, 使用同一份签到脚本即可
 
@@ -14,10 +12,10 @@
 
 ```properties
 [MITM]
-v.qq.com
+vip.video.qq.com
 
 [Script]
-http-request ^https:\/\/v\.qq\.com\/?.? script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/videoqq/videoqq.cookie.js
+http-request ^https:\/\/vip\.video\.qq\.com\/?.? script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/videoqq/videoqq.cookie.js
 cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/videoqq/videoqq.js
 ```
 
@@ -25,10 +23,10 @@ cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scr
 
 ```properties
 [MITM]
-v.qq.com
+vip.video.qq.com
 
 [rewrite_local]
-^https:\/\/v\.qq\.com\/?.? url script-response-body videoqq.cookie.js
+^https:\/\/vip\.video\.qq\.com\/?.? url script-response-body videoqq.cookie.js
 
 [task_local]
 1 0 * * * videoqq.js
@@ -36,15 +34,13 @@ v.qq.com
 
 ## 说明
 
-1. 先在浏览器登录 `(先登录! 先登录! 先登录!)`
-   - 可以随便找个 vip 视频触发登录: https://m.v.qq.com/x/cover/r/rj8uc45tm8a17wm.html
-2. 先把`v.qq.com`加到`[MITM]`
-3. 再配置重写规则:
+1. 先把`vip.video.qq.com`加到`[MITM]`
+2. 再配置重写规则:
    - Surge: 把两条远程脚本放到`[Script]`
    - QuanX: 把`videoqq.cookie.js`和`videoqq.js`传到`On My iPhone - Quantumult X - Scripts` (传到 iCloud 相同目录也可, 注意要打开 quanx 的 iCloud 开关)
-4. 打开浏览器访问: https://v.qq.com
-5. 系统提示: `获取Cookie: 成功`
-6. 最后就可以把第 1 条脚本注释掉了
+3. 打开 APP, 访问下`个人中心`
+4. 系统提示: `获取Cookie: 成功` （如果不提示获取成功, 尝试杀进程再进个人中心）
+5. 最后就可以把第 1 条脚本注释掉了
 
 > 第 1 条脚本是用来获取 cookie 的, 用浏览器访问一次获取 cookie 成功后就可以删掉或注释掉了, 但请确保在`登录成功`后再获取 cookie.
 
