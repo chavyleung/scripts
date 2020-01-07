@@ -4,6 +4,8 @@
 
 **2020.1.7 从 APP 获取 Cookie，目测有效期能撑一段时间 (需要观察)**
 
+**2020.1.8 如果从 APP 获取 Cookie 还发现失败，请尝试新的正则 (详见下面 Surge & QuanX 配置内容)**
+
 > 代码已同时兼容 Surge & QuanX, 使用同一份签到脚本即可
 
 > 需要 VIP 会员才能签到 (需要 VIP!需要 VIP!需要 VIP!)
@@ -15,7 +17,10 @@
 vip.video.qq.com
 
 [Script]
+# App Cookie
 http-request ^https:\/\/vip\.video\.qq\.com\/?.? script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/videoqq/videoqq.cookie.js
+# 页面 Cookie (如果App Cookie还是容易失效, 尝试这个正则, 手机页面访问v.qq.com随便看一个vip视频触发)
+http-request ^https:\/\/access\.video\.qq.com\/user\/auth_refresh script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/videoqq/videoqq.cookie.js
 cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/videoqq/videoqq.js
 ```
 
@@ -26,7 +31,10 @@ cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scr
 vip.video.qq.com
 
 [rewrite_local]
+# App Cookie
 ^https:\/\/vip\.video\.qq\.com\/?.? url script-response-body videoqq.cookie.js
+# 页面 Cookie (如果App Cookie还是容易失效, 尝试这个正则, 手机页面访问v.qq.com随便看一个vip视频触发)
+^https:\/\/access\.video\.qq.com\/user\/auth_refresh url script-response-body videoqq.cookie.js
 
 [task_local]
 1 0 * * * videoqq.js
