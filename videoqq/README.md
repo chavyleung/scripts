@@ -4,12 +4,6 @@
 
 **2020.1.7 从 APP 获取 Cookie，目测有效期能撑一段时间 (需要观察)**
 
-**2020.1.8 如果从 APP 获取 Cookie 还发现失败，请尝试新的正则 (详见下面 Surge & QuanX 配置内容)**
-
-**2020.1.8 增加 Cookie 心跳器, 尝试每 1 小时或 2 小时运行一次来保持 Cookie 活性 (详见下面 Surge & QuanX 配置内容)**
-
-**2020.1.8 MITM、Rewrite 正则都有改动**
-
 > 代码已同时兼容 Surge & QuanX, 使用同一份签到脚本即可
 
 > 需要 VIP 会员才能签到 (需要 VIP!需要 VIP!需要 VIP!)
@@ -21,13 +15,8 @@
 *.video.qq.com
 
 [Script]
-# App Cookie
 http-request ^https:\/\/vip\.video\.qq\.com\/?.? script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/videoqq/videoqq.cookie.js
-# 页面 Cookie (如果App Cookie还是容易失效, 尝试这个正则, 手机页面访问v.qq.com随便看一个vip视频触发)
-http-request ^https:\/\/access\.video\.qq.com\/user\/auth_refresh script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/videoqq/videoqq.cookie.js
 cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/videoqq/videoqq.js
-# 新的尝试: 尝试每1小时或2小时运行下面脚本来保持Cookie的活性 (效果未知)
-cron "* */1 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/videoqq/videoqq.cookie.keeper.js
 ```
 
 ## 配置 (QuanX)
@@ -37,15 +26,10 @@ cron "* */1 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scri
 *.video.qq.com
 
 [rewrite_local]
-# App Cookie
 ^https:\/\/vip\.video\.qq\.com\/?.? url script-response-body videoqq.cookie.js
-# 页面 Cookie (如果App Cookie还是容易失效, 尝试这个正则, 手机页面访问v.qq.com随便看一个vip视频触发)
-^https:\/\/access\.video\.qq.com\/user\/auth_refresh url script-response-body videoqq.cookie.js
 
 [task_local]
 1 0 * * * videoqq.js
-# 新的尝试: 尝试每1小时或2小时运行下面脚本来保持Cookie的活性 (效果未知)
-* */1 * * * videoqq.cookie.keeper.js
 ```
 
 ## 说明
