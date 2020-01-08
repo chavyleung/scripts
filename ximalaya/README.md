@@ -1,4 +1,4 @@
-# 喜马拉雅 (Beta)
+# 喜马拉雅
 
 > 代码已同时兼容 Surge & QuanX, 使用同一份签到脚本即可
 
@@ -32,8 +32,8 @@ mobwsa.ximalaya.com
 2. 再配置重写规则:
    - Surge: 把两条远程脚本放到`[Script]`
    - QuanX: 把`ximalaya.cookie.js`和`ximalaya.js`传到`On My iPhone - Quantumult X - Scripts` (传到 iCloud 相同目录也可, 注意要打开 quanx 的 iCloud 开关)
-3. 打开 APP, 访问下`我的`
-4. 系统提示: `获取Cookie: 成功` & `获取Token: 成功`（如果不提示获取成功, 尝试杀进程再进我的）
+3. 打开 APP, 访问下右下角`账号`
+4. 系统提示: `获取Cookie: 成功` & `获取Token: 成功`（如果不提示获取成功, 尝试杀进程再进`账号`）
 5. 最后就可以把第 1 条脚本注释掉了
 
 > 第 1 条脚本是用来获取 cookie 的, 用浏览器访问一次获取 cookie 成功后就可以删掉或注释掉了, 但请确保在`登录成功`后再获取 cookie.
