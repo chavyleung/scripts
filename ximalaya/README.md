@@ -2,6 +2,8 @@
 
 > 代码已同时兼容 Surge & QuanX, 使用同一份签到脚本即可
 
+> 2020.1.9 部分场景不能获取 Cookie 请更换匹配正则
+
 ## 配置 (Surge)
 
 ```properties
@@ -9,7 +11,7 @@
 mobwsa.ximalaya.com
 
 [Script]
-http-request ^https?:\/\/mobwsa\.ximalaya\.com\/mobile\-user\/homePage\/.* script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/ximalaya/ximalaya.cookie.js
+http-request ^https?:\/\/.*\/mobile\-user\/homePage\/.* script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/ximalaya/ximalaya.cookie.js
 cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/ximalaya/ximalaya.js
 ```
 
@@ -20,7 +22,7 @@ cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scr
 mobwsa.ximalaya.com
 
 [rewrite_local]
-^https?:\/\/mobwsa\.ximalaya\.com\/mobile\-user\/homePage\/.* url script-response-body ximalaya.cookie.js
+^https?:\/\/.*\/mobile\-user\/homePage\/.* url script-response-body ximalaya.cookie.js
 
 [task_local]
 1 0 * * * ximalaya.js
