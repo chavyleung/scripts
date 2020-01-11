@@ -1,5 +1,7 @@
 # 百度贴吧
 
+> 2020.1.11 QuanX 在`190`版本开始, 获取 Cookie 方式需要从`script-response-body`改为`script-request-header`
+
 ## 配置
 
 ```properties
@@ -7,7 +9,10 @@
 *.v2ex.com
 
 [rewrite_local]
+# 189及以前版本
 ^https:\/\/www\.v2ex\.com\/mission\/daily url script-response-body v2ex.cookie.js
+# 190及以后版本
+^https:\/\/www\.v2ex\.com\/mission\/daily url script-request-header v2ex.cookie.js
 
 [task_local]
 1 0 * * * v2ex.js

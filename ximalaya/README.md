@@ -4,6 +4,8 @@
 
 > 2020.1.9 部分场景不能获取 Cookie 请更换匹配正则
 
+> 2020.1.11 QuanX 在`190`版本开始, 获取 Cookie 方式需要从`script-response-body`改为`script-request-header`
+
 ## 配置 (Surge)
 
 ```properties
@@ -22,7 +24,10 @@ cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scr
 mobwsa.ximalaya.com
 
 [rewrite_local]
+# 189及以前版本
 ^https?:\/\/.*\/mobile\-user\/homePage\/.* url script-response-body ximalaya.cookie.js
+# 190及以后版本
+^https?:\/\/.*\/mobile\-user\/homePage\/.* url script-request-header ximalaya.cookie.js
 
 [task_local]
 1 0 * * * ximalaya.js

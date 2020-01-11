@@ -1,10 +1,12 @@
-# AcFun (Beta)
+# AcFun
 
 > 代码已同时兼容 Surge & QuanX, 使用同一份签到脚本即可
 
 > 只支持 APP 端签到 (什么? 你想用 Mac 签? emm...看需求人数吧...)
 
 > 测试版有可能出现任何情况, 如虫子(bug)、cookie(有效期)等各种问题, 希望大家能抱着共同完善的心态来玩
+
+> 2020.1.11 QuanX 在`190`版本开始, 获取 Cookie 方式需要从`script-response-body`改为`script-request-header`
 
 ## 配置 (Surge)
 
@@ -25,8 +27,10 @@ cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scr
 *.acfun.cn
 
 [rewrite_local]
-
+# 189及以前版本
 ^https:\/\/api\-new\.app\.acfun\.cn\/rest\/app\/user\/personalInfo url script-response-body acfun.cookie.js
+# 190及以后版本
+^https:\/\/api\-new\.app\.acfun\.cn\/rest\/app\/user\/personalInfo url script-request-header acfun.cookie.js
 
 [task_local]
 1 0 * * * acfun.js

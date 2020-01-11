@@ -1,4 +1,4 @@
-# 腾讯视频 (Surge & QuanX 二合一签到脚本)
+# 腾讯视频
 
 **2020.1.6** **~~从 网页 获取 Cookie 只有 2 小时有效期，使用意义不大，先弃坑~~**
 
@@ -7,6 +7,8 @@
 > 代码已同时兼容 Surge & QuanX, 使用同一份签到脚本即可
 
 > 需要 VIP 会员才能签到 (需要 VIP!需要 VIP!需要 VIP!)
+
+> 2020.1.11 QuanX 在`190`版本开始, 获取 Cookie 方式需要从`script-response-body`改为`script-request-header`
 
 ## 配置 (Surge)
 
@@ -26,7 +28,10 @@ cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scr
 *.video.qq.com
 
 [rewrite_local]
+# 189及以前版本
 ^https:\/\/vip\.video\.qq\.com\/?.? url script-response-body videoqq.cookie.js
+# 190及以后版本
+^https:\/\/vip\.video\.qq\.com\/?.? url script-request-header videoqq.cookie.js
 
 [task_local]
 1 0 * * * videoqq.js

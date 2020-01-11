@@ -1,4 +1,4 @@
-# 百度签到 (Surge & QuanX 二合一签到脚本)
+# 百度签到
 
 > 代码已同时兼容 Surge & QuanX, 使用同一份签到脚本即可
 
@@ -7,6 +7,8 @@
 > 之前已经获取过贴吧 cookie 的话，不需要再次获取 (通用)
 
 > 2020.1.3: 屏蔽文库签到, 原因: 实际签不上
+
+> 2020.1.11 QuanX 在`190`版本开始, 获取 Cookie 方式需要从`script-response-body`改为`script-request-header`
 
 ## 配置 (Surge)
 
@@ -26,7 +28,10 @@ cron "10 0 0 * *" script-path=https://raw.githubusercontent.com/chavyleung/scrip
 tieba.baidu.com
 
 [rewrite_local]
+# 189及以前版本
 ^https?:\/\/tieba\.baidu\.com\/?.? url script-response-body tieba.cookie.js
+# 190及以后版本
+^https?:\/\/tieba\.baidu\.com\/?.? url script-request-header tieba.cookie.js
 
 [task_local]
 1 0 * * * tieba.js

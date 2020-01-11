@@ -1,6 +1,8 @@
-# 字幕组 (Surge & QuanX 二合一签到脚本)
+# 字幕组
 
 > 代码已同时兼容 Surge & QuanX, 使用同一份签到脚本即可
+
+> 2020.1.11 QuanX 在`190`版本开始, 获取 Cookie 方式需要从`script-response-body`改为`script-request-header`
 
 ## 配置 (Surge)
 
@@ -20,7 +22,10 @@ cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scr
 *.zmz2019.com
 
 [rewrite_local]
+# 189及以前版本
 ^https?:\/\/(www\.)?zmz2019\.com\/?.? url script-response-body zimuzu.cookie.js
+# 190及以后版本
+^https?:\/\/(www\.)?zmz2019\.com\/?.? url script-request-header zimuzu.cookie.js
 
 [task_local]
 1 0 * * * zimuzu.js

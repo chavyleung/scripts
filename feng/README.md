@@ -1,8 +1,10 @@
-# 威锋网 (Surge & QuanX 二合一签到脚本)
+# 威锋网
 
 > 代码已同时兼容 Surge & QuanX, 使用同一份签到脚本即可
 
 > 注意了威锋网只能在一处登录, 如果你手机上登录了, 其他地方的登录会话会被踢掉 (重新登录需要重新获取 Cookie)
+
+> 2020.1.11 QuanX 在`190`版本开始, 获取 Cookie 方式需要从`script-response-body`改为`script-request-header`
 
 ## 配置 (Surge)
 
@@ -22,7 +24,10 @@ cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scr
 *.feng.com
 
 [rewrite_local]
+# 189及以前版本
 ^https:\/\/(www\.)?feng\.com\/?.? url script-response-body feng.cookie.js
+# 190及以后版本
+^https:\/\/(www\.)?feng\.com\/?.? url script-request-header feng.cookie.js
 
 [task_local]
 1 0 * * * feng.js

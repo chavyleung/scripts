@@ -1,8 +1,10 @@
-# bilibili (Surge & QuanX 二合一签到脚本)
+# bilibili
 
 > 代码已同时兼容 Surge & QuanX, 使用同一份签到脚本即可
 
 > 目前只签 bilibili 直播 (直播!直播!直播!)
+
+> 2020.1.11 QuanX 在`190`版本开始, 获取 Cookie 方式需要从`script-response-body`改为`script-request-header`
 
 ## 配置 (Surge)
 
@@ -22,7 +24,10 @@ cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scr
 *.bilibili.com
 
 [rewrite_local]
+# 189及以前版本
 ^https:\/\/(www|live)\.bilibili\.com\/?.? url script-response-body bilibili.cookie.js
+# 190及以后版本
+^https:\/\/(www|live)\.bilibili\.com\/?.? url script-request-header bilibili.cookie.js
 
 [task_local]
 1 0 * * * bilibili.js

@@ -1,6 +1,8 @@
-# 人人视频 (Beta)
+# 人人视频
 
 > 代码已同时兼容 Surge & QuanX, 使用同一份签到脚本即可
+
+> 2020.1.11 QuanX 在`190`版本开始, 获取 Cookie 方式需要从`script-response-body`改为`script-request-header`
 
 ## 配置 (Surge)
 
@@ -20,7 +22,10 @@ cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scr
 *.rr.tv
 
 [rewrite_local]
+# 189及以前版本
 ^https:\/\/api\.rr\.tv\/user\/profile url script-response-body rrtv.cookie.js
+# 189及以前版本
+^https:\/\/api\.rr\.tv\/user\/profile url script-request-header rrtv.cookie.js
 
 [task_local]
 1 0 * * * rrtv.js
