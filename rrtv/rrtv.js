@@ -49,11 +49,13 @@ function getinfo(signresult) {
     let subTitle = ``
     let detail = ``
     if (signresult.code == '0000') {
+      const levelStr = result.data.user.levelStr ? ` (${result.data.user.levelStr})` : ``
       subTitle = `签到结果: 成功`
-      detail = `等级: ${result.data.user.level} (${result.data.user.levelStr}), 说明: ${signresult.msg}`
+      detail = `等级: ${result.data.user.level}${levelStr}, 说明: ${signresult.msg}`
     } else if (signresult.code == '8750') {
+      const levelStr = result.data.user.levelStr ? ` (${result.data.user.levelStr})` : ``
       subTitle = `签到结果: 成功 (重复签到)`
-      detail = `等级: ${result.data.user.level} (${result.data.user.levelStr}), 说明: ${signresult.msg}`
+      detail = `等级: ${result.data.user.level}${levelStr}, 说明: ${signresult.msg}`
     } else if (signresult.code == '8400') {
       subTitle = `签到失败: 失败`
       detail = `说明: ${signresult.msg}`
