@@ -24,7 +24,7 @@ cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scr
 [rewrite_local]
 # 189及以前版本
 ^https:\/\/api\.rr\.tv\/user\/profile url script-response-body rrtv.cookie.js
-# 189及以前版本
+# 190及以后版本
 ^https:\/\/api\.rr\.tv\/user\/profile url script-request-header rrtv.cookie.js
 
 [task_local]
