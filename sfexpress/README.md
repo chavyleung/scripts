@@ -11,7 +11,7 @@
 *.weixinjia.net
 
 [Script]
-^https:\/\/sf\-integral\-sign\-in\.weixinjia\.net\/app\/init script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/sfexpress/sfexpress.cookie.js
+http-request ^https:\/\/sf\-integral\-sign\-in\.weixinjia\.net\/app\/init script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/sfexpress/sfexpress.cookie.js
 cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/sfexpress/sfexpress.js
 ```
 
