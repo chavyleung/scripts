@@ -4,6 +4,8 @@
 
 > 2020.1.11 QuanX 在`190`版本开始, 获取 Cookie 方式需要从`script-response-body`改为`script-request-header`
 
+> 2020.1.22 签到脚本会导致账号异常, 请停止使用
+
 ## 配置 (Surge)
 
 ```properties
