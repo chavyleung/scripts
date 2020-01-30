@@ -112,21 +112,3 @@ apk.tw
 [@lhie1](https://github.com/lhie1)
 
 [@ConnersHua](https://github.com/ConnersHua)
-
-```
-<img src="./source/plugin/dsu_amupper/images/dk.gif" style="margin-bottom:-6px;">
-https://apk.tw/plugin.php?id=dsu_amupper:pper&ajax=1&formhash=9894bd20&zjtesttimes=1577779673&inajax=1&ajaxtarget=my_amupper
-:method: GET
-:scheme: https
-:authority: apk.tw
-:path: /plugin.php?id=dsu_amupper:pper&ajax=1&formhash=9894bd20&zjtesttimes=1577779673&inajax=1&ajaxtarget=my_amupper
-Accept: */*
-Cookie: xfhP_2132_dsu_amupper_header=PHNwYW4gY2xhc3M9InBpcGUiPnw8L3NwYW4%2BPGEgaWQ9Im15X2FtdXBwZXIiIGhyZWY9ImphdmFzY3JpcHQ6OyIgb25jbGljaz0iYWpheGdldCgncGx1Z2luLnBocD9pZD1kc3VfYW11cHBlcjpwcGVyJmFqYXg9MSZmb3JtaGFzaD05ODk0YmQyMCZ6anRlc3R0aW1lcz0xNTc3Nzc5Njc0JywgJ215X2FtdXBwZXInLCAnbXlfYW11cHBlcicsICfnsL3liLDkuK0nLCAnJyxmdW5jdGlvbiAoKSB7dG9uZXBsYXllcigwKTt9KTsiPjxpbWcgc3JjPSIuL3NvdXJjZS9wbHVnaW4vZHN1X2FtdXBwZXIvaW1hZ2VzL2RrLmdpZiIgc3R5bGU9Im1hcmdpbi1ib3R0b206LTZweDsiPjwvYT4%3D; xfhP_2132_lastact=1577779674%09home.php%09spacecp; __asc=b3c0cc6c16f5afd676092d4eda8; __auc=dce799f516f59f067237a2febb9; _ga=GA1.2.1608429304.1577761929; _gid=GA1.2.1688629439.1577761939; xfhP_2132_noticeTitle=1; xfhP_2132_nofavfid=1; xfhP_2132_sid=J87Vc1; xfhP_2132_auth=7ac24btCR%2BdI6b4lefpECmxYWj0Wn9yVqWWBGEcJbcrJJQ%2Fict%2F6dtRYiEbwRqBBA9KS0YQBQ5gi4yXDAIRIiGR8WIxb; xfhP_2132_ulastactivity=915f6BAyOWJu5e6W%2FFDdReWOBJY9iCFtYx%2BtJZFz36l7rpWBZnyF; xfhP_2132_secqaa=26426276.be83416687a9ef3d73; xfhP_2132_sendmail=1; xfhP_2132_lastvisit=1577758319; xfhP_2132_saltkey=sy5ICtnI; __cfduid=d070a2409b8f31d15ce3354ce3514c78e1577761919
-Accept-Language: zh-cn
-Host: apk.tw
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_2) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.4 Safari/605.1.15
-Referer: https://apk.tw/forum.php
-Accept-Encoding: gzip, deflate, br
-Connection: keep-alive
-X-Requested-With: XMLHttpRequest
-```
