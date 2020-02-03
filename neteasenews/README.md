@@ -27,9 +27,9 @@ cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scr
 
 [rewrite_local]
 # 189及以前版本
-^https:\/\/c\.m\.163\.com\/uc\/api\/sign\/v2\/commit url script-response-body neteasenews.cookie.js
+^https:\/\/user\.m\.163.com\/api\/v1\/commons\/fav\/topic\/allList url script-response-body neteasenews.cookie.js
 # 190及以后版本
-^https:\/\/c\.m\.163\.com\/uc\/api\/sign\/v2\/commit url script-request-header neteasenews.cookie.js
+^https:\/\/user\.m\.163.com\/api\/v1\/commons\/fav\/topic\/allList url script-request-header neteasenews.cookie.js
 
 [task_local]
 1 0 * * * neteasenews.js
