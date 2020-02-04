@@ -65,6 +65,9 @@ cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scr
    - ```js
      let bodyVal = `trashId=%7B%22id_ver%22%3A%22IOS_1.2.1%22...`
      ```
+   - 最后杀掉 `网易新闻` 重新打开获取一下 cookie
+     - 系统提示: `获取Cookie: 成功`
+     - 系统提示: `获取Body: 成功`
 
 5. 最后就可以把第 1 条脚本注释掉了
 6. 运行一次脚本, 如果提示重复签到, 那就算成功了!
