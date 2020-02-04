@@ -2,9 +2,11 @@
 
 > 代码已同时兼容 Surge & QuanX, 使用同一份签到脚本即可
 
-> 2020.2.4 QuanX v1.0.6-build195 及以后版本可以直接使用 `neteasenews.cookie.js` 自动获取 Cookie
+> 由于 QuanX 不支持获取 `$request.body`, 所以 QuanX 用户需要自行抓包获取 body 参数
 
-> 2020.2.4 如果是 195 以前的版本, 或者想尝试手动抓包获取参数, 请点[这里](https://github.com/chavyleung/scripts/tree/master/neteasenews/README.old.md)
+> Surge 可以由脚本自自动获取 Cookie 及 Body 参数
+
+> QuanX 需要自己抓包签到请求中的 Body 参数, 详见: [抓包步骤](https://github.com/chavyleung/scripts/tree/master/neteasenews/抓包步骤)
 
 ## 配置 (Surge)
 
@@ -24,21 +26,49 @@ cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scr
 *.m.163.com
 
 [rewrite_local]
-# 195及以后版本
-^https:\/\/c\.m\.163\.com\/uc\/api\/sign\/v2\/commit url script-request-body neteasenews.cookie.js
+# 189及以前版本
+^https:\/\/user\.m\.163.com\/api\/v1\/commons\/fav\/topic\/allList url script-response-body neteasenews.cookie.js
+# 190及以后版本
+^https:\/\/user\.m\.163.com\/api\/v1\/commons\/fav\/topic\/allList url script-request-header neteasenews.cookie.js
 
 [task_local]
 1 0 * * * neteasenews.js
 ```
 
-## 说明
+## 说明 (Surge)
 
 1. 先把`*.m.163.com`加到`[MITM]`
-2. 再配置重写规则:
-   - Surge: 把两条远程脚本放到`[Script]`
-   - QuanX: 把`neteasenews.cookie.js`和`neteasenews.js`传到`On My iPhone - Quantumult X - Scripts` (传到 iCloud 相同目录也可, 注意要打开 quanx 的 iCloud 开关)
+2. 把两条远程脚本放到`[Script]`
 3. 打开 APP 然后手动签到 1 次:
 4. 系统提示: `获取Cookie: 成功`, `获取Body: 成功`
+5. 最后就可以把第 1 条脚本注释掉了
+6. 运行一次脚本, 如果提示重复签到, 那就算成功了!
+
+## 说明 (QuanX)
+
+> 由于 QuanX 目前不支持通过脚本获取\$request.body, 所以该参数需要自行抓包获取
+
+1. 先把`*.m.163.com`加到`[MITM]`
+2. 把两条脚本放到 QuanX 的 Scripts 目录
+3. 获取 Cookie:
+   - 打开 网易新闻, 系统提示: `获取Cookie: 成功`
+4. 获取 body (抓包):
+
+   - 打开 QuanX 的 `调试开关` (确保 `MITM` 已正确配置)
+   - 打开 网易新闻 手动签到 1 次
+   - 进入 QuanX 的 `调试记录` (在`调试开关` 下面)
+   - 进入日期最新的抓包记录
+   - 搜索关键字`commit`, 应该会搜索出 1 条记录: `https://c.m.163.com/uc/api/sign/v2/commit`
+   - 点进搜索出来的那条抓包记录: 请求体>文本查看 (把这里面的所有内容复制起来)
+   - 手动编辑 `neteasenews.cookie.js` 第 6 行: ` let bodyVal = `` `
+   - 把刚才复制的文本放到过时去, 如:
+   - ```js
+     let bodyVal = `trashId=%7B%22id_ver%22%3A%22IOS_1.2.1%22...`
+     ```
+   - 最后杀掉 `网易新闻` 重新打开获取一下 cookie
+     - 系统提示: `获取Cookie: 成功`
+     - 系统提示: `获取Body: 成功`
+
 5. 最后就可以把第 1 条脚本注释掉了
 6. 运行一次脚本, 如果提示重复签到, 那就算成功了!
 
