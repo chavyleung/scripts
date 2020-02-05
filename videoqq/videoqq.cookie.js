@@ -1,13 +1,30 @@
 const cookieName = '腾讯视频'
 const cookieKey = 'chavy_cookie_videoqq'
+const authUrlKey = 'chavy_auth_url_videoqq'
+const authHeaderKey = 'chavy_auth_header_videoqq'
 const chavy = init()
+
 const cookieVal = $request.headers['Cookie']
 if (cookieVal) {
-  if (chavy.setdata(cookieVal, cookieKey)) {
+  if ($request.url.indexOf('auth_refresh') > 0) {
+    const authurl = $request.url
+    const authHeader = JSON.stringify($request.headers)
+    if (cookieVal) chavy.setdata(cookieVal, cookieKey)
+    if (authurl) chavy.setdata(authurl, authUrlKey)
+    if (authHeader) chavy.setdata(authHeader, authHeaderKey)
     chavy.msg(`${cookieName}`, '获取Cookie: 成功', '')
-    chavy.log(`[${cookieName}] 获取Cookie: 成功, cookie: ${cookieVal}`)
+    chavy.log(`[${cookieName}] 获取Cookie: 成功, Cookie: ${cookieVal}`)
+    chavy.log(`[${cookieName}] 获取Cookie: 成功, AuthUrl: ${authurl}`)
+    chavy.log(`[${cookieName}] 获取Cookie: 成功, AuthHeader: ${authHeader}`)
+  } else {
+    chavy.setdata(cookieVal, cookieKey)
+    chavy.setdata(``, authUrlKey)
+    chavy.setdata(``, authHeaderKey)
+    chavy.msg(`${cookieName}`, '获取Cookie: 成功', '')
+    chavy.log(`[${cookieName}] 获取Cookie: 成功, Cookie: ${cookieVal}`)
   }
 }
+
 function init() {
   isSurge = () => {
     return undefined === this.$httpClient ? false : true

@@ -1,15 +1,40 @@
 const cookieName = '腾讯视频'
 const cookieKey = 'chavy_cookie_videoqq'
+const authUrlKey = 'chavy_auth_url_videoqq'
+const authHeaderKey = 'chavy_auth_header_videoqq'
 const chavy = init()
-const cookieVal = chavy.getdata(cookieKey)
+let cookieVal = chavy.getdata(cookieKey)
+const authUrlVal = chavy.getdata(authUrlKey)
+const authHeaderVal = chavy.getdata(authHeaderKey)
 
 sign()
 
 function sign() {
-  const timestamp = Date.parse(new Date())
+  if (authUrlVal && authHeaderVal) {
+    const url = { url: authUrlVal, headers: JSON.parse(authHeaderVal) }
+    chavy.get(url, (error, response, data) => {
+      chavy.log(`${cookieName}, auth_refresh - data: ${data}`)
+      chavy.log(`${cookieName}, auth_refresh - oldCookie: ${cookieVal}`)
+      let result = JSON.parse(data.match(/\(([^\)]*)\)/)[1])
+      if (result.errcode == 0) {
+        if (result.vuserid) cookieVal = cookieVal.replace(/vuserid=[^;]*/, `vuserid=${result.vuserid}`)
+        if (result.vusession) cookieVal = cookieVal.replace(/vusession=[^;]*/, `vusession=${result.vusession}`)
+        if (result.next_refresh_time) cookieVal = cookieVal.replace(/next_refresh_time=[^;]*/, `next_refresh_time=${result.next_refresh_time}`)
+        if (result.access_token) cookieVal = cookieVal.replace(/access_token=[^;]*/, `access_token=${result.access_token}`)
+        chavy.log(`${cookieName}, auth_refresh - newCookie: ${cookieVal}`)
+        chavy.setdata(cookieVal, cookieKey)
+        signapp()
+      }
+    })
+  } else {
+    signapp()
+  }
+}
+
+function signapp() {
+  const timestamp = Math.round(new Date().getTime() / 1000).toString()
   let url = { url: `https://vip.video.qq.com/fcgi-bin/comm_cgi?name=hierarchical_task_system&cmd=2&_=${timestamp}`, headers: { Cookie: cookieVal } }
   url.headers['User-Agent'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_2) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.4 Safari/605.1.15'
-
   chavy.get(url, (error, response, data) => {
     chavy.log(`${cookieName}, data: ${data}`)
     let result = JSON.parse(data.match(/QZOutputJson=\(([^\)]*)\)/)[1])
@@ -36,7 +61,7 @@ function sign() {
 }
 
 function getexp(signresult) {
-  const timestamp = Date.parse(new Date())
+  const timestamp = Math.round(new Date().getTime() / 1000).toString()
   let url = { url: `https://vip.video.qq.com/fcgi-bin/comm_cgi?name=spp_PropertyNum&cmd=1&growth_value=1&otype=json&_=${timestamp}`, headers: { Cookie: cookieVal } }
   url.headers['User-Agent'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_2) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.4 Safari/605.1.15'
   chavy.get(url, (error, response, data) => {
