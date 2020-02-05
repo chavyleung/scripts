@@ -6,6 +6,13 @@ const cookieVal = chavy.getdata(cookieKey)
 sign()
 
 function sign() {
+  const title = `${cookieName}`
+  const subTitle = `签到结果: 失败`
+  const detail = `说明: 威锋加了验证, 无法签到, 请移除本脚本`
+  chavy.msg(title, subTitle, detail)
+}
+
+function _sign() {
   let url = { url: `https://beta-api.feng.com/v1/attendance/userSignIn`, headers: {}, body: {} }
   url.headers['Host'] = 'beta-api.feng.com'
   url.headers['Origin'] = 'https://www.feng.com'
