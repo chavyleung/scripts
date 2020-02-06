@@ -17,10 +17,10 @@ function sign() {
     if (result.errcode == 200) {
       if (result.data.modalInfo.title) {
         subTitle = '签到结果: 成功'
-        detail = `${result.data.unit}: ${result.data.total}个, 连签: ${result.data.continuous}天, 说明: ${result.data.modalInfo.title}`
+        detail = `${result.data.unit}: ${result.data.preferential.counts}个, 共签: ${result.data.total}天, 连签: ${result.data.continuous}天, 说明: ${result.data.modalInfo.title}`
       } else {
         subTitle = '签到结果: 成功 (重复签到)'
-        detail = `${result.data.unit}: ${result.data.total}个, 连签: ${result.data.continuous}天`
+        detail = `${result.data.unit}: ${result.data.preferential.counts}个, 共签: ${result.data.total}天, 连签: ${result.data.continuous}天`
       }
     } else {
       subTitle = '签到结果: 失败'
