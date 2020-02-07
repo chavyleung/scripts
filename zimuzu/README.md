@@ -16,7 +16,7 @@
 
 [Script]
 http-request ^https?:\/\/(www\.)?rrys2019\.com\/?.? script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/zimuzu/zimuzu.cookie.js
-http-request ^https?:\/\/h5.rrhuodong.com\/mobile\/mission\/pages\/task.html script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/zimuzu/zimuzu.cookie.js
+http-request ^https?:\/\/h5.rrhuodong.com\/index.php.*m=clock script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/zimuzu/zimuzu.cookie.js
 cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/zimuzu/zimuzu.js
 ```
 
@@ -29,10 +29,10 @@ cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scr
 [rewrite_local]
 # 189及以前版本
 ^https?:\/\/(www\.)?rrys2019\.com\/?.? url script-response-body zimuzu.cookie.js
-^https?:\/\/h5.rrhuodong.com\/mobile\/mission\/pages\/task.html url script-response-body zimuzu.cookie.js
+^https?:\/\/h5.rrhuodong.com\/index.php.*m=clock url script-response-body zimuzu.cookie.js
 # 190及以后版本
 ^https?:\/\/(www\.)?rrys2019\.com\/?.? url script-request-header zimuzu.cookie.js
-^https?:\/\/h5.rrhuodong.com\/mobile\/mission\/pages\/task.html url script-request-header zimuzu.cookie.js
+^https?:\/\/h5.rrhuodong.com\/index.php.*m=clock url script-request-header zimuzu.cookie.js
 
 [task_local]
 1 0 * * * zimuzu.js
