@@ -13,15 +13,34 @@ function sign() {
   if (authUrlVal && authHeaderVal) {
     const url = { url: authUrlVal, headers: JSON.parse(authHeaderVal) }
     chavy.get(url, (error, response, data) => {
-      chavy.log(`${cookieName}, auth_refresh - data: ${data}`)
-      chavy.log(`${cookieName}, auth_refresh - oldCookie: ${cookieVal}`)
-      let result = JSON.parse(data.match(/\(([^\)]*)\)/)[1])
+      // chavy.log(`${cookieName}, auth_refresh - data: ${data}`)
+      // chavy.log(`${cookieName}, auth_refresh - old-cookie: ${cookieVal}`)
+      // chavy.log(`${cookieName}, auth_refresh - set-cookie: ${response.headers['Set-Cookie']}`)
+      const result = JSON.parse(data.match(/\(([^\)]*)\)/)[1])
+      let respcookie = response.headers['Set-Cookie']
+      // chavy.log(`${cookieName}, auth_refresh - Expires: ${respcookie.indexOf('Expires=') >= 0 ? respcookie.match(/Expires=(.*?)GMT/)[1] : '无'}`)
+      respcookie = respcookie.replace(/Expires=(.*?)GMT,? ?/g, '')
+      respcookie = respcookie.replace(/Path=(.*?); ?/g, '')
+      respcookie = respcookie.replace(/Domain=(.*?); ?/g, '')
+      respcookie = respcookie.replace(/;$/g, '')
       if (result.errcode == 0) {
-        if (result.vuserid) cookieVal = cookieVal.replace(/vuserid=[^;]*/, `vuserid=${result.vuserid}`)
-        if (result.vusession) cookieVal = cookieVal.replace(/vusession=[^;]*/, `vusession=${result.vusession}`)
-        if (result.next_refresh_time) cookieVal = cookieVal.replace(/next_refresh_time=[^;]*/, `next_refresh_time=${result.next_refresh_time}`)
-        if (result.access_token) cookieVal = cookieVal.replace(/access_token=[^;]*/, `access_token=${result.access_token}`)
-        chavy.log(`${cookieName}, auth_refresh - newCookie: ${cookieVal}`)
+        for (setcookie of respcookie.split(';')) {
+          const setcookieKey = setcookie.split('=')[0]
+          const setcookieVal = setcookie.split('=')[1]
+          if (setcookieKey && cookieVal.indexOf(setcookieKey) >= 0) {
+            cookieVal = cookieVal.replace(new RegExp(`${setcookieKey}=[^;]*`), `${setcookieKey}=${setcookieVal}`)
+          } else {
+            cookieVal += `; ${setcookieKey}=${setcookieVal}`
+          }
+          // chavy.log(`${cookieName}, auth_refresh - set-cookie: ${setcookieKey} = ${setcookieVal}`)
+        }
+        for (resultcookie in result) {
+          if (cookieVal.indexOf(resultcookie) >= 0) {
+            cookieVal = cookieVal.replace(new RegExp(`${resultcookie}=[^;]*`, 'g'), `${resultcookie}=${result[resultcookie]}`)
+            // chavy.log(`${cookieName}, auth_refresh - ret-cookie: ${resultcookie} = ${result[resultcookie]}`)
+          }
+        }
+        // chavy.log(`${cookieName}, auth_refresh - new-cookie: ${cookieVal}`)
         chavy.setdata(cookieVal, cookieKey)
         signapp()
       }
@@ -30,6 +49,8 @@ function sign() {
     signapp()
   }
 }
+
+function refreshSetCookie() {}
 
 function signapp() {
   const timestamp = Math.round(new Date().getTime() / 1000).toString()
@@ -107,7 +128,7 @@ function init() {
     }
     if (isQuanX()) {
       url.method = 'GET'
-      $task.fetch(url).then((resp) => cb(null, {}, resp.body))
+      $task.fetch(url).then((resp) => cb(null, resp, resp.body))
     }
   }
   post = (url, cb) => {
@@ -116,7 +137,7 @@ function init() {
     }
     if (isQuanX()) {
       url.method = 'POST'
-      $task.fetch(url).then((resp) => cb(null, {}, resp.body))
+      $task.fetch(url).then((resp) => cb(null, resp, resp.body))
     }
   }
   done = (value = {}) => {
