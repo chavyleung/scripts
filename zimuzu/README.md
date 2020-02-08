@@ -18,7 +18,7 @@
 
 [Script]
 http-request ^https?:\/\/(www\.)?rrys2019\.com\/?.? script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/zimuzu/zimuzu.cookie.js
-http-request http:\/\/ios.zmzapi.com\/index.php.*a=login script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/zimuzu/zimuzu.cookie.js
+http-request ^http:\/\/ios.zmzapi.com\/index.php.*a=login script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/zimuzu/zimuzu.cookie.js
 cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/zimuzu/zimuzu.js
 ```
 
@@ -31,10 +31,10 @@ cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scr
 [rewrite_local]
 # 189及以前版本
 ^https?:\/\/(www\.)?rrys2019\.com\/?.? url script-response-body zimuzu.cookie.js
-http:\/\/ios.zmzapi.com\/index.php.*a=login url script-response-body zimuzu.cookie.js
+^http:\/\/ios.zmzapi.com\/index.php.*a=login url script-response-body zimuzu.cookie.js
 # 190及以后版本
 ^https?:\/\/(www\.)?rrys2019\.com\/?.? url script-request-header zimuzu.cookie.js
-http:\/\/ios.zmzapi.com\/index.php.*a=login url script-request-header zimuzu.cookie.js
+^http:\/\/ios.zmzapi.com\/index.php.*a=login url script-request-header zimuzu.cookie.js
 
 [task_local]
 1 0 * * * zimuzu.js
