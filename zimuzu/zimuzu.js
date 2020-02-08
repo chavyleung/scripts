@@ -1,9 +1,11 @@
 const cookieName = '字幕组'
 const cookieKey = 'chavy_cookie_zimuzu'
 const cookieAppKey = 'chavy_cookie_zimuzu_app'
+const authUrlAppKey = 'chavy_auth_url_zimuzu_app'
 const chavy = init()
 const cookieVal = chavy.getdata(cookieKey)
-const cookieAppVal = chavy.getdata(cookieAppKey)
+let cookieAppVal = chavy.getdata(cookieAppKey)
+const authUrlAppVal = chavy.getdata(authUrlAppKey)
 const signinfo = {}
 
 sign()
@@ -24,8 +26,28 @@ function signweb() {
   })
 }
 
-function signapp() {
-  let url = { url: `http://h5.rrhuodong.com/index.php?g=api/mission&m=clock&a=store&id=2`, headers: { Cookie: cookieAppVal } }
+function loginapp(cb) {
+  if (authUrlAppVal) {
+    const url = { url: authUrlAppVal, headers: {} }
+    url.headers['Accept'] = `*/*`
+    url.headers['Accept-Encoding'] = `gzip;q=1.0, compress;q=0.5`
+    url.headers['Accept-Language'] = `zh-Hans-CN;q=1.0, en-US;q=0.9`
+    url.headers['Connection'] = `close`
+    url.headers['Host'] = `ios.zmzapi.com`
+    url.headers['Referer'] = `http://h5.rrhuodong.com/mobile/mission/pages/task.html`
+    url.headers['User-Agent'] = `YYets_swift/2.5.7 (com.yyets.ZiMuZu; build:29; iOS 13.3.1) Alamofire/4.9.1`
+    chavy.get(url, (error, response, data) => {
+      const result = JSON.parse(data)
+      if (result.status == 1) refreshapp(result, cb)
+      else signinfo.app = result
+    })
+  } else {
+    cb()
+  }
+}
+
+function refreshapp(logininfo, cb) {
+  const url = { url: `http://h5.rrhuodong.com/index.php?g=api/mission&m=index&a=login&uid=${logininfo.data.uid}&token=${logininfo.data.token}`, headers: {} }
   url.headers['Accept'] = `application/json, text/plain, */*`
   url.headers['Accept-Encoding'] = `gzip, deflate`
   url.headers['Accept-Language'] = `zh-cn`
@@ -33,10 +55,31 @@ function signapp() {
   url.headers['Host'] = `h5.rrhuodong.com`
   url.headers['Referer'] = `http://h5.rrhuodong.com/mobile/mission/pages/task.html`
   url.headers['User-Agent'] = `Mozilla/5.0 (iPhone; CPU iPhone OS 13_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148`
-
   chavy.get(url, (error, response, data) => {
-    chavy.log(`${cookieName}, signapp - data: ${data}`)
-    signinfo.app = JSON.parse(data)
+    const respcookie = response.headers['Set-Cookie']
+    if (respcookie && respcookie.indexOf('PHPSESSID=') >= 0) {
+      cookieAppVal = response.headers['Set-Cookie'].match(/PHPSESSID=([^;]*)/)[0]
+      if (cookieAppVal) chavy.setdata(cookieAppVal, cookieAppKey)
+    }
+    cb()
+  })
+}
+
+function signapp() {
+  loginapp(() => {
+    let url = { url: `http://h5.rrhuodong.com/index.php?g=api/mission&m=clock&a=store&id=2`, headers: { Cookie: cookieAppVal } }
+    url.headers['Accept'] = `application/json, text/plain, */*`
+    url.headers['Accept-Encoding'] = `gzip, deflate`
+    url.headers['Accept-Language'] = `zh-cn`
+    url.headers['Connection'] = `close`
+    url.headers['Host'] = `h5.rrhuodong.com`
+    url.headers['Referer'] = `http://h5.rrhuodong.com/mobile/mission/pages/task.html`
+    url.headers['User-Agent'] = `Mozilla/5.0 (iPhone; CPU iPhone OS 13_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148`
+
+    chavy.get(url, (error, response, data) => {
+      chavy.log(`${cookieName}, signapp - data: ${data}`)
+      signinfo.app = JSON.parse(data)
+    })
   })
 }
 
@@ -106,7 +149,7 @@ function init() {
     }
     if (isQuanX()) {
       url.method = 'GET'
-      $task.fetch(url).then((resp) => cb(null, {}, resp.body))
+      $task.fetch(url).then((resp) => cb(null, resp, resp.body))
     }
   }
   post = (url, cb) => {
@@ -115,7 +158,7 @@ function init() {
     }
     if (isQuanX()) {
       url.method = 'POST'
-      $task.fetch(url).then((resp) => cb(null, {}, resp.body))
+      $task.fetch(url).then((resp) => cb(null, resp, resp.body))
     }
   }
   done = (value = {}) => {

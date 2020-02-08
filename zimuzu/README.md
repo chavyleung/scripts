@@ -8,15 +8,17 @@
 
 > 2020.2.8 双端签到 (增加 APP 签到)
 
+> 2020.2.8 19:40 更新 App 端 Cookie 获取方式 (旧方式容易失效) (需要更新: MITM, 两个脚本, 正则)
+
 ## 配置 (Surge)
 
 ```properties
 [MITM]
-*.rrys2019.com, h5.rrhuodong.com
+*.rrys2019.com, h5.rrhuodong.com, ios.zmzapi.com
 
 [Script]
 http-request ^https?:\/\/(www\.)?rrys2019\.com\/?.? script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/zimuzu/zimuzu.cookie.js
-http-request ^https?:\/\/h5.rrhuodong.com\/index.php.*m=clock script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/zimuzu/zimuzu.cookie.js
+http-request http:\/\/ios.zmzapi.com\/index.php.*a=login script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/zimuzu/zimuzu.cookie.js
 cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/zimuzu/zimuzu.js
 ```
 
@@ -24,15 +26,15 @@ cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scr
 
 ```properties
 [MITM]
-*.rrys2019.com, h5.rrhuodong.com
+*.rrys2019.com, h5.rrhuodong.com, ios.zmzapi.com
 
 [rewrite_local]
 # 189及以前版本
 ^https?:\/\/(www\.)?rrys2019\.com\/?.? url script-response-body zimuzu.cookie.js
-^https?:\/\/h5.rrhuodong.com\/index.php.*m=clock url script-response-body zimuzu.cookie.js
+http:\/\/ios.zmzapi.com\/index.php.*a=login url script-response-body zimuzu.cookie.js
 # 190及以后版本
 ^https?:\/\/(www\.)?rrys2019\.com\/?.? url script-request-header zimuzu.cookie.js
-^https?:\/\/h5.rrhuodong.com\/index.php.*m=clock url script-request-header zimuzu.cookie.js
+http:\/\/ios.zmzapi.com\/index.php.*a=login url script-request-header zimuzu.cookie.js
 
 [task_local]
 1 0 * * * zimuzu.js
@@ -41,7 +43,7 @@ cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scr
 ## 说明 (网页)
 
 1. 先在浏览器登录 `(先登录! 先登录! 先登录!)`
-2. 先把`*.rrys2019.com, h5.rrhuodong.com`加到`[MITM]`
+2. 先把`*.rrys2019.com, h5.rrhuodong.com, ios.zmzapi.com`加到`[MITM]`
 3. 再配置重写规则:
    - Surge: 把两条远程脚本放到`[Script]`
    - QuanX: 把`zimuzu.cookie.js`和`zimuzu.js`传到`On My iPhone - Quantumult X - Scripts` (传到 iCloud 相同目录也可, 注意要打开 quanx 的 iCloud 开关)
@@ -52,12 +54,12 @@ cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scr
 ## 说明 (APP)
 
 1. 先在浏览器登录 `(先登录! 先登录! 先登录!)`
-2. 先把`*.rrys2019.com, h5.rrhuodong.com`加到`[MITM]`
+2. 先把`*.rrys2019.com, h5.rrhuodong.com, ios.zmzapi.com`加到`[MITM]`
 3. 再配置重写规则:
    - Surge: 把两条远程脚本放到`[Script]`
    - QuanX: 把`zimuzu.cookie.js`和`zimuzu.js`传到`On My iPhone - Quantumult X - Scripts` (传到 iCloud 相同目录也可, 注意要打开 quanx 的 iCloud 开关)
-4. 打开 APP, `我` > `任务墙`
-5. 系统提示: `获取Cookie: 成功`
+4. 打开 APP 即可
+5. 系统提示: `获取Cookie: 成功` (如果不提示, 请杀掉 APP 重新打开)
 6. 最后就可以把第 1 条脚本注释掉了
 
 > 第 1 条脚本是用来获取 cookie 的, 用浏览器访问一次获取 cookie 成功后就可以删掉或注释掉了, 但请确保在`登录成功`后再获取 cookie.
