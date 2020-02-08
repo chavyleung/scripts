@@ -9,7 +9,7 @@
 tncj.hortorgames.com
 
 [Script]
-http-response ^https://tncj.hortorgames.com/chicken/fight/(answer|findQuiz) requires-body=1,max-size=0,script-path=scripts/tncj.min.js
+http-response ^https://tncj.hortorgames.com/chicken/fight/(answer|findQuiz) requires-body=1,max-size=0,script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/tncj/tncj.min.js
 ```
 
 ## 配置 (QuanX)
