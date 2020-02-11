@@ -41,20 +41,24 @@ function sign() {
   url.headers['X-Request-Id'] = encrypt(signurl)
   chavy.post(url, (error, response, data) => {
     chavy.log(`${cookieName}, signdata: ${data}`)
-    let result = JSON.parse(data)
-    let title = `${cookieName}`
-    // 签到成功 || 签到重复
-    if (result.status && (result.status.code == 0 || result.status.code == 1021)) {
-      if (chavy.isQuanX()) getexp(result)
-      if (chavy.isSurge()) showSurgeMsg(result)
-    }
-    // 签到失败
-    else {
-      let subTitle = `签到结果: 失败`
-      let detail = `说明: ${result.status.message}`
-      chavy.msg(title, subTitle, detail)
-      chavy.log(`${cookieName}, cookieKey: ${cookieVal}`)
-      chavy.log(`${cookieName}, token: ${getToken()}`)
+    if (data) {
+      let result = JSON.parse(data)
+      let title = `${cookieName}`
+      // 签到成功 || 签到重复
+      if (result.status && (result.status.code == 0 || result.status.code == 1021)) {
+        if (chavy.isQuanX()) getexp(result)
+        if (chavy.isSurge()) showSurgeMsg(result)
+      }
+      // 签到失败
+      else {
+        let subTitle = `签到结果: 失败`
+        let detail = `说明: ${result.status.message}`
+        chavy.msg(title, subTitle, detail)
+        chavy.log(`${cookieName}, cookieKey: ${cookieVal}`)
+        chavy.log(`${cookieName}, token: ${getToken()}`)
+      }
+    } else {
+      chavy.msg(cookieName, `签到结果: 失败`, `说明: 威锋加了校验, 偶尔能签, 选择性弃坑吧!`)
     }
   })
   chavy.done()
