@@ -8,6 +8,8 @@
 
 > QuanX 需要 v1.0.6-build195 及以后版本
 
+> 2020.2.13 腾讯系的 Cookie 果然活不久, 弃坑!
+
 ## 配置 (Surge)
 
 ```properties
