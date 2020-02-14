@@ -6,12 +6,6 @@
 
 > 如果你希望显示话费、语音、流量信息，请在支付宝中搜索小程序“中国联通”并授权登录一次
 
-> 2020.2.15 据说只有广东的小伙伴能成功
-
-广东省以外的朋友, 如果你有条件, 麻烦用 thor 抓包个包给我
-
-过程: 杀联通，开抓包，开联通，签到，关抓包，导出 har（选包含）发至: chavyleung@gmail.com
-
 ## 配置 (Surge)
 
 ```properties
@@ -21,7 +15,7 @@ act.10010.com
 [Script]
 # 注意获取Cookie有两条脚本
 http-request ^https:\/\/act.10010.com\/SigninApp\/signin\/querySigninActivity.htm script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/10010/10010.cookie.js
-http-request ^https:\/\/act.10010.com\/SigninApp\/signin\/daySign.do script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/10010/10010.cookie.js
+http-request ^https:\/\/act.10010.com\/SigninApp(.*?)\/signin\/daySign.do script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/10010/10010.cookie.js
 cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/10010/10010.js
 ```
 
@@ -34,7 +28,7 @@ act.10010.com
 [rewrite_local]
 # 注意获取Cookie有两条脚本
 ^https:\/\/act.10010.com\/SigninApp\/signin\/querySigninActivity.htm url script-request-header 10010.cookie.js
-^https:\/\/act.10010.com\/SigninApp\/signin\/daySign.do url script-request-header 10010.cookie.js
+^https:\/\/act.10010.com\/SigninApp(.*?)\/signin\/daySign.do url script-request-header 10010.cookie.js
 
 [task_local]
 1 0 * * * 10010.js
