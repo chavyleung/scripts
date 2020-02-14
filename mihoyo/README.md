@@ -6,7 +6,7 @@
 
 ```properties
 [MITM]
-*.mihoyo.com
+api-takumi.mihoyo.com
 
 [Script]
 http-request ^https:\/\/api-takumi.mihoyo.com\/apihub\/api\/getGameList script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/mihoyo/mihoyo.cookie.js
@@ -17,7 +17,7 @@ cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scr
 
 ```properties
 [MITM]
-*.mihoyo.com
+api-takumi.mihoyo.com
 
 [rewrite_local]
 ^https:\/\/api-takumi.mihoyo.com\/apihub\/api\/getGameList url script-request-header mihoyo.cookie.js
@@ -28,7 +28,7 @@ cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scr
 
 ## 说明
 
-1. 先把`*.mihoyo.com`加到`[MITM]`
+1. 先把`api-takumi.mihoyo.com`加到`[MITM]`
 2. 再配置重写规则:
    - Surge: 把两条远程脚本放到`[Script]`
    - QuanX: 把`mihoyo.cookie.js`和`mihoyo.js`传到`On My iPhone - Quantumult X - Scripts` (传到 iCloud 相同目录也可, 注意要打开 quanx 的 iCloud 开关)
