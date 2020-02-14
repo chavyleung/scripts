@@ -14,8 +14,8 @@ act.10010.com
 
 [Script]
 # 注意获取Cookie有两条脚本
-^https:\/\/act.10010.com\/SigninApp\/signin\/querySigninActivity.htm script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/10010/10010.cookie.js
-^https:\/\/act.10010.com\/SigninApp\/signin\/daySign.do script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/10010/10010.cookie.js
+http-request ^https:\/\/act.10010.com\/SigninApp\/signin\/querySigninActivity.htm script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/10010/10010.cookie.js
+http-request ^https:\/\/act.10010.com\/SigninApp\/signin\/daySign.do script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/10010/10010.cookie.js
 cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/10010/10010.js
 ```
 
