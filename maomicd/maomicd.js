@@ -17,7 +17,7 @@ function sign() {
     if (result) {
       result = result[2]
       if (result == '') subTitle = `签到结果: 成功`
-      if (result.indexOf('今日已签') >= 0) subTitle = `签到结果: 成功 (重复签到)`
+      else if (result.indexOf('今日已签') >= 0) subTitle = `签到结果: 成功 (重复签到)`
       else (subTitle = `签到结果: 未知`), (detail = `说明: ${result}`)
     } else {
       subTitle = `签到结果: 失败`
