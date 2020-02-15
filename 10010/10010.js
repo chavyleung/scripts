@@ -22,7 +22,13 @@ function sign() {
 function gettel() {
   const reqheaders = JSON.parse(signheaderVal)
   const reqreferer = reqheaders.Referer
-  return reqreferer.match(/desmobile=(.*?)(&|$)/)[1]
+  const reqCookie = reqheaders.Cookie
+  if (reqreferer.indexOf(`desmobile=`) >= 0) return reqreferer.match(/desmobile=(.*?)(&|$)/)[1]
+  else if (reqCookie.indexOf(`u_account=`) >= 0) return reqCookie.match(/u_account=(.*?);/)[1]
+  else {
+    chavy.log(`${cookieName}, gettel - reqheaders: ${reqheaders}`)
+    return ''
+  }
 }
 
 function loginapp(cb) {
