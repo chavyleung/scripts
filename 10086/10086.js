@@ -16,11 +16,14 @@ function loginapp(cb) {
   const url = { url: tokenurlVal, headers: JSON.parse(tokenheaderVal) }
   chavy.get(url, (error, response, data) => {
     const respcookie = response.headers['Set-Cookie']
-    const signheaderObj = JSON.parse(signheaderVal)
-    let signcookie = signheaderObj['Cookie']
-    signcookie = signcookie.replace(/d\.sid=([^;]*)/, respcookie.match(/d\.sid=([^;]*)/)[0])
-    signheaderObj['Cookie'] = signcookie
-    signheaderVal = JSON.stringify(signheaderObj)
+    chavy.log(`${cookieName}, loginapp - respcookie: ${respcookie}`)
+    if (respcookie && respcookie.indexOf('d.sid=') >= 0) {
+      const signheaderObj = JSON.parse(signheaderVal)
+      let signcookie = signheaderObj['Cookie']
+      signcookie = signcookie.replace(/d\.sid=([^;]*)/, respcookie.match(/d\.sid=([^;]*)/)[0])
+      signheaderObj['Cookie'] = signcookie
+      signheaderVal = JSON.stringify(signheaderObj)
+    }
     cb()
   })
 }
