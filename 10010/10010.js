@@ -23,12 +23,10 @@ function gettel() {
   const reqheaders = JSON.parse(signheaderVal)
   const reqreferer = reqheaders.Referer
   const reqCookie = reqheaders.Cookie
-  if (reqreferer.indexOf(`desmobile=`) >= 0) return reqreferer.match(/desmobile=(.*?)(&|$)/)[1]
-  else if (reqCookie.indexOf(`u_account=`) >= 0) return reqCookie.match(/u_account=(.*?);/)[1]
-  else {
-    chavy.log(`${cookieName}, gettel - reqheaders: ${reqheaders}`)
-    return ''
-  }
+  let tel = ''
+  if (reqreferer.indexOf(`desmobile=`) >= 0) tel = reqreferer.match(/desmobile=(.*?)(&|$)/)[1]
+  if (tel == '' && reqCookie.indexOf(`u_account=`) >= 0) tel = reqCookie.match(/u_account=(.*?);/)[1]
+  return tel
 }
 
 function loginapp(cb) {
@@ -55,7 +53,9 @@ function signapp() {
 }
 
 function getinfo() {
-  const url = { url: `https://mina.10010.com/wxapplet/bind/getIndexData/alipay/alipaymini?user_id=${gettel()}` }
+  const tel = gettel()
+  const url = { url: `https://mina.10010.com/wxapplet/bind/getIndexData/alipay/alipaymini?user_id=${tel}` }
+  chavy.log(`${cookieName}, getinfo - tel: ${tel}`)
   chavy.get(url, (error, response, data) => (signinfo.info = data))
 }
 
