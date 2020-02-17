@@ -21,10 +21,16 @@ function sign() {
       let detail = `累计: ${result.data.checkin_num}次, 经验: ${result.data.exp}, 金币: ${result.data.gold}, 积分: ${result.data.point}`
       $notification.post(title, subTitle, detail)
     }
+    // 登录失效
+    else if (result && result.data && result.error_code == 99) {
+      let subTitle = `签到结果: 失败`
+      let detail = `说明: 登录失效, 请重新获取Cookie`
+      $notification.post(title, subTitle, detail)
+    }
     // 签到失败
     else {
       let subTitle = `签到结果: 失败`
-      let detail = `请把日志中的输出反馈到Github`
+      let detail = `编码: ${result.error_code}, 说明: ${result.error_msg}`
       $notification.post(title, subTitle, detail)
     }
     console.log(`${cookieName}, data: ${data}`)
