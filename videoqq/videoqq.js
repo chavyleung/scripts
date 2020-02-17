@@ -2,10 +2,15 @@ const cookieName = '腾讯视频'
 const cookieKey = 'chavy_cookie_videoqq'
 const authUrlKey = 'chavy_auth_url_videoqq'
 const authHeaderKey = 'chavy_auth_header_videoqq'
+const msignurlKey = 'chavy_msign_url_videoqq'
+const msignheaderKey = 'chavy_msign_header_videoqq'
 const chavy = init()
 let cookieVal = chavy.getdata(cookieKey)
 const authUrlVal = chavy.getdata(authUrlKey)
 const authHeaderVal = chavy.getdata(authHeaderKey)
+const msignurlVal = chavy.getdata(msignurlKey)
+const msignheaderVal = chavy.getdata(msignheaderKey)
+const signinfo = {}
 
 sign()
 
@@ -24,6 +29,7 @@ function sign() {
       respcookie = respcookie.replace(/Domain=(.*?); ?/g, '')
       respcookie = respcookie.replace(/;$/g, '')
       if (result.errcode == 0) {
+        let setcookies = []
         for (setcookie of respcookie.split(';')) {
           const setcookieKey = setcookie.split('=')[0]
           const setcookieVal = setcookie.split('=')[1]
@@ -32,17 +38,22 @@ function sign() {
           } else {
             cookieVal += `; ${setcookieKey}=${setcookieVal}`
           }
+          setcookies.push({ key: setcookieKey, val: setcookieVal })
           // chavy.log(`${cookieName}, auth_refresh - set-cookie: ${setcookieKey} = ${setcookieVal}`)
         }
         for (resultcookie in result) {
           if (cookieVal.indexOf(resultcookie) >= 0) {
             cookieVal = cookieVal.replace(new RegExp(`${resultcookie}=[^;]*`, 'g'), `${resultcookie}=${result[resultcookie]}`)
+            setcookies.push({ key: resultcookie, val: result[resultcookie] })
             // chavy.log(`${cookieName}, auth_refresh - ret-cookie: ${resultcookie} = ${result[resultcookie]}`)
           }
         }
         // chavy.log(`${cookieName}, auth_refresh - new-cookie: ${cookieVal}`)
+        // chavy.log(`${cookieName}, auth_refresh - setcookies: ${JSON.stringify(setcookies)}`)
         chavy.setdata(cookieVal, cookieKey)
         signapp()
+        signmobile(setcookies)
+        chavy.done()
       }
     })
   } else {
@@ -78,7 +89,54 @@ function signapp() {
       chavy.msg(title, subTitle, detail)
     }
   })
-  chavy.done()
+  // chavy.done()
+}
+
+function signmobile(cookies) {
+  if (msignheaderVal) {
+    let msignheaderObj = JSON.parse(msignheaderVal)
+    let msignCookies = msignheaderObj.Cookie
+    // chavy.log(`${cookieName} updatemobile old-cookie: ${msignCookies}`)
+    for (c of cookies) {
+      if (msignCookies.indexOf(c.key) >= 0) {
+        msignCookies = msignCookies.replace(new RegExp(`${c.key}=[^;]*`, 'g'), `${c.key}=${c.val}`)
+      }
+    }
+    // chavy.log(`${cookieName} updatemobile new-cookie: ${msignCookies}`)
+    msignheaderObj.Cookie = msignCookies
+
+    const url = { url: msignurlVal, headers: msignheaderObj }
+    chavy.get(url, (error, response, data) => {
+      const dmatch = data.match(/window\.__STATE__=(.*?)<\/script>/)
+      let result = {}
+      result.msg = '未知'
+      result.ret = -9999
+      if (dmatch) {
+        try {
+          result = JSON.parse(dmatch[1]).payloads.execCheck
+        } catch (e) {
+          chavy.log(`${cookieName} catch - error: ${e}`)
+        }
+      }
+      const title = `${cookieName} (移动端)`
+      let subtitle = ``
+      let detail = ``
+      if (result.ret == -9999) {
+        // chavy.log(`${cookieName} updatemobile data: ${data}`)
+        subtitle = `签到结果: 失败`
+        detail = `说明: 未知`
+      } else {
+        if (result.ret == 0) {
+          subtitle = `签到结果: 成功`
+          if (result.data && result.data.show_text_1) detail = `说明: ${result.data.show_text_1}`
+          else detail = `说明: ${result.msg}`
+        } else if (result.ret == -2021) {
+          subtitle = `签到结果: 成功（重复签到）`
+        }
+      }
+      chavy.msg(title, subtitle, detail)
+    })
+  }
 }
 
 function getexp(signresult) {

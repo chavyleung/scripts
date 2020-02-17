@@ -2,6 +2,8 @@ const cookieName = '腾讯视频'
 const cookieKey = 'chavy_cookie_videoqq'
 const authUrlKey = 'chavy_auth_url_videoqq'
 const authHeaderKey = 'chavy_auth_header_videoqq'
+const msignurlKey = 'chavy_msign_url_videoqq'
+const msignheaderKey = 'chavy_msign_header_videoqq'
 const chavy = init()
 
 const cookieVal = $request.headers['Cookie']
@@ -16,6 +18,14 @@ if (cookieVal) {
     chavy.log(`[${cookieName}] 获取Cookie: 成功, Cookie: ${cookieVal}`)
     chavy.log(`[${cookieName}] 获取Cookie: 成功, AuthUrl: ${authurl}`)
     chavy.log(`[${cookieName}] 获取Cookie: 成功, AuthHeader: ${authHeader}`)
+  } else if ($request.url.indexOf('mobile_checkin') > 0) {
+    const msignurl = $request.url
+    const msignheader = JSON.stringify($request.headers)
+    if (msignurl) chavy.setdata(msignurl, msignurlKey)
+    if (msignheader) chavy.setdata(msignheader, msignheaderKey)
+    chavy.msg(`${cookieName}`, '获取Cookie: 成功', '')
+    chavy.log(`[${cookieName}] 获取Cookie: 成功, msignurl: ${msignurl}`)
+    chavy.log(`[${cookieName}] 获取Cookie: 成功, msignheader: ${msignheader}`)
   } else {
     chavy.setdata(cookieVal, cookieKey)
     chavy.setdata(``, authUrlKey)
