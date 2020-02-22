@@ -17,9 +17,7 @@ function sign() {
   const url = { url: signurlVal, headers: JSON.parse(signheaderVal), body: signBodyVal }
   chavy.post(url, (error, response, data) => {
     chavy.log(`${cookieName}, data: ${data}`)
-    const result = JSON.parse(
-      `{\"code\":0,\"msg\":\"操作成功\",\"data\":[{\"activityId\":100219,\"errorCode\":0,\"signInAwardRecords\":[{\"type\":4,\"info\":\"{\\\"amount\\\":206,\\\"id\\\":137735,\\\"manual\\\":false,\\\"type\\\":\\\"cash\\\"}\"},{\"type\":1,\"info\":\"{\\\"amount\\\":25.0,\\\"condition\\\":\\\"满200元可用\\\",\\\"name\\\":\\\"签到酒店首单券\\\",\\\"isMoney\\\":false,\\\"id\\\":137742,\\\"type\\\":\\\"coupon\\\",\\\"manual\\\":true,\\\"couponId\\\":\\\"0c7a0ebe5a\\\",\\\"personaId\\\":980}\"},{\"type\":1,\"info\":\"{\\\"amount\\\":4.0,\\\"condition\\\":\\\"满49元可用\\\",\\\"name\\\":\\\"签到美食券\\\",\\\"isMoney\\\":false,\\\"id\\\":137743,\\\"type\\\":\\\"coupon\\\",\\\"manual\\\":true,\\\"couponId\\\":\\\"6afa6cc079\\\",\\\"personaId\\\":110509}\"}],\"circleSignTimes\":1,\"circleSize\":7,\"firstSignDay\":true,\"success\":true,\"lastDayInCircle\":false}]}`
-    )
+    const result = JSON.parse(data)
     let subTitle = ``
     let detail = ``
     if (result.code == 0) {
