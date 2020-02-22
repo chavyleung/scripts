@@ -14,7 +14,7 @@ if ($request && $request.method != 'OPTIONS' && requrl.match(/\/evolve\/signin\/
   if (signurlVal) chavy.setdata(signurlVal, signurlKey)
   if (signheaderVal) chavy.setdata(signheaderVal, signheaderKey)
   if (signbodyVal) chavy.setdata(signbodyVal, signbodyKey)
-  title = chavy.msg(cookieName, `获取Cookie: 成功`, ``)
+  chavy.msg(cookieName, `获取Cookie: 成功`, ``)
 }
 
 function init() {
