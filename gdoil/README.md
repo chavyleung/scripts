@@ -2,14 +2,16 @@
 
 > 代码已同时兼容 Surge & QuanX, 使用同一份签到脚本即可
 
+> 2020.2.28 更新域名: gdws.nsenz.com > m.gdoil.cn
+
 ## 配置 (Surge)
 
 ```properties
 [MITM]
-gdws.nsenz.com
+m.gdoil.cn
 
 [Script]
-http-request ^https:\/\/gdws.nsenz.com\/webapi\/usersign\/addusersign script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/gdoil/gdoil.cookie.js
+http-request ^https:\/\/m.gdoil.cn\/webapi\/usersign\/addusersign script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/gdoil/gdoil.cookie.js
 cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/gdoil/gdoil.js
 ```
 
@@ -17,10 +19,10 @@ cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scr
 
 ```properties
 [MITM]
-gdws.nsenz.com
+m.gdoil.cn
 
 [rewrite_local]
-^https:\/\/gdws.nsenz.com\/webapi\/usersign\/addusersign url script-request-header gdoil.cookie.js
+^https:\/\/m.gdoil.cn\/webapi\/usersign\/addusersign url script-request-header gdoil.cookie.js
 
 [task_local]
 1 0 * * * gdoil.js
@@ -28,7 +30,7 @@ gdws.nsenz.com
 
 ## 说明
 
-1. 先把`gdws.nsenz.com`加到`[MITM]`
+1. 先把`m.gdoil.cn`加到`[MITM]`
 2. 再配置重写规则:
    - Surge: 把两条远程脚本放到`[Script]`
    - QuanX: 把`gdoil.cookie.js`和`gdoil.js`传到`On My iPhone - Quantumult X - Scripts` (传到 iCloud 相同目录也可, 注意要打开 quanx 的 iCloud 开关)
