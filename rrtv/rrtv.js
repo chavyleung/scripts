@@ -14,7 +14,7 @@ let VAL_signcookie = chavy.getdata(KEY_signcookie)
     await answerquestion()
     await getquestion()
   }
-  await openbox('copperbox', '铅宝箱', 'simpleBody=nUuymDQ/BcC2Q6QH21Tjww23J7qtVaDlUN17k1/KY%2BXGDsRVwDRJ8YfjAMraptIL%0D%0A4t2g56kUpDGFsn9z6%2BofyiL5QwfBYZBZOTw9stNt9mc%3D')
+  await openbox('copperbox', '铜宝箱', 'simpleBody=nUuymDQ/BcC2Q6QH21Tjww23J7qtVaDlUN17k1/KY%2BXGDsRVwDRJ8YfjAMraptIL%0D%0A4t2g56kUpDGFsn9z6%2BofyiL5QwfBYZBZOTw9stNt9mc%3D')
   await openbox('silverbox', '银宝箱', 'simpleBody=nUuymDQ/BcC2Q6QH21Tjww23J7qtVaDlUN17k1/KY%2BXGDsRVwDRJ8YfjAMraptIL%0D%0ADPPhFllL7eBnJs52RODWxxe9rquyWdYcDcbyirN6KiE%3D')
   await openbox('goldenbox', '金宝箱', 'simpleBody=3abxJMn7LwEdH8u1Xpe2qN6AtFpDhBrmviLyoU%2BunKwnS1IGS7DIfS0HiKtt03G0%0D%0A/zVCARFyXUFFrOxLRrgAS4m/u4BiQYWJzTUeUqLAFZk%3D')
   await getinfo()
