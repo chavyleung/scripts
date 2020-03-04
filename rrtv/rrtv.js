@@ -14,6 +14,9 @@ let VAL_signcookie = chavy.getdata(KEY_signcookie)
     await answerquestion()
     await getquestion()
   }
+  await openbox('copperbox', '铅宝箱', 'simpleBody=nUuymDQ/BcC2Q6QH21Tjww23J7qtVaDlUN17k1/KY%2BXGDsRVwDRJ8YfjAMraptIL%0D%0A4t2g56kUpDGFsn9z6%2BofyiL5QwfBYZBZOTw9stNt9mc%3D')
+  await openbox('silverbox', '银宝箱', 'simpleBody=nUuymDQ/BcC2Q6QH21Tjww23J7qtVaDlUN17k1/KY%2BXGDsRVwDRJ8YfjAMraptIL%0D%0ADPPhFllL7eBnJs52RODWxxe9rquyWdYcDcbyirN6KiE%3D')
+  await openbox('goldenbox', '金宝箱', 'simpleBody=3abxJMn7LwEdH8u1Xpe2qN6AtFpDhBrmviLyoU%2BunKwnS1IGS7DIfS0HiKtt03G0%0D%0A/zVCARFyXUFFrOxLRrgAS4m/u4BiQYWJzTUeUqLAFZk%3D')
   await getinfo()
   await showmsg()
 })().catch((e) => chavy.log(`❌ ${cookieName} 签到失败: ${e}`))
@@ -163,12 +166,40 @@ function answerquestion() {
     url.headers['User-Agent'] = 'Mozilla/5.0 (iPhone; CPU iPhone OS 13_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 App/RRSPApp platform/iPhone AppVersion/4.3.5'
     chavy.post(url, (error, response, data) => {
       try {
-        chavy.log(`❕ ${cookieName} answerquestion: ${data}`)
         signinfo.answerquestion = JSON.parse(data)
         resolve()
       } catch (e) {
         chavy.msg(cookieName, `获取问题: 失败`, `说明: ${e}`)
         chavy.log(`❌ ${cookieName} getquestion - 获取问题失败: ${e}`)
+        chavy.log(`❌ ${cookieName} getquestion - response: ${JSON.stringify(response)}`)
+        resolve()
+      }
+    })
+  })
+}
+
+function openbox(boxcode, boxname, body) {
+  return new Promise((resolve, reject) => {
+    let url = { url: `https://api.rr.tv/v3plus/taskCenter/openBox`, headers: { token: VAL_signcookie } }
+    url.body = body
+    url.headers['Accept'] = `*/*`
+    url.headers['Accept-Encoding'] = `gzip, deflate, br`
+    url.headers['Accept-Language'] = `zh-Hans-CN;q=1, en-US;q=0.9`
+    url.headers['Connection'] = `keep-alive`
+    url.headers['Content-Type'] = `application/x-www-form-urlencoded`
+    url.headers['Host'] = `api.rr.tv`
+    url.headers['User-Agent'] = `PUClient/4.3.6 (iPhone; iOS 13.3.1; Scale/2.00)`
+    url.headers['clientType'] = `ios_rrsp_jzsp`
+    url.headers['clientVersion'] = `4.3.6`
+    url.headers['deviceMode'] = `iPhone 8`
+    url.headers['p'] = `iOS`
+    chavy.post(url, (error, response, data) => {
+      try {
+        signinfo[boxcode] = JSON.parse(data)
+        resolve()
+      } catch (e) {
+        chavy.msg(cookieName, `打开${boxname}: 失败`, `说明: ${e}`)
+        chavy.log(`❌ ${cookieName} getquestion - 打开${boxname}失败: ${e}`)
         chavy.log(`❌ ${cookieName} getquestion - response: ${JSON.stringify(response)}`)
         resolve()
       }
@@ -203,7 +234,7 @@ function showmsg() {
 
   if (signinfo.userinfo.code == '0000') {
     const levelStr = signinfo.userinfo.data.user.levelStr ? ` (${signinfo.userinfo.data.user.levelStr})` : ``
-    detail = `等级: ${signinfo.userinfo.data.user.level}${levelStr}, 积分: ${signinfo.userinfo.data.user.score}`
+    detail = `等级: ${signinfo.userinfo.data.user.level}${levelStr}, 银币: ${signinfo.userinfo.data.user.silverCount}`
   } else {
     detail = `编码: ${signinfo.userinfo.code}, 说明: ${signinfo.userinfo.msg}`
   }
@@ -215,9 +246,33 @@ function showmsg() {
     if (signinfo.selectId) {
       detail += `\n最佳回答: ${signinfo.answeropt.optionStr}`
       detail += `\n我的回答: ${signinfo.questionopts[signinfo.selectId].optionStr}`
-      detail += `${signinfo.isRight ? '✅' : '❌'}`
+      detail += `${signinfo.isRight ? '✅' : '❌'}\n`
     } else {
-      detail += `\n最佳回答: ${signinfo.answeropt.optionStr}`
+      detail += `\n最佳回答: ${signinfo.answeropt.optionStr}\n`
+    }
+  }
+
+  if (signinfo.copperbox) {
+    if (signinfo.copperbox.code == '0000') {
+      for (box of signinfo.copperbox.data.boxs) detail += `\n铜宝箱: ${box.rewardName} (+${box.rewardNum})`
+    } else {
+      detail += `\n铜宝箱: ${signinfo.copperbox.msg}`
+    }
+  }
+
+  if (signinfo.silverbox) {
+    if (signinfo.silverbox.code == '0000') {
+      for (box of signinfo.silverbox.data.boxs) detail += `\n银宝箱: ${box.rewardName} (+${box.rewardNum})`
+    } else {
+      detail += `\n银宝箱: ${signinfo.silverbox.msg}`
+    }
+  }
+
+  if (signinfo.goldenbox) {
+    if (signinfo.goldenbox.code == '0000') {
+      for (box of signinfo.goldenbox.data.boxs) detail += `\n金宝箱: ${box.rewardName} (+${box.rewardNum})`
+    } else {
+      detail += `\n金宝箱: ${signinfo.goldenbox.msg}`
     }
   }
   chavy.msg(cookieName, subTitle, detail)
