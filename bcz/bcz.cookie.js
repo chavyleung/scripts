@@ -1,16 +1,16 @@
-const cookieName = '百词斩领取铜板'
-const cookieKey = 'cookie_tb'
-const shareKey = `share_key`
+const cookieName = '百词斩'
+const cookieKey = 'senku_cookie_bcz'
+const shareKey = 'senku_key_bcz'
 const senku = init()
 
 if (this.$request && this.$request.headers) {
   const cookieVal = $request.headers['Cookie']
-   const url = $request.url
-   const index1 = url.indexOf('=')
-   const index2 = url.indexOf('&')
-   const shareVal = url.substring(index1+1,index2)
-  if (cookieVal&&shareVal) {
-    if (senku.setdata(cookieVal,cookieKey)&&senku.setdata(shareVal,shareKey)) {
+  const url = $request.url
+  const index1 = url.indexOf('=')
+  const index2 = url.indexOf('&')
+  const shareVal = url.substring(index1 + 1, index2)
+  if (cookieVal && shareVal) {
+    if (senku.setdata(cookieVal, cookieKey) && senku.setdata(shareVal, shareKey)) {
       senku.msg(`${cookieName}`, '获取Cookie: 成功', '')
       senku.log(`[${cookieName}] 获取Cookie: 成功, cookie: ${cookieVal}`)
     }

@@ -1,9 +1,12 @@
 # 百词斩
-> 参考chavy签到脚本制作的百词斩领取铜板的脚本
+
+> 参考 chavy 签到脚本制作的百词斩领取铜板的脚本
 
 > 代码已同时兼容 Surge & QuanX, 使用同一份签到脚本即可
 
 > 不需要手动编辑脚本 (获取 Cookie 和手机号码都由脚本自动完成)
+
+> 感谢 [@AGentleWind](https://github.com/AGentleWind) PR
 
 ## 配置 (Surge)
 
@@ -40,7 +43,7 @@ group.baicizhan.com
 2. 再配置重写规则:
    - Surge: 把两条远程脚本放到`[Script]`
    - QuanX: 把`bcz.cookie.js`和`bcz.js`传到`On My iPhone - Quantumult X - Scripts` (传到 iCloud 相同目录也可, 注意要打开 quanx 的 iCloud 开关)
-3. 打开 APP 手动签到一次: 访问下右下角 `我` > `我的铜板` > `加入百词斩小班` > `去查看` > `我的小班进去 领铜板` 
+3. 打开 APP 手动签到一次: 访问下右下角 `我` > `我的铜板` > `加入百词斩小班` > `去查看` > `我的小班进去 领铜板`
 4. 系统提示: `获取Cookie: 成功`
 5. 最后就可以把第 1 条脚本注释掉了
 
@@ -98,4 +101,4 @@ group.baicizhan.com
 
 [@ConnersHua](https://github.com/ConnersHua)
 
-[@sazs34](https://github.com/sazs34/)
+[@AGentleWind](https://github.com/AGentleWind)
