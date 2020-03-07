@@ -4,6 +4,8 @@
 
 > QuanX 需要: v1.0.6-build195 及以后版本 (TestFlight)
 
+> 感谢 [@GideonSenku](https://github.com/GideonSenku) PR
+
 ## 配置 (Surge)
 
 ```properties
