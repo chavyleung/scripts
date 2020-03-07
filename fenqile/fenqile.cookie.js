@@ -5,10 +5,13 @@ const signbodyKey = 'senku_signbody_fenqile'
 const senku = init()
 
 const requrl = $request.url
-if ($request && $request.method != 'OPTIONS' && requrl.match(/\/route0014\/star\/signin/)) {
+if ($request && $request.method != 'OPTIONS') {
   const signurlVal = requrl
   const signheaderVal = JSON.stringify($request.headers)
   const signbodyVal = $request.body
+  senku.log(`signurlVal:${signurlVal}`)
+  senku.log(`signheaderVal:${signheaderVal}`)
+  senku.log(`signbodyVal:${signbodyVal}`)
   if (signurlVal) senku.setdata(signurlVal, signurlKey)
   if (signheaderVal) senku.setdata(signheaderVal, signheaderKey)
   if (signbodyVal) senku.setdata(signbodyVal, signbodyKey)
