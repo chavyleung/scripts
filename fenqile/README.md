@@ -1,55 +1,53 @@
-# 百词斩
-
-> 参考 chavy 签到脚本制作的百词斩领取铜板的脚本
+# 美团
 
 > 代码已同时兼容 Surge & QuanX, 使用同一份签到脚本即可
 
-> 不需要手动编辑脚本 (获取 Cookie 和手机号码都由脚本自动完成)
-
-> 感谢 [@GideonSenku](https://github.com/GideonSenku) PR
+> QuanX 需要: v1.0.6-build195 及以后版本 (TestFlight)
 
 ## 配置 (Surge)
 
 ```properties
 [MITM]
-group.baicizhan.com
+pm.m.fenqile.com
 
 [Script]
-http-request ^https://group\.baicizhan\.com/group/rewards? script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/bcz/bcz.cookie.js
+http-request ^https:\/\/pm.m.fenqile.com\/route0014\/star\/sign script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/fenqile/fenqile.cookie.js, requires-body=true
 
-cron "0 8-24/4 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/bcz/bcz.js
+cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/fenqile/fenqile.js
 ```
 
 ## 配置 (QuanX)
 
 ```properties
 [MITM]
-group.baicizhan.com
+pm.m.fenqile.com
 
 [rewrite_local]
-# 190及以后版本
-^https://group\.baicizhan\.com/group/rewards? url script-request-header bcz.cookie.js
+
+# [商店版] QuanX v1.0.6-build194 及更早版本
+# 不支持
+
+# [TestFlight] QuanX v1.0.6-build195 及以后版本
+^https://pm\.m\.fenqile\.com/route0014/star/sign/ url script-request-body https://raw.githubusercontent.com/chavyleung/scripts/master/fenqile/fenqile.cookie.js
 
 [task_local]
-0 8-24/4 * * * bcz.js
+1 0 * * * fenqile.js
 ```
 
 ## 说明
 
-> 先在登录成功后, 再打开获取 Cookie 的脚本
-
-1. 先配置`[MITM]`
-   - Surge&QuanX: group.baicizhan.com
+1. 先把`pm.m.fenqile.com`加到`[MITM]`
 2. 再配置重写规则:
    - Surge: 把两条远程脚本放到`[Script]`
-   - QuanX: 把`bcz.cookie.js`和`bcz.js`传到`On My iPhone - Quantumult X - Scripts` (传到 iCloud 相同目录也可, 注意要打开 quanx 的 iCloud 开关)
-3. 打开 APP 手动签到一次: 访问下右下角 `我` > `我的铜板` > `加入百词斩小班` > `去查看` > `我的小班进去 领铜板`
+   - QuanX: 把`fenqile.cookie.js`和`fenqile.js`传到`On My iPhone - Quantumult X - Scripts` (传到 iCloud 相同目录也可, 注意要打开 quanx 的 iCloud 开关)
+3. 打开 APP 手动签到一次: 访问下右下角 `我的` > `乐星` > `签到` 
 4. 系统提示: `获取Cookie: 成功`
-5. 最后就可以把第 1 条脚本注释掉了
+5. 把获取 Cookie 的脚本注释掉
+6. 运行一次脚本, 如果提示重复签到, 那就算成功了!
 
 > 第 1 条脚本是用来获取 cookie 的, 用浏览器访问一次获取 cookie 成功后就可以删掉或注释掉了, 但请确保在`登录成功`后再获取 cookie.
 
-> 第 2 条脚本是签到脚本, 每天`8-24点每4小时`执行一次.
+> 第 2 条脚本是签到脚本, 每天`00:00:10`执行一次.
 
 ## 常见问题
 
