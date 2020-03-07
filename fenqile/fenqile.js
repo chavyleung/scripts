@@ -1,4 +1,4 @@
-const cookieName = '美团'
+const cookieName = '分期乐'
 const signurlKey = 'senku_signurl_fenqile'
 const signheaderKey = 'senku_signheader_fenqile'
 const signbodyKey = 'senku_signbody_fenqile'

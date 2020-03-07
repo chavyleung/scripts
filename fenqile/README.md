@@ -1,4 +1,4 @@
-# 美团
+# 分期乐
 
 > 代码已同时兼容 Surge & QuanX, 使用同一份签到脚本即可
 
@@ -40,7 +40,7 @@ pm.m.fenqile.com
 2. 再配置重写规则:
    - Surge: 把两条远程脚本放到`[Script]`
    - QuanX: 把`fenqile.cookie.js`和`fenqile.js`传到`On My iPhone - Quantumult X - Scripts` (传到 iCloud 相同目录也可, 注意要打开 quanx 的 iCloud 开关)
-3. 打开 APP 手动签到一次: 访问下右下角 `我的` > `乐星` > `签到` 
+3. 打开 APP 手动签到一次: 访问下右下角 `我的` > `乐星` > `签到`
 4. 系统提示: `获取Cookie: 成功`
 5. 把获取 Cookie 的脚本注释掉
 6. 运行一次脚本, 如果提示重复签到, 那就算成功了!
