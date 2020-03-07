@@ -13,7 +13,7 @@
 pm.m.fenqile.com
 
 [Script]
-http-request ^https:\/\/pm.m.fenqile.com\/route0014\/star\/sign script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/fenqile/fenqile.cookie.js, requires-body=true
+http-request ^https://pm\.m\.fenqile\.com/route0014/star/sign/ script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/fenqile/fenqile.cookie.js, requires-body=true
 
 cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/fenqile/fenqile.js
 ```
