@@ -1,21 +1,28 @@
-const cookieName = '百词斩'
-const cookieKey = 'senku_cookie_bcz'
-const shareKey = 'senku_key_bcz'
-const senku = init()
+const chavy = init()
+const cookieName = '叮咚买菜'
+const KEY_homeurl = 'chavy_home_url_mcdd'
+const KEY_homeheader = 'chavy_home_header_mcdd'
 
-if (this.$request && this.$request.headers) {
-  const cookieVal = $request.headers['Cookie']
-  const url = $request.url
-  const index1 = url.indexOf('=')
-  const index2 = url.indexOf('&')
-  const shareVal = url.substring(index1 + 1, index2)
-  if (cookieVal && shareVal) {
-    if (senku.setdata(cookieVal, cookieKey) && senku.setdata(shareVal, shareKey)) {
-      senku.msg(`${cookieName}`, '获取Cookie: 成功', '')
-      senku.log(`[${cookieName}] 获取Cookie: 成功, cookie: ${cookieVal}`)
+if ($request && $request.method != 'OPTIONS') {
+  try {
+    chavy.log(`🔔 ${cookieName} 开始获取: Cookies`)
+    const VAL_homeurl = $request.url
+    const VAL_homeheader = JSON.stringify($request.headers)
+    if (VAL_homeurl) {
+      chavy.setdata(VAL_homeurl, KEY_homeurl)
+      chavy.log(`❕ ${cookieName} VAL_homeurl: ${VAL_homeurl}`)
     }
+    if (VAL_homeheader) {
+      chavy.setdata(VAL_homeheader, KEY_homeheader)
+      chavy.log(`❕ ${cookieName} VAL_homeheader: ${VAL_homeheader}`)
+    }
+    chavy.msg(cookieName, `获取Cookie: 成功`, ``)
+  } catch (e) {
+    chavy.msg(cookieName, `获取Cookie: 失败`, e)
+    chavy.log(`❌ ${cookieName} 获取Cookie: 失败: ${e}`)
   }
 }
+
 function init() {
   isSurge = () => {
     return undefined === this.$httpClient ? false : true
@@ -59,4 +66,4 @@ function init() {
   }
   return { isSurge, isQuanX, msg, log, getdata, setdata, get, post, done }
 }
-senku.done()
+chavy.done()

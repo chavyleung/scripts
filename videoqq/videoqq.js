@@ -19,8 +19,10 @@ let VAL_mh5signheader = chavy.getdata(KEY_mh5signheader)
   await signapp()
   await getexp()
   await signmh5()
-  await getpricelist()
-  await getprice()
+  if (signinfo.signmh5.ret != -2011) {
+    await getpricelist()
+    await getprice()
+  }
   await showmsg()
 })().catch((e) => chavy.log(`❌ ${cookieName} 签到失败: ${e}`))
 
@@ -222,7 +224,7 @@ function showmsg() {
         subTitle = `签到结果: 失败`
         detail = `编码: ${signinfo.signmh5.ret}, 说明: ${signinfo.signmh5.msg}`
       }
-      chavy.msg(`${cookieName} (移动端)`, subTitle, detail)
+      if (signinfo.signmh5.ret != -2011) chavy.msg(`${cookieName} (移动端)`, subTitle, detail)
     }
 
     // 会员抽奖

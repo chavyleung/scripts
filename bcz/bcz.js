@@ -1,47 +1,41 @@
-const cookieName = '百词斩领取铜板'
-const cookieKey = 'cookie_tb'
-const shareKey = `share_key`
+const cookieName = '百词斩'
+const cookieKey = 'senku_cookie_bcz'
+const shareKey = 'senku_key_bcz'
 const senku = init()
 const cookieVal = senku.getdata(cookieKey)
 const shareVal = senku.getdata(shareKey)
 
-let signinfo = {}   //signinfo 对象初始化
+let signinfo = {}
 senku.log()
 check()
-// ^https?://app\.xiaoyuan\.ccb\.com/channelManage/outbreak/addOutbreak  Cookie: cookieVal
 function check(cb) {
-    const url = { url: `https://group.baicizhan.com/group/apply_reward`, headers: { Cookie: cookieVal } }
-    url.headers['Content-Type'] = `text/plain;charset=utf-8`
-    url.headers['User-Agent'] = `Mozilla/5.0 (iPhone; CPU iPhone OS 13_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 MicroMessenger/7.0.10(0x17000a21) NetType/4G Language/zh_CN`
-    const key = {share_key:shareVal}
-    url.body = JSON.stringify(key)
-    senku.log(url.body)
-    senku.post(url, (error, response, data) => {
-      signinfo = JSON.parse(data)
-
-      senku.log(JSON.stringify(signinfo))
-
-      const title = `${cookieName}`
-      let subTitle = ``
-      let detail = ''
-      if (signinfo.code == 1) {
-        if (signinfo.data.is_new) {
-          subTitle += `成功`
-          detail = `获取铜板数${signinfo.data.reward[2]}`
-        }
-        else {
-          subTitle += `失败(重复签到)`
-        }
+  const url = { url: `https://group.baicizhan.com/group/apply_reward`, headers: { Cookie: cookieVal } }
+  url.headers['Content-Type'] = `text/plain;charset=utf-8`
+  url.headers['User-Agent'] = `Mozilla/5.0 (iPhone; CPU iPhone OS 13_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 MicroMessenger/7.0.10(0x17000a21) NetType/4G Language/zh_CN`
+  const key = { share_key: shareVal }
+  url.body = JSON.stringify(key)
+  senku.log(url.body)
+  senku.post(url, (error, response, data) => {
+    signinfo = JSON.parse(data)
+    senku.log(JSON.stringify(signinfo))
+    const title = `${cookieName}`
+    let subTitle = ``
+    let detail = ''
+    if (signinfo.code == 1) {
+      if (signinfo.data.is_new) {
+        subTitle += `成功`
+        detail = `获取铜板数${signinfo.data.reward[2]}`
+      } else {
+        subTitle += `失败(重复签到)`
       }
-      else {
-        detail = `状态: ${signinfo.message}`
-        subTitle += '失败'
-      }
-      senku.msg(title, subTitle, detail)
-      senku.done()
-    })
+    } else {
+      detail = `状态: ${signinfo.message}`
+      subTitle += '失败'
+    }
+    senku.msg(title, subTitle, detail)
+    senku.done()
+  })
 }
-
 
 function init() {
   isSurge = () => {
