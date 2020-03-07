@@ -1,4 +1,4 @@
-# 分期乐
+# 美团
 
 > 代码已同时兼容 Surge & QuanX, 使用同一份签到脚本即可
 
@@ -12,6 +12,7 @@ pm.m.fenqile.com
 
 [Script]
 http-request ^https:\/\/pm.m.fenqile.com\/route0014\/star\/sign script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/fenqile/fenqile.cookie.js, requires-body=true
+
 cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/fenqile/fenqile.js
 ```
 
@@ -27,14 +28,15 @@ pm.m.fenqile.com
 # 不支持
 
 # [TestFlight] QuanX v1.0.6-build195 及以后版本
-^https:\/\/pm.m.fenqile.com\/route0014\/star\/sign url script-request-body fenqile.coolie.js
+^https://pm\.m\.fenqile\.com/route0014/star/sign/ url script-request-body https://raw.githubusercontent.com/chavyleung/scripts/master/fenqile/fenqile.cookie.js
+
 [task_local]
 1 0 * * * fenqile.js
 ```
 
 ## 说明
 
-1. 先把`i.fenqile.com`加到`[MITM]`
+1. 先把`pm.m.fenqile.com`加到`[MITM]`
 2. 再配置重写规则:
    - Surge: 把两条远程脚本放到`[Script]`
    - QuanX: 把`fenqile.cookie.js`和`fenqile.js`传到`On My iPhone - Quantumult X - Scripts` (传到 iCloud 相同目录也可, 注意要打开 quanx 的 iCloud 开关)
@@ -91,6 +93,10 @@ pm.m.fenqile.com
 
 ## 感谢
 
+[@NobyDa](https://github.com/NobyDa)
+
 [@lhie1](https://github.com/lhie1)
 
-[@chavyleung](https://github.com/chavyleung)
+[@ConnersHua](https://github.com/ConnersHua)
+
+[@GideonSenku](https://github.com/GideonSenku)

@@ -6,7 +6,7 @@
 
 > 不需要手动编辑脚本 (获取 Cookie 和手机号码都由脚本自动完成)
 
-> 感谢 [@AGentleWind](https://github.com/AGentleWind) PR
+> 感谢 [@GideonSenku](https://github.com/GideonSenku) PR
 
 ## 配置 (Surge)
 
@@ -101,4 +101,4 @@ group.baicizhan.com
 
 [@ConnersHua](https://github.com/ConnersHua)
 
-[@AGentleWind](https://github.com/AGentleWind)
+[@GideonSenku](https://github.com/GideonSenku)
