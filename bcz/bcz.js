@@ -26,10 +26,10 @@ function check(cb) {
         subTitle += `成功`
         detail = `获取铜板数${signinfo.data.reward[2]}`
       } else {
-        subTitle += `失败(重复签到)`
+        subTitle += `今天的铜板已经领取,但是单词还是可以继续背的`
       }
     } else {
-      detail = `状态: ${signinfo.message}`
+      detail = `状态: 还玩手机？快去背单词`
       subTitle += '失败'
     }
     senku.msg(title, subTitle, detail)
