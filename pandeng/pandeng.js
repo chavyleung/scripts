@@ -1,4 +1,4 @@
-const cookieName = '攀登读书'
+const cookieName = '樊登读书'
 const signurlKey = 'senku_signurl_pandeng'
 const signheaderKey = 'senku_signheader_pandeng'
 const signbodyKey = 'senku_signbody_pandeng'
