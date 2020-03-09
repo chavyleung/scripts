@@ -37,7 +37,7 @@ wxprdapplet.gac-nio.com
 2. 再配置重写规则:
    - Surge: 把两条远程脚本放到`[Script]`
    - QuanX: 把`hycan.js`传到`On My iPhone - Quantumult X - Scripts` (传到 iCloud 相同目录也可, 注意要打开 quanx 的 iCloud 开关)
-3. 打开 APP 然后手动签到 1 次, 系统提示: `获取Cookie: 成功`
+3. 打开 APP[HYCAN合创](https://apps.apple.com/cn/app/hycan%E5%90%88%E5%88%9B-%E5%B9%BF%E6%B1%BD%E8%94%9A%E6%9D%A5/id1464838502) 然后手动签到 1 次, 系统提示: `获取Cookie: 成功`
 4. 最后就可以把第 1 条脚本注释掉了
 5. 运行一次脚本, 如果提示重复签到, 那就算成功了!
 
