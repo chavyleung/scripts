@@ -2,6 +2,7 @@
 
 > 代码已同时兼容 Surge & QuanX, 使用同一份签到脚本即可
 > 感谢 [@barry](https://t.me/barrymchen) 编写
+> 
 > 感谢 [@GideonSenku](https://github.com/GideonSenku) 对代码优化
 
 ## 配置 (Surge)
@@ -11,7 +12,7 @@
 daojia.jd.com
 
 [Script]
-http-request ^https:\/\/daojia\.jd\.com\/client? script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/jddj/jddj.cookie.js, requires-body=true
+^https:\/\/daojia.jd.com/client(.*?)functionId=signin(.*?)userSigninNewscript-path=https://raw.githubusercontent.com/chavyleung/scripts/master/jddj/jddj.cookie.js, requires-body=true
 
 cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/jddj/jddj.js
 ```
@@ -28,7 +29,7 @@ daojia.jd.com
 # ^https:\/\/daojia\.jd\.com\/client? url script-request-header jddj.cookie.js
 
 # [TestFlight] QuanX v1.0.6-build195 及以后版本
-^https:\/\/daojia\.jd\.com\/client? url script-request-body https://raw.githubusercontent.com/chavyleung/scripts/master/jddj/jddj.cookie.js
+^https:\/\/daojia.jd.com/client(.*?)functionId=signin(.*?)userSigninNew url script-request-body https://raw.githubusercontent.com/chavyleung/scripts/master/jddj/jddj.cookie.js
 
 [task_local]
 1 0 * * * jddj.js

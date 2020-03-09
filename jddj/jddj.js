@@ -16,14 +16,13 @@ function sign() {
       if (res.success&&res.result.points) {
         subTitle = `签到结果:成功`
         detail = `获取鲜豆：${res.result.points}`
-      } else if(res.success==false){
+      } else if(!res.success){
         subTitle = `签到结果: 重复签到`
         detail = `说明: ${res.msg}`
       }
       chen.msg(title, subTitle, detail)
     })
-    chen.done()
-    }
+  }
 
   function init() {
     isSurge = () => {
