@@ -1,7 +1,7 @@
 # HYCAN合创
 
 > 代码已同时兼容 Surge & QuanX, 使用同一份签到脚本即可
-
+> 感谢 [@danchaw](https://github.com/danchaw) PR
 ## 配置 (Surge)
 
 ```properties
@@ -22,7 +22,7 @@ wxprdapplet.gac-nio.com
 [rewrite_local]
 
 # [商店版] QuanX v1.0.6-build194 及更早版本
-# 不支持
+# ^https:\/\/wxprdapplet\.gac-nio\.com\/community\/userSignIn\/simpleAuth\/front\/v3\.1\.3\.5\/signV2$ url script-request-header hycan.cookie.js
 
 # [TestFlight] QuanX v1.0.6-build195 及以后版本
 ^https:\/\/wxprdapplet\.gac-nio\.com\/community\/userSignIn\/simpleAuth\/front\/v3\.1\.3\.5\/signV2$ url script-request-header https://raw.githubusercontent.com/chavyleung/scripts/master/hycan/hycan.cookie.js
@@ -95,4 +95,4 @@ wxprdapplet.gac-nio.com
 
 [@ConnersHua](https://github.com/ConnersHua)
 
-[@Chavy](https://github.com/chavyleung)
+[@danchaw](https://github.com/danchaw)
