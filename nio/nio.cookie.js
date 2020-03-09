@@ -3,7 +3,7 @@ const signurlKey = 'signurl_nextevcar'
 const signheaderKey = 'signheader_nextevcar'
 const nextevcar = init()
 
-if ($request && $request.method != 'OPTIONS') {
+if ($request && $request.method == 'POST') {
   const signurlVal = $request.url
   const signheaderVal = JSON.stringify($request.headers)
   
