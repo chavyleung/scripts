@@ -3,7 +3,7 @@ const signurlKey = 'signurl_hycan'
 const signheaderKey = 'signheader_hycan'
 const hycan = init()
 
-if ($request && $request.method != 'OPTIONS') {
+if ($request && $request.method == 'POST') {
   const signurlVal = $request.url
   const signheaderVal = JSON.stringify($request.headers)
   
