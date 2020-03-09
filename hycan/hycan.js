@@ -9,7 +9,6 @@ sign()
 
 function sign() {
   const url = { url: signurlVal, headers: JSON.parse(signheaderVal) }
-  url.body = '{}'
   hycan.post(url, (error, response, data) => {
     hycan.log(`${cookieName}, data: ${data}`)
     const title = `${cookieName}`
