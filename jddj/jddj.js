@@ -13,7 +13,7 @@ function sign() {
       const title = `${cookieName}`
       let subTitle = ``
       let detail = ``
-      if (res.success) {
+      if (res.success&&res.result.points) {
         subTitle = `签到结果:成功`
         detail = `获取鲜豆：${res.result.points}`
       } else if(res.success==false){
@@ -21,7 +21,6 @@ function sign() {
         detail = `说明: ${res.msg}`
       }
       chen.msg(title, subTitle, detail)
-      chen.log(`${res.totalBalanceAmount}`)
     })
     chen.done()
     }

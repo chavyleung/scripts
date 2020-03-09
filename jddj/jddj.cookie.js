@@ -6,7 +6,7 @@ const requrl = $request.url
 if ($request && $request.method != 'OPTIONS') {
   const signurlVal = requrl
   const signheaderVal = JSON.stringify($request.headers)
-  const flag = requrl.includes('functionId=signin')
+  const flag = requrl.includes('functionId=signinuserSigninNew')
   if (signurlVal&&signheaderVal&&flag) {
     chen.setdata(signurlVal, signurlKey)
     chen.setdata(signheaderVal, signheaderKey)
