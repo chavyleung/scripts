@@ -1,4 +1,4 @@
-const cookieName = '分期乐'
+const cookieName = '全民K歌'
 const signurlKey = 'senku_signurl_qmkg'
 const signheaderKey = 'senku_signheader_qmkg'
 const signbodyKey = 'senku_signbody_qmkg'
