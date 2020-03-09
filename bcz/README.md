@@ -17,7 +17,7 @@ group.baicizhan.com
 [Script]
 http-request ^https://group\.baicizhan\.com/group/rewards? script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/bcz/bcz.cookie.js
 
-cron "0 8-24/4 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/bcz/bcz.js
+cron "0 50 23 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/bcz/bcz.js
 ```
 
 ## 配置 (QuanX)
@@ -31,7 +31,7 @@ group.baicizhan.com
 ^https://group\.baicizhan\.com/group/rewards? url script-request-header bcz.cookie.js
 
 [task_local]
-0 8-24/4 * * * bcz.js
+50 23 * * * bcz.js
 ```
 
 ## 说明
@@ -49,7 +49,8 @@ group.baicizhan.com
 
 > 第 1 条脚本是用来获取 cookie 的, 用浏览器访问一次获取 cookie 成功后就可以删掉或注释掉了, 但请确保在`登录成功`后再获取 cookie.
 
-> 第 2 条脚本是签到脚本, 每天`8-24点每4小时`执行一次.
+> 第 2 条脚本是签到脚本, 每天`23:50`执行一次.
+7. 也可将脚本的cron语法自行更改,如我设置成 `0 */4 * * *` 则每4小时可提醒我背单词
 
 ## 常见问题
 

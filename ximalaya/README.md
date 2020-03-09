@@ -6,6 +6,8 @@
 
 > 2020.1.11 QuanX 在`190`版本开始, 获取 Cookie 方式需要从`script-response-body`改为`script-request-header`
 
+> 2020.3.9 增加自动执行每日`浏览发现页`任务 (更新脚本即可, 无需重新获取 cookike)
+
 ## 配置 (Surge)
 
 ```properties
