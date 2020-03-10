@@ -1,6 +1,7 @@
 # 海底捞
 
 > 代码已同时兼容 Surge & QuanX, 使用同一份签到脚本即可
+
 > 感谢[@danchaw](https://github.com/danchaw) PR
 ## 配置 (Surge)
 
