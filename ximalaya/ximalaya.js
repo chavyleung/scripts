@@ -117,10 +117,10 @@ function showmsg() {
   if (signinfo.info.isTickedToday == false) {
     if (signinfo.signapp == 'true') {
       subTitle = '签到: 成功'
-      detail = `共签: ${signinfo.totalCheckedCounts + 1}天, 积分: ${accinfo.data.score}(+${signinfo.awardAmount})`
+      detail = `共签: ${signinfo.totalCheckedCounts + 1}天, 积分: ${signinfo.acc.data.score}(+${signinfo.info.awardAmount})`
     } else {
       subTitle = '签到: 失败'
-      detail = `说明: ${data}`
+      detail = `说明: ${signinfo.signapp}`
     }
   } else {
     subTitle = `签到: 重复`
