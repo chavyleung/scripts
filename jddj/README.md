@@ -12,7 +12,7 @@
 daojia.jd.com
 
 [Script]
-^https:\/\/daojia.jd.com/client(.*?)functionId=signin(.*?)userSigninNewscript-path=https://raw.githubusercontent.com/chavyleung/scripts/master/jddj/jddj.cookie.js, requires-body=true
+http-request ^https:\/\/daojia.jd.com/client(.*?)functionId=signin(.*?)userSigninNew script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/jddj/jddj.cookie.js
 
 cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/jddj/jddj.js
 ```
@@ -26,7 +26,7 @@ daojia.jd.com
 [rewrite_local]
 
 # [商店版] QuanX v1.0.6-build194 及更早版本
-# ^https:\/\/daojia\.jd\.com\/client? url script-request-header jddj.cookie.js
+# ^https:\/\/daojia.jd.com/client(.*?)functionId=signin(.*?)userSigninNew url script-request-header jddj.cookie.js
 
 # [TestFlight] QuanX v1.0.6-build195 及以后版本
 ^https:\/\/daojia.jd.com/client(.*?)functionId=signin(.*?)userSigninNew url script-request-body https://raw.githubusercontent.com/chavyleung/scripts/master/jddj/jddj.cookie.js
@@ -41,7 +41,7 @@ daojia.jd.com
 2. 再配置重写规则:
    - Surge: 把两条远程脚本放到`[Script]`
    - QuanX: 把`jddj.cookie.js`和`jddj.js`传到`On My iPhone - Quantumult X - Scripts` (传到 iCloud 相同目录也可, 注意要打开 quanx 的 iCloud 开关)
-3. 打开 APP 手动签到一次: `首页` > `签到`
+3. 打开 APP 手动签到一次: `首页` > `签到` 或者 手机浏览器打开`https://daojia.jd.com/html/index.html` 点击签到
 4. 系统提示: `获取Cookie: 成功`
 5. 把获取 Cookie 的脚本注释掉
 6. 运行一次脚本, 如果提示重复签到, 那就算成功了!
