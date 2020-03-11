@@ -43,8 +43,8 @@ daojia.jd.com
    - QuanX: 把`jddj.cookie.js`和`jddj.js`传到`On My iPhone - Quantumult X - Scripts` (传到 iCloud 相同目录也可, 注意要打开 quanx 的 iCloud 开关)
 3. 手机浏览器打开`https://daojia.jd.com/html/index.html` 点击签到
 4. 系统提示: `获取Cookie: 成功`
-5. 把获取 Cookie 的脚本注释掉
-6. 运行一次脚本, 如果提示重复签到, 那就算成功了!
+5. 把获取 Cookie 的脚本注释掉,不用再次运行签到脚本！大概率导致Cookie失效
+6. 测试版远程尝试,获取不到Cookie请采用本地脚本！
 
 > 第 1 条脚本是用来获取 cookie 的, 用浏览器访问一次获取 cookie 成功后就可以删掉或注释掉了, 但请确保在`登录成功`后再获取 cookie.
 
