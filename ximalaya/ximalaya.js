@@ -128,7 +128,7 @@ function showmsg() {
   }
 
   if (signinfo.browseapp) {
-    if (signinfo.browseapp.ret == 0) {
+    if (signinfo.browseapp.ret == 0 && signinfo.browseapp.data && signinfo.browseapp.data.awards) {
       if (signinfo.browseapp.data.awards) subTitle += `, 每日浏览: 成功 (${signinfo.browseapp.data.awards})`
       else subTitle += ', 每日浏览: 重复'
     } else {
