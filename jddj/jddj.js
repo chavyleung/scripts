@@ -1,7 +1,6 @@
 const cookieName ='京东到家'
 const signheaderKey = 'chen_signheader_jddj'
 const chen = init()
-const signurlVal = chen.getdata(signurlKey)
 const signheaderVal = chen.getdata(signheaderKey)
 sign()
 function sign() {
