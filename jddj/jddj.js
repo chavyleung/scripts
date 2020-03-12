@@ -1,12 +1,11 @@
 const cookieName ='京东到家'
-const signurlKey = 'chen_signurl_jddj'
 const signheaderKey = 'chen_signheader_jddj'
 const chen = init()
 const signurlVal = chen.getdata(signurlKey)
 const signheaderVal = chen.getdata(signheaderKey)
 sign()
 function sign() {
-    let url = {url: signurlVal,headers: JSON.parse(signheaderVal)}
+    let url = {url: `https://daojia.jd.com/client?functionId=signin%2FuserSigninNew&body=%7B%7D`,headers: JSON.parse(signheaderVal)}
     chen.get(url, (error, response, data) => {
       chen.log(`${cookieName}, data: ${data}`)
       let res = JSON.parse(data)
@@ -19,6 +18,9 @@ function sign() {
       } else if(!res.success&&res.code==202){
         subTitle = `签到结果: 失败`
         detail = `说明: ${res.msg}`
+      }
+      else if (!res.success&&res.code==-1){
+        subTitle = `签到成功,请勿重复操作`
       }
       else{
         subTitle = `未知错误,截图日志`

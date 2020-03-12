@@ -1,15 +1,9 @@
 const cookieName = '京东到家'
-const signurlKey = 'chen_signurl_jddj'
 const signheaderKey = 'chen_signheader_jddj'
 const chen = init()
-const requrl = $request.url
   if (this.$request) {
-    const signurlVal = requrl
     const signheaderVal = JSON.stringify($request.headers)
-    chen.log(`URL:${signurlVal}`)
-    const flag = requrl.includes('userSigninNew')
-    if (flag) {
-      chen.setdata(signurlVal, signurlKey)
+    if (signheaderVal) {
       chen.setdata(signheaderVal, signheaderKey)
       chen.msg(cookieName, `获取Cookie: 成功`, ``)
     }
