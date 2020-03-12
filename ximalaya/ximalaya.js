@@ -117,7 +117,7 @@ function showmsg() {
   if (signinfo.info.isTickedToday == false) {
     if (signinfo.signapp == 'true') {
       subTitle = '签到: 成功'
-      detail = `共签: ${signinfo.totalCheckedCounts + 1}天, 积分: ${signinfo.acc.data.score}(+${signinfo.info.awardAmount})`
+      detail = `共签: ${signinfo.info.totalCheckedCounts + 1}天, 积分: ${signinfo.acc.data.score}(+${signinfo.info.awardAmount})`
     } else {
       subTitle = '签到: 失败'
       detail = `说明: ${signinfo.signapp}`
