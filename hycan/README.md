@@ -21,14 +21,19 @@ wxprdapplet.gac-nio.com
 
 [rewrite_local]
 
-# [商店版] QuanX v1.0.6-build194 及更早版本
-# ^https:\/\/wxprdapplet\.gac-nio\.com\/community\/userSignIn\/simpleAuth\/front\/v3\.1\.3\.5\/signV2$ url script-request-header hycan.cookie.js
+# [商店版]
+^https:\/\/wxprdapplet\.gac-nio\.com\/community\/userSignIn\/simpleAuth\/front\/v3\.1\.3\.5\/signV2$ url script-request-header hycan.cookie.js
 
-# [TestFlight] QuanX v1.0.6-build195 及以后版本
+# [TestFlight]
 ^https:\/\/wxprdapplet\.gac-nio\.com\/community\/userSignIn\/simpleAuth\/front\/v3\.1\.3\.5\/signV2$ url script-request-header https://raw.githubusercontent.com/chavyleung/scripts/master/hycan/hycan.cookie.js
 
 [task_local]
+
+# [商店版]
 1 0 * * * hycan.js
+
+# [TestFlight]
+1 0 * * * https://raw.githubusercontent.com/chavyleung/scripts/master/hycan/hycan.js
 ```
 
 ## 说明
