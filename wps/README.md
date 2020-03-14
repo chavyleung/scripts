@@ -9,7 +9,6 @@
 hostname = zt.wps.cn
 
 [Script]
-# 注意获取Cookie有两条脚本
 http-request ^https:\/\/zt.wps.cn\/2018\/docer_check_in\/api\/act_list script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/wps/wps.cookie.js
 cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/wps/wps.js
 ```
@@ -21,7 +20,6 @@ cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scr
 hostname = 110.43.90.61, zt.wps.cn
 
 [rewrite_local]
-# 注意获取Cookie有两条脚本
 ^https:\/\/zt.wps.cn\/2018\/docer_check_in\/api\/act_list url script-request-header wps.cookie.js
 
 [task_local]
