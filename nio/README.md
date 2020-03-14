@@ -21,14 +21,19 @@ app.nio.com
 
 [rewrite_local]
 
-# [商店版] QuanX v1.0.6-build194 及更早版本
-# ^https:\/\/app\.nio\.com\/api\/1\/app\/daily_checkin url script-request-header nio.cookie.js
+# [商店版]
+^https:\/\/app\.nio\.com\/api\/1\/app\/daily_checkin url script-request-header nio.cookie.js
 
-# [TestFlight] QuanX v1.0.6-build195 及以后版本
+# [TestFlight]
 ^https:\/\/app\.nio\.com\/api\/1\/app\/daily_checkin url script-request-header https://raw.githubusercontent.com/chavyleung/scripts/master/nio/nio.cookie.js
 
 [task_local]
+
+# [商店版]
 1 0 * * * nio.js
+
+# [TestFlight]
+1 0 * * * https://raw.githubusercontent.com/chavyleung/scripts/master/nio/nio.js
 ```
 
 ## 说明

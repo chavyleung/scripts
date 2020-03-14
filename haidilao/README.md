@@ -22,14 +22,19 @@ activity-1.m.duiba.com.cn
 
 [rewrite_local]
 
-# [商店版] QuanX v1.0.6-build194 及更早版本
-不支持
+# [商店版]
+^https:\/\/activity-1\.m\.duiba\.com\.cn\/signactivity\/doSign$ url script-request-body hdl.js
 
-# [TestFlight] QuanX v1.0.6-build195 及以后版本
+# [TestFlight]
 ^https:\/\/activity-1\.m\.duiba\.com\.cn\/signactivity\/doSign$ url script-request-body https://raw.githubusercontent.com/chavyleung/scripts/master/haidilao/hdl.js
 
 [task_local]
+
+# [商店版]
 1 0 * * * hdl.js
+
+# [TestFlight]
+1 0 * * * https://raw.githubusercontent.com/chavyleung/scripts/master/haidilao/hdl.js
 ```
 
 ## 说明
