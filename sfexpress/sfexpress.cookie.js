@@ -1,12 +1,14 @@
-const cookieName = '顺丰速运'
-const cookieKey = 'chavy_cookie_sfexpress'
 const chavy = init()
-const cookieVal = $request.headers['Cookie']
-if (cookieVal) {
-  if (chavy.setdata(cookieVal, cookieKey)) {
-    chavy.msg(`${cookieName}`, '获取Cookie: 成功', '')
-    chavy.log(`[${cookieName}] 获取Cookie: 成功, cookie: ${cookieVal}`)
-  }
+const cookieName = '顺丰速运'
+const KEY_loginurl = 'chavy_loginurl_sfexpress'
+const KEY_loginheader = 'chavy_loginheader_sfexpress'
+
+if ($request && $request.method != 'OPTIONS') {
+  const VAL_loginurl = $request.url
+  const VAL_loginheader = JSON.stringify($request.headers)
+  if (VAL_loginurl) chavy.setdata(VAL_loginurl, KEY_loginurl)
+  if (VAL_loginheader) chavy.setdata(VAL_loginheader, KEY_loginheader)
+  chavy.msg(cookieName, `获取Cookie: 成功`, ``)
 }
 
 function init() {

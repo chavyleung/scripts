@@ -1,33 +1,30 @@
-# 顺丰速运 (弃坑)
+# 顺丰速运
 
 > 代码已同时兼容 Surge & QuanX, 使用同一份签到脚本即可
 
-> 2020.1.11 QuanX 在`190`版本开始, 获取 Cookie 方式需要从`script-response-body`改为`script-request-header`
-
 > 2020.1.22 据实测顺丰的 Cookie 只能存活 1 天不到，大家先弃坑
+
+> 2020.3.15 恢复顺丰签到 (更新脚本、更新配置、重取 Cookie) (QuanX&Surge、商店&TF 都支持)
 
 ## 配置 (Surge)
 
 ```properties
 [MITM]
-*.weixinjia.net
+hostname = sf-integral-sign-in.weixinjia.net
 
 [Script]
-http-request ^https:\/\/sf\-integral\-sign\-in\.weixinjia\.net\/app\/init script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/sfexpress/sfexpress.cookie.js
-cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/sfexpress/sfexpress.js
+http-request ^https:\/\/sf-integral-sign-in.weixinjia.net\/app\/index script-path=scripts/sfexpress.cookie.js,debug=true
+cron "*/10 * * * * *" script-path=scripts/sfexpress.js,debug=true
 ```
 
 ## 配置 (QuanX)
 
 ```properties
 [MITM]
-*.weixinjia.net
+hostname = sf-integral-sign-in.weixinjia.net
 
 [rewrite_local]
-# 189及以前版本
-^https:\/\/sf\-integral\-sign\-in\.weixinjia\.net\/app\/init url script-response-body sfexpress.cookie.js
-# 190及以后版本
-^https:\/\/sf\-integral\-sign\-in\.weixinjia\.net\/app\/init url script-request-header sfexpress.cookie.js
+^https:\/\/sf-integral-sign-in.weixinjia.net\/app\/index url script-request-header sfexpress.cookie.js
 
 [task_local]
 1 0 * * * sfexpress.js
@@ -35,7 +32,7 @@ cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scr
 
 ## 说明
 
-1. 先把`*.weixinjia.net`加到`[MITM]`
+1. 先把`sf-integral-sign-in.weixinjia.net`加到`[MITM]`
 2. 再配置重写规则:
    - Surge: 把两条远程脚本放到`[Script]`
    - QuanX: 把`sfexpress.cookie.js`和`sfexpress.js`传到`On My iPhone - Quantumult X - Scripts` (传到 iCloud 相同目录也可, 注意要打开 quanx 的 iCloud 开关)
