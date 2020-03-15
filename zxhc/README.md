@@ -1,50 +1,47 @@
-# 七猫小说
+#  智行火车票
 
 > 代码已同时兼容 Surge & QuanX, 使用同一份签到脚本即可
-> 感谢[@danchaw](https://github.com/danchaw) PR
+
+> QuanX 需要: v1.0.6-build195 及以后版本 (TestFlight)
+
+> 感谢 [@GideonSenku](https://github.com/GideonSenku) Commit
+
 ## 配置 (Surge)
 
 ```properties
 [MITM]
-xiaoshuo.qm989.com
+m.ctrip.com
 
 [Script]
-http-request ^https:\/\/xiaoshuo\.qm989\.com script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/qimao/qmnovel.js
-cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/qimao/qmnovel.js
+http-request ^https:\/\/m\.ctrip\.com/restapi/soa2/14593/json/attendanceDay? script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/zxhc/zxhc.cookie.js, requires-body=true
+
+cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/zxhc/zxhc.js
 ```
 
 ## 配置 (QuanX)
 
 ```properties
 [MITM]
-xiaoshuo.qm989.com
+m.ctrip.com
 
 [rewrite_local]
 
-# [商店版]
-^https:\/\/xiaoshuo\.qm989\.com url script-request-header qmnovel.js
-
-# [TestFlight]
-^https:\/\/xiaoshuo\.qm989\.com url script-request-header https://raw.githubusercontent.com/chavyleung/scripts/master/qimao/qmnovel.js
+# QuanTF&QuanX
+^https:\/\/m\.ctrip\.com/restapi/soa2/14593/json/attendanceDay? url script-request-body https://raw.githubusercontent.com/chavyleung/scripts/master/zxhc/zxhc.cookie.js
 
 [task_local]
-
-# [商店版]
-1 0 * * * qmnovel.js
-
-# [TestFlight]
-1 0 * * * https://raw.githubusercontent.com/chavyleung/scripts/master/qimao/qmnovel.js
+1 0 * * * zxhc.js
 ```
 
 ## 说明
 
-1. 先把`xiaoshuo.qm989.com`加到`[MITM]`
+1. 先把`m.ctrip.com`加到`[MITM]`
 2. 再配置重写规则:
    - Surge: 把两条远程脚本放到`[Script]`
-   - QuanX: 把`qmnovel.js`传到`On My iPhone - Quantumult X - Scripts` (传到 iCloud 相同目录也可, 注意要打开 quanx 的 iCloud 开关)
-3. 暂时关闭QX或Surge中的广告屏蔽, 否则无法获取小视频奖励cookie和url
-4. 打开 APP[七猫小说](https://apps.apple.com/cn/app/%E4%B8%83%E7%8C%AB%E5%B0%8F%E8%AF%B4-%E7%9C%8B%E5%B0%8F%E8%AF%B4%E7%94%B5%E5%AD%90%E4%B9%A6%E7%9A%84%E9%98%85%E8%AF%BB%E7%A5%9E%E5%99%A8/id1387717110) 然后到APP内手动日常签到(观看小视频领取奖励)和新手领福利签到以及幸运大转盘 1 次, 系统提示: `首次写入xxxUrl成功🎉,首次写入xxxCookie成功🎉`
-5. 最后就可以把第 1 条脚本注释掉了
+   - QuanX: 把`zxhc.cookie.js`和`zxhc.js`传到`On My iPhone - Quantumult X - Scripts` (传到 iCloud 相同目录也可, 注意要打开 quanx 的 iCloud 开关)
+3. 打开 APP 手动签到一次: 访问下右下角 `个人中心` > `签到`
+4. 系统提示: `获取Cookie: 成功`
+5. 把获取 Cookie 的脚本注释掉
 6. 运行一次脚本, 如果提示重复签到, 那就算成功了!
 
 > 第 1 条脚本是用来获取 cookie 的, 用浏览器访问一次获取 cookie 成功后就可以删掉或注释掉了, 但请确保在`登录成功`后再获取 cookie.
@@ -101,4 +98,4 @@ xiaoshuo.qm989.com
 
 [@ConnersHua](https://github.com/ConnersHua)
 
-[@danchaw](https://github.com/danchaw)
+[@GideonSenku](https://github.com/GideonSenku)
