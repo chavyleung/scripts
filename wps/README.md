@@ -1,50 +1,47 @@
-# HYCAN合创
+# WPS
 
 > 代码已同时兼容 Surge & QuanX, 使用同一份签到脚本即可
-> 感谢 [@danchaw](https://github.com/danchaw) PR
+
+> 2020.3.15 增加小程序签到
+
 ## 配置 (Surge)
 
 ```properties
 [MITM]
-wxprdapplet.gac-nio.com
+hostname = zt.wps.cn
 
 [Script]
-http-request ^https:\/\/wxprdapplet\.gac-nio\.com\/community\/userSignIn\/simpleAuth\/front\/v3\.1\.3\.5\/signV2$ script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/hycan/hycan.cookie.js
-cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/hycan/hycan.js
+http-request ^https:\/\/zt.wps.cn\/2018\/docer_check_in\/api\/act_list script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/wps/wps.cookie.js
+http-request ^https:\/\/zt.wps.cn\/2018\/clock_in\/api\/sign_up script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/wps/wps.cookie.js
+cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/wps/wps.js
 ```
 
 ## 配置 (QuanX)
 
 ```properties
 [MITM]
-wxprdapplet.gac-nio.com
+hostname = 110.43.90.61, zt.wps.cn
 
 [rewrite_local]
-
-# [商店版]
-^https:\/\/wxprdapplet\.gac-nio\.com\/community\/userSignIn\/simpleAuth\/front\/v3\.1\.3\.5\/signV2$ url script-request-header hycan.cookie.js
-
-# [TestFlight]
-^https:\/\/wxprdapplet\.gac-nio\.com\/community\/userSignIn\/simpleAuth\/front\/v3\.1\.3\.5\/signV2$ url script-request-header https://raw.githubusercontent.com/chavyleung/scripts/master/hycan/hycan.cookie.js
+^https:\/\/zt.wps.cn\/2018\/docer_check_in\/api\/act_list url script-request-header wps.cookie.js
+^https:\/\/zt.wps.cn\/2018\/clock_in\/api\/sign_up url script-request-header wps.cookie.js
 
 [task_local]
-
-# [商店版]
-1 0 * * * hycan.js
-
-# [TestFlight]
-1 0 * * * https://raw.githubusercontent.com/chavyleung/scripts/master/hycan/hycan.js
+1 0 * * * wps.js
 ```
 
 ## 说明
 
-1. 先把`wxprdapplet.gac-nio.com`加到`[MITM]`
+1. 配置`[MITM]`
+   - Surge: zt.wps.cn
+   - QuanX: 110.43.90.61, zt.wps.cn
 2. 再配置重写规则:
    - Surge: 把两条远程脚本放到`[Script]`
-   - QuanX: 把`hycan.js`传到`On My iPhone - Quantumult X - Scripts` (传到 iCloud 相同目录也可, 注意要打开 quanx 的 iCloud 开关)
-3. 打开 APP[HYCAN合创](https://apps.apple.com/cn/app/hycan%E5%90%88%E5%88%9B-%E5%B9%BF%E6%B1%BD%E8%94%9A%E6%9D%A5/id1464838502) 然后手动签到 1 次, 系统提示: `获取Cookie: 成功`
-4. 最后就可以把第 1 条脚本注释掉了
-5. 运行一次脚本, 如果提示重复签到, 那就算成功了!
+   - QuanX: 把`wps.cookie.js`和`wps.js`传到`On My iPhone - Quantumult X - Scripts` (传到 iCloud 相同目录也可, 注意要打开 quanx 的 iCloud 开关)
+3. 打开 APP , 进入签到页面, 系统提示: `获取Cookie: 成功 (APP)` (不用手动签到)
+4. 打开 `我的WPS会员` 小程序 , 进入签到页面并手动签到, 系统提示: `获取Cookie: 成功 (小程序)` (手动签到)
+5. 最后就可以把两条获取 Cookie 的脚本注释掉了
+6. 运行一次脚本, 如果提示重复签到, 那就算成功了!
 
 > 第 1 条脚本是用来获取 cookie 的, 用浏览器访问一次获取 cookie 成功后就可以删掉或注释掉了, 但请确保在`登录成功`后再获取 cookie.
 
@@ -99,5 +96,3 @@ wxprdapplet.gac-nio.com
 [@lhie1](https://github.com/lhie1)
 
 [@ConnersHua](https://github.com/ConnersHua)
-
-[@danchaw](https://github.com/danchaw)

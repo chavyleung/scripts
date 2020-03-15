@@ -1,50 +1,50 @@
-# HYCAN合创
+# 苏宁易购
 
 > 代码已同时兼容 Surge & QuanX, 使用同一份签到脚本即可
-> 感谢 [@danchaw](https://github.com/danchaw) PR
+
+> 2020.3.15 目前仅在 QuanX 上测试通过 (但不知 Cookie 能撑多久), Surge 应该是签不上的 (经反馈, Surge 作者会在下一个 TF 版本解决这个问题)
+
 ## 配置 (Surge)
 
 ```properties
 [MITM]
-wxprdapplet.gac-nio.com
+hostname = passport.suning.com, luckman.suning.com, sign.suning.com
 
 [Script]
-http-request ^https:\/\/wxprdapplet\.gac-nio\.com\/community\/userSignIn\/simpleAuth\/front\/v3\.1\.3\.5\/signV2$ script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/hycan/hycan.cookie.js
-cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/hycan/hycan.js
+# 注意有3条获取 Cookie 脚本
+http-request ^https:\/\/passport.suning.com\/ids\/login$ script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/suning/suning.cookie.js, requires-body=true
+http-request ^https:\/\/luckman.suning.com\/luck-web\/sign\/api\/clock_sign.do script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/suning/suning.cookie.js
+http-request ^https:\/\/sign.suning.com\/sign-web\/m\/promotion\/sign\/doSign.do script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/suning/suning.cookie.js
+cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/suning/suning.js
 ```
 
 ## 配置 (QuanX)
 
 ```properties
 [MITM]
-wxprdapplet.gac-nio.com
+hostname = passport.suning.com, luckman.suning.com, sign.suning.com
 
 [rewrite_local]
-
-# [商店版]
-^https:\/\/wxprdapplet\.gac-nio\.com\/community\/userSignIn\/simpleAuth\/front\/v3\.1\.3\.5\/signV2$ url script-request-header hycan.cookie.js
-
-# [TestFlight]
-^https:\/\/wxprdapplet\.gac-nio\.com\/community\/userSignIn\/simpleAuth\/front\/v3\.1\.3\.5\/signV2$ url script-request-header https://raw.githubusercontent.com/chavyleung/scripts/master/hycan/hycan.cookie.js
+# 注意有3条获取 Cookie 脚本
+^https:\/\/passport.suning.com\/ids\/login$ url script-request-body suning.cookie.js
+^https:\/\/luckman.suning.com\/luck-web\/sign\/api\/clock_sign.do url script-request-header suning.cookie.js
+^https:\/\/sign.suning.com\/sign-web\/m\/promotion\/sign\/doSign.do url script-request-header suning.cookie.js
 
 [task_local]
-
-# [商店版]
-1 0 * * * hycan.js
-
-# [TestFlight]
-1 0 * * * https://raw.githubusercontent.com/chavyleung/scripts/master/hycan/hycan.js
+1 0 * * * suning.js
 ```
 
 ## 说明
 
-1. 先把`wxprdapplet.gac-nio.com`加到`[MITM]`
+1. 先把`passport.suning.com, luckman.suning.com, sign.suning.com`加到`[MITM]`
 2. 再配置重写规则:
    - Surge: 把两条远程脚本放到`[Script]`
-   - QuanX: 把`hycan.js`传到`On My iPhone - Quantumult X - Scripts` (传到 iCloud 相同目录也可, 注意要打开 quanx 的 iCloud 开关)
-3. 打开 APP[HYCAN合创](https://apps.apple.com/cn/app/hycan%E5%90%88%E5%88%9B-%E5%B9%BF%E6%B1%BD%E8%94%9A%E6%9D%A5/id1464838502) 然后手动签到 1 次, 系统提示: `获取Cookie: 成功`
-4. 最后就可以把第 1 条脚本注释掉了
-5. 运行一次脚本, 如果提示重复签到, 那就算成功了!
+   - QuanX: 把`suning.cookie.js`和`suning.js`传到`On My iPhone - Quantumult X - Scripts` (传到 iCloud 相同目录也可, 注意要打开 quanx 的 iCloud 开关)
+3. 获取 Cookie:
+   - 打开 APP, 系统提示: `获取Cookie: 成功 (登录链接)`
+   - 进入 `主页` > `签到有礼`, 系统提示: `获取Cookie: 成功 (每日签到)`
+   - 进入 `主页` > `领取红包`, 系统提示: `获取Cookie: 成功 (每日红包)`
+4. 把获取 Cookie 的脚本
 
 > 第 1 条脚本是用来获取 cookie 的, 用浏览器访问一次获取 cookie 成功后就可以删掉或注释掉了, 但请确保在`登录成功`后再获取 cookie.
 
@@ -100,4 +100,4 @@ wxprdapplet.gac-nio.com
 
 [@ConnersHua](https://github.com/ConnersHua)
 
-[@danchaw](https://github.com/danchaw)
+[@Liquor030](https://github.com/Liquor030)
