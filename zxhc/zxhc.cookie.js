@@ -1,4 +1,4 @@
-const cookieName = '分期乐'
+const cookieName = '智行火车'
 const signurlKey = 'senku_signurl_zxhc'
 const signheaderKey = 'senku_signheader_zxhc'
 const signbodyKey = 'senku_signbody_zxhc'
