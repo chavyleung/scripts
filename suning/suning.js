@@ -8,6 +8,10 @@ const KEY_signheader = 'chavy_sign_header_suning'
 const KEY_signweburl = 'chavy_signweb_url_suning'
 const KEY_signweburlBarry = 'snyg_userTokenKey'
 const KEY_signwebheader = 'chavy_signweb_header_suning'
+const KEY_signgameurl = 'chavy_signgame_url_suning'
+const KEY_signgameheader = 'chavy_signgame_header_suning'
+const KEY_signgetgameurl = 'chavy_signgetgame_url_suning'
+const KEY_signgetgameheader = 'chavy_signgetgame_header_suning'
 const KEY_runflag = 'chavy_runflag_suning'
 
 const signinfo = {}
@@ -19,6 +23,10 @@ let VAL_signheader = chavy.getdata(KEY_signheader)
 let VAL_signweburl = chavy.getdata(KEY_signweburl)
 let VAL_signweburlBarry = chavy.getdata(KEY_signweburlBarry)
 let VAL_signwebheader = chavy.getdata(KEY_signwebheader)
+let VAL_signgameurl = chavy.getdata(KEY_signgameurl)
+let VAL_signgameheader = chavy.getdata(KEY_signgameheader)
+let VAL_signgetgameurl = chavy.getdata(KEY_signgetgameurl)
+let VAL_signgetgameheader = chavy.getdata(KEY_signgetgameheader)
 let VAL_runflag = chavy.getdata(KEY_runflag)
 
 ;(sign = async () => {
@@ -27,6 +35,7 @@ let VAL_runflag = chavy.getdata(KEY_runflag)
   if (VAL_signurl) await signapp()
   await getinfo()
   if (VAL_signweburl || VAL_signweburlBarry) await signweb(), await getwebinfo()
+  if (VAL_signgameurl && VAL_signgetgameurl) await signgame(), await getgameinfo()
   showmsg()
 })().catch((e) => chavy.log(`❌ ${cookieName} 签到失败: ${e}`))
 
@@ -55,6 +64,25 @@ function signapp() {
         chavy.msg(cookieName, `签到结果: 失败`, `说明: ${e}`)
         chavy.log(`❌ ${cookieName} signapp - 签到失败: ${e}`)
         chavy.log(`❌ ${cookieName} signapp - response: ${JSON.stringify(response)}`)
+        resolve()
+      }
+    })
+  })
+}
+
+function signgame() {
+  return new Promise((resolve, reject) => {
+    const url = { url: VAL_signgameurl, headers: JSON.parse(VAL_signgameheader) }
+    delete url.headers['Cookie']
+    chavy.get(url, (error, response, data) => {
+      try {
+        chavy.log(`❕ ${cookieName} signgame - response: ${JSON.stringify(response)}`)
+        signinfo.signgame = JSON.parse(data)
+        resolve()
+      } catch (e) {
+        chavy.msg(cookieName, `天天低价: 失败`, `说明: ${e}`)
+        chavy.log(`❌ ${cookieName} signgame - 签到失败: ${e}`)
+        chavy.log(`❌ ${cookieName} signgame - response: ${JSON.stringify(response)}`)
         resolve()
       }
     })
@@ -110,6 +138,25 @@ function getwebinfo() {
         chavy.msg(cookieName, `领红包结果: 失败`, `说明: ${e}`)
         chavy.log(`❌ ${cookieName} getwebinfo - 领红包失败: ${e}`)
         chavy.log(`❌ ${cookieName} getwebinfo - response: ${JSON.stringify(response)}`)
+        resolve()
+      }
+    })
+  })
+}
+
+function getgameinfo() {
+  return new Promise((resolve, reject) => {
+    const url = { url: VAL_signgetgameurl, headers: JSON.parse(VAL_signgetgameheader) }
+    delete url.headers['Cookie']
+    chavy.get(url, (error, response, data) => {
+      try {
+        chavy.log(`❕ ${cookieName} getgameinfo - response: ${JSON.stringify(response)}`)
+        signinfo.gameinfo = JSON.parse(data.match(/\((.*)\)/)[1])
+        resolve()
+      } catch (e) {
+        chavy.msg(cookieName, `查询天天低价: 失败`, `说明: ${e}`)
+        chavy.log(`❌ ${cookieName} getgameinfo - 查询天天低价失败: ${e}`)
+        chavy.log(`❌ ${cookieName} getgameinfo - response: ${JSON.stringify(response)}`)
         resolve()
       }
     })
@@ -176,6 +223,21 @@ function showmsg() {
     chavy.log(`❌ ${cookieName} showmsg - 每日红包 - signweb: ${JSON.stringify(signinfo.signweb)}`)
   }
 
+  subTitle += subTitle == '' ? '' : ', '
+  if (signinfo.signgame && signinfo.signgame.code == '1') {
+    if (signinfo.signgame.data.resultCode == 'SG0000') {
+      subTitle += '低价: 成功'
+    } else if (signinfo.signgame.data.resultCode == 'SG0103') {
+      subTitle += '低价: 重复'
+    } else {
+      subTitle += '低价: 失败'
+      chavy.log(`❌ ${cookieName} showmsg - 每日红包 - signweb: ${JSON.stringify(signinfo.signgame)}`)
+    }
+  } else {
+    subTitle += '红包: 失败'
+    chavy.log(`❌ ${cookieName} showmsg - 每日红包 - signweb: ${JSON.stringify(signinfo.signgame)}`)
+  }
+
   if (signinfo.webinfo && signinfo.webinfo.respData) {
     const currentIndex = signinfo.webinfo.respData.currentIndex
     const detailTreeMap = signinfo.webinfo.respData.detailTreeMap
@@ -189,6 +251,18 @@ function showmsg() {
     }
   } else {
     chavy.log(`❌ ${cookieName} showmsg - 每日红包 - webinfo: ${JSON.stringify(signinfo.webinfo)}`)
+  }
+
+  if (signinfo.signgame && signinfo.gameinfo && signinfo.gameinfo.code == 1) {
+    if (signinfo.gameinfo.data.resultCode == 0000) {
+      moreDetail += moreDetail == '' ? '' : '\n'
+      moreDetail += '\n💰 天天低价: '
+      for (d of signinfo.gameinfo.data.result.datas) moreDetail += `\n${d.obj.couponRuleName} (${d.obj.remainValue}元)`
+    } else {
+      chavy.log(`❌ ${cookieName} showmsg - 天天低价 - gameinfo: ${JSON.stringify(signinfo.gameinfo)}`)
+    }
+  } else {
+    chavy.log(`❌ ${cookieName} showmsg - 天天低价 - gameinfo: ${JSON.stringify(signinfo.gameinfo)}`)
   }
 
   if (moreDetail) detail += `\n查看签到详情\n${moreDetail}`

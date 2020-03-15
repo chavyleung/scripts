@@ -7,6 +7,10 @@ const KEY_signurl = 'chavy_sign_url_suning'
 const KEY_signheader = 'chavy_sign_header_suning'
 const KEY_signweburl = 'chavy_signweb_url_suning'
 const KEY_signwebheader = 'chavy_signweb_header_suning'
+const KEY_signgameurl = 'chavy_signgame_url_suning'
+const KEY_signgameheader = 'chavy_signgame_header_suning'
+const KEY_signgetgameurl = 'chavy_signgetgame_url_suning'
+const KEY_signgetgameheader = 'chavy_signgetgame_header_suning'
 
 if ($request.url.match(/\/ids\/login/)) {
   const VAL_loginurl = $request.url
@@ -35,6 +39,22 @@ if ($request.url.match(/\/ids\/login/)) {
   chavy.msg(`${cookieName}`, '获取Cookie: 成功 (每日红包)', '')
   chavy.log(`❕ ${cookieName} 获取Cookie: 成功, VAL_signweburl: ${VAL_signweburl}`)
   chavy.log(`❕ ${cookieName} 获取Cookie: 成功, VAL_signwebheader: ${VAL_signwebheader}`)
+} else if ($request.url.match(/customerSignOperation.do/)) {
+  const VAL_signgameurl = $request.url
+  const VAL_signgameheader = JSON.stringify($request.headers)
+  if (VAL_signgameurl) chavy.setdata(VAL_signgameurl, KEY_signgameurl)
+  if (VAL_signgameheader) chavy.setdata(VAL_signgameheader, KEY_signgameheader)
+  chavy.msg(`${cookieName}`, '获取Cookie: 成功 (天天低价)', '')
+  chavy.log(`❕ ${cookieName} 获取Cookie: 成功, VAL_signgameurl: ${VAL_signgameurl}`)
+  chavy.log(`❕ ${cookieName} 获取Cookie: 成功, VAL_signgameheader: ${VAL_signgameheader}`)
+} else if ($request.url.match(/queryPrize.do/)) {
+  const VAL_signgetgameurl = $request.url
+  const VAL_signgetgameheader = JSON.stringify($request.headers)
+  if (VAL_signgetgameurl) chavy.setdata(VAL_signgetgameurl, KEY_signgetgameurl)
+  if (VAL_signgetgameheader) chavy.setdata(VAL_signgetgameheader, KEY_signgetgameheader)
+  chavy.msg(`${cookieName}`, '获取Cookie: 成功 (查询天天低价)', '')
+  chavy.log(`❕ ${cookieName} 获取Cookie: 成功, VAL_signgetgameurl: ${VAL_signgetgameurl}`)
+  chavy.log(`❕ ${cookieName} 获取Cookie: 成功, VAL_signgetgameheader: ${VAL_signgetgameheader}`)
 }
 
 function init() {

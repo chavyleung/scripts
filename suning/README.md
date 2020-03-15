@@ -4,14 +4,16 @@
 
 > 有一定动手及排查问题能力的同学先上车
 
+> 2020.3.15 增加天天低价, 注意更新`mitm`和`rewrite`并进入天天低价获取两次 Cookie
+
 ## 配置 (Surge)
 
 ```properties
 [MITM]
-hostname = passport.suning.com, luckman.suning.com, sign.suning.com
+hostname = passport.suning.com, luckman.suning.com, sign.suning.com, gameapi.suning.com
 
 [Script]
-# 注意有3条获取 Cookie 脚本
+# 注意有4条获取 Cookie 脚本
 http-request ^https:\/\/passport.suning.com\/ids\/login$ script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/suning/suning.cookie.js, requires-body=true
 http-request ^https:\/\/luckman.suning.com\/luck-web\/sign\/api\/clock_sign.do script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/suning/suning.cookie.js
 http-request ^https:\/\/sign.suning.com\/sign-web\/m\/promotion\/sign\/doSign.do script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/suning/suning.cookie.js
@@ -22,13 +24,14 @@ cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scr
 
 ```properties
 [MITM]
-hostname = passport.suning.com, luckman.suning.com, sign.suning.com
+hostname = passport.suning.com, luckman.suning.com, sign.suning.com, gameapi.suning.com
 
 [rewrite_local]
-# 注意有3条获取 Cookie 脚本
+# 注意有4条获取 Cookie 脚本
 ^https:\/\/passport.suning.com\/ids\/login$ url script-request-body suning.cookie.js
 ^https:\/\/luckman.suning.com\/luck-web\/sign\/api\/clock_sign.do url script-request-header suning.cookie.js
 ^https:\/\/sign.suning.com\/sign-web\/m\/promotion\/sign\/doSign.do url script-request-header suning.cookie.js
+^https:\/\/gameapi.suning.com\/sngame-web\/(api\/signin\/private\/customerSignOperation.do|gateway\/api\/queryPrize.do) url script-request-header suning.cookie.js
 
 [task_local]
 1 0 * * * suning.js
@@ -36,7 +39,7 @@ hostname = passport.suning.com, luckman.suning.com, sign.suning.com
 
 ## 说明
 
-1. 先把`passport.suning.com, luckman.suning.com, sign.suning.com`加到`[MITM]`
+1. 先把`passport.suning.com, luckman.suning.com, sign.suning.com, gameapi.suning.com`加到`[MITM]`
 2. 再配置重写规则:
    - Surge: 把两条远程脚本放到`[Script]`
    - QuanX: 把`suning.cookie.js`和`suning.js`传到`On My iPhone - Quantumult X - Scripts` (传到 iCloud 相同目录也可, 注意要打开 quanx 的 iCloud 开关)
@@ -44,6 +47,7 @@ hostname = passport.suning.com, luckman.suning.com, sign.suning.com
    - 【必要】打开 APP, 系统提示: `获取Cookie: 成功 (登录链接)`
    - 【可选】进入 `主页` > `签到有礼`, 系统提示: `获取Cookie: 成功 (每日签到)`
    - 【可选】进入 `主页` > `领取红包`, 系统提示: `获取Cookie: 成功 (每日红包)` (如果找不到领取红包，尝试卸载苏宁重新安装) 兼容之前 @barrymchen 写的 snyg.js 如果之前有用这个脚本获取过 Cookie 那不用重新取
+   - 【可选】进入 `主页` > `天天低价`, 系统提示: `获取Cookie: 成功 (天天低价)`、`获取Cookie: 成功 (查询天天低价)`
 4. 把获取 Cookie 的脚本注释或删掉
 
 > 第 1 条脚本是用来获取 cookie 的, 用浏览器访问一次获取 cookie 成功后就可以删掉或注释掉了, 但请确保在`登录成功`后再获取 cookie.
