@@ -2,16 +2,27 @@ const chavy = init()
 const cookieName = 'WPS'
 const KEY_signhomeurl = 'chavy_signhomeurl_wps'
 const KEY_signhomeheader = 'chavy_signhomeheader_wps'
+const KEY_signwxurl = 'chavy_signwxurl_wps'
+const KEY_signwxheader = 'chavy_signwxheader_wps'
 
 const signinfo = {}
 let VAL_signhomeurl = chavy.getdata(KEY_signhomeurl)
 let VAL_signhomeheader = chavy.getdata(KEY_signhomeheader)
+let VAL_signwxurl = chavy.getdata(KEY_signwxurl)
+let VAL_signwxheader = chavy.getdata(KEY_signwxheader)
 
 ;(sign = async () => {
   chavy.log(`🔔 ${cookieName}`)
   await gethome()
   await signapp()
   await getinfo()
+  if (VAL_signwxurl) {
+    await getwxinfo()
+    if (signinfo.is_sign_up == 0) {
+      await signwxapp()
+      await getwxinfo()
+    }
+  }
   await getreward()
   showmsg()
 })().catch((e) => chavy.log(`❌ ${cookieName} 签到失败: ${e}`))
@@ -21,7 +32,6 @@ function gethome() {
     const url = { url: VAL_signhomeurl, headers: JSON.parse(VAL_signhomeheader) }
     chavy.get(url, (error, response, data) => {
       try {
-        chavy.log(`❕ ${cookieName} gethome - response: ${JSON.stringify(response)}`)
         signinfo.homeinfo = JSON.parse(data)
         resolve()
       } catch (e) {
@@ -61,6 +71,23 @@ function signapp() {
   })
 }
 
+function signwxapp() {
+  return new Promise((resolve, reject) => {
+    const url = { url: VAL_signwxurl, headers: JSON.parse(VAL_signwxheader) }
+    chavy.get(url, (error, response, data) => {
+      try {
+        signinfo.signwxapp = JSON.parse(data)
+        resolve()
+      } catch (e) {
+        chavy.msg(cookieName, `小程序签到结果: 失败`, `说明: ${e}`)
+        chavy.log(`❌ ${cookieName} signwxapp - 小程序签到失败: ${e}`)
+        chavy.log(`❌ ${cookieName} signwxapp - response: ${JSON.stringify(response)}`)
+        resolve()
+      }
+    })
+  })
+}
+
 function getinfo() {
   return new Promise((resolve, reject) => {
     const VAL_getinfourl = `https://zt.wps.cn/2018/docer_check_in/api/checkin_record`
@@ -81,6 +108,27 @@ function getinfo() {
         chavy.msg(cookieName, `获取结果: 失败`, `说明: ${e}`)
         chavy.log(`❌ ${cookieName} getinfo - 获取结果失败: ${e}`)
         chavy.log(`❌ ${cookieName} getinfo - response: ${JSON.stringify(response)}`)
+        resolve()
+      }
+    })
+  })
+}
+
+function getwxinfo() {
+  return new Promise((resolve, reject) => {
+    const VAL_getwxinfourl = `https://zt.wps.cn/2018/clock_in/api/get_data?member=wps`
+    const url = { url: VAL_getwxinfourl, headers: JSON.parse(VAL_signwxheader) }
+
+    chavy.get(url, (error, response, data) => {
+      try {
+        const wxinfo = JSON.parse(data)
+        if (!signinfo.wxinfo) signinfo.is_sign_up = wxinfo.is_sign_up
+        signinfo.wxinfo = wxinfo
+        resolve()
+      } catch (e) {
+        chavy.msg(cookieName, `获取小程序结果: 失败`, `说明: ${e}`)
+        chavy.log(`❌ ${cookieName} getwxinfo - 获取小程序结果失败: ${e}`)
+        chavy.log(`❌ ${cookieName} getwxinfo - response: ${JSON.stringify(response)}`)
         resolve()
       }
     })
@@ -117,16 +165,27 @@ function showmsg() {
   let subTitle = ''
   let detail = ''
   if (signinfo.signapp && signinfo.signapp.result == 'ok') {
-    subTitle = `签到结果: 成功`
+    subTitle = `日常签到: 成功`
     // detail = `获得金币${result.data.coin}, 金豆${result.data.flow}`
   } else if (signinfo.signapp && signinfo.signapp.result == 'error' && signinfo.signapp.msg == 'recheckin') {
-    subTitle = `签到结果: 重复`
+    subTitle = `日常签到: 重复`
     // detail = `说明: ${result.data.msg}`
   } else {
-    subTitle = `签到结果: 失败`
+    subTitle = `日常签到: 失败`
     detail = `详见日志`
     chavy.log(`❌ ${cookieName} showmsg - homeinfo: ${JSON.stringify(signinfo.homeinfo)}`)
     chavy.log(`❌ ${cookieName} showmsg - signapp: ${JSON.stringify(signinfo.signapp)}`)
+  }
+
+  if (signinfo.wxinfo) {
+    subTitle += subTitle == '' ? '' : '; '
+    if (signinfo.is_sign_up == 0 && signinfo.signwxapp && signinfo.signwxapp.result == 'ok') subTitle += `小程序: 成功`
+    else if (signinfo.is_sign_up == 1) subTitle += `小程序: 重复`
+    else {
+      subTitle += `小程序: 失败`
+      chavy.log(`❌ ${cookieName} showmsg - wxinfo: ${JSON.stringify(signinfo.wxinfo)}`)
+      chavy.log(`❌ ${cookieName} showmsg - signwxapp: ${JSON.stringify(signinfo.signwxapp)}`)
+    }
   }
 
   if (signinfo.homeinfo && signinfo.signapp && signinfo.info && signinfo.homeinfo.data[0]) {

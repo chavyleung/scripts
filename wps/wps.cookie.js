@@ -2,13 +2,21 @@ const chavy = init()
 const cookieName = 'WPS'
 const KEY_signhomeurl = 'chavy_signhomeurl_wps'
 const KEY_signhomeheader = 'chavy_signhomeheader_wps'
+const KEY_signwxurl = 'chavy_signwxurl_wps'
+const KEY_signwxheader = 'chavy_signwxheader_wps'
 
-if ($request && $request.method != 'OPTIONS') {
+if ($request && $request.method != 'OPTIONS' && $request.url.match(/act_list/)) {
   const VAL_signhomeurl = $request.url
   const VAL_signhomeheader = JSON.stringify($request.headers)
   if (VAL_signhomeurl) chavy.setdata(VAL_signhomeurl, KEY_signhomeurl)
   if (VAL_signhomeheader) chavy.setdata(VAL_signhomeheader, KEY_signhomeheader)
-  chavy.msg(cookieName, `获取Cookie: 成功`, ``)
+  chavy.msg(cookieName, `获取Cookie: 成功 (APP)`, ``)
+} else if ($request && $request.method != 'OPTIONS' && $request.url.match(/sign_up/)) {
+  const VAL_signwxurl = $request.url
+  const VAL_signwxheader = JSON.stringify($request.headers)
+  if (VAL_signwxurl) chavy.setdata(VAL_signwxurl, KEY_signwxurl)
+  if (VAL_signwxheader) chavy.setdata(VAL_signwxheader, KEY_signwxheader)
+  chavy.msg(cookieName, `获取Cookie: 成功 (小程序)`, ``)
 }
 
 function init() {
