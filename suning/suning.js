@@ -231,11 +231,11 @@ function showmsg() {
       subTitle += '低价: 重复'
     } else {
       subTitle += '低价: 失败'
-      chavy.log(`❌ ${cookieName} showmsg - 每日红包 - signweb: ${JSON.stringify(signinfo.signgame)}`)
+      chavy.log(`❌ ${cookieName} showmsg - 每日红包 - signgame: ${JSON.stringify(signinfo.signgame)}`)
     }
   } else {
-    subTitle += '红包: 失败'
-    chavy.log(`❌ ${cookieName} showmsg - 每日红包 - signweb: ${JSON.stringify(signinfo.signgame)}`)
+    subTitle += '低价: 失败'
+    chavy.log(`❌ ${cookieName} showmsg - 每日红包 - signgame: ${JSON.stringify(signinfo.signgame)}`)
   }
 
   if (signinfo.webinfo && signinfo.webinfo.respData) {
