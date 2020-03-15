@@ -6,7 +6,9 @@ const KEY_loginheader = 'chavy_login_header_suning'
 const KEY_signurl = 'chavy_sign_url_suning'
 const KEY_signheader = 'chavy_sign_header_suning'
 const KEY_signweburl = 'chavy_signweb_url_suning'
+const KEY_signweburlBarry = 'snyg_userTokenKey'
 const KEY_signwebheader = 'chavy_signweb_header_suning'
+const KEY_runflag = 'chavy_runflag_suning'
 
 const signinfo = {}
 let VAL_loginurl = chavy.getdata(KEY_loginurl)
@@ -15,22 +17,25 @@ let VAL_loginheader = chavy.getdata(KEY_loginheader)
 let VAL_signurl = chavy.getdata(KEY_signurl)
 let VAL_signheader = chavy.getdata(KEY_signheader)
 let VAL_signweburl = chavy.getdata(KEY_signweburl)
+let VAL_signweburlBarry = chavy.getdata(KEY_signweburlBarry)
 let VAL_signwebheader = chavy.getdata(KEY_signwebheader)
+let VAL_runflag = chavy.getdata(KEY_runflag)
 
 ;(sign = async () => {
   chavy.log(`🔔 ${cookieName}`)
   await loginapp()
   if (VAL_signurl) await signapp()
-  if (VAL_signweburl) await signweb()
   await getinfo()
-  await getwebinfo()
+  if (VAL_signweburl || VAL_signweburlBarry) await signweb(), await getwebinfo()
   showmsg()
 })().catch((e) => chavy.log(`❌ ${cookieName} 签到失败: ${e}`))
 
 function loginapp() {
   return new Promise((resolve, reject) => {
     const url = { url: VAL_loginurl, body: VAL_loginbody, headers: JSON.parse(VAL_loginheader) }
-    url.headers['Cookie'] = null
+    // chavy.log(`❕ ${cookieName} loginapp - VAL_runflag: ${VAL_runflag}`)
+    // if (VAL_runflag) delete url.headers['Cookie']
+    // else chavy.setdata('true', KEY_runflag)
     chavy.post(url, (error, response, data) => {
       resolve()
     })
@@ -58,8 +63,22 @@ function signapp() {
 
 function signweb() {
   return new Promise((resolve, reject) => {
-    const url = { url: VAL_signweburl, headers: JSON.parse(VAL_signwebheader) }
-    delete url.headers['Cookie']
+    let url = null
+    if (VAL_signweburl) {
+      url = { url: VAL_signweburl, headers: JSON.parse(VAL_signwebheader) }
+      delete url.headers['Cookie']
+    } else if (VAL_signweburlBarry) {
+      url = { url: VAL_signweburlBarry, headers: {} }
+      url.headers['Cookie'] = chavy.getdata('snyg_userCookieKey')
+      url.headers['Accept'] = 'application/json'
+      url.headers['Accept-Encoding'] = 'gzip, deflate, br'
+      url.headers['Connection'] = 'keep-alive'
+      url.headers['Referer'] = 'https://luckman.suning.com/luck-web/sign/app/index_sign.htm?wx_navbar_transparent=true'
+      url.headers['Host'] = 'luckman.suning.com'
+      url.headers['User-Agent'] = chavy.getdata('snyg_userAgentKey')
+      url.headers['Accept-Language'] = 'en-us'
+      url.headers['X-Requested-With'] = 'XMLHttpRequest'
+    }
     chavy.get(url, (error, response, data) => {
       try {
         chavy.log(`❕ ${cookieName} signweb - response: ${JSON.stringify(response)}`)
@@ -122,22 +141,21 @@ function showmsg() {
   let detail = ''
   let moreDetail = ''
   if (signinfo.signapp && signinfo.signapp.code == '1') {
-    if (signinfo.signapp.data.todayFirstSignFlag == true) {
-      subTitle = '签到: 成功'
-    } else {
-      subTitle = '签到: 重复'
-    }
+    if (signinfo.signapp.data.todayFirstSignFlag == true) subTitle = '签到: 成功'
+    else subTitle = '签到: 重复'
     for (myinfo of signinfo.info.data) {
       detail += detail == '' ? '总共: ' : ', '
       detail += myinfo.showLabel
     }
-    detail += `, 说明: 还有${signinfo.signapp.data.remainingPoint}云钻待领取`
-    const prizeLists = signinfo.signapp.data.prizeLists
-    const customerDays = signinfo.signapp.data.customerDays
-    const prize = prizeLists[customerDays - 1]
-    moreDetail += moreDetail == '' ? '' : '\n'
-    moreDetail += '\n💎 每日签到: '
-    for (res of prize) moreDetail += `\n${res.prizeName}: ${res.prizeContent}`
+    if (signinfo.signapp.data.prizeLists) {
+      detail += `, 说明: 还有${signinfo.signapp.data.remainingPoint}云钻待领取`
+      const prizeLists = signinfo.signapp.data.prizeLists
+      const customerDays = signinfo.signapp.data.customerDays
+      const prize = prizeLists[customerDays - 1]
+      moreDetail += moreDetail == '' ? '' : '\n'
+      moreDetail += '\n💎 每日签到: '
+      for (res of prize) moreDetail += `\n${res.prizeName}: ${res.prizeContent}`
+    }
   } else {
     subTitle = '签到: 失败'
     chavy.log(`❌ ${cookieName} showmsg - 每日签到: ${JSON.stringify(signinfo.signapp)}`)
