@@ -10,15 +10,16 @@
 
 > 2020.3.6 移动端每个用户仅可签两周，签到活动结果后，移动端签到不再弹通知
 
+> 2020.3.16 移动端签到活动已结束
+
 ## 配置 (Surge)
 
 ```properties
 [MITM]
-*.video.qq.com, v.qq.com
+*.video.qq.com
 
 [Script]
 http-request ^https:\/\/access.video.qq.com\/user\/auth_refresh script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/videoqq/videoqq.cookie.js
-http-request ^https?:\/\/v.qq.com\/x\/bu\/mobile_checkin script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/videoqq/videoqq.cookie.js
 cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/videoqq/videoqq.js
 ```
 
@@ -26,11 +27,10 @@ cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scr
 
 ```properties
 [MITM]
-*.video.qq.com, v.qq.com
+*.video.qq.com
 
 [rewrite_local]
 ^https:\/\/access.video.qq.com\/user\/auth_refresh url script-request-header videoqq.cookie.js
-^https?:\/\/v.qq.com\/x\/bu\/mobile_checkin url script-request-header videoqq.cookie.js
 
 [task_local]
 1 0 * * * videoqq.js
