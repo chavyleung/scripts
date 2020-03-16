@@ -24,19 +24,19 @@ function sign() {
   chavy.get(url, (error, response, data) => {
     let result = JSON.parse(data)
     let title = `${cookieName} 银瓜子转硬币`
-    // 签到成功
+    // 兑换成功
     if (result && result.code == 0) {
       let subTitle = `${result.message}`
       let detail = `成功兑换: ${result.data.coin} 个硬币\n当前银瓜子: ${result.data.silver} , 当前金瓜子: ${result.data.gold}`
       chavy.msg(title, subTitle, detail)
     }
-    // 签到重复
+    // 兑换中止（重复兑换&银瓜子不足）
     else if (result && result.code == 403) {
       let subTitle = `未成功兑换`
       let detail = `${result.message}`
       chavy.msg(title, subTitle, detail)
     }
-    // 签到失败
+    // 兑换失败
     else {
       let subTitle = `兑换失败`
       let detail = `说明: ${result.message}`
