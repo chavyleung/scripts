@@ -104,4 +104,4 @@ cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scr
 
 [@ConnersHua](https://github.com/ConnersHua)
 
-[silver2coin@lcandy2](https://github.com/lcandy2)
+[@lcandy2](https://github.com/lcandy2)
