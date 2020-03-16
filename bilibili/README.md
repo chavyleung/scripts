@@ -6,7 +6,7 @@
 
 > 2020.1.11 QuanX 在`190`版本开始, 获取 Cookie 方式需要从`script-response-body`改为`script-request-header`
 
-> 2020.3.16 添加银瓜子转硬币脚本
+> 2020.3.16 添加银瓜子转硬币脚本 感谢[@lcandy2](https://github.com/lcandy2) PR
 
 ## 配置 (Surge)
 
