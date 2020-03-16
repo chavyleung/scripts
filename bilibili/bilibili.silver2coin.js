@@ -1,7 +1,3 @@
-/*
-by @lcandy2 forked from chavyleung
-compatible with bilibili.cookie.js
-*/
 const cookieName = 'bilibili'
 const cookieKey = 'chavy_cookie_bilibili'
 const chavy = init()
