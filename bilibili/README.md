@@ -6,6 +6,8 @@
 
 > 2020.1.11 QuanX 在`190`版本开始, 获取 Cookie 方式需要从`script-response-body`改为`script-request-header`
 
+> 2020.3.16 添加银瓜子转硬币脚本
+
 ## 配置 (Surge)
 
 ```properties
@@ -15,6 +17,7 @@
 [Script]
 http-request ^https:\/\/(www|live)\.bilibili\.com\/?.? script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/bilibili/bilibili.cookie.js
 cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/bilibili/bilibili.js
+// 如需银瓜子转硬币，添加以下内容 
 cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/bilibili/bilibili.silver2coin.js
 ```
 
@@ -32,7 +35,7 @@ cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scr
 
 [task_local]
 1 0 * * * bilibili.js
-# 如需要银瓜子转硬币，添加以下内容 
+# 如需银瓜子转硬币，添加以下内容 
 1 0 * * * bilibili.silver2coin.js
 ```
 
