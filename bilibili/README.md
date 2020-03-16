@@ -2,7 +2,7 @@
 
 > 代码已同时兼容 Surge & QuanX, 使用同一份签到脚本即可
 
-> 目前只签 bilibili 直播 (直播!直播!直播!)
+> 目前可签 bilibili 直播 (直播!直播!直播!) + 银瓜子转硬币
 
 > 2020.1.11 QuanX 在`190`版本开始, 获取 Cookie 方式需要从`script-response-body`改为`script-request-header`
 
@@ -15,6 +15,7 @@
 [Script]
 http-request ^https:\/\/(www|live)\.bilibili\.com\/?.? script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/bilibili/bilibili.cookie.js
 cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/bilibili/bilibili.js
+cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/bilibili/bilibili.silver2coin.js
 ```
 
 ## 配置 (QuanX)
@@ -31,6 +32,8 @@ cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scr
 
 [task_local]
 1 0 * * * bilibili.js
+# 如需要银瓜子转硬币，添加以下内容 
+1 0 * * * bilibili.silver2coin.js
 ```
 
 ## 说明
@@ -97,3 +100,5 @@ cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scr
 [@lhie1](https://github.com/lhie1)
 
 [@ConnersHua](https://github.com/ConnersHua)
+
+[silver2coin@lcandy2](https://github.com/lcandy2)
