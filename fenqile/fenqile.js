@@ -2,10 +2,16 @@ const cookieName = '分期乐'
 const signurlKey = 'senku_signurl_fenqile'
 const signheaderKey = 'senku_signheader_fenqile'
 const signbodyKey = 'senku_signbody_fenqile'
+const signDailyKey = 'senku_signDailyKey_fenqile'
+const signDailyUrlKey = 'senku_signDailyUrlKey_fenqile'
 const senku = init()
+
 const signurlVal = senku.getdata(signurlKey)
 const signheaderVal = senku.getdata(signheaderKey)
 const signBodyVal = senku.getdata(signbodyKey)
+const signDailyUrlVal = senku.getdata(signDailyUrlKey)
+const signDailyVal = senku.getdata(signDailyKey)
+
 const signinfo = {}
 
 
@@ -20,15 +26,15 @@ function check(){
 function sign() {
   const url = { url: signurlVal, headers: JSON.parse(signheaderVal), body: signBodyVal }
   senku.post(url, (error, response, data) => {
-    senku.log(`${cookieName}, sing--data: ${data}`)
+    senku.log(`${cookieName}, 🔔sign--data: ${data}`)
     signinfo.sign = JSON.parse(data)
   })
 }
 
 function signDaily(){
-  const url = { url: `https://pm.m.fenqile.com/route0014/app/tab/privilege/convertTaskReward.json`, headers: JSON.parse(signheaderVal), body: signBodyVal }
+  const url = { url: signDailyUrlVal, headers: JSON.parse(signheaderVal), body: signDailyVal }
     senku.post(url, (error, response, data) => {
-    senku.log(`${cookieName}, signDaily--data: ${data}`)
+    senku.log(`${cookieName}, 🔔signDaily--data: ${data}`)
     signinfo.signDaily = JSON.parse(data)
   })
 }
