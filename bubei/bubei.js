@@ -1,7 +1,7 @@
-var appName = 'ZAKER新闻'
-var zaker = init()
-var URL = zaker.getdata("UrlZK")
-var KEY = zaker.getdata("CookieZK")
+var appName = '不背单词'
+var bubei = init()
+var URL = bubei.getdata("UrlBB")
+var KEY = bubei.getdata("CookieBB")
 
 let isGetCookie = typeof $request !== 'undefined'
 
@@ -14,75 +14,77 @@ if (isGetCookie) {
 function getcookie() {
   var url = $request.url;
   if (url) {
-     var UrlKeyZK = "UrlZK";
-     var UrlValueZK = url;
-     if (zaker.getdata(UrlKeyZK) != (undefined || null)) {
-        if (zaker.getdata(UrlKeyZK) != UrlValueZK) {
-           var url = zaker.setdata(UrlValueZK, UrlKeyZK);
+     var UrlKeyBB = "UrlBB";
+     var UrlValueBB = url;
+     if (bubei.getdata(UrlKeyBB) != (undefined || null)) {
+        if (bubei.getdata(UrlKeyBB) != UrlValueBB) {
+           var url = bubei.setdata(UrlValueBB, UrlKeyBB);
            if (!url) {
-              zaker.msg("更新" + appName + "Url失败‼️", "", "");
+              bubei.msg("更新" + appName + "Url失败‼️", "", "");
               } else {
-              zaker.msg("更新" + appName + "Url成功🎉", "", "");
+              bubei.msg("更新" + appName + "Url成功🎉", "", "");
               }
            } else {
-           zaker.msg(appName + "Url未变化❗️", "", "");
+           bubei.msg(appName + "Url未变化❗️", "", "");
            }
         } else {
-        var url = zaker.setdata(UrlValueZK, UrlKeyZK);
+        var url = bubei.setdata(UrlValueBB, UrlKeyBB);
         if (!url) {
-           zaker.msg("首次写入" + appName + "Url失败‼️", "", "");
+           bubei.msg("首次写入" + appName + "Url失败‼️", "", "");
            } else {
-           zaker.msg("首次写入" + appName + "Url成功🎉", "", "");
+           bubei.msg("首次写入" + appName + "Url成功🎉", "", "");
            }
         }
      } else {
-     zaker.msg("写入" + appName + "Url失败‼️", "", "配置错误, 无法读取URL, ");
+     bubei.msg("写入" + appName + "Url失败‼️", "", "配置错误, 无法读取URL, ");
      }
   if ($request.headers) {
-     var CookieKeyZK = "CookieZK";
-     var CookieValueZK = JSON.stringify($request.headers);
-     if (zaker.getdata(CookieKeyZK) != (undefined || null)) {
-        if (zaker.getdata(CookieKeyZK) != CookieValueZK) {
-           var cookie = zaker.setdata(CookieValueZK, CookieKeyZK);
+     var CookieKeyBB = "CookieBB";
+     var CookieValueBB = JSON.stringify($request.headers);
+     if (bubei.getdata(CookieKeyBB) != (undefined || null)) {
+        if (bubei.getdata(CookieKeyBB) != CookieValueBB) {
+           var cookie = bubei.setdata(CookieValueBB, CookieKeyBB);
            if (!cookie) {
-              zaker.msg("更新" + appName + "Cookie失败‼️", "", "");
+              bubei.msg("更新" + appName + "Cookie失败‼️", "", "");
               } else {
-              zaker.msg("更新" + appName + "Cookie成功🎉", "", "");
+              bubei.msg("更新" + appName + "Cookie成功🎉", "", "");
               }
            } else {
-           zaker.msg(appName + "Cookie未变化❗️", "", "");
+           bubei.msg(appName + "Cookie未变化❗️", "", "");
            }
         } else {
-        var cookie = zaker.setdata(CookieValueZK, CookieKeyZK);
+        var cookie = bubei.setdata(CookieValueBB, CookieKeyBB);
         if (!cookie) {
-           zaker.msg("首次写入" + appName + "Cookie失败‼️", "", "");
+           bubei.msg("首次写入" + appName + "Cookie失败‼️", "", "");
            } else {
-           zaker.msg("首次写入" + appName + "Cookie成功🎉", "", "");
+           bubei.msg("首次写入" + appName + "Cookie成功🎉", "", "");
            }
         }
      } else {
-     zaker.msg("写入" + appName + "Cookie失败‼️", "", "配置错误, 无法读取请求头, ");
+     bubei.msg("写入" + appName + "Cookie失败‼️", "", "配置错误, 无法读取请求头, ");
      }
-  zaker.done()
+  bubei.done()
 }
    
 function sign() {
+  var t1 = new Date().getTime()
+  var t2 = t1 + 1
+  URL = URL.replace(/by-sign-in\/\d*/g,"by-sign-in/" + t1).replace(/timestamp=\d*/g,"timestamp=" + t2)
   const url = { url: URL, headers: JSON.parse(KEY) }
-  zaker.get(url, (error, response, data) => {
-    zaker.log(`${appName}, data: ${data}`)
+  bubei.get(url, (error, response, data) => {
+    bubei.log(`${appName}, data: ${data}`)
     const title = `${appName}`
     let subTitle = ''
     let detail = ''
     const result = JSON.parse(data)
-    if (result.stat == 1) {
+    if (result.result_code == 200) {
       subTitle = `签到结果: 成功`
-      detail = `签到奖励: ${result.data.tips}, 总签到天数: ${result.data.total_day_count}天`
     } else {
       subTitle = `签到结果: 未知`
-      detail = `说明: ${result.msg}`
+      detail = `说明: ${result.error_body.user_msg}`
     }
-    zaker.msg(title, subTitle, detail)
-    zaker.done()
+    bubei.msg(title, subTitle, detail)
+    bubei.done()
   })
 }
 
