@@ -49,14 +49,14 @@ function GetCookie() {
               }
            } else {
            var urlDC = qmnovel.setdata(UrlValueDC, UrlKeyDC);
-           if (!cookieDC) {
+           if (!urlDC) {
               qmnovel.msg("首次写入" + UrlNameDC + "Url失败‼️", "", "");
               } else {
               qmnovel.msg("首次写入" + UrlNameDC + "Url成功🎉", "", "");
               }
            }
         } else {
-        qmnovel.msg("写入" + UrlNameDC + "Url失败‼️", "", "配置错误, 无法读取请求头, ");
+        qmnovel.msg("写入" + UrlNameDC + "Url失败‼️", "", "配置错误, 无法读取URL, ");
         }
      if ($request.headers) {
         var CookieKeyDC = "CookieDC";
@@ -109,7 +109,7 @@ function GetCookie() {
               }
            }
         } else {
-        qmnovel.msg("写入" + UrlNameNC + "Url失败‼️", "", "配置错误, 无法读取请求头, ");
+        qmnovel.msg("写入" + UrlNameNC + "Url失败‼️", "", "配置错误, 无法读取URL, ");
         }    
      if ($request.headers) {
         var CookieKeyNC = "CookieNC";
@@ -162,7 +162,7 @@ function GetCookie() {
               }
            }
         } else {
-        qmnovel.msg("写入" + UrlNameLT + "Url失败‼️", "", "配置错误, 无法读取请求头, ");
+        qmnovel.msg("写入" + UrlNameLT + "Url失败‼️", "", "配置错误, 无法读取URL, ");
         }
      if ($request.headers) {
         var CookieKeyLT = "CookieLT";
@@ -215,7 +215,7 @@ function GetCookie() {
               }
            }
         } else {
-        qmnovel.msg("写入" + UrlNameVC + "Url失败‼️", "", "配置错误, 无法读取请求头, ");
+        qmnovel.msg("写入" + UrlNameVC + "Url失败‼️", "", "配置错误, 无法读取URL, ");
         }
      }     
 }
