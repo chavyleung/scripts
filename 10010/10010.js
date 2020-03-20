@@ -34,7 +34,8 @@ let VAL_findlotteryheader = chavy.getdata(KEY_findlotteryheader)
   }
   await getinfo()
   showmsg()
-})().catch((e) => chavy.log(`❌ ${cookieName} 签到失败: ${e}`))
+  chavy.done()
+})().catch((e) => chavy.log(`❌ ${cookieName} 签到失败: ${e}`), chavy.done())
 
 function loginapp() {
   return new Promise((resolve, reject) => {

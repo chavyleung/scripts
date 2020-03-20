@@ -10,8 +10,9 @@ let VAL_signheader = chavy.getdata(KEY_signheader)
 ;(exec = async () => {
   chavy.log(`🔔 ${cookieName} 开始签到`)
   await signapp()
-  await showmsg()
-})().catch((e) => chavy.log(`❌ ${cookieName} 签到失败: ${e}`))
+  showmsg()
+  chavy.done()
+})().catch((e) => chavy.log(`❌ ${cookieName} 签到失败: ${e}`), chavy.done())
 
 function signapp() {
   return new Promise((resolve, reject) => {

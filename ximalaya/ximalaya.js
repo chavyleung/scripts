@@ -12,7 +12,8 @@ let VAL_signcookie = chavy.getdata(KEY_signcookie)
   // await browseapp()
   await getacc()
   showmsg()
-})().catch((e) => chavy.log(`❌ ${cookieName} 签到失败: ${e}`))
+  chavy.done()
+})().catch((e) => chavy.log(`❌ ${cookieName} 签到失败: ${e}`), chavy.done())
 
 function signapp() {
   return new Promise((resolve, reject) => {

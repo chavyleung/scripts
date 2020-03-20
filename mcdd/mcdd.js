@@ -14,8 +14,9 @@ let VAL_homeheader = chavy.getdata(KEY_homeheader)
   if (signinfo.draw_num > 0) for (let i = 0; i < signinfo.draw_num; i++) await lotteryapp(i)
   await browseapp()
   await getinfo()
-  await showmsg()
-})().catch((e) => chavy.log(`❌ ${cookieName} 签到失败: ${e}`))
+  showmsg()
+  chavy.done()
+})().catch((e) => chavy.log(`❌ ${cookieName} 签到失败: ${e}`), chavy.done())
 
 function getinfo() {
   return new Promise((resolve, reject) => {

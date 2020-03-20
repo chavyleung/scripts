@@ -37,7 +37,8 @@ let VAL_runflag = chavy.getdata(KEY_runflag)
   if (VAL_signweburl || VAL_signweburlBarry) await signweb(), await getwebinfo()
   if (VAL_signgameurl && VAL_signgetgameurl) await signgame(), await getgameinfo()
   showmsg()
-})().catch((e) => chavy.log(`❌ ${cookieName} 签到失败: ${e}`))
+  chavy.done()
+})().catch((e) => chavy.log(`❌ ${cookieName} 签到失败: ${e}`), chavy.done())
 
 function loginapp() {
   return new Promise((resolve, reject) => {

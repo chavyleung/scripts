@@ -25,7 +25,8 @@ let VAL_signwxheader = chavy.getdata(KEY_signwxheader)
   }
   await getreward()
   showmsg()
-})().catch((e) => chavy.log(`❌ ${cookieName} 签到失败: ${e}`))
+  chavy.done()
+})().catch((e) => chavy.log(`❌ ${cookieName} 签到失败: ${e}`), chavy.done())
 
 function gethome() {
   return new Promise((resolve, reject) => {

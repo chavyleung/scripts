@@ -18,8 +18,9 @@ let VAL_signcookie = chavy.getdata(KEY_signcookie)
   await openbox('silverbox', '银宝箱', 'simpleBody=nUuymDQ/BcC2Q6QH21Tjww23J7qtVaDlUN17k1/KY%2BXGDsRVwDRJ8YfjAMraptIL%0D%0ADPPhFllL7eBnJs52RODWxxe9rquyWdYcDcbyirN6KiE%3D')
   await openbox('goldenbox', '金宝箱', 'simpleBody=3abxJMn7LwEdH8u1Xpe2qN6AtFpDhBrmviLyoU%2BunKwnS1IGS7DIfS0HiKtt03G0%0D%0A/zVCARFyXUFFrOxLRrgAS4m/u4BiQYWJzTUeUqLAFZk%3D')
   await getinfo()
-  await showmsg()
-})().catch((e) => chavy.log(`❌ ${cookieName} 签到失败: ${e}`))
+  showmsg()
+  chavy.done()
+})().catch((e) => chavy.log(`❌ ${cookieName} 签到失败: ${e}`), chavy.done())
 
 function signdaily() {
   return new Promise((resolve, reject) => {
