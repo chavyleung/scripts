@@ -13,20 +13,14 @@ let VAL_loginheader = chavy.getdata(KEY_loginheader)
   await signapp()
   await getinfo()
   showmsg()
-})().catch((e) => chavy.log(`❌ ${cookieName} 签到失败: ${e}`))
+  chavy.done()
+})().catch((e) => chavy.log(`❌ ${cookieName} 签到失败: ${e}`), chavy.done())
 
 function loginapp() {
   return new Promise((resolve, reject) => {
-    const url = { url: VAL_loginurl, headers: { Cookie: '' }, opts: { redirection: false } }
+    const url = { url: VAL_loginurl, headers: { Cookie: '' } }
     chavy.get(url, (error, response, data) => {
       try {
-        chavy.log(`❕ ${cookieName} loginapp - response: ${JSON.stringify(response)}`)
-        const respcookie = response.headers['Set-Cookie']
-        if (respcookie && respcookie.indexOf('SESSION=') >= 0) {
-          signinfo.SESSION = response.headers['Set-Cookie'].match(/SESSION=([^;]*)/)[0]
-        } else {
-          chavy.msg(cookieName, `登录结果: 失败`, `说明: 请尝试杀掉 APP 重新获取Cookie`)
-        }
         resolve()
       } catch (e) {
         chavy.msg(cookieName, `登录结果: 失败`, `说明: ${e}`)
