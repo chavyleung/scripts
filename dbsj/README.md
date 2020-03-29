@@ -6,6 +6,7 @@
 
 > 感谢 [@GideonSenku](https://github.com/GideonSenku) Commit
 
+> 实现过程[nocoding.xyz](http://nocoding.xyz/2020/03/28/build-check/)
 ## 配置 (Surge)
 
 ```properties
@@ -13,7 +14,7 @@
 frodo.douban.com
 
 [Script]
-http-request ^https:\/\/frodo\.douban\.com\/api\/v2\/niffler\/check_in\/status script-path=ttps://raw.githubusercontent.com/chavyleung/scripts/master/dbsj/dbsj.cookie.js
+http-request ^https:\/\/frodo\.douban\.com\/api\/v2\/niffler\/check_in\/status script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/dbsj/dbsj.cookie.js
 
 cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/dbsj/dbsj.js
 ```
