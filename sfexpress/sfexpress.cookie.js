@@ -11,7 +11,7 @@ if ($request && $request.method != 'OPTIONS' && $request.url.match(/app\/index/)
   if (VAL_loginurl) chavy.setdata(VAL_loginurl, KEY_loginurl)
   if (VAL_loginheader) chavy.setdata(VAL_loginheader, KEY_loginheader)
   chavy.msg(cookieName, `获取Cookie: 成功`, ``)
-} else if ($request && $request.method != 'OPTIONS' && $request.url.match(/mcs-mimp\/share\/app\/shareRedirect/)) {
+} else if ($request && $request.method != 'OPTIONS' && $request.url.match(/mcs-mimp\/share\/(.*?)Redirect/)) {
   const VAL_login27url = $request.url
   const VAL_login27header = JSON.stringify($request.headers)
   if (VAL_login27url) chavy.setdata(VAL_login27url, KEY_login27url)
