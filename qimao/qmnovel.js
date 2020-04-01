@@ -4,11 +4,13 @@ var DCURL = qmnovel.getdata("UrlDC")
 var DCKEY = qmnovel.getdata("CookieDC")
 var NCURL = qmnovel.getdata("UrlNC")
 var NCKEY = qmnovel.getdata("CookieNC")
+var VDURL = qmnovel.getdata("UrlVD")
+var VDKEY = qmnovel.getdata("CookieVD")
 var LTURL = qmnovel.getdata("UrlLT")
 var LTKEY = qmnovel.getdata("CookieLT")
 var VCURL = qmnovel.getdata("UrlVC")
 var Totalresult = new Array()
-var time = 0
+var time = 100
 
 let isGetCookie = typeof $request !== 'undefined'
 
@@ -20,14 +22,24 @@ if (isGetCookie) {
    qmnovel.done()
 }
 
-function all() {
- LuckyTurn(time,1).then(LuckyTurn(time,2)).then(LuckyTurn(time,3)).then(LuckyTurn(time,4)).then(LuckyTurn(time,5)).then(DailyCheckin(time)).then(VideoCoin(time)).then(NoviceCheckin(time)).then((data) => {Notify(1000)});
+async function all() {
+  await DailyCheckin(time);
+  await VideoCoin(time);
+  await VideoCheckin(time);
+  await NoviceCheckin(time);
+  await LuckyTurn(time,1);
+  await LuckyTurn(time,2);
+  await LuckyTurn(time,3);
+  await LuckyTurn(time,4);
+  await LuckyTurn(time,5);
+  await Notify();
 }
 
 
 function GetCookie() {
   const dailycheckin = '/api/v1/sign-in/do-sign-in';
   const novice = '/api/v1/task/get-novice-reward';
+  const videocheckin = '/api/v1/task/get-watch-video-reward';
   const turn = '/api/v2/lucky-draw/do-extracting';
   const video = '/api/v1/sign-in/sign-in-video-coin';
   var url = $request.url;
@@ -49,14 +61,14 @@ function GetCookie() {
               }
            } else {
            var urlDC = qmnovel.setdata(UrlValueDC, UrlKeyDC);
-           if (!urlDC) {
+           if (!cookieDC) {
               qmnovel.msg("首次写入" + UrlNameDC + "Url失败‼️", "", "");
               } else {
               qmnovel.msg("首次写入" + UrlNameDC + "Url成功🎉", "", "");
               }
            }
         } else {
-        qmnovel.msg("写入" + UrlNameDC + "Url失败‼️", "", "配置错误, 无法读取URL, ");
+        qmnovel.msg("写入" + UrlNameDC + "Url失败‼️", "", "配置错误, 无法读取请求头, ");
         }
      if ($request.headers) {
         var CookieKeyDC = "CookieDC";
@@ -83,6 +95,59 @@ function GetCookie() {
            }
         } else {
         qmnovel.msg("写入" + CookieNameDC + "Cookie失败‼️", "", "配置错误, 无法读取请求头, ");
+        }
+     } else if (url.indexOf(videocheckin) != -1) {
+     if (url) {
+        var UrlKeyVD = "UrlVD";
+        var UrlNameVD = "七猫小说视频签到";
+        var UrlValueVD = url;
+        if (qmnovel.getdata(UrlKeyVD) != (undefined || null)) {
+           if (qmnovel.getdata(UrlKeyVD) != UrlValueVD) {
+              var UrlVD = qmnovel.setdata(UrlValueVD, UrlKeyVD);
+              if (!UrlVD) {
+                 qmnovel.msg("更新" + UrlNameVD + "Url失败‼️", "", "");
+                 } else {
+                 qmnovel.msg("更新" + UrlNameVD + "Url成功🎉", "", "");
+                 }
+              } else {
+              qmnovel.msg(UrlNameVD + "Url未变化❗️", "", "");
+              }
+           } else {
+           var UrlVD = qmnovel.setdata(UrlValueVD, UrlKeyVD);
+           if (!UrlVD) {
+              qmnovel.msg("首次写入" + UrlNameVD + "Url失败‼️", "", "");
+              } else {
+              qmnovel.msg("首次写入" + UrlNameVD + "Url成功🎉", "", "");
+              }
+           }
+        } else {
+        qmnovel.msg("写入" + UrlNameVD + "Url失败‼️", "", "配置错误, 无法读取请求头, ");
+        }    
+     if ($request.headers) {
+        var CookieKeyVD = "CookieVD";
+        var CookieNameVD = "七猫小说视频签到";
+        var CookieValueVD = JSON.stringify($request.headers);
+        if (qmnovel.getdata(CookieKeyVD) != (undefined || null)) {
+           if (qmnovel.getdata(CookieKeyVD) != CookieValueVD) {
+              var cookieVD = qmnovel.setdata(CookieValueVD, CookieKeyVD);
+              if (!cookieVD) {
+                 qmnovel.msg("更新" + CookieNameVD + "Cookie失败‼️", "", "");
+                 } else {
+                 qmnovel.msg("更新" + CookieNameVD + "Cookie成功🎉", "", "");
+                 }
+              } else {
+              qmnovel.msg(CookieNameVD + "Cookie未变化❗️", "", "");
+              }
+           } else {
+           var cookieVD = qmnovel.setdata(CookieValueVD, CookieKeyVD);
+           if (!cookieVD) {
+              qmnovel.msg("首次写入" + CookieNameVD + "Cookie失败‼️", "", "");
+              } else {
+              qmnovel.msg("首次写入" + CookieNameVD + "Cookie成功🎉", "", "");
+              }
+           }
+        } else {
+        qmnovel.msg("写入" + CookieNameVD + "Cookie失败‼️", "", "配置错误, 无法读取请求头, ");
         }
      } else if (url.indexOf(novice) != -1) {
      if (url) {
@@ -162,7 +227,7 @@ function GetCookie() {
               }
            }
         } else {
-        qmnovel.msg("写入" + UrlNameLT + "Url失败‼️", "", "配置错误, 无法读取URL, ");
+        qmnovel.msg("写入" + UrlNameLT + "Url失败‼️", "", "配置错误, 无法读取请求头, ");
         }
      if ($request.headers) {
         var CookieKeyLT = "CookieLT";
@@ -215,143 +280,158 @@ function GetCookie() {
               }
            }
         } else {
-        qmnovel.msg("写入" + UrlNameVC + "Url失败‼️", "", "配置错误, 无法读取URL, ");
+        qmnovel.msg("写入" + UrlNameVC + "Url失败‼️", "", "配置错误, 无法读取请求头, ");
         }
      }     
 }
 
 function DailyCheckin(t) {
-  return new Promise(resolve => {
-    setTimeout(() => {
-      try {
-          url = { url: DCURL, headers: JSON.parse(DCKEY) }
-          qmnovel.get(url, (error, response, data) => {
-          var obj = JSON.parse(data);
-          qmnovel.log(`${cookieName}日常签到, data: ${data}`)
-          if (obj.data) {
-             var DCresult = '日常签到结果: 成功🎉 签到奖励: '+ obj.data.coin +'金币\n';
-             Totalresult.push(DCresult);
-          } else if (obj.errors) {
-             if (obj.errors.code == 23010103) {
-                var DCresult = '日常签到结果: 成功(重复签到)🎉\n';
-                Totalresult.push(DCresult);
-             } else {
-                var DCresult = '日常签到结果: 失败‼️ 说明: ' + obj.errors.details + '\n';
-                Totalresult.push(DCresult);                
-             }
-          }          
-          resolve('done');
-        })
-      }
-      catch (erre) {
-        resolve('done')
-      }
-    }, t)
-  })
+  return new Promise(resolve => { setTimeout(() => {
+      url = { url: DCURL, headers: JSON.parse(DCKEY) }
+      qmnovel.get(url, (error, response, data) => { 
+        try {
+            var obj = JSON.parse(data);
+            qmnovel.log(`${cookieName}日常签到, data: ${data}`)
+            if (obj.data) {
+               var DCresult = '日常签到结果: 成功🎉 签到奖励: '+ obj.data.coin +'金币\n';
+               Totalresult.push(DCresult);
+            } else if (obj.errors) {
+               if (obj.errors.code == 23010103) {
+                  var DCresult = '日常签到结果: 成功(重复签到)🎉\n';
+                  Totalresult.push(DCresult);
+               } else {
+                  var DCresult = '日常签到结果: 失败‼️ 说明: ' + obj.errors.details + '\n';
+                  Totalresult.push(DCresult);                
+               }
+            }          
+            resolve('done');        
+         } catch (e) {
+            resolve('done')
+         }
+      })}, t)
+   })
 }
 
 function NoviceCheckin(t) {
-  return new Promise(resolve => {
-    setTimeout(() => {
-      try {
-          url = { url: NCURL, headers: JSON.parse(NCKEY) }
-          qmnovel.get(url, (error, response, data) => {
-          var obj = JSON.parse(data);
-          qmnovel.log(`${cookieName}新人签到, data: ${data}`)
-          if (obj.data) {
-             var NCresult = '新人签到结果: 成功🎉 签到奖励: '+ obj.data.reward_cash +'金币\n';
-             Totalresult.push(NCresult);
-          } else if (obj.errors) {
-             if (obj.errors.code == 13101002) {
-                var NCresult = '新人签到结果: 成功(重复签到)🎉 说明: ' + obj.errors.details + '\n';
+   return new Promise(resolve => { setTimeout(() => {
+       url = { url: NCURL, headers: JSON.parse(NCKEY) }
+       qmnovel.get(url, (error, response, data) => {
+         try {
+             var obj = JSON.parse(data);
+             qmnovel.log(`${cookieName}新人签到, data: ${data}`)
+             if (obj.data) {
+                var NCresult = '新人签到结果: 成功🎉 签到奖励: '+ obj.data.reward_cash +'金币\n';
                 Totalresult.push(NCresult);
-             } else {
-                var NCresult = '新人签到结果: 失败‼️ 说明: ' + obj.errors.details + '\n';
-                Totalresult.push(NCresult);
+             } else if (obj.errors) {
+                if (obj.errors.code == 13101002) {
+                   var NCresult = '新人签到结果: 成功(重复签到)🎉 说明: ' + obj.errors.details + '\n';
+                   Totalresult.push(NCresult);
+                } else {
+                   var NCresult = '新人签到结果: 失败‼️ 说明: ' + obj.errors.details + '\n';
+                   Totalresult.push(NCresult);
+                }
              }
-          }
-          resolve('done');
-        })
-      }
-      catch (erre) {
-        resolve('done')
-      }
-    }, t)
-  })
+             resolve('done');    
+         } catch (e) {
+             resolve('done')
+         }
+     })}, t)
+   })
+ }
+
+function VideoCheckin(t) {
+  return new Promise(resolve => { setTimeout(() => {
+      var ctime = new Date().getTime()
+      VDURL = VDURL.replace(/t=\d*/g,"t=" + ctime)
+      url = { url: VDURL, headers: JSON.parse(VDKEY) }
+      qmnovel.get(url, (error, response, data) => {
+        try {
+            var obj = JSON.parse(data);
+            qmnovel.log(`${cookieName}视频签到, data: ${data}`)
+            if (obj.data) {
+               var VDresult = '视频签到结果: 成功🎉 签到奖励: '+ obj.data.reward_cash +'金币\n';
+               Totalresult.push(VDresult);
+            } else if (obj.errors) {
+               if (obj.errors.code == 13201003) {
+                  var VDresult = '视频签到结果: 成功(重复签到)🎉 说明: ' + obj.errors.details + '\n';
+                  Totalresult.push(VDresult);
+               } else {
+                  var VDresult = '视频签到结果: 失败‼️ 说明: ' + obj.errors.details + '\n';
+                  Totalresult.push(VDresult);
+               }
+            }
+            resolve('done');        
+         } catch (e) {
+            resolve('done')
+         }
+      })}, t)
+   })
 }
 
 function VideoCoin(t) {
-  return new Promise(resolve => {
-    setTimeout(() => {
-      try {
-          url = { url: VCURL, headers: JSON.parse(DCKEY) }
-          qmnovel.get(url, (error, response, data) => {
-          var obj = JSON.parse(data);
-          qmnovel.log(`${cookieName}视频奖励, data: ${data}`)
-          if (obj.data) {
-             var VCresult = '视频签到结果: 成功🎉 签到奖励: '+ $obj.data.coin +'金币\n';
-             Totalresult.push(VCresult);
-          } else if (obj.errors) {
-             if (obj.errors.code == 23010107) {
-                var VCresult = '视频签到结果: 成功(重复签到)🎉 说明: ' + obj.errors.details + '\n';
-                Totalresult.push(VCresult);
-             } else {
-                var VCresult = '视频签到结果: 失败‼️ 说明: ' + obj.errors.details + '\n';
-                Totalresult.push(VCresult);
+  return new Promise(resolve => { setTimeout(() => {
+      url = { url: VCURL, headers: JSON.parse(DCKEY) }
+      qmnovel.get(url, (error, response, data) => {  
+        try {
+            var obj = JSON.parse(data);
+            qmnovel.log(`${cookieName}视频奖励, data: ${data}`)
+            if (obj.data) {
+               var VCresult = '视频奖励: 成功🎉 签到奖励: '+ $obj.data.coin +'金币\n';
+               Totalresult.push(VCresult);
+            } else if (obj.errors) {
+               if (obj.errors.code == 23010107) {
+                  var VCresult = '视频奖励: 成功(重复签到)🎉 说明: ' + obj.errors.details + '\n';
+                  Totalresult.push(VCresult);
+               } else {
+                  var VCresult = '视频奖励: 失败‼️ 说明: ' + obj.errors.details + '\n';
+                  Totalresult.push(VCresult);
              }
-          }
-          resolve('done');
-        })
-      }
-      catch (erre) {
-        resolve('done')
-      }
-    }, t)
-  })
+            }
+            resolve('done'); 
+         } catch (e) {
+            resolve('done')
+         }
+      })}, t)
+   })
 }
 
 function LuckyTurn(t,n) {
-  return new Promise(resolve => {
-    setTimeout(() => {
-      try {
-          url = { url: LTURL, headers: JSON.parse(LTKEY) }
-          qmnovel.get(url, (error, response, data) => {
-          var obj = JSON.parse(data);
-          qmnovel.log(`${cookieName}幸运大转盘, data: ${data}`)
-          if (obj.data) {
-             var LTresult = '第' + n + '次' + '幸运大转盘: 成功🎉 转盘奖励: ' + obj.data.prize_title + '\n';
-             Totalresult.push(LTresult);
-          } else if (obj.errors) {
-             if (obj.errors.code == 13101002) {
-                var LTresult = '幸运大转盘: 次数耗尽🚫 说明: ' + obj.errors.details + '\n';
-                Totalresult.push(LTresult);
-             } else {
-                var LTresult = '幸运大转盘: 失败‼️ 说明: ' + obj.errors.details + '\n';
-                Totalresult.push(LTresult);
-             }
-          }
-          resolve('done');
-        })
-      }
-      catch (erre) {
-        resolve('done')
-      }
-    }, t)
-  })
+  return new Promise(resolve => { setTimeout(() => {
+      url = { url: LTURL, headers: JSON.parse(LTKEY) }
+      qmnovel.get(url, (error, response, data) => {
+        try { 
+            var obj = JSON.parse(data);
+            qmnovel.log(`${cookieName}幸运大转盘, data: ${data}`)
+            if (obj.data) {
+               var LTresult = '第' + n + '次' + '幸运大转盘: 成功🎉 转盘奖励: ' + obj.data.prize_title + '\n';
+               Totalresult.push(LTresult);
+            } else if (obj.errors) {
+               if (obj.errors.code == 13101002) {
+                  var LTresult = '幸运大转盘: 次数耗尽🚫 说明: ' + obj.errors.details + '\n';
+                  Totalresult.push(LTresult);
+               } else {
+                  var LTresult = '幸运大转盘: 失败‼️ 说明: ' + obj.errors.details + '\n';
+                  Totalresult.push(LTresult);
+               }
+            }
+            resolve('done');  
+         } catch (e) {
+            resolve('done')
+         }
+      })}, t)
+   })
 }
 
-function Notify(t) {
+function Notify() {
   return new Promise(resolve => {
-    setTimeout(() => {
       try {
           let details = Totalresult.join("")
           qmnovel.msg(cookieName, '', details)
+          resolve('done');
+      } catch (e) {
+          resolve('done')
       }
-      catch (erre) {
-        resolve()
-      }
-    }, t)
-  })
+   })
 }
 
 function init() {
