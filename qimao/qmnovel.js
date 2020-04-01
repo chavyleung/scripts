@@ -68,7 +68,7 @@ function GetCookie() {
               }
            }
         } else {
-        qmnovel.msg("写入" + UrlNameDC + "Url失败‼️", "", "配置错误, 无法读取请求头, ");
+        qmnovel.msg("写入" + UrlNameDC + "Url失败‼️", "", "配置错误, 无法读取URL, ");
         }
      if ($request.headers) {
         var CookieKeyDC = "CookieDC";
@@ -121,7 +121,7 @@ function GetCookie() {
               }
            }
         } else {
-        qmnovel.msg("写入" + UrlNameVD + "Url失败‼️", "", "配置错误, 无法读取请求头, ");
+        qmnovel.msg("写入" + UrlNameVD + "Url失败‼️", "", "配置错误, 无法读取URL, ");
         }    
      if ($request.headers) {
         var CookieKeyVD = "CookieVD";
@@ -227,7 +227,7 @@ function GetCookie() {
               }
            }
         } else {
-        qmnovel.msg("写入" + UrlNameLT + "Url失败‼️", "", "配置错误, 无法读取请求头, ");
+        qmnovel.msg("写入" + UrlNameLT + "Url失败‼️", "", "配置错误, 无法读取URL, ");
         }
      if ($request.headers) {
         var CookieKeyLT = "CookieLT";
@@ -280,7 +280,7 @@ function GetCookie() {
               }
            }
         } else {
-        qmnovel.msg("写入" + UrlNameVC + "Url失败‼️", "", "配置错误, 无法读取请求头, ");
+        qmnovel.msg("写入" + UrlNameVC + "Url失败‼️", "", "配置错误, 无法读取URL, ");
         }
      }     
 }
