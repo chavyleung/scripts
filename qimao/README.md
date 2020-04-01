@@ -43,7 +43,7 @@ xiaoshuo.qm989.com
    - Surge: 把两条远程脚本放到`[Script]`
    - QuanX: 把`qmnovel.js`传到`On My iPhone - Quantumult X - Scripts` (传到 iCloud 相同目录也可, 注意要打开 quanx 的 iCloud 开关)
 3. 暂时关闭QX或Surge中的广告屏蔽, 否则无法获取小视频奖励cookie和url
-4. 打开 APP[七猫小说](https://apps.apple.com/cn/app/%E4%B8%83%E7%8C%AB%E5%B0%8F%E8%AF%B4-%E7%9C%8B%E5%B0%8F%E8%AF%B4%E7%94%B5%E5%AD%90%E4%B9%A6%E7%9A%84%E9%98%85%E8%AF%BB%E7%A5%9E%E5%99%A8/id1387717110) 然后到APP内手动日常签到(观看小视频领取奖励)和新手领福利签到以及幸运大转盘 1 次, 系统提示: `首次写入xxxUrl成功🎉,首次写入xxxCookie成功🎉`
+4. 打开 APP[七猫小说](https://apps.apple.com/cn/app/%E4%B8%83%E7%8C%AB%E5%B0%8F%E8%AF%B4-%E7%9C%8B%E5%B0%8F%E8%AF%B4%E7%94%B5%E5%AD%90%E4%B9%A6%E7%9A%84%E9%98%85%E8%AF%BB%E7%A5%9E%E5%99%A8/id1387717110) 然后到APP内福利界面手动日常签到(观看小视频领取奖励),新手领福利签到,视频签到以及幸运大转盘 1 次, 系统提示: `首次写入xxxUrl成功🎉,首次写入xxxCookie成功🎉`
 5. 最后就可以把第 1 条脚本注释掉了
 6. 运行一次脚本, 如果提示重复签到, 那就算成功了!
 
