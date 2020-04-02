@@ -25,7 +25,7 @@ if (isGetCookie) {
 async function all() {
   await DailyCheckin(time);
   await VideoCoin(time);
-  await VideoCheckin(time);
+  //await VideoCheckin(time);
   await NoviceCheckin(time);
   await LuckyTurn(time,1);
   await LuckyTurn(time,2);
