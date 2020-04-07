@@ -9,7 +9,9 @@ const signheaderVal = senku.getdata(signheaderKey)
 sign()
 
 function sign() {
-
+  // Todo: 1.each hour can get rewards,about 30-gold/phase
+  // Todo: 2.each hour play ads can get rewards about:200-golds/phase,total have four ads
+  // Todo: 3.Watting for someone do it!
   const url = { url: signurlVal, headers: JSON.parse(signheaderVal) }
   senku.get(url, (error, response, data) => {
     const result = JSON.parse(data)
@@ -19,9 +21,9 @@ function sign() {
     const message = result.message
     if (code == 0) {
       const amount = result.data.amount
-      const continuouSignIn = result.data.continuouSignIn
+      const continuationSignIn = result.data.continuationSignIn
       subTitle = `签到结果: 成功`
-      detail = `获得${amount}💰连续签到天数:${continuouSignIn}天`
+      detail = `获得${amount}💰连续签到天数:${continuationSignIn}天`
     } else if (code == -132) {
       subTitle = `${message}`
     }
