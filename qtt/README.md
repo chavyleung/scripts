@@ -6,6 +6,10 @@
 
 > 感谢 [@GideonSenku](https://github.com/GideonSenku) Commit
 
+> 2020.04.07 添加签到脚本
+
+> 2020.04.08 添加视频广告奖励
+
 ## 配置 (Surge)
 
 ```properties
