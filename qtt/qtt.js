@@ -65,9 +65,9 @@ function signHour() {
 
 function signLucky() {
   return new Promise((resolve, reject) => {
+
     const luckyUrlVal = signurlVal.replace("api.1sapp.com/sign/sign", "qtt-turntable.qutoutiao.net/press_trigger")
-    signheaderVal.Host = "qtt-turntable.qutoutiao.net"
-    const url = { url: luckyUrlVal, headers: JSON.parse(signheaderVal) }
+    const url = { url: luckyUrlVal, headers: { "Host": "qtt-turntable.qutoutiao.net" } }
     senku.get(url, (error, response, data) => {
       try {
         senku.log(`❕ ${cookieName} signLucky - response: ${JSON.stringify(response)}`)
