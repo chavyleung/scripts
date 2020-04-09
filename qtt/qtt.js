@@ -1,3 +1,5 @@
+// Todo: 待添加多账号签到
+
 const cookieName = '趣头条'
 const signurlKey = 'senku_signurl_qtt'
 const signheaderKey = 'senku_signheader_qtt'
@@ -16,6 +18,7 @@ let playUrl = [adUrl.concat("&pos=one"), adUrl.concat("&pos=two"), adUrl.concat(
     senku.log(`🔔 ${cookieName}`)
     await signDay()
     await signHour()
+    await signLucky()
     await play()
     await getinfo()
 
@@ -54,6 +57,26 @@ function signHour() {
         senku.msg(cookieName, `签到结果: 失败`, `说明: ${e}`)
         senku.log(`❌ ${cookieName} signHour - 签到失败: ${e}`)
         senku.log(`❌ ${cookieName} signHour - response: ${JSON.stringify(response)}`)
+        resolve()
+      }
+    })
+  })
+}
+
+function signLucky() {
+  return new Promise((resolve, reject) => {
+    const luckyUrlVal = signurlVal.replace("api.1sapp.com/sign/sign", "qtt-turntable.qutoutiao.net/press_trigger")
+    signheaderVal.Host = "qtt-turntable.qutoutiao.net"
+    const url = { url: luckyUrlVal, headers: JSON.parse(signheaderVal) }
+    senku.get(url, (error, response, data) => {
+      try {
+        senku.log(`❕ ${cookieName} signLucky - response: ${JSON.stringify(response)}`)
+        signinfo.signLucky = JSON.parse(data)
+        resolve()
+      } catch (e) {
+        senku.msg(cookieName, `幸运转盘: 失败`, `说明: ${e}`)
+        senku.log(`❌ ${cookieName} signLucky - 幸运转盘失败: ${e}`)
+        senku.log(`❌ ${cookieName} signLucky - response: ${JSON.stringify(response)}`)
         resolve()
       }
     })
@@ -111,9 +134,9 @@ function play() {
 function tTime(timestamp) {
   const date = new Date(timestamp * 1000)
   const M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-'
-  const D = date.getDate() + '-'
+  const D = (date.getDate() + 1 < 10 ? '0' + (date.getDate() + 1) : date.getDate() + 1) + ' '
   const h = date.getHours() + ':'
-  const m = date.getMinutes() + ''
+  const m = (date.getMinutes() + 1 < 10 ? '0' + (date.getMinutes() + 1) : date.getMinutes() + 1) + ''
   return M + D + h + m
 }
 
@@ -149,6 +172,16 @@ function showmsg() {
     detail += `时段签到:获得${amount}💰,下次签到:${next_time}`
   } else subTitle += '时段:🔕'
 
+  // signLuckMsg
+  subTitle += subTitle == '' ? '' : ', '
+  if (signinfo.signLucky && signinfo.signLucky == 1) {
+    subTitle += `幸运转盘:✅`
+    detail += detail == '' ? '' : ','
+    const amount_coin = signinfo.signLucky.amount_coin
+    const count = signinfo.signLucky.count
+    const count_limit = signinfo.signLucky.count_limit
+    detail += `幸运转盘:获得${amount_coin},抽奖情况:${count}/${count_limit次}`
+  } else subTitle += `转盘:次数上限`
   // playAdsMsg
   subTitle += subTitle == '' ? '' : ', '
   if (signinfo.playList) {

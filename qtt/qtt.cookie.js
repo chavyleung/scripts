@@ -13,6 +13,7 @@ if ($request && $request.method != 'OPTIONS') {
     if (signurlVal) senku.setdata(signurlVal, signurlKey)
     if (signheaderVal) senku.setdata(signheaderVal, signheaderKey)
     senku.msg(cookieName, `获取Cookie: 成功`, ``)
+    senku.log(`🔔${signurlVal},🔔${signheaderVal}`)
   } catch (error) {
     senku.log(`❌error:${error}`)
   }
