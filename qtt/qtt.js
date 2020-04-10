@@ -134,7 +134,7 @@ function play() {
 function tTime(timestamp) {
   const date = new Date(timestamp * 1000)
   const M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-'
-  const D = (date.getDate() + 1 < 10 ? '0' + (date.getDate() + 1) : date.getDate() + 1) + ' '
+  const D = (date.getDate() + 1 < 10 ? '0' + date.getDate() : date.getDate() ) + ' '
   const h = date.getHours() + ':'
   const m = (date.getMinutes() + 1 < 10 ? '0' + (date.getMinutes() + 1) : date.getMinutes() + 1) + ''
   return M + D + h + m
