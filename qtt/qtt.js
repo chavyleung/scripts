@@ -1,17 +1,17 @@
 // Todo: 待添加多账号签到
 
 const cookieName = '趣头条'
-const signurlKey = 'senku_signurl_qtt'
-const signheaderKey = 'senku_signheader_qtt'
-const signbodyKey = 'senku_signbody_qtt'
+const signKey = 'senku_signKey_qtt'
+const signXTKKey = 'senku_signXTK_qtt'
 const senku = init()
-const signurlVal = senku.getdata(signurlKey)
-const signheaderVal = senku.getdata(signheaderKey)
-const adUrl = signurlVal.replace(/sign\?/, "adDone?").concat("&GUID=58711eba362605e8c3afa9be885.31911288")
-const getinfoUrlVal = signurlVal.replace(/sign\?/, "info?")
-const hourUrlVal = signurlVal.replace("/sign/sign", "/mission/intPointReward")
+const signVal = senku.getdata(signKey)
+const signXTKVal = senku.getdata(signXTKKey)
+const signurlVal = 'https://api.1sapp.com/sign/sign?version=30967000&xhi=200' + signVal
+const adUrl = 'https://api.1sapp.com/sign/adDone?version=30967000&xhi=200' + signVal
+const getinfoUrlVal = 'https://api.1sapp.com/sign/info?version=30967000&xhi=200' + signVal
+const hourUrlVal = 'https://api.1sapp.com/mission/intPointReward?version=30967000&xhi=200' + signVal
 const signinfo = { playList: [] }
-let playUrl = [adUrl.concat("&pos=one"), adUrl.concat("&pos=two"), adUrl.concat("&pos=three"), adUrl.concat("&pos=four")]
+const playUrl = [adUrl + 'pos=one', adUrl + 'pos=two', adUrl + 'pos=three', adUrl + 'pos=four']
 
 
   ; (sign = async () => {
@@ -29,7 +29,8 @@ let playUrl = [adUrl.concat("&pos=one"), adUrl.concat("&pos=two"), adUrl.concat(
 
 function signDay() {
   return new Promise((resolve, reject) => {
-    const url = { url: signurlVal, headers: JSON.parse(signheaderVal) }
+    const url = { url: signurlVal, headers: { 'Host': 'api.1sapp.com', 'X-Tk': signXTKVal } }
+    url.headers['User-Agent'] = 'Mozilla/5.0 (iPhone; CPU iPhone OS 12_4_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148'
     senku.get(url, (error, response, data) => {
       try {
         senku.log(`❕ ${cookieName} signDay - response: ${JSON.stringify(response)}`)
@@ -47,7 +48,7 @@ function signDay() {
 
 function signHour() {
   return new Promise((resolve, reject) => {
-    const url = { url: hourUrlVal, headers: JSON.parse(signheaderVal) }
+    const url = { url: hourUrlVal, headers: { 'Host': 'api.1sapp.com', 'X-Tk': signXTKKey } }
     senku.get(url, (error, response, data) => {
       try {
         senku.log(`❕ ${cookieName} signHour - response: ${JSON.stringify(response)}`)
@@ -66,8 +67,8 @@ function signHour() {
 function signLucky() {
   return new Promise((resolve, reject) => {
 
-    const luckyUrlVal = signurlVal.replace("api.1sapp.com/sign/sign", "qtt-turntable.qutoutiao.net/press_trigger")
-    const url = { url: luckyUrlVal, headers: { "Host": "qtt-turntable.qutoutiao.net" } }
+    const luckyUrlVal = 'https://qtt-turntable.qutoutiao.net/press_trigger?version=30967000&xhi=200' + signVal
+    const url = { url: luckyUrlVal, headers: { "Host": "qtt-turntable.qutoutiao.net", 'X-Tk': signXTKKey } }
     senku.get(url, (error, response, data) => {
       try {
         senku.log(`❕ ${cookieName} signLucky - response: ${JSON.stringify(response)}`)
@@ -85,7 +86,7 @@ function signLucky() {
 
 function getinfo() {
   return new Promise((resolve, reject) => {
-    const url = { url: getinfoUrlVal, headers: JSON.parse(signheaderVal) }
+    const url = { url: getinfoUrlVal, headers: { 'Host': 'api.1sapp.com', 'X-Tk': signXTKKey } }
     senku.get(url, (error, response, data) => {
       try {
         senku.log(`❕ ${cookieName} getinfo - response: ${JSON.stringify(response)}`)
@@ -104,7 +105,7 @@ function getinfo() {
 //  播放广告获取奖励
 function playAd(urlParameter) {
   return new Promise((resolve, reject) => {
-    const url = { url: urlParameter, headers: JSON.parse(signheaderVal) }
+    const url = { url: urlParameter, headers: { 'Host': 'api.1sapp.com', 'X-Tk': signXTKKey } }
     senku.get(url, (error, response, data) => {
       try {
         senku.log(`❕ ${cookieName} playAd - response: ${JSON.stringify(response)}`)
@@ -174,13 +175,13 @@ function showmsg() {
 
   // signLuckMsg
   subTitle += subTitle == '' ? '' : ', '
-  if (signinfo.signLucky && signinfo.signLucky == 1) {
+  if (signinfo.signLucky && signinfo.signLucky.code == 1) {
     subTitle += `幸运转盘:✅`
     detail += detail == '' ? '' : ','
     const amount_coin = signinfo.signLucky.amount_coin
     const count = signinfo.signLucky.count
     const count_limit = signinfo.signLucky.count_limit
-    detail += `幸运转盘:获得${amount_coin},抽奖情况:${count}/${count_limit次}`
+    detail += `幸运转盘:获得${amount_coin},抽奖情况:${count}/${count_limit}次`
   } else subTitle += `转盘:次数上限`
   // playAdsMsg
   subTitle += subTitle == '' ? '' : ', '

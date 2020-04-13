@@ -11,6 +11,9 @@
 > 2020.04.08 添加视频广告奖励、添加每时段签到奖励
 
 > 2020.04.09 添加幸运转盘抽奖
+
+> 2020.04.13 简化Cookie获取方式
+
 ## 配置 (Surge)
 
 ```properties
@@ -18,7 +21,7 @@
 api.1sapp.com
 
 [Script]
-http-request ^https:\/\/api\.1sapp\.com\/sign\/sign? script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/qtt/qtt.cookie.js
+http-request ^https:\/\/api\.1sapp\.com\/sign\/info? script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/qtt/qtt.cookie.js
 
 cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/qtt/qtt.js
 ```
@@ -32,10 +35,10 @@ api.1sapp.com
 [rewrite_local]
 
 # [商店版] QuanX v1.0.6-build194 及更早版本
-^https:\/\/api\.1sapp\.com\/sign\/sign? url script-request-header qtt.cookie.js
+^https:\/\/api\.1sapp\.com\/sign\/info? url script-request-header qtt.cookie.js
 
 # [TestFlight] QuanX v1.0.6-build195 及以后版本
-^https:\/\/api\.1sapp\.com\/sign\/sign? url script-request-header https://raw.githubusercontent.com/chavyleung/scripts/master/qtt/qtt.cookie.js
+^https:\/\/api\.1sapp\.com\/sign\/info? url script-request-header https://raw.githubusercontent.com/chavyleung/scripts/master/qtt/qtt.cookie.js
 
 [task_local]
 1 0 * * * qtt.js
@@ -47,7 +50,7 @@ api.1sapp.com
 2. 再配置重写规则:
    - Surge: 把两条远程脚本放到`[Script]`
    - QuanX: 把`qtt.cookie.js`和`qtt.js`传到`On My iPhone - Quantumult X - Scripts` (传到 iCloud 相同目录也可, 注意要打开 quanx 的 iCloud 开关)
-3. 打开 APP 手动签到一次:  `右上角` > `签到`
+3. 打开 APP 进入签到:  `右上角` > `签到`
 4. 系统提示: `获取Cookie: 成功`
 5. 把获取 Cookie 的脚本注释掉
 6. 运行一次脚本, 如果提示重复签到, 那就算成功了!

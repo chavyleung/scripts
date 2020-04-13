@@ -1,19 +1,19 @@
 const cookieName = '趣头条'
-const signurlKey = 'senku_signurl_qtt'
-const signheaderKey = 'senku_signheader_qtt'
-const signbodyKey = 'senku_signbody_qtt'
+const signKey = 'senku_signKey_qtt'
+const signXTKKey = 'senku_signXTK_qtt'
 const senku = init()
 
 const requrl = $request.url
 if ($request && $request.method != 'OPTIONS') {
   try {
-    const signurlVal = requrl
-    const signheaderVal = JSON.stringify($request.headers)
-
-    if (signurlVal) senku.setdata(signurlVal, signurlKey)
-    if (signheaderVal) senku.setdata(signheaderVal, signheaderKey)
+    const tokenVal = '&' + requrl.match(/token=[a-zA-Z0-9_-]+/)[0]
+    const uuidVal = '&' + requrl.match(/uuid=[a-zA-Z0-9_-]+/)[0]
+    const signVal = tokenVal + uuidVal
+    const signXTKVal = requrl.match(/tk=[a-zA-Z0-9_-]+/)[0]
+    if (signVal) senku.setdata(signVal, signKey)
+    if (signXTKVal) senku.setdata(signXTKVal, signXTKKey)
     senku.msg(cookieName, `获取Cookie: 成功`, ``)
-    senku.log(`🔔${signurlVal},🔔${signheaderVal}`)
+    senku.log(`🔔${signVal},🔔${signXTKVal}`)
   } catch (error) {
     senku.log(`❌error:${error}`)
   }
