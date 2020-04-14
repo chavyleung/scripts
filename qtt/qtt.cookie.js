@@ -1,6 +1,7 @@
 const cookieName = '趣头条'
 const signKey = 'senku_signKey_qtt'
 const signXTKKey = 'senku_signXTK_qtt'
+const readKey = 'senku_readKey_qtt'
 const senku = init()
 
 const requrl = $request.url
@@ -9,16 +10,29 @@ if ($request && $request.method != 'OPTIONS') {
     const tokenVal = '&' + requrl.match(/token=[a-zA-Z0-9_-]+/)[0]
     const uuidVal = '&' + requrl.match(/uuid=[a-zA-Z0-9_-]+/)[0]
     const signVal = tokenVal + uuidVal
-    const signXTKVal = requrl.match(/tk=[a-zA-Z0-9_-]+/)[0]
+    const XTK = requrl.match(/tk=[a-zA-Z0-9_-]+/)[0]
+    const signXTKVal = XTK.substring(3, XTK.length)
     if (signVal) senku.setdata(signVal, signKey)
     if (signXTKVal) senku.setdata(signXTKVal, signXTKKey)
-    senku.msg(cookieName, `获取Cookie: 成功`, ``)
+    senku.msg(cookieName, `签到,获取Cookie: 成功`, ``)
     senku.log(`🔔${signVal},🔔${signXTKVal}`)
   } catch (error) {
     senku.log(`❌error:${error}`)
   }
 }
 
+if ($request && $request.method != 'OPTIONS' && requrl.match(/\/content\/readV2\?qdata=[a-zA-Z0-9_-]+/)) {
+  try {
+    const readVal = requrl
+    if (readVal) {
+      if (senku.setdata(readVal, readKey))
+        senku.msg(cookieName, `阅读,获取Cookie: 成功`, ``)
+      senku.log(`🔔${readVal}`)
+    }
+  } catch (error) {
+    senku.log(`❌error:${error}`)
+  }
+}
 function init() {
   isSurge = () => {
     return undefined === this.$httpClient ? false : true

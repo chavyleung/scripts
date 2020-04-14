@@ -3,13 +3,16 @@
 const cookieName = '趣头条'
 const signKey = 'senku_signKey_qtt'
 const signXTKKey = 'senku_signXTK_qtt'
+const readKey = 'senku_readKey_qtt'
 const senku = init()
 const signVal = senku.getdata(signKey)
 const signXTKVal = senku.getdata(signXTKKey)
+const readVal = senku.getdata(readKey)
 const signurlVal = 'https://api.1sapp.com/sign/sign?version=30967000&xhi=200' + signVal
 const adUrl = 'https://api.1sapp.com/sign/adDone?version=30967000&xhi=200' + signVal
 const getinfoUrlVal = 'https://api.1sapp.com/sign/info?version=30967000&xhi=200' + signVal
-const hourUrlVal = 'https://api.1sapp.com/mission/intPointReward?version=30967000&xhi=200' + signVal
+const hourUrlVal = 'https://api.1sapp.com/mission/intPointReward?version=30967000&xhi=200&sign=8167814154902b578aed1d6bb694ebee' + signVal
+const coinUrlVal = 'https://api.1sapp.com/app/ioscoin/getInfo?version=30967000&xhi=200' + signVal
 const signinfo = { playList: [] }
 const playUrl = [adUrl + 'pos=one', adUrl + 'pos=two', adUrl + 'pos=three', adUrl + 'pos=four']
 
@@ -20,8 +23,9 @@ const playUrl = [adUrl + 'pos=one', adUrl + 'pos=two', adUrl + 'pos=three', adUr
     await signHour()
     await signLucky()
     await play()
+    await read()
     await getinfo()
-
+    await getcoininfo()
     showmsg()
     senku.done()
   })().catch((e) => senku.log(`❌ ${cookieName} 签到失败: ${e}`), senku.done())
@@ -46,9 +50,29 @@ function signDay() {
   })
 }
 
+function read() {
+  return new Promise((resolve, reject) => {
+    const url = { url: readVal, headers: { 'Host': 'api.1sapp.com', 'X-Tk': signXTKVal } }
+    url.headers['User-Agent'] = 'Mozilla/5.0 (iPhone; CPU iPhone OS 12_4_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148'
+    senku.get(url, (error, response, data) => {
+      try {
+        senku.log(`❕ ${cookieName} signDay - response: ${JSON.stringify(response)}`)
+        signinfo.read = JSON.parse(data)
+        resolve()
+      } catch (e) {
+        senku.msg(cookieName, `签到结果: 失败`, `说明: ${e}`)
+        senku.log(`❌ ${cookieName} signDay - 签到失败: ${e}`)
+        senku.log(`❌ ${cookieName} signDay - response: ${JSON.stringify(response)}`)
+        resolve()
+      }
+    })
+  })
+}
+
+// FIXME: 时段请求偶尔丢失或伪请求
 function signHour() {
   return new Promise((resolve, reject) => {
-    const url = { url: hourUrlVal, headers: { 'Host': 'api.1sapp.com', 'X-Tk': signXTKKey } }
+    const url = { url: hourUrlVal, headers: { 'Host': 'api.1sapp.com', 'X-Tk': signXTKVal } }
     senku.get(url, (error, response, data) => {
       try {
         senku.log(`❕ ${cookieName} signHour - response: ${JSON.stringify(response)}`)
@@ -102,32 +126,56 @@ function getinfo() {
   })
 }
 
-//  播放广告获取奖励
-function playAd(urlParameter) {
+function getcoininfo() {
   return new Promise((resolve, reject) => {
-    const url = { url: urlParameter, headers: { 'Host': 'api.1sapp.com', 'X-Tk': signXTKKey } }
+    const url = { url: coinUrlVal, headers: { 'Host': 'api.1sapp.com', 'X-Tk': signXTKKey } }
     senku.get(url, (error, response, data) => {
       try {
-        senku.log(`❕ ${cookieName} playAd - response: ${JSON.stringify(response)}`)
-        signinfo.playList.push(JSON.parse(data))
+        senku.log(`❕ ${cookieName} getcoininfo - response: ${JSON.stringify(response)}`)
+        signinfo.coininfo = JSON.parse(data)
         resolve()
       } catch (e) {
         senku.msg(cookieName, `签到结果: 失败`, `说明: ${e}`)
-        senku.log(`❌ ${cookieName} playAd - 签到失败: ${e}`)
-        senku.log(`❌ ${cookieName} playAd - response: ${JSON.stringify(response)}`)
+        senku.log(`❌ ${cookieName} getcoininfo - 签到失败: ${e}`)
+        senku.log(`❌ ${cookieName} getcoininfo - response: ${JSON.stringify(response)}`)
         resolve()
       }
     })
   })
 }
 
+// FIXME: 播放广告请求经常性丢失或伪请求
+//  播放广告获取奖励
+function playAd(urlParameter) {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      const url = { url: urlParameter, headers: { 'Host': 'api.1sapp.com', 'X-Tk': signXTKKey } }
+      url.headers['User-Agent'] = 'Mozilla / 5.0(iPhone; CPU iPhone OS 12_4_1 like Mac OS X) AppleWebKit / 605.1.15(KHTML, like Gecko) Mobile / 15E148'
+      senku.get(url, (error, response, data) => {
+        try {
+          senku.log(`❕ ${cookieName} playAd - response: ${JSON.stringify(response)}`)
+          signinfo.playList.push(JSON.parse(data))
+          resolve()
+        } catch (e) {
+          senku.msg(cookieName, `签到结果: 失败`, `说明: ${e}`)
+          senku.log(`❌ ${cookieName} playAd - 签到失败: ${e}`)
+          senku.log(`❌ ${cookieName} playAd - response: ${JSON.stringify(response)}`)
+          resolve()
+        }
+      })
+    }, 100)
+  })
+}
+
 // 播放广告
 function play() {
   return new Promise((resolve, reject) => {
-    playUrl.forEach((url) => {
-      playAd(url)
-      resolve()
-    })
+    setTimeout(() => {
+      playUrl.forEach((url) => {
+        playAd(url)
+        resolve()
+      })
+    }, 100)
   })
 }
 
@@ -135,7 +183,7 @@ function play() {
 function tTime(timestamp) {
   const date = new Date(timestamp * 1000)
   const M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-'
-  const D = (date.getDate() + 1 < 10 ? '0' + date.getDate() : date.getDate() ) + ' '
+  const D = (date.getDate() + 1 < 10 ? '0' + date.getDate() : date.getDate()) + ' '
   const h = date.getHours() + ':'
   const m = (date.getMinutes() + 1 < 10 ? '0' + (date.getMinutes() + 1) : date.getMinutes() + 1) + ''
   return M + D + h + m
@@ -173,7 +221,16 @@ function showmsg() {
     detail += `时段签到:获得${amount}💰,下次签到:${next_time}`
   } else subTitle += '时段:🔕'
 
-  // signLuckMsg
+  // readMsg
+  detail += detail == '' ? '' : ','
+  if (signinfo.read && signinfo.read.data.status_code == 0) {
+    if (signinfo.coininfo.data) {
+      const desc = signinfo.coininfo.data.content_config.desc
+      detail += `阅读奖励:${desc}`
+    }
+  } else detail += '阅读篇数:失败'
+
+  // signLuckyMsg
   subTitle += subTitle == '' ? '' : ', '
   if (signinfo.signLucky && signinfo.signLucky.code == 1) {
     subTitle += `幸运转盘:✅`
@@ -193,7 +250,7 @@ function showmsg() {
     const continuation = signinfo.info.data.signIn.continuation
     for (const poss of icon) {
       const time = tTime(poss.next_time)
-      moreDetail += `\n视频广告🔕下次🕥${time} 可获得${poss.amount}💰`
+      moreDetail += `\n【视频广告】下次🕥${time} 可获得${poss.amount}💰`
     }
     detail += detail == '' ? '' : ', '
     detail += `共计:${coins}💰,连续签到${continuation}天`
