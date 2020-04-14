@@ -2,6 +2,7 @@ const cookieName = '趣头条'
 const signKey = 'senku_signKey_qtt'
 const signXTKKey = 'senku_signXTK_qtt'
 const readKey = 'senku_readKey_qtt'
+const navCoinKey = 'senku_navCoinKey_qtt'
 const senku = init()
 
 const requrl = $request.url
@@ -28,6 +29,19 @@ if ($request && $request.method != 'OPTIONS' && requrl.match(/\/content\/readV2\
       if (senku.setdata(readVal, readKey))
         senku.msg(cookieName, `阅读,获取Cookie: 成功`, ``)
       senku.log(`🔔${readVal}`)
+    }
+  } catch (error) {
+    senku.log(`❌error:${error}`)
+  }
+}
+
+if ($request && $request.method != 'OPTIONS' && requrl.match(/\/xx\/feed\/getReward\?qdata=[a-zA-Z0-9_-]+/)) {
+  try {
+    const navCoinVal = requrl
+    if (navCoinVal) {
+      if (senku.setdata(navCoinVal, navCoinKey))
+        senku.msg(cookieName, `首页金币奖励,获取Cookie: 成功`, ``)
+      senku.log(`🔔${navCoinVal}`)
     }
   } catch (error) {
     senku.log(`❌error:${error}`)
