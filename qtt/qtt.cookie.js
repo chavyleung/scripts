@@ -35,7 +35,7 @@ if ($request && $request.method != 'OPTIONS' && requrl.match(/\/content\/readV2\
   }
 }
 
-if ($request && $request.method != 'OPTIONS' && requrl.match(/\/xx\/feed\/getReward\?qdata=[a-zA-Z0-9_-]+/)) {
+if ($request && $request.method != 'OPTIONS' && requrl.match(/\/x\/feed\/getReward\?qdata=[a-zA-Z0-9_-]+/)) {
   try {
     const navCoinVal = requrl
     if (navCoinVal) {

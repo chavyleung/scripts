@@ -21,18 +21,19 @@ const playUrl = [adUrl + 'pos=one', adUrl + 'pos=two', adUrl + 'pos=three', adUr
 
   ; (sign = async () => {
     senku.log(`🔔 ${cookieName}`)
+    // 要获取首页奖励取消下方注释
+    // await navCoin()
     await signDay()
     await signHour()
     await signLucky()
-    // await play()
     await playone()
     await playtwo()
     await playthree()
     await playfour()
     await read()
-    await navCoin()
     await getinfo()
     await getcoininfo()
+
     showmsg()
     senku.done()
   })().catch((e) => senku.log(`❌ ${cookieName} 签到失败: ${e}`), senku.done())
@@ -353,7 +354,7 @@ function showmsg() {
       const done_times = signinfo.coininfo.data.done_times
       detail += `\n【首页奖励】:${cur_amount}💰,完成${done_times}/${total_times}`
     }
-  } else detail += '首页奖励:失败或Cookie失效'
+  } else detail += '首页奖励:失败或Cookie不存在'
 
   // signLuckyMsg
   subTitle += subTitle == '' ? '' : ', '
