@@ -1,5 +1,5 @@
 // Todo: 待添加多账号签到
-
+// ToDo: 种菜赚金币
 const cookieName = '趣头条'
 const signKey = 'senku_signKey_qtt'
 const signXTKKey = 'senku_signXTK_qtt'
@@ -18,12 +18,14 @@ const coinUrlVal = 'https://api.1sapp.com/app/ioscoin/getInfo?version=30967000&x
 const signinfo = { playList: [] }
 const playUrl = [adUrl + 'pos=one', adUrl + 'pos=two', adUrl + 'pos=three', adUrl + 'pos=four']
 
-
   ; (sign = async () => {
     senku.log(`🔔 ${cookieName}`)
-    // 要获取首页奖励取消下方注释
-    if (navCoinVal.match(/\/x\/feed\/getReward\?qdata=[a-zA-Z0-9_-]+/)) {
+    if (navCoinVal != undefined && navCoinVal.match(/\/x\/feed\/getReward\?qdata=[a-zA-Z0-9_-]+/)) {
       await navCoin()
+    }
+    if (readVal != undefined && readVal.match(/\/content\/readV2\?qdata=[a-zA-Z0-9_-]+/)) {
+      await read()
+      await getcoininfo()
     }
     await signDay()
     await signHour()
@@ -32,10 +34,7 @@ const playUrl = [adUrl + 'pos=one', adUrl + 'pos=two', adUrl + 'pos=three', adUr
     await playtwo()
     await playthree()
     await playfour()
-    await read()
     await getinfo()
-    await getcoininfo()
-
     showmsg()
     senku.done()
   })().catch((e) => senku.log(`❌ ${cookieName} 签到失败: ${e}`), senku.done())
@@ -267,7 +266,6 @@ function tTime(timestamp) {
 function showmsg() {
   let subTitle = ''
   let detail = ''
-  let moreDetail = ''
   // signDayMsg
   if (signinfo.info && signinfo.info.data.signIn.today == 1) {
     if (signinfo.signDay.code == 0) {
@@ -276,13 +274,12 @@ function showmsg() {
       const currentCoin = amount[continuation]
       const nextCoin = amount[continuation + 1]
       const coins = signinfo.info.data.show_balance_info.coins
-      subTitle = '每日:✅'
-      detail += detail == '' ? '' : ', '
+      subTitle += '每日:✅'
       detail += `【每日签到】获得${currentCoin}💰,明日可得${nextCoin}💰\n`
     }
-    else subTitle = '每日:🔄'
+    else subTitle += '每日:🔄'
   } else {
-    subTitle = '每日:❌'
+    subTitle += '每日:❌'
     senku.log(`❌ ${cookieName} showmsg - 每日签到: ${JSON.stringify(signinfo.signDay)}`)
   }
 
@@ -290,14 +287,12 @@ function showmsg() {
   subTitle += subTitle == '' ? '' : ', '
   if (signinfo.signHour && signinfo.signHour.code == 0) {
     subTitle += '时段:✅'
-    detail += detail == '' ? '' : ','
     const amount = signinfo.signHour.data.amount
     const next_time = tTime(signinfo.signHour.data.next_time)
     detail += `【时段签到】获得${amount}💰,下次签到:${next_time}\n`
   } else subTitle += '时段:🔕'
 
   // readMsg
-  detail += detail == '' ? '' : ','
   if (signinfo.read && signinfo.read.data.status_code == 0) {
     if (signinfo.coininfo.data) {
       const desc = signinfo.coininfo.data.content_config.desc
@@ -323,25 +318,26 @@ function showmsg() {
   subTitle += subTitle == '' ? '' : ', '
   if (signinfo.signLucky && signinfo.signLucky.code == 1) {
     subTitle += `幸运转盘:✅`
-    detail += detail == '' ? '' : ','
     const amount_coin = signinfo.signLucky.amount_coin
     const count = signinfo.signLucky.count
     const count_limit = signinfo.signLucky.count_limit
     detail += `【幸运转盘】获得${amount_coin},抽奖情况:${count}/${count_limit}次\n`
   } else subTitle += `转盘:次数上限`
+
   // playAdsMsg
   subTitle += subTitle == '' ? '' : ', '
   if (signinfo.playList) {
-    subTitle += '广告:✅'
-
-    const icon = signinfo.info.data.signIn.ext_ad.icon
-    const coins = signinfo.info.data.show_balance_info.coins
-    const continuation = signinfo.info.data.signIn.continuation
-    for (const poss of icon) {
-      const time = tTime(poss.next_time)
-      detail += `【视频广告】下次🕥${time} 可获得${poss.amount}💰\n`
-    }
-    detail += `【账户详情】共计:${coins}💰,连续签到${continuation}天`
+    if (signinfo.playList[0].code == 0) {
+      subTitle += '广告:✅'
+      const icon = signinfo.info.data.signIn.ext_ad.icon
+      const coins = signinfo.info.data.show_balance_info.coins
+      const continuation = signinfo.info.data.signIn.continuation
+      for (const poss of icon) {
+        const time = tTime(poss.next_time)
+        detail += `【视频广告】下次🕥${time} 可获得${poss.amount}💰\n`
+      }
+      detail += `【账户详情】共计:${coins}💰,连续签到${continuation}天`
+    } else if (signinfo.playList[0].code == -126) subTitle += '广告:权限错误'
   } else subTitle += '广告:❌'
 
   senku.msg(cookieName, subTitle, detail)
