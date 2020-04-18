@@ -17,7 +17,8 @@ const getinfoUrlVal = 'https://api.1sapp.com/sign/info?version=30967000&xhi=200'
 const hourUrlVal = 'https://api.1sapp.com/mission/intPointReward?version=30967000&xhi=200' + signVal
 const coinUrlVal = 'https://api.1sapp.com/app/ioscoin/getInfo?version=30967000&xhi=200' + signVal
 const readReawardVal = 'https://api.1sapp.com/app/ioscoin/readReward?version=30967000&xhi=200&type=content_config' + signVal
-
+const sleepUrlVal = 'https://mvp-sleeper.qutoutiao.net/v1/sleep/update?version=30967000&xhi=200status=1' + signVal
+const sleepRewardVal = 'https://mvp-sleeper.qutoutiao.net/v1/reward?version=30967000&xhi=200status=1&which=2' + signVal
 const signinfo = { playList: [] }
 const playUrl = [adUrl + 'pos=one', adUrl + 'pos=two', adUrl + 'pos=three', adUrl + 'pos=four']
 
@@ -30,6 +31,12 @@ const playUrl = [adUrl + 'pos=one', adUrl + 'pos=two', adUrl + 'pos=three', adUr
       await read()
       await getcoininfo()
       await getreadReward()
+    }
+    if (new Date().getHours() >= 20) {
+      await sleep()
+    }
+    if (new Date().getHours() >= 8 && new Date().getHours() <= 12) {
+      await sleepReward()
     }
     await signDay()
     await signHour()
@@ -44,6 +51,42 @@ const playUrl = [adUrl + 'pos=one', adUrl + 'pos=two', adUrl + 'pos=three', adUr
   })().catch((e) => senku.log(`❌ ${cookieName} 签到失败: ${e}`), senku.done())
 
 
+function sleep() {
+  return new Promise((resolve, reject) => {
+    const url = { url: sleepUrlVal, headers: { 'Host': 'mvp-sleeper.qutoutiao.net', 'X-Tk': signXTKVal } }
+    url.headers['User-Agent'] = 'Mozilla/5.0 (iPhone; CPU iPhone OS 12_4_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148'
+    senku.get(url, (error, response, data) => {
+      try {
+        senku.log(`❕ ${cookieName} sleep - response: ${JSON.stringify(response)}`)
+        signinfo.sleep = JSON.parse(data)
+        resolve()
+      } catch (e) {
+        senku.msg(cookieName, `睡觉结果: 失败`, `说明: ${e}`)
+        senku.log(`❌ ${cookieName} sleep - 睡觉失败: ${e}`)
+        senku.log(`❌ ${cookieName} sleep - response: ${JSON.stringify(response)}`)
+        resolve()
+      }
+    })
+  })
+}
+function sleepReward() {
+  return new Promise((resolve, reject) => {
+    const url = { url: sleepRewardVal, headers: { 'Host': 'mvp-sleeper.qutoutiao.net', 'X-Tk': signXTKVal } }
+    url.headers['User-Agent'] = 'Mozilla/5.0 (iPhone; CPU iPhone OS 12_4_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148'
+    senku.get(url, (error, response, data) => {
+      try {
+        senku.log(`❕ ${cookieName} sleepReward - response: ${JSON.stringify(response)}`)
+        signinfo.sleepReward = JSON.parse(data)
+        resolve()
+      } catch (e) {
+        senku.msg(cookieName, `睡觉结果: 失败`, `说明: ${e}`)
+        senku.log(`❌ ${cookieName} sleepReward - 睡觉失败: ${e}`)
+        senku.log(`❌ ${cookieName} sleepReward - response: ${JSON.stringify(response)}`)
+        resolve()
+      }
+    })
+  })
+}
 function signDay() {
   return new Promise((resolve, reject) => {
     const url = { url: signurlVal, headers: { 'Host': 'api.1sapp.com', 'X-Tk': signXTKVal } }
@@ -358,6 +401,21 @@ function showmsg() {
     }
   } else detail += '【阅读详情】失败\n'
 
+  // sleepMsg
+  if (signinfo.sleep && signinfo.sleep.data.success) {
+    detail += `【睡觉结果】已开始睡觉\n`
+  } else if (signinfo.sleepReward && signinfo.sleepReward.data) {
+    if (signinfo.sleepReward.data.success) {
+      const coins = signinfo.sleepReward.data.coins
+      detail += `【睡觉金币】获得${coins}💰\n`
+    } else {
+      detail += `【睡觉金币】金币获取失败\n`
+    }
+  } else if (signinfo.sleep == undefined) {
+    detail += ``
+  } else {
+    detail += `【睡觉结果】失败\n`
+  }
   // navCoinMsg
   if (signinfo.navCoin && signinfo.navCoin.code == 0) {
     if (signinfo.coininfo.data) {
