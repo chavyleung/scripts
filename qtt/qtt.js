@@ -227,7 +227,7 @@ function getinfo() {
 // 视频广告部分
 function playone() {
   return new Promise((resolve, reject) => {
-    const urlParameter = 'https://api.1sapp.com/sign/adDone?version=30967000&xhi=200&pos=two' + signVal
+    const urlParameter = 'https://api.1sapp.com/sign/adDone?version=30967000&xhi=200&pos=one' + signVal
     const url = { url: urlParameter, headers: { 'Host': 'api.1sapp.com', 'X-Tk': signXTKKey } }
     url.headers['User-Agent'] = 'Mozilla / 5.0(iPhone; CPU iPhone OS 12_4_1 like Mac OS X) AppleWebKit / 605.1.15(KHTML, like Gecko) Mobile / 15E148'
     senku.get(url, (error, response, data) => {
