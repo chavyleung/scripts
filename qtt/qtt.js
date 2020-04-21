@@ -1,6 +1,7 @@
 // Todo: 待添加多账号签到
 // ToDo: 种菜赚金币
 // ToDo: 幸运大转盘自动获取阶段奖励,奖励每周重置
+// Warn: 睡觉仅在20点和12点触发,获取奖励在8点和14触发
 const cookieName = '趣头条'
 const signKey = 'senku_signKey_qtt'
 const signXTKKey = 'senku_signXTK_qtt'
@@ -32,10 +33,10 @@ const playUrl = [adUrl + 'pos=one', adUrl + 'pos=two', adUrl + 'pos=three', adUr
       await getcoininfo()
       await getreadReward()
     }
-    if (new Date().getHours() >= 20) {
+    if (new Date().getHours() == 20 || new Date().getHours() == 12) {
       await sleep()
     }
-    if (new Date().getHours() >= 8 && new Date().getHours() <= 12) {
+    if (new Date().getHours() == 8 || new Date().getHours() == 14) {
       await sleepReward()
     }
     await signDay()
@@ -158,7 +159,7 @@ function getreadReward() {
           resolve(readReward(15))
         } else if (read_num == 18) {
           resolve(readReward(18))
-        }
+        } else resolve()
       }
     } catch (e) {
       senku.msg(cookieName, `获取阅读奖励: 失败`, `说明: ${e}`)
@@ -374,7 +375,7 @@ function showmsg() {
       subTitle += '每日:✅'
       detail += `【每日签到】获得${currentCoin}💰,明日可得${nextCoin}💰\n`
     }
-    else subTitle += '每日:🔄'
+    else subTitle += ''
   } else {
     subTitle += '每日:❌'
     senku.log(`❌ ${cookieName} showmsg - 每日签到: ${JSON.stringify(signinfo.signDay)}`)
@@ -407,7 +408,7 @@ function showmsg() {
   } else if (signinfo.sleepReward && signinfo.sleepReward.data) {
     if (signinfo.sleepReward.data.success) {
       const coins = signinfo.sleepReward.data.coins
-      detail += `【睡觉金币】获得${coins}💰\n`
+      coins == 0 ? detail += `` : detail += `【睡觉金币】获得${coins}💰\n`
     } else {
       detail += `【睡觉金币】金币获取失败\n`
     }
@@ -438,13 +439,13 @@ function showmsg() {
     const count = signinfo.signLucky.count
     const count_limit = signinfo.signLucky.count_limit
     detail += `【幸运转盘】获得${amount_coin},抽奖情况:${count}/${count_limit}次\n`
-  } else subTitle += `转盘:次数上限`
+  } else subTitle += ``
 
   // playAdsMsg
   subTitle += subTitle == '' ? '' : ', '
   if (signinfo.playList) {
     if (signinfo.playList[0].code == 0) {
-      subTitle += '广告:✅'
+      subTitle += ''
       const icon = signinfo.info.data.signIn.ext_ad.icon
       const coins = signinfo.info.data.show_balance_info.coins
       const continuation = signinfo.info.data.signIn.continuation
