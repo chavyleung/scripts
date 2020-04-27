@@ -223,6 +223,7 @@ function getcoininfo() {
 function signHour() {
   return new Promise((resolve, reject) => {
     const url = { url: hourUrlVal, headers: { 'Host': 'api.1sapp.com', 'X-Tk': signXTKVal } }
+    url.headers['User-Agent'] = 'Mozilla/5.0 (iPhone; CPU iPhone OS 12_4_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148'
     senku.get(url, (error, response, data) => {
       try {
         senku.log(`❕ ${cookieName} signHour - response: ${JSON.stringify(response)}`)
@@ -241,6 +242,7 @@ function signHour() {
 function signLucky() {
   return new Promise((resolve, reject) => {
     const url = { url: luckyUrlVal, headers: { 'Host': 'qtt-turntable.qutoutiao.net', 'X-Tk': signXTKKey } }
+    url.headers['User-Agent'] = 'Mozilla/5.0 (iPhone; CPU iPhone OS 12_4_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148'
     senku.get(url, (error, response, data) => {
       try {
         senku.log(`❕ ${cookieName} signLucky - response: ${JSON.stringify(response)}`)
