@@ -1,39 +1,37 @@
 // 赞赏:邀请码`A1040276307`
 // 链接`http://html34.qukantoutiao.net/qpr2/bBmQ.html?pid=5eb14518`
 // 农妇山泉 -> 有点咸
-
-const cookieName = '米读'
-const readTimeurlKey = 'senku_readTimeurl_midu'
-const readTimeheaderKey = 'senku_readTimeheader_midu'
+const cookieName = '米读阅读时长'
 const readTimebodyKey = 'senku_readTimebody_midu'
+const readTimeheaderKey = 'senku_readTimeheader_midu'
 const senku = init()
-const readTimeurlVal = senku.getdata(readTimeurlKey)
-const readTimeheaderVal = senku.getdata(readTimeheaderKey)
 const readTimebodyVal = senku.getdata(readTimebodyKey)
+const readTimeheaderVal = senku.getdata(readTimeheaderKey)
+const readTimeurlVal = 'https://apiwz.midukanshu.com/user/readTimeBase/readTime?' + readTimebodyVal
 const signinfo = {}
-let subTitle = ''
-let detail = ''
     ; (sign = async () => {
         senku.log(`🔔 ${cookieName}`)
         await readTime()
-        // showmsg()
         senku.done()
     })().catch((e) => senku.log(`❌ ${cookieName} 签到失败: ${e}`), senku.done())
 
 
+// 阅读时长
 function readTime() {
     return new Promise((resolve, reject) => {
-        const url = { url: readTimeurlVal, headers: readTimeheaderVal, body: readTimebodyVal }
+        const url = { url: readTimeurlVal, headers: JSON.parse(readTimeheaderVal) }
         senku.post(url, (error, response, data) => {
             try {
                 senku.log(`❕ ${cookieName} readTime - response: ${JSON.stringify(response)}`)
                 signinfo.readTime = JSON.parse(data)
+                let subTitle = ''
+                let detail = ''
                 if (signinfo.readTime && signinfo.readTime.code == 0) {
                     const coin = signinfo.readTime.data.coin
                     const readTotalMinute = signinfo.readTime.data.readTotalMinute
                     coin == 0 ? detail += `` : detail += `【阅读时长】获得${coin}💰`
-                    if (readTotalMinute % 40 == 0) {
-                        detail += ` 阅读时长${readTotalMinute / 2}分钟\n`
+                    if (readTotalMinute % 20 == 0) {
+                        detail += ` 阅读时长${readTotalMinute}分钟\n`
                         senku.msg(cookieName, subTitle, detail)
                     }
                 } else if (signinfo.readTime.code != 0) {
@@ -54,13 +52,6 @@ function readTime() {
     })
 }
 
-function showmsg() {
-    subTitle += ''
-    detail += ''
-
-    senku.msg(cookieName, subTitle, detail)
-    senku.done()
-}
 
 function init() {
     isSurge = () => {

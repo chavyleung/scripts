@@ -14,11 +14,11 @@
 apiwz.midukanshu.com
 
 [Script]
+http-request ^https:\/\/apiwz\.midukanshu\.com script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/midu/midu.cookie.js, requires-body=true
 
-http-request ^https:\/\/apiwz\.midukanshu\.com\/user\/readTimeBase\/readTime script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/midu/midu.cookie.js, requires-body=true
 
-
-cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/midu/midu.js
+cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/midu/miduSign.js
+cron "*/1 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/midu/miduRead.js
 ```
 
 ## 配置 (QuanX)
@@ -30,15 +30,16 @@ apiwz.midukanshu.com
 [rewrite_local]
 
 # [商店版] QuanX v1.0.6-build194 及更早版本
-^https:\/\/apiwz\.midukanshu\.com\/user\/readTimeBase\/readTime url script-request-body midu.cookie.js
+^https:\/\/apiwz\.midukanshu\.com url script-request-body midu.cookie.js
 
 # [TestFlight] QuanX v1.0.6-build195 及以后版本
-^https:\/\/apiwz\.midukanshu\.com\/user\/readTimeBase\/readTime url script-request-body https://raw.githubusercontent.com/chavyleung/scripts/master/midu/midu.cookie.js
+^https:\/\/apiwz\.midukanshu\.com url script-request-body https://raw.githubusercontent.com/chavyleung/scripts/master/midu/midu.cookie.js
 
 
 
 [task_local]
-*/1 * * * * midu.js
+*/1 * * * * miduRead.js
+0 1 * * * miduSign.js
 ```
 
 ## 说明
@@ -46,10 +47,12 @@ apiwz.midukanshu.com
 1. 先把`apiwz.midukanshu.com`加到`[MITM]`
 2. 再配置重写规则:
    - Surge: 把两条远程脚本放到`[Script]`
-   - QuanX: 把`midu.cookie.js`和`midu.js`传到`On My iPhone - Quantumult X - Scripts` (传到 iCloud 相同目录也可, 注意要打开 quanx 的 iCloud 开关)
-3. 建议将`task`执行次数改成每分钟执行以达到阅读时长
-4. 阅读时长获取Cookie:打开 APP 选取文章阅读， `书城` > `任意文章阅读` 等到提示获取Cookie成功即可
-5. 赞赏:邀请码`A1040276307`,链接`http://html34.qukantoutiao.net/qpr2/bBmQ.html?pid=5eb14518`
+   - QuanX: 把`midu.cookie.js`和`miduRead.js`&`miduSign.js`传到`On My iPhone - Quantumult X - Scripts` (传到 iCloud 相同目录也可, 注意要打开 quanx 的 iCloud 开关)
+3. 打开 APP 进入福利,系统提示: `获取Cookie: 成功`
+4. 把获取 Cookie 的脚本注释掉
+5. 建议将`task`执行次数改成每分钟执行以达到阅读时长
+6. 阅读时长获取Cookie:打开 APP 选取文章阅读， `书城` > `任意文章阅读` 等到提示获取Cookie成功即可
+7. 赞赏:邀请码`A1040276307`,链接`http://html34.qukantoutiao.net/qpr2/bBmQ.html?pid=5eb14518`
 > 第 1 条脚本是用来获取 cookie 的, 用浏览器访问一次获取 cookie 成功后就可以删掉或注释掉了, 但请确保在`登录成功`后再获取 cookie.
 
 > 第 2 条脚本是签到脚本, 每天`00:00:10`执行一次.
