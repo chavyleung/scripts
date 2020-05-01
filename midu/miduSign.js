@@ -89,7 +89,7 @@ function dice_double() {
         senku.post(url, (error, response, data) => {
             try {
                 senku.log(`❕ ${cookieName} dice_double - response: ${JSON.stringify(response)}`)
-                signinfo.doubleList.push(SON.parse(data))
+                signinfo.doubleList.push(JSON.parse(data))
                 resolve()
             } catch (e) {
                 senku.msg(cookieName, `骰子双倍奖励: 失败`, `说明: ${e}`)
