@@ -22,10 +22,13 @@ const token = senku.getdata(tokenKey)
 const token2 = senku.getdata(tokenKey2)
 const readTimeurlVal = 'https://apiwz.midukanshu.com/user/readTimeBase/readTime?' + readTimebodyVal
 const signinfo = {}
-senku.log(senku.getdata('tokenMidu_sign'))
-senku.log(senku.getdata('tokenMidu_sign2'))
+
 // 清除Cookie,将下方改为true,默认false
 const DeleteCookie = false
+// 开启debug模式,每次脚本执行会显示通知,默认false
+const debug = false
+senku.log(`🍎${readTimeheaderVal}`)
+senku.log(`🍎${readTimeheaderVal2}`)
 if (DeleteCookie) {
     if (token) {
         senku.setdata("", "tokenMidu_read")
@@ -37,12 +40,15 @@ if (DeleteCookie) {
         senku.msg("米读 无可清除的Cookie !", "", '请手动关闭脚本内"DeleteCookie"选项')
     }
 }
-; (sign = async () => {
+debug ? senku.setdata('true', 'debug') : senku.setdata('false', 'debug')
+
+;
+(sign = async () => {
     senku.log(`🔔 ${cookieName},token:${token} token2:${token2}`)
     if (token) {
-        await readTime(readTimeheaderVal, '账号一')
+        token == token2 ? senku.msg('米读阅读', '阅读token重复', '清除Cookie再试一次') : await readTime(readTimeheaderVal, '账号一')
     }
-    if (token2) {
+    if (token2 && token2 != token) {
         await readTime(readTimeheaderVal2, '账号二')
     }
     senku.done()
@@ -52,7 +58,10 @@ if (DeleteCookie) {
 // 阅读时长
 function readTime(header, account) {
     return new Promise((resolve, reject) => {
-        const url = { url: readTimeurlVal, headers: JSON.parse(header) }
+        const url = {
+            url: readTimeurlVal,
+            headers: JSON.parse(header)
+        }
         senku.post(url, (error, response, data) => {
             try {
                 senku.log(`❕ ${cookieName} readTime - response: ${JSON.stringify(response)}`)
@@ -64,6 +73,9 @@ function readTime(header, account) {
                     const readTotalMinute = signinfo.readTime.data.readTotalMinute
                     coin == 0 ? detail += `` : detail += `【阅读时长】获得${coin}💰`
                     if (readTotalMinute % 20 == 0) {
+                        readTotalMinute ? detail += ` 阅读时长${readTotalMinute / 2}分钟` : detail += ``
+                        senku.msg(cookieName, account + subTitle, detail)
+                    } else if (senku.getdata('debug') == 'true') {
                         readTotalMinute ? detail += ` 阅读时长${readTotalMinute / 2}分钟` : detail += ``
                         senku.msg(cookieName, account + subTitle, detail)
                     }
@@ -127,5 +139,15 @@ function init() {
     done = (value = {}) => {
         $done(value)
     }
-    return { isSurge, isQuanX, msg, log, getdata, setdata, get, post, done }
+    return {
+        isSurge,
+        isQuanX,
+        msg,
+        log,
+        getdata,
+        setdata,
+        get,
+        post,
+        done
+    }
 }

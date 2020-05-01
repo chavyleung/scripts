@@ -11,34 +11,42 @@ const dice_index_urlVal = 'https://apiwz.midukanshu.com/wz/dice/index?' + signbo
 const dice_roll_urlVal = 'https://apiwz.midukanshu.com/wz/dice/roll?' + signbodyVal
 const dice_double_urlVal = 'https://apiwz.midukanshu.com/wz/dice/doubleReward?' + signbodyVal
 const dice_addnum_urlVal = 'https://apiwz.midukanshu.com/wz/dice/addChangeNumByRewardVideo?' + signbodyVal
-const signinfo = { addnumList: [], rollList: [], doubleList: [] }
+const signinfo = {
+    addnumList: [],
+    rollList: [],
+    doubleList: []
+}
 
-    ; (sign = async () => {
-        senku.log(`🔔 ${cookieName}`)
-        await signDay()
-        await signVideo()
-        await dice_index()
-        if (signinfo.dice_index && signinfo.dice_index.code == 0) {
-            const remain_add_num = signinfo.dice_index.data.remain_add_chance_num
-            const chance_num = signinfo.dice_index.data.chance_num
-            for (let index = 0; index < remain_add_num; index++) {
-                await dice_addnum()
-            }
-
-            for (let index = 0; index < chance_num; index++) {
-                await dice_roll()
-                await dice_double()
-            }
+;
+(sign = async () => {
+    senku.log(`🔔 ${cookieName}`)
+    await signDay()
+    await signVideo()
+    await dice_index()
+    if (signinfo.dice_index && signinfo.dice_index.code == 0) {
+        const remain_add_num = signinfo.dice_index.data.remain_add_chance_num
+        const chance_num = signinfo.dice_index.data.chance_num
+        for (let index = 0; index < remain_add_num; index++) {
+            await dice_addnum()
         }
-        showmsg()
-        senku.done()
-    })().catch((e) => senku.log(`❌ ${cookieName} 签到失败: ${e}`), senku.done())
+
+        for (let index = 0; index < chance_num; index++) {
+            await dice_roll()
+            await dice_double()
+        }
+    }
+    showmsg()
+    senku.done()
+})().catch((e) => senku.log(`❌ ${cookieName} 签到失败: ${e}`), senku.done())
 
 
 // 骰子信息
 function dice_index() {
     return new Promise((resolve, reject) => {
-        const url = { url: dice_index_urlVal, headers: {} }
+        const url = {
+            url: dice_index_urlVal,
+            headers: {}
+        }
         url.headers['Host'] = 'apiwz.midukanshu.com'
         url.headers['Content-Type'] = 'application/x-www-form-urlencoded'
         url.headers['User-Agent'] = 'Mozilla/5.0 (iPhone; CPU iPhone OS 12_4_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148'
@@ -60,7 +68,10 @@ function dice_index() {
 // 掷骰子
 function dice_roll() {
     return new Promise((resolve, reject) => {
-        const url = { url: dice_roll_urlVal, headers: {} }
+        const url = {
+            url: dice_roll_urlVal,
+            headers: {}
+        }
         url.headers['Host'] = 'apiwz.midukanshu.com'
         url.headers['Content-Type'] = 'application/x-www-form-urlencoded'
         url.headers['User-Agent'] = 'Mozilla/5.0 (iPhone; CPU iPhone OS 12_4_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148'
@@ -82,7 +93,10 @@ function dice_roll() {
 // 骰子双倍奖励
 function dice_double() {
     return new Promise((resolve, reject) => {
-        const url = { url: dice_double_urlVal, headers: {} }
+        const url = {
+            url: dice_double_urlVal,
+            headers: {}
+        }
         url.headers['Host'] = 'apiwz.midukanshu.com'
         url.headers['Content-Type'] = 'application/x-www-form-urlencoded'
         url.headers['User-Agent'] = 'Mozilla/5.0 (iPhone; CPU iPhone OS 12_4_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148'
@@ -104,7 +118,10 @@ function dice_double() {
 // 获取骰子次数
 function dice_addnum() {
     return new Promise((resolve, reject) => {
-        const url = { url: dice_addnum_urlVal, headers: {} }
+        const url = {
+            url: dice_addnum_urlVal,
+            headers: {}
+        }
         url.headers['Host'] = 'apiwz.midukanshu.com'
         url.headers['Content-Type'] = 'application/x-www-form-urlencoded'
         url.headers['User-Agent'] = 'Mozilla/5.0 (iPhone; CPU iPhone OS 12_4_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148'
@@ -126,7 +143,10 @@ function dice_addnum() {
 // 每日签到
 function signDay() {
     return new Promise((resolve, reject) => {
-        const url = { url: signurlVal, headers: {} }
+        const url = {
+            url: signurlVal,
+            headers: {}
+        }
         url.headers['Host'] = 'apiwz.midukanshu.com'
         url.headers['Content-Type'] = 'application/x-www-form-urlencoded'
         url.headers['User-Agent'] = 'Mozilla/5.0 (iPhone; CPU iPhone OS 12_4_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148'
@@ -148,7 +168,10 @@ function signDay() {
 // 签到视频奖励
 function signVideo() {
     return new Promise((resolve, reject) => {
-        const url = { url: signVideourlVal, headers: {} }
+        const url = {
+            url: signVideourlVal,
+            headers: {}
+        }
         url.headers['Host'] = 'apiwz.midukanshu.com'
         url.headers['Content-Type'] = 'application/x-www-form-urlencoded'
         url.headers['User-Agent'] = 'Mozilla/5.0 (iPhone; CPU iPhone OS 12_4_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148'
@@ -246,5 +269,15 @@ function init() {
     done = (value = {}) => {
         $done(value)
     }
-    return { isSurge, isQuanX, msg, log, getdata, setdata, get, post, done }
+    return {
+        isSurge,
+        isQuanX,
+        msg,
+        log,
+        getdata,
+        setdata,
+        get,
+        post,
+        done
+    }
 }

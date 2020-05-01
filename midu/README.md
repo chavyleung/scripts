@@ -55,7 +55,7 @@ apiwz.midukanshu.com
 5. 把获取 Cookie 的脚本注释掉
 6. 建议将`miduRead.js`脚本`task`执行次数改成每分钟执行以达到阅读时长
 7. 若要双签到,切换账号获取账户二的Cookie即可
-8. 赞赏:邀请码`A1040276307`,链接`http://html34.qukantoutiao.net/qpr2/bBmQ.html?pid=5eb14518`
+8. 赞赏:邀请码`A1040276307`,[直达链接](http://html34.qukantoutiao.net/qpr2/bBmQ.html?pid=5eb14518)
 > 第 1 条脚本是用来获取 cookie 的, 用浏览器访问一次获取 cookie 成功后就可以删掉或注释掉了, 但请确保在`登录成功`后再获取 cookie.
 
 > 第 2 条脚本是签到脚本, 每天`00:00:10`执行一次.

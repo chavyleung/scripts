@@ -1,4 +1,3 @@
-
 const readTimebodyKey = 'senku_readTimebody_midu'
 // 账号一
 const readTimeheaderKey = 'senku_readTimeheader_midu'
@@ -15,13 +14,8 @@ if ($request && $request.method != 'OPTIONS' && requrl.match(/\/user\/readTimeBa
     try {
         const readTimebodyVal = $request.body
         const CookieValue = $request.headers
-        if (readTimebodyVal) {
-            var body = senku.setdata(readTimebodyVal, readTimebodyKey)
-            if (body) {
-                senku.msg("米读", "阅读文章", "更新Cookie成功 ‼️")
-            }
-        }
-
+        senku.log(`🍎${readTimebodyVal}`)
+        senku.log(`🍎${senku.getdata(readTimebodyKey)}`)
         var account = senku.getdata('tokenMidu_read') ? senku.getdata('tokenMidu_read') : null
         var account2 = senku.getdata('tokenMidu_read2') ? senku.getdata('tokenMidu_read2') : null
         var tokenVal = CookieValue['token']
@@ -40,22 +34,29 @@ if ($request && $request.method != 'OPTIONS' && requrl.match(/\/user\/readTimeBa
             if (senku.getdata(tokenKey) != tokenVal) {
                 var token = senku.setdata(tokenVal, tokenKey)
                 var header = senku.setdata(JSON.stringify(CookieValue), CookieKey)
+                var body = senku.setdata(readTimebodyVal, readTimebodyKey)
+                senku.setdata(readTimebodyVal, readTimebodyKey)
                 senku.log(`🔔${readTimebodyVal}`)
                 senku.log(`🔔${JSON.stringify(CookieValue)}`)
-                if (!token && !header) {
+                if (!token && !header && !body) {
+                    senku.msg("米读", "阅读文章数据", "获取Cookie失败 ‼️")
                     senku.msg("米读", "阅读", "更新" + CookieName + "Cookie失败 ‼️")
                 } else {
+                    senku.msg("米读", "阅读文章数据", "获取Cookie成功 🎉")
                     senku.msg("米读", "阅读", "更新" + CookieName + "Cookie成功 🎉")
                 }
             }
         } else {
             var token = senku.setdata(tokenVal, tokenKey)
             var header = senku.setdata(JSON.stringify(CookieValue), CookieKey)
+            var body = senku.setdata(readTimebodyVal, readTimebodyKey)
             senku.log(`🍎${tokenVal}`)
             senku.log(`🔔${readTimebodyVal}`)
-            if (!header && !token) {
+            if (!header && !token && !body) {
+                senku.msg("米读", "阅读文章数据", "获取Cookie失败 ‼️")
                 senku.msg("米读", "阅读", "首次写入" + CookieName + "Cookie失败 ‼️")
             } else {
+                senku.msg("米读", "阅读文章数据", "获取Cookie成功 🎉")
                 senku.msg("米读", "阅读", "首次写入" + CookieName + "Cookie成功 🎉")
             }
         }
@@ -151,6 +152,16 @@ function init() {
     done = (value = {}) => {
         $done(value)
     }
-    return { isSurge, isQuanX, msg, log, getdata, setdata, get, post, done }
+    return {
+        isSurge,
+        isQuanX,
+        msg,
+        log,
+        getdata,
+        setdata,
+        get,
+        post,
+        done
+    }
 }
 senku.done()
