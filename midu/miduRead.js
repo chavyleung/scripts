@@ -2,6 +2,13 @@
 // 链接`http://html34.qukantoutiao.net/qpr2/bBmQ.html?pid=5eb14518`
 // 农妇山泉 -> 有点咸
 
+/********************
+ * 1、 为了方便任意脚本可以清除Cookie, 任意一个脚本将DeleteCookie = true都可以生效
+ * 2、 debug模式可以在Surge&&Qx中开启,方便你判定多用户及脚本运行情况
+ * 3、 Qx==>dubug:miduRede构造请求
+ * 4、 Surge==>debug:load脚本->evalaute
+ * 5、脚本默认每半小时通知一次,建议自己先debug看看是否成功
+ *********************/
 
 const DeleteCookie = false // 清除Cookie,将下方改为true,默认false
 
@@ -68,7 +75,7 @@ function double() {
     initial()
     DualAccount = false
     if (senku.getdata('tokenMidu_read2')) {
-        readTimeheaderVal = senku.getdata('senku_readTimeheader_midu')
+        readTimeheaderVal = senku.getdata('senku_readTimeheader_midu2')
         readTimebodyVal = senku.getdata('senku_readTimebody_midu2')
         signbodyVal = senku.getdata('senku_signbody_midu2')
         all()
@@ -132,19 +139,17 @@ function showmsg() {
             const readTotalMinute = signinfo.readTime.data.readTotalMinute
             const total_coin = signinfo.readTime.data.total_coin
             coin == 0 ? detail += `` : detail += `【阅读时长】获得${coin}💰`
-            if (readTotalMinute % 20 == 0) {
-                readTotalMinute ? detail += ` 阅读时长${readTotalMinute / 2}分钟,该账户:${total_coin}💰` : detail += `该账户:${total_coin}💰`
-            } else if (senku.getdata('debug') == 'true') {
-                readTotalMinute ? detail += ` 阅读时长${readTotalMinute / 2}分钟,该账户:${total_coin}💰` : detail += `该账户:${total_coin}💰`
-            }
+            readTotalMinute ? detail += ` 阅读时长${readTotalMinute / 2}分钟,该账户:${total_coin}💰` : detail += `该账户:${total_coin}💰`
         } else if (signinfo.readTime.code != 0) {
             detail += `【阅读时长】错误代码${signinfo.readTime.code},错误信息${signinfo.readTime.message}`
         } else {
             detail += '【阅读时长】失败'
         }
-        if (detail) {
+        if (senku.getdata('debug') == 'true' || detail && signinfo.readTime.data.readTotalMinute % 60 == 0) {
             senku.msg(cookieName + ` 用户:${signinfo.userInfo.data.nickname}`, subTitle, detail)
-        } else senku.msg(cookieName + ` 用户:${signinfo.userInfo.data.nickname}`, '阅读结果', '时间未到')
+        } else if (senku.getdata('debug') == 'true' || signinfo.readTime.data.readTotalMinute % 60 == 0) {
+            senku.msg(cookieName + ` 用户:${signinfo.userInfo.data.nickname}`, '阅读结果', '时间未到')
+        }
         if (DualAccount) double()
         senku.done()
         resolve()
