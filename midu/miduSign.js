@@ -2,27 +2,42 @@
 // 链接`http://html34.qukantoutiao.net/qpr2/bBmQ.html?pid=5eb14518`
 // 农妇山泉 -> 有点咸
 const cookieName = '米读'
-const signbodyKey = 'senku_signbody_midu'
 const senku = init()
-const signbodyVal = senku.getdata(signbodyKey)
-const signurlVal = 'https://apiwz.midukanshu.com/wz/task/signInV2?' + signbodyVal
-const signVideourlVal = 'https://apiwz.midukanshu.com/wz/task/signVideoReward?' + signbodyVal
-const dice_index_urlVal = 'https://apiwz.midukanshu.com/wz/dice/index?' + signbodyVal
-const dice_roll_urlVal = 'https://apiwz.midukanshu.com/wz/dice/roll?' + signbodyVal
-const dice_double_urlVal = 'https://apiwz.midukanshu.com/wz/dice/doubleReward?' + signbodyVal
-const dice_addnum_urlVal = 'https://apiwz.midukanshu.com/wz/dice/addChangeNumByRewardVideo?' + signbodyVal
-const signinfo = {
-    addnumList: [],
-    rollList: [],
-    doubleList: []
+
+function initial() {
+    signinfo = {
+        addnumList: [],
+        rollList: [],
+        doubleList: []
+    }
 }
 
 ;
-(sign = async () => {
+(sign = () => {
     senku.log(`🔔 ${cookieName}`)
-    await signDay()
-    await signVideo()
-    await dice_index()
+    if (senku.getdata('senku_signbody_midu')) {
+        signbodyVal = senku.getdata('senku_signbody_midu')
+        name = '账户一'
+        all(name)
+    }
+    if (senku.getdata('senku_signbody_midu2')) {
+        signbodyVal = senku.getdata('senku_signbody_midu2')
+        name = '账户二'
+        all(name)
+    }
+    if (!senku.getdata('senku_signbody_midu') && !senku.getdata('senku_signbody_midu2')) {
+        senku.msg('米读签到', '', '不存在Cookie')
+    }
+    senku.done()
+})().catch((e) => senku.log(`❌ ${cookieName} 签到失败: ${e}`), senku.done())
+
+async function all(name) {
+    senku.log(`🍎${name},${signbodyVal}`)
+    const key = signbodyVal
+    initial()
+    await signDay(key)
+    await signVideo(key)
+    await dice_index(key)
     if (signinfo.dice_index && signinfo.dice_index.code == 0) {
         const remain_add_num = signinfo.dice_index.data.remain_add_chance_num
         const chance_num = signinfo.dice_index.data.chance_num
@@ -30,19 +45,18 @@ const signinfo = {
             await dice_addnum()
         }
 
-        for (let index = 0; index < chance_num; index++) {
-            await dice_roll()
-            await dice_double()
+        for (let index = 0; index < 8; index++) {
+            await dice_roll(key)
+            await dice_double(key)
         }
     }
-    showmsg()
-    senku.done()
-})().catch((e) => senku.log(`❌ ${cookieName} 签到失败: ${e}`), senku.done())
-
+    await showmsg(name)
+}
 
 // 骰子信息
 function dice_index() {
     return new Promise((resolve, reject) => {
+        const dice_index_urlVal = 'https://apiwz.midukanshu.com/wz/dice/index?' + signbodyVal
         const url = {
             url: dice_index_urlVal,
             headers: {}
@@ -68,6 +82,7 @@ function dice_index() {
 // 掷骰子
 function dice_roll() {
     return new Promise((resolve, reject) => {
+        const dice_roll_urlVal = 'https://apiwz.midukanshu.com/wz/dice/roll?' + signbodyVal
         const url = {
             url: dice_roll_urlVal,
             headers: {}
@@ -93,6 +108,7 @@ function dice_roll() {
 // 骰子双倍奖励
 function dice_double() {
     return new Promise((resolve, reject) => {
+        const dice_double_urlVal = 'https://apiwz.midukanshu.com/wz/dice/doubleReward?' + signbodyVal
         const url = {
             url: dice_double_urlVal,
             headers: {}
@@ -118,6 +134,7 @@ function dice_double() {
 // 获取骰子次数
 function dice_addnum() {
     return new Promise((resolve, reject) => {
+        const dice_addnum_urlVal = 'https://apiwz.midukanshu.com/wz/dice/addChangeNumByRewardVideo?' + signbodyVal
         const url = {
             url: dice_addnum_urlVal,
             headers: {}
@@ -143,6 +160,7 @@ function dice_addnum() {
 // 每日签到
 function signDay() {
     return new Promise((resolve, reject) => {
+        const signurlVal = 'https://apiwz.midukanshu.com/wz/task/signInV2?' + signbodyVal
         const url = {
             url: signurlVal,
             headers: {}
@@ -168,6 +186,7 @@ function signDay() {
 // 签到视频奖励
 function signVideo() {
     return new Promise((resolve, reject) => {
+        const signVideourlVal = 'https://apiwz.midukanshu.com/wz/task/signVideoReward?' + signbodyVal
         const url = {
             url: signVideourlVal,
             headers: {}
@@ -191,41 +210,44 @@ function signVideo() {
 }
 
 
-function showmsg() {
-    let subTitle = ''
-    let detail = ''
-    // 签到信息
-    if (signinfo.signDay && signinfo.signDay.code == 0) {
-        if (signinfo.signDay.data) {
-            const amount = signinfo.signDay.data.amount
-            amount ? detail += `【签到奖励】获得${amount}💰\n` : detail += ``
-        }
-    } else subTitle += '签到:失败'
+function showmsg(name) {
+    return new Promise((resolve, reject) => {
+        let subTitle = name
+        let detail = ''
+        // 签到信息
+        if (signinfo.signDay && signinfo.signDay.code == 0) {
+            if (signinfo.signDay.data) {
+                const amount = signinfo.signDay.data.amount
+                amount ? detail += `【签到奖励】获得${amount}💰\n` : detail += ``
+            }
+        } else subTitle += '签到:失败'
 
-    if (signinfo.signVideo && signinfo.signVideo.code == 0) {
-        const amount = signinfo.signVideo.data.amount
-        amount ? detail += `【签到视频】获得${amount}💰\n` : detail += ``
-    } else subTitle += '签到视频:失败'
+        if (signinfo.signVideo && signinfo.signVideo.code == 0) {
+            const amount = signinfo.signVideo.data.amount
+            amount ? detail += `【签到视频】获得${amount}💰\n` : detail += ``
+        } else subTitle += '签到视频:失败'
 
-    // 骰子信息
-    // 次数
-    if (signinfo.addnumList.length > 0) {
-        detail += `【骰子次数】增加${signinfo.addnumList.length}次\n`
-    } else {
-        detail += `【骰子次数】无次数增加\n`
-    }
-    // 掷骰子
-    if (signinfo.rollList.length > 0) {
-        let i = 0
-        for (const roll of signinfo.rollList) {
-            i += 1
-            roll.code == 0 ? detail += `【骰子奖励】第${i}次获得${roll.data.roll_coin}💰\n` : detail += ``
+        // 骰子信息
+        // 次数
+        if (signinfo.addnumList.length > 0) {
+            detail += `【骰子次数】增加${signinfo.addnumList.length}次\n`
+        } else {
+            detail += `【骰子次数】无次数增加\n`
         }
-    } else {
-        detail += `【骰子奖励】无次数掷骰子`
-    }
-    senku.msg(cookieName, subTitle, detail)
-    senku.done()
+        // 掷骰子
+        if (signinfo.rollList.length > 0) {
+            let i = 0
+            for (const roll of signinfo.rollList) {
+                i += 1
+                roll.code == 0 ? detail += `【骰子奖励】第${i}次获得${roll.data.roll_coin}💰\n` : detail += ``
+            }
+        } else {
+            detail += `【骰子奖励】无次数掷骰子`
+        }
+        senku.msg(cookieName, subTitle, detail)
+        senku.done()
+        resolve()
+    })
 }
 
 function init() {

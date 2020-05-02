@@ -1,4 +1,3 @@
-const readTimebodyKey = 'senku_readTimebody_midu'
 // 账号一
 const readTimeheaderKey = 'senku_readTimeheader_midu'
 const signbodyKey = 'senku_signbody_midu'
@@ -23,14 +22,15 @@ if ($request && $request.method != 'OPTIONS' && requrl.match(/\/user\/readTimeBa
             var CookieName = '【账号一】'
             var CookieKey = 'senku_readTimeheader_midu'
             var tokenKey = 'tokenMidu_read'
+            var readTimebodyKey = 'senku_readTimebody_midu'
         } else if (!account2 || tokenVal == account2) {
             var CookieName = '【账号二】'
             var CookieKey = 'senku_readTimeheader_midu2'
             var tokenKey = 'tokenMidu_read2'
-        } else {
-            senku.msg("米读", "更新米读->阅读Cookie失败", '非历史写入账号 ‼️')
+            var readTimebodyKey = 'senku_readTimebody_midu2'
         }
-        if (senku.getdata(tokenKey)) {
+        senku.log(`🍎${CookieName}`)
+        if (CookieName && senku.getdata(tokenKey)) {
             if (senku.getdata(tokenKey) != tokenVal) {
                 var token = senku.setdata(tokenVal, tokenKey)
                 var header = senku.setdata(JSON.stringify(CookieValue), CookieKey)
@@ -46,7 +46,7 @@ if ($request && $request.method != 'OPTIONS' && requrl.match(/\/user\/readTimeBa
                     senku.msg("米读", "阅读", "更新" + CookieName + "Cookie成功 🎉")
                 }
             }
-        } else {
+        } else if (CookieName) {
             var token = senku.setdata(tokenVal, tokenKey)
             var header = senku.setdata(JSON.stringify(CookieValue), CookieKey)
             var body = senku.setdata(readTimebodyVal, readTimebodyKey)
@@ -59,6 +59,8 @@ if ($request && $request.method != 'OPTIONS' && requrl.match(/\/user\/readTimeBa
                 senku.msg("米读", "阅读文章数据", "获取Cookie成功 🎉")
                 senku.msg("米读", "阅读", "首次写入" + CookieName + "Cookie成功 🎉")
             }
+        } else {
+            senku.msg("米读", "更新米读->阅读Cookie失败", '非历史写入账号 ‼️')
         }
 
     } catch (error) {
