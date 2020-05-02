@@ -47,6 +47,7 @@ apiwz.midukanshu.com
 
 ## 说明
 
+0. 越狱用户请关闭越狱状态,否则会视为作弊用户!!!
 1. 先把`apiwz.midukanshu.com`加到`[MITM]`
 2. 再配置重写规则:
    - Surge: 把两条远程脚本放到`[Script]`

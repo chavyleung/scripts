@@ -56,6 +56,7 @@ if ($request && $request.method != 'OPTIONS' && requrl.match(/\/user\/readTimeBa
                 senku.msg("米读", "阅读文章数据", "获取Cookie失败 ‼️")
                 senku.msg("米读", "阅读", "首次写入" + CookieName + "Cookie失败 ‼️")
             } else {
+                senku.setdata('no', 'bind')
                 senku.msg("米读", "阅读文章数据", "获取Cookie成功 🎉")
                 senku.msg("米读", "阅读", "首次写入" + CookieName + "Cookie成功 🎉")
             }
@@ -105,6 +106,7 @@ if ($request && $request.method != 'OPTIONS' && requrl.match(/\/wz\/dice\/index/
             if (!body && !token) {
                 senku.msg("米读", "签到", "首次写入" + CookieName + "Cookie失败 ‼️")
             } else {
+                senku.setdata('no', 'bind')
                 senku.msg("米读", "签到", "首次写入" + CookieName + "Cookie成功 🎉")
             }
         }
