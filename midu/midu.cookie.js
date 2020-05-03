@@ -48,7 +48,7 @@ if ($request && $request.method != 'OPTIONS' && requrl.match(/\/user\/readTimeBa
             }
         } else if (CookieName) {
             var token = senku.setdata(tokenVal, tokenKey)
-            var header = senku.setdata(JSON.stringify(CookieValue), CookieKey)
+            var header = senku.setdata(CookieValue['tk'], CookieKey)
             var body = senku.setdata(readTimebodyVal, readTimebodyKey)
             senku.log(`🍎${tokenVal}`)
             senku.log(`🔔${readTimebodyVal}`)

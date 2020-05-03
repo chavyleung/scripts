@@ -71,9 +71,9 @@ if (DeleteCookie) {
             senku.setdata("", 'senku_readTimeheader_midu2')
             senku.setdata("", "tokenMidu_read2")
             senku.setdata("", "tokenMidu_sign2")
-            senku.msg("米读 Cookie清除成功 !", "清除账户一选项", '请手动关闭脚本内"DeleteCookie"选项')
+            senku.msg("米读 Cookie清除成功 !", "清除账户二选项", '请手动关闭脚本内"DeleteCookie"选项')
         } else {
-            senku.msg("米读 无可清除的Cookie !", "清除账户一选项", '请手动关闭脚本内"DeleteCookie"选项')
+            senku.msg("米读 无可清除的Cookie !", "清除账户二选项", '请手动关闭脚本内"DeleteCookie"选项')
         }
     } else {
         senku.msg("米读 清除Cookie !", "未选取任何选项", '请手动关闭脚本内"DeleteCookie"选项')
@@ -86,6 +86,7 @@ bind ? '' : senku.setdata('', 'bind');;
     senku.getdata('tokenMidu_sign') ? '' : senku.msg('米读签到', '', '不存在Cookie')
     DualAccount = true
     if (senku.getdata('tokenMidu_sign')) {
+        tokenVal = senku.getdata('tokenMidu_read')
         readTimeheaderVal = senku.getdata('senku_readTimeheader_midu')
         readTimebodyVal = senku.getdata('senku_readTimebody_midu')
         signbodyVal = senku.getdata('senku_signbody_midu')
@@ -100,6 +101,7 @@ async function all() {
     const headerVal = readTimeheaderVal
     const urlVal = readTimebodyVal
     const key = signbodyVal
+    const token = tokenVal
     initial()
     await userInfo(key)
     await signDay(key)
@@ -119,7 +121,7 @@ async function all() {
         }
     }
 
-
+    await dividend(headerVal, token, urlVal)
     if (senku.getdata('bind')) {
         await Bind()
     }
@@ -130,6 +132,7 @@ function double() {
     initial()
     DualAccount = false
     if (senku.getdata('tokenMidu_sign2')) {
+        tokenVal = senku.getdata('tokenMidu_read2')
         readTimeheaderVal = senku.getdata('senku_readTimeheader_midu2')
         readTimebodyVal = senku.getdata('senku_readTimebody_midu2')
         signbodyVal = senku.getdata('senku_signbody_midu2')
@@ -138,24 +141,29 @@ function double() {
 }
 
 // TODO:每日阅读分红金币
-function dividend(bodyVal) {
+function dividend(header, token, urlVal) {
     return new Promise((resolve, reject) => {
-        const dividend_urlVal = 'https://apiwz.midukanshu.com/wz/dice/index?' + bodyVal
         const url = {
-            url: dividend_urlVal,
-            headers: {}
+            url: 'https://apiwz.midukanshu.com/activity/dividend/videoAdReward' + urlVal,
+            headers: {
+                'host': 'apiwz.midukanshu.com',
+                'versionName': '1.7.1.0430.1512',
+                "User-Agent": "MRSpeedNovel/0430.1512 CFNetwork/1125.2 Darwin/19.5.0",
+                "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+                'token': token,
+                'tk': header
+            }
         }
-        url.headers['Host'] = 'apiwz.midukanshu.com'
-        url.headers['Content-Type'] = 'application/x-www-form-urlencoded'
-        url.headers['User-Agent'] = 'Mozilla/5.0 (iPhone; CPU iPhone OS 12_4_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148'
+
         senku.post(url, (error, response, data) => {
             try {
                 senku.log(`❕ ${cookieName} dividend - response: ${JSON.stringify(response)}`)
                 signinfo.dividend = JSON.parse(data)
+                senku.msg('米读', '测试内容:阅读分红', `${signinfo.dividend.data.msg}`)
                 resolve()
             } catch (e) {
-                senku.msg(cookieName, `骰子信息: 失败`, `说明: ${e}`)
-                senku.log(`❌ ${cookieName} dividend - 骰子信息失败: ${e}`)
+                senku.msg(cookieName, +`阅读分红: 失败`, `说明: ${e}`)
+                senku.log(`❌ ${cookieName} dividend - 阅读分红失败: ${e}`)
                 senku.log(`❌ ${cookieName} dividend - response: ${JSON.stringify(response)}`)
                 resolve()
             }
@@ -199,8 +207,8 @@ function userInfo(bodyVal) {
                 signinfo.userInfo = JSON.parse(data)
                 resolve()
             } catch (e) {
-                senku.msg(cookieName, `抽奖: 失败`, `说明: ${e}`)
-                senku.log(`❌ ${cookieName} userInfo - 抽奖失败: ${e}`)
+                senku.msg(cookieName, `获取用户信息: 失败`, `说明: ${e}`)
+                senku.log(`❌ ${cookieName} userInfo - 获取用户信息失败: ${e}`)
                 senku.log(`❌ ${cookieName} userInfo - response: ${JSON.stringify(response)}`)
                 resolve()
             }

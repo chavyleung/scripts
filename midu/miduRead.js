@@ -61,14 +61,14 @@ if (DeleteCookie) {
         }
     } else if (DeleteCookieTwo) {
         if (three || four) {
-            senku.setdata("", 'senku_signbody_midu')
-            senku.setdata("", 'senku_readTimebody_midu')
-            senku.setdata("", 'senku_readTimeheader_midu')
-            senku.setdata("", "tokenMidu_read")
-            senku.setdata("", "tokenMidu_sign")
-            senku.msg("米读 Cookie清除成功 !", "清除账户一选项", '请手动关闭脚本内"DeleteCookie"选项')
+            senku.setdata("", 'senku_signbody_midu2')
+            senku.setdata("", 'senku_readTimebody_midu2')
+            senku.setdata("", 'senku_readTimeheader_midu2')
+            senku.setdata("", "tokenMidu_read2")
+            senku.setdata("", "tokenMidu_sign2")
+            senku.msg("米读 Cookie清除成功 !", "清除账户二选项", '请手动关闭脚本内"DeleteCookie"选项')
         } else {
-            senku.msg("米读 无可清除的Cookie !", "清除账户一选项", '请手动关闭脚本内"DeleteCookie"选项')
+            senku.msg("米读 无可清除的Cookie !", "清除账户二选项", '请手动关闭脚本内"DeleteCookie"选项')
         }
     } else {
         senku.msg("米读 清除Cookie !", "未选取任何选项", '请手动关闭脚本内"DeleteCookie"选项')
@@ -90,6 +90,7 @@ function initial() {
     senku.getdata('tokenMidu_read') ? '' : senku.msg('米读阅读', '', '不存在Cookie')
     DualAccount = true
     if (senku.getdata('tokenMidu_read')) {
+        tokenVal = senku.getdata('tokenMidu_read')
         readTimeheaderVal = senku.getdata('senku_readTimeheader_midu')
         readTimebodyVal = senku.getdata('senku_readTimebody_midu')
         signbodyVal = senku.getdata('senku_signbody_midu')
@@ -104,9 +105,10 @@ async function all() {
     const headerVal = readTimeheaderVal
     const urlVal = readTimebodyVal
     const key = signbodyVal
+    const token = tokenVal
     initial()
 
-    await readTime(headerVal, urlVal)
+    await readTime(headerVal, token, urlVal)
     await userInfo(key)
     await prizeInfo(key)
     if (signinfo.prizeInfo.data.total_num) {
@@ -121,6 +123,7 @@ function double() {
     initial()
     DualAccount = false
     if (senku.getdata('tokenMidu_read2')) {
+        tokenVal = senku.getdata('tokenMidu_read2')
         readTimeheaderVal = senku.getdata('senku_readTimeheader_midu2')
         readTimebodyVal = senku.getdata('senku_readTimebody_midu2')
         signbodyVal = senku.getdata('senku_signbody_midu2')
@@ -205,12 +208,20 @@ function prizeInfo(bodyVal) {
     })
 }
 // 阅读时长
-function readTime(header, urlVal) {
+function readTime(header, token, urlVal) {
     return new Promise((resolve, reject) => {
         const url = {
             url: 'https://apiwz.midukanshu.com/user/readTimeBase/readTime?' + urlVal,
-            headers: JSON.parse(header)
+            headers: {
+                'host': 'apiwz.midukanshu.com',
+                'versionName': '1.7.1.0430.1512',
+                "User-Agent": "MRSpeedNovel/0430.1512 CFNetwork/1125.2 Darwin/19.5.0",
+                "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+                'token': token,
+                'tk': header
+            }
         }
+
         senku.post(url, (error, response, data) => {
             try {
                 senku.log(`❕ ${cookieName} readTime - response: ${JSON.stringify(response)}`)
@@ -218,7 +229,7 @@ function readTime(header, urlVal) {
                 resolve()
             } catch (e) {
                 senku.msg(cookieName, +`阅读时长: 失败`, `说明: ${e}`)
-                senku.log(`❌ ${cookieName} readTime - 签到失败: ${e}`)
+                senku.log(`❌ ${cookieName} readTime - 阅读时长失败: ${e}`)
                 senku.log(`❌ ${cookieName} readTime - response: ${JSON.stringify(response)}`)
                 resolve()
             }
