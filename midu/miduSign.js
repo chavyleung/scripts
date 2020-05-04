@@ -43,7 +43,7 @@ bind ? '' : senku.setdata('', 'bind');;
         signbodyVal = senku.getdata('senku_signbody_midu')
         all()
     }
-})().catch((e) => senku.log(`❌ ${cookieName} 签到失败: ${e}`), senku.done())
+})()
 
 async function all() {
     try {
@@ -79,8 +79,8 @@ async function all() {
     } catch (e) {
         senku.msg(cookieName, `失败`, `说明: ${e}`)
         senku.log(`❌ ${cookieName}  - 失败: ${e}`)
+        senku.done()
     }
-
 }
 
 function double() {
@@ -340,7 +340,7 @@ function showmsg() {
             detail += `【骰子奖励】无次数掷骰子\n`
         }
         senku.msg(cookieName + ` 用户:${name}`, subTitle, detail)
-        // if (DualAccount) double()
+        if (DualAccount) double()
         resolve()
     })
 }
