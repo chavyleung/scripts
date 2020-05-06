@@ -1,25 +1,14 @@
 const cookieName = '电信营业厅'
-const cookieKey = 'chavy_cookie_10000'
-const mobileKey = 'chavy_mobile_10000'
+const KEY_signheader = 'chavy_signheader_10000'
+const KEY_signbody = 'chavy_signbody_10000'
+const KEY_mobile = 'chavy_mobile_10000'
 const chavy = init()
-if (this.$request && this.$request.headers) {
-  const cookieVal = $request.headers['Cookie']
-  if (cookieVal) {
-    if (chavy.setdata(cookieVal, cookieKey)) {
-      chavy.msg(`${cookieName}`, '获取Cookie: 成功', '')
-      chavy.log(`[${cookieName}] 获取Cookie: 成功, cookie: ${cookieVal}`)
-    }
-  }
-}
-if (this.$response) {
-  chavy.log(JSON.parse($response.body).data.userInfo.mobile)
-  const mobileVal = JSON.parse($response.body).data.userInfo.mobile
-  if (mobileVal) {
-    if (chavy.setdata(mobileVal, mobileKey)) {
-      chavy.msg(`${cookieName}`, `获取号码: 成功 (${mobileVal})`, ``)
-      chavy.log(`[${cookieName}] 获取号码: 成功, 号码: ${mobileVal}`)
-    }
-  }
+if (this.$request && this.$request.headers && this.$request.body) {
+  const VAL_signheader = JSON.stringify($request.headers)
+  const VAL_signbody = this.$request.body
+  if (VAL_signheader) chavy.setdata(VAL_signheader, KEY_signheader)
+  if (VAL_signbody) chavy.setdata(VAL_signbody, KEY_signbody)
+  chavy.msg(cookieName, `获取Cookie: 成功`, ``)
 }
 
 function init() {

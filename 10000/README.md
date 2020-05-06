@@ -1,12 +1,6 @@
 # 电信营业厅
 
-> 代码已同时兼容 Surge & QuanX, 使用同一份签到脚本即可
-
-> 不需要手动编辑脚本 (获取 Cookie 和手机号码都由脚本自动完成)
-
-> 需要`两条`重写脚本, 且两条脚本`都是不同的` (请完整复制! 请完整复制! 请完整复制!)
-
-> Surge 与 QuanX 的 `MITM` 不一样! 不一样! 不一样!
+> 2020.5.6 更新签到脚本 (正则和 rewrite 类型都有变化)
 
 ## 配置 (Surge)
 
@@ -15,8 +9,7 @@
 wapside.189.cn:9001
 
 [Script]
-http-request ^https:\/\/wapside.189.cn:9001\/api\/home\/homeInfo script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/10000/10000.cookie.js
-http-response ^https:\/\/wapside.189.cn:9001\/api\/home\/homeInfo script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/10000/10000.cookie.js, requires-body=true
+http-request ^https:\/\/wapside.189.cn:9001\/api\/home\/sign script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/10000/10000.cookie.js, requires-body=true
 cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/10000/10000.js
 ```
 
@@ -28,8 +21,7 @@ wapside.189.cn
 
 [rewrite_local]
 # 190及以后版本
-^https:\/\/wapside.189.cn:9001\/api\/home\/homeInfo url script-request-header 10000.cookie.js
-^https:\/\/wapside.189.cn:9001\/api\/home\/homeInfo url script-response-body 10000.cookie.js
+^https:\/\/wapside.189.cn:9001\/api\/home\/sign url script-request-body 10000.cookie.js
 
 [task_local]
 1 0 * * * 10000.js
