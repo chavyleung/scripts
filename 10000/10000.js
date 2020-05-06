@@ -19,11 +19,6 @@ const VAL_mobileVal = chavy.getdata(KEY_mobile)
 function signapp() {
   return new Promise((resolve, reject) => {
     let url = { url: `https://wapside.189.cn:9001/api/home/sign`, body: VAL_signbody, headers: JSON.parse(VAL_signheader) }
-    url.headers['Content-Type'] = 'application/json;charset=utf-8'
-    url.headers['User-Agent'] = 'Mozilla/5.0 (iPhone; CPU iPhone OS 13_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;CtClient;7.6.0;iOS;13.3;iPhone XR'
-    url.headers['Host'] = 'wapside.189.cn:9001'
-    url.headers['Origin'] = 'https://wapside.189.cn:9001'
-    url.headers['Referer'] = 'https://wapside.189.cn:9001/resources/dist/signInActivity.html?cmpid=jt-khd-my-zygn&ticket=0ab000281b4a8139f264620ae1d8b1ce067a6587921f90a6260dca4389a4e01a&version=7.6.0'
     chavy.post(url, (error, response, data) => {
       try {
         signinfo.signapp = JSON.parse(data)
