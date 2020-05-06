@@ -15,11 +15,11 @@ let VAL_login27header = chavy.getdata(KEY_login27header)
   chavy.log(`🔔 ${cookieName}`)
   await loginapp()
   await signapp()
-  if (VAL_login27url && VAL_login27header) {
-    await loginapp27()
-    await signapp27()
-    await getinfo27()
-  }
+  // if (VAL_login27url && VAL_login27header) {
+  //   await loginapp27()
+  //   await signapp27()
+  //   await getinfo27()
+  // }
   await getinfo()
   showmsg()
   chavy.done()
