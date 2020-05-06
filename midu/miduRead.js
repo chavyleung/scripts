@@ -150,7 +150,7 @@ function drawPrize(bodyVal) {
         senku.post(url, (error, response, data) => {
             try {
                 senku.log(`🐍🐢 ${cookieName} drawPrize - response: ${JSON.stringify(response)}`)
-                signinfo.drawPrize = JSON.parse(data)
+                data ? signinfo.drawPrize = JSON.parse(data) : signinfo.drawPrize = null
                 resolve()
             } catch (e) {
                 // senku.msg(cookieName, `抽奖: 失败`, `说明: ${e}`)
@@ -176,7 +176,7 @@ function prizeTask(bodyVal) {
         senku.post(url, (error, response, data) => {
             try {
                 senku.log(`🐍🐢 ${cookieName} prizeTask - response: ${JSON.stringify(response)}`)
-                signinfo.prizeTask = JSON.parse(data)
+                data ? signinfo.prizeTask = JSON.parse(data) : signinfo.prizeTask = null
                 resolve()
             } catch (e) {
                 // senku.msg(cookieName, `观看视频抽奖: 失败`, `说明: ${e}`)
@@ -202,7 +202,7 @@ function prizeInfo(bodyVal) {
         senku.post(url, (error, response, data) => {
             try {
                 senku.log(`🐍🐢 ${cookieName} prizeInfo - response: ${JSON.stringify(response)}`)
-                signinfo.prizeInfo = JSON.parse(data)
+                data ? signinfo.prizeInfo = JSON.parse(data) : signinfo.prizeInfo = null
                 resolve()
             } catch (e) {
                 // senku.msg(cookieName, `抽奖信息: 失败`, `说明: ${e}`)
@@ -231,7 +231,7 @@ function readTime(header, token, urlVal) {
         senku.post(url, (error, response, data) => {
             try {
                 senku.log(`🐍🐢 ${cookieName} readTime - response: ${JSON.stringify(response)}`)
-                signinfo.readTime = JSON.parse(data)
+                data ? signinfo.readTime = JSON.parse(data) : signinfo.readTime = null
                 resolve()
             } catch (e) {
                 // senku.msg(cookieName, `阅读时长: 失败`, `说明: ${e}`)
@@ -257,7 +257,7 @@ function userInfo(bodyVal) {
         senku.post(url, (error, response, data) => {
             try {
                 senku.log(`🐍🐢 ${cookieName} userInfo - response: ${JSON.stringify(response)}`)
-                signinfo.userInfo = JSON.parse(data)
+                data ? signinfo.userInfo = JSON.parse(data) : signinfo.userInfo = null
                 resolve()
             } catch (e) {
                 // senku.msg(cookieName, `用户信息: 失败`, `说明: ${e}`)
