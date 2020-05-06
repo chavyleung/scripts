@@ -8,6 +8,8 @@
 
 > 2020.3.12 增加每日抽奖 (需要进抽奖页面获取 Cookie) (进抽奖页会弹两个获取 Cookie 成功的消息) (签到 Cookie 不用重新获取) (增加了 rewrite 和 mitm), 注意看操作步骤说明
 
+> 2020.5.6 修复签到报错问题
+
 ## 配置 (Surge)
 
 ```properties
@@ -17,7 +19,7 @@ hostname = act.10010.com, m.client.10010.com
 [Script]
 # 注意获取Cookie有两条脚本
 http-request ^https:\/\/act.10010.com\/SigninApp\/signin\/querySigninActivity.htm script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/10010/10010.cookie.js
-http-request ^https:\/\/act.10010.com\/SigninApp(.*?)\/signin\/daySign.do script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/10010/10010.cookie.js
+http-request ^https:\/\/act.10010.com\/SigninApp(.*?)\/signin\/daySign script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/10010/10010.cookie.js
 http-request ^https:\/\/m.client.10010.com\/dailylottery\/static\/(textdl\/userLogin|active\/findActivityInfo) script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/10010/10010.cookie.js
 cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/10010/10010.js
 ```
@@ -31,7 +33,7 @@ hostname = act.10010.com, m.client.10010.com
 [rewrite_local]
 # 注意获取Cookie有两条脚本
 ^https:\/\/act.10010.com\/SigninApp\/signin\/querySigninActivity.htm url script-request-header 10010.cookie.js
-^https:\/\/act.10010.com\/SigninApp(.*?)\/signin\/daySign.do url script-request-header 10010.cookie.js
+^https:\/\/act.10010.com\/SigninApp(.*?)\/signin\/daySign url script-request-header 10010.cookie.js
 ^https:\/\/m.client.10010.com\/dailylottery\/static\/(textdl\/userLogin|active\/findActivityInfo) url script-request-header 10010.cookie.js
 
 [task_local]

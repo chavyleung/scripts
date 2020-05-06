@@ -14,25 +14,25 @@ if ($request && $request.method != 'OPTIONS' && $request.url.indexOf('querySigni
   const tokenheaderVal = JSON.stringify($request.headers)
   if (tokenurlVal) chavy.setdata(tokenurlVal, tokenurlKey)
   if (tokenheaderVal) chavy.setdata(tokenheaderVal, tokenheaderKey)
-  title = chavy.msg(cookieName, `获取刷新链接: 成功`, ``)
-} else if ($request && $request.method != 'OPTIONS' && $request.url.indexOf('daySign.do') >= 0) {
+  chavy.msg(cookieName, `获取刷新链接: 成功`, ``)
+} else if ($request && $request.method != 'OPTIONS' && $request.url.endsWith('daySign') >= 0) {
   const signurlVal = $request.url
   const signheaderVal = JSON.stringify($request.headers)
   if (signurlVal) chavy.setdata(signurlVal, signurlKey)
   if (signheaderVal) chavy.setdata(signheaderVal, signheaderKey)
-  title = chavy.msg(cookieName, `获取Cookie: 成功 (每日签到)`, ``)
+  chavy.msg(cookieName, `获取Cookie: 成功 (每日签到)`, ``)
 } else if ($request && $request.method != 'OPTIONS' && $request.url.indexOf('userLogin') >= 0) {
   const loginlotteryurlVal = $request.url
   const loginlotteryheaderVal = JSON.stringify($request.headers)
   if (loginlotteryurlVal) chavy.setdata(loginlotteryurlVal, loginlotteryurlKey)
   if (loginlotteryheaderVal) chavy.setdata(loginlotteryheaderVal, loginlotteryheaderKey)
-  title = chavy.msg(cookieName, `获取Cookie: 成功 (登录抽奖)`, ``)
+  chavy.msg(cookieName, `获取Cookie: 成功 (登录抽奖)`, ``)
 } else if ($request && $request.method != 'OPTIONS' && $request.url.indexOf('findActivityInfo') >= 0) {
   const findlotteryurlVal = $request.url
   const findlotteryheaderVal = JSON.stringify($request.headers)
   if (findlotteryurlVal) chavy.setdata(findlotteryurlVal, findlotteryurlKey)
   if (findlotteryheaderVal) chavy.setdata(findlotteryheaderVal, findlotteryheaderKey)
-  title = chavy.msg(cookieName, `获取Cookie: 成功 (抽奖次数)`, ``)
+  chavy.msg(cookieName, `获取Cookie: 成功 (抽奖次数)`, ``)
 }
 
 function init() {
