@@ -261,7 +261,9 @@ function showmsg() {
     if (signinfo.gameinfo.data.resultCode == 0000) {
       moreDetail += moreDetail == '' ? '' : '\n'
       moreDetail += '\n💰 天天低价: '
-      for (d of signinfo.gameinfo.data.result.datas) moreDetail += `\n${d.obj.couponRuleName} (${d.obj.remainValue}元)`
+      for (d of signinfo.gameinfo.data.result.datas)
+        if (d.obj) moreDetail += `\n${d.obj.couponRuleName} (${d.obj.remainValue}元)`
+        else moreDetail += `\n${d.basePrizeEntity.prizeName} (${d.basePrizeEntity.prizeRules})`
     } else {
       chavy.log(`❌ ${cookieName} showmsg - 天天低价 - gameinfo: ${JSON.stringify(signinfo.gameinfo)}`)
     }
