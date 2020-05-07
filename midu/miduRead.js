@@ -85,6 +85,7 @@ function initial() {
     }
 }
 
+;
 (sign = () => {
     senku.log(`🔔 ${cookieName}`)
     senku.getdata('tokenMidu_read') ? '' : senku.msg('米读阅读', '', '不存在Cookie')
@@ -226,7 +227,7 @@ function readTime(header, token, urlVal) {
             url: 'https://apiwz.midukanshu.com/user/readTimeBase/readTime?' + urlVal,
             headers: {
                 'host': 'apiwz.midukanshu.com',
-                'versionName': '1.7.1.0430.1512',
+                'versionName': '1.7.2.0501.1930',
                 "User-Agent": "MRSpeedNovel/0430.1512 CFNetwork/1125.2 Darwin/19.5.0",
                 "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
                 'token': token,
@@ -283,7 +284,7 @@ function showmsg() {
     return new Promise((resolve, reject) => {
         let subTitle = ''
         let detail = ''
-        const name = signinfo.userInfo.data.nickname ? signinfo.userInfo.data.nickname : `未设置昵称`
+        const name = signinfo.userInfo && signinfo.userInfo.data && signinfo.userInfo.data.nickname ? signinfo.userInfo.data.nickname : `账户已退出`
         if (signinfo.readTime && signinfo.readTime.code == 0) {
             const coin = signinfo.readTime.data.coin
             const readTotalMinute = signinfo.readTime.data.readTotalMinute
@@ -292,9 +293,6 @@ function showmsg() {
             readTotalMinute ? detail += ` 阅读时长${readTotalMinute / 2}分钟,该账户:${total_coin}💰` : detail += `该账户:${total_coin}💰`
         } else if (signinfo.readTime && signinfo.readTime.code != 0) {
             detail += `【阅读时长】错误代码${signinfo.readTime.code},错误信息${signinfo.readTime.message}`
-            senku.msg(cookieName + ` 用户:${name}`, subTitle, detail)
-        } else {
-            detail += '【阅读时长】失败'
             senku.msg(cookieName + ` 用户:${name}`, subTitle, detail)
         }
 
