@@ -305,7 +305,7 @@ function showmsg() {
         // 大转盘抽手机
         if (signinfo.drawPrize) {
             if (signinfo.drawPrize.code == 0) {
-                drawPrize.data.index >= 0 ? detail += `【转盘奖励】本次${drawPrize.data.title}\n` : detail += ``
+                detail += `【转盘奖励】本次${drawPrize.data.title}\n`
             } else {
                 detail += `【转盘奖励】无次数抽奖`
             }
