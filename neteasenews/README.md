@@ -13,7 +13,7 @@
 *.m.163.com
 
 [Script]
-http-request ^https:\/\/c\.m\.163\.com\/uc\/api\/sign\/v2\/commit script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/neteasenews/neteasenews.cookie.js,requires-body=true
+http-request ^https:\/\/v6-c\.m\.163\.com\/uc\/api\/sign\/v3\/commit script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/neteasenews/neteasenews.cookie.js,requires-body=true
 cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/neteasenews/neteasenews.js
 ```
 
@@ -25,7 +25,7 @@ cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scr
 
 [rewrite_local]
 # 195及以后版本
-^https:\/\/c\.m\.163\.com\/uc\/api\/sign\/v2\/commit url script-request-body neteasenews.cookie.js
+^https:\/\/v6-c\.m\.163\.com\/uc\/api\/sign\/v3\/commit url script-request-body neteasenews.cookie.js
 
 [task_local]
 1 0 * * * neteasenews.js
