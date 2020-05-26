@@ -303,14 +303,14 @@ function showmsg() {
         }
 
         // 大转盘抽手机
-        if (signinfo.drawPrize) {
-            if (signinfo.drawPrize.code == 0) {
-                detail += `【转盘奖励】本次${drawPrize.data.title}\n`
-            } else {
-                detail += `【转盘奖励】无次数抽奖`
-            }
-            senku.msg(cookieName + ` 用户:${name}`, subTitle, detail)
-        }
+        // if (signinfo.drawPrize) {
+        //     if (signinfo.drawPrize.code == 0) {
+        //         detail += `【转盘奖励】本次${drawPrize.data.title}\n`
+        //     } else {
+        //         detail += `【转盘奖励】无次数抽奖`
+        //     }
+        //     senku.msg(cookieName + ` 用户:${name}`, subTitle, detail)
+        // }
         if (DualAccount) double()
         resolve()
     })
