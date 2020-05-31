@@ -1,0 +1,6 @@
+#!name=Chavy iOS JD618 Task Module
+#!desc=执行京东 618 活动任务
+#!system=ios
+
+[Script]
+Tasks: JD618 = type=cron,cronexp="10,20,30,40,50 0 * * *",script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/jd/jd.618.js,wake-system=true,timeout=600
