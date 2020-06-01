@@ -195,8 +195,6 @@ function taskurl(fid, body = '{}') {
   const url = { url: `https://api.m.jd.com/client.action` }
   url.headers = JSON.parse($.VAL_headers)
   url.body = `functionId=${fid}&body=${body}&client=wh5&clientVersion=1.0.0`
-  $.log(`❕ ${$.name}, url: ${url.url}, body: ${url.body}`)
-  $.log(`❕ ${$.name}, ckurl: ${$.VAL_url}, ckbody: ${$.VAL_body}`)
   return url
 }
 
