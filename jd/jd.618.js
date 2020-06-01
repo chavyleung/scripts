@@ -30,7 +30,7 @@ function getData() {
         $.log(`   等级 = ${_info?.raiseInfo?.scoreLevel}`)
         $.log(`   分数 = ${_info?.raiseInfo?.totalScore} => ${_info?.raiseInfo?.nextLevelScore}`, '')
       } catch (e) {
-        $.log(`❗️ ${$.name}, 获取密钥!`, ` error = ${e}`, `response = ${JSON.parse(response)}`, `data = ${data}`, '')
+        $.log(`❗️ ${$.name}, 获取密钥!`, ` error = ${error || e}`, `response = ${JSON.stringify(response)}`, `data = ${data}`, '')
       } finally {
         resove()
       }
@@ -67,7 +67,7 @@ function getActs() {
         if (!$.acts) throw new Error('获取活动失败!')
         $.log(`   活动数量 = ${$.acts.length}`, '')
       } catch (e) {
-        $.log(`❗️ ${$.name}, 获取活动!`, ` error = ${e}`, `response = ${JSON.parse(response)}`, `data = ${data}`, '')
+        $.log(`❗️ ${$.name}, 获取活动!`, ` error = ${error || e}`, `response = ${JSON.stringify(response)}`, `data = ${data}`, '')
       } finally {
         resove()
       }
@@ -154,7 +154,7 @@ function getProdAct(act) {
           act.subacts.push(_subact)
         })
       } catch (e) {
-        $.log(`❗️ ${$.name}, 执行商品类活动!`, ` error = ${error || e}`, `response = ${JSON.parse(response)}`, `data = ${data}`, '')
+        $.log(`❗️ ${$.name}, 执行商品类活动!`, ` error = ${error || e}`, `response = ${JSON.stringify(response)}`, `data = ${data}`, '')
       } finally {
         resove()
       }
@@ -195,6 +195,8 @@ function taskurl(fid, body = '{}') {
   const url = { url: `https://api.m.jd.com/client.action` }
   url.headers = JSON.parse($.VAL_headers)
   url.body = `functionId=${fid}&body=${body}&client=wh5&clientVersion=1.0.0`
+  $.log(`❕ ${$.name}, url: ${url.url}, body: ${url.body}`)
+  $.log(`❕ ${$.name}, ckurl: ${$.VAL_url}, ckbody: ${$.VAL_body}`)
   return url
 }
 
