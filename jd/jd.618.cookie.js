@@ -13,7 +13,14 @@
  * ^https:\/\/api.m.jd.com\/client.action\?functionId=cakebaker_getHomeData url script-request-body https://raw.githubusercontent.com/chavyleung/scripts/master/jd/jd.618.cookie.js
  *
  * [task_local]
+ * # 本地
+ * 10,20,30,40,50 0 * * * jd.618.js, tag=京东618
+ * # 远程
  * 10,20,30,40,50 0 * * * https://raw.githubusercontent.com/chavyleung/scripts/master/jd/jd.618.js, tag=京东618
+ *
+ * Loon:
+ * cron "10,20,30,40,50 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/jd/jd.618.js, timeout=600, tag=京东618
+ * http-request ^https:\/\/api.m.jd.com\/client.action\?functionId=cakebaker_getHomeData script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/jd/jd.618.cookie.js,requires-body=true
  *
  * [MITM]
  * hostname = api.m.jd.com
