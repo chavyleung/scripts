@@ -22,13 +22,13 @@ function getData() {
     $.post(taskurl('cakebaker_getHomeData'), (error, response, data) => {
       try {
         if (error) throw new Error(error)
-        const _info = JSON.parse(data).data.result.cakeBakerInfo
-        $.secretp = _info.secretp
+        const _info = JSON.parse(data).data?.result?.cakeBakerInfo
+        $.secretp = _info?.secretp
         if (!$.secretp) throw new Error('获取 secretp 失败!')
         $.log(`❕ ${$.name}, 获取密钥!`)
         $.log(`   密钥 = ${$.secretp.slice(0, 10)}...`)
-        $.log(`   等级 = ${_info.raiseInfo.scoreLevel}`)
-        $.log(`   分数 = ${_info.raiseInfo.totalScore} => ${_info.raiseInfo.nextLevelScore}`, '')
+        $.log(`   等级 = ${_info?.raiseInfo?.scoreLevel}`)
+        $.log(`   分数 = ${_info?.raiseInfo?.totalScore} => ${_info?.raiseInfo?.nextLevelScore}`, '')
       } catch (e) {
         $.log(`❗️ ${$.name}, 获取密钥!`, ` error = ${error || e}`, `response = ${JSON.stringify(response)}`, `data = ${data}`, '')
       } finally {
@@ -45,7 +45,7 @@ function getActs() {
         $.log(`❕ ${$.name}, 获取活动!`)
         if (error) throw new Error(error)
         $.acts = []
-        JSON.parse(data).data.result.taskVos.forEach((_a) => {
+        JSON.parse(data)?.data?.result?.taskVos.forEach((_a) => {
           const _act = {
             _raw: _a,
             id: _a.taskId,
@@ -56,7 +56,7 @@ function getActs() {
             isProd: _a.productInfoVos ? true : false,
             tasks: [],
           }
-          const _vo = _a[Object.keys(_a).find((key) => (_a[key] && _a[key].itemId) || (_a[key] && _a[key][0] && _a[key][0].itemId))]
+          const _vo = _a[Object.keys(_a).find((key) => _a[key]?.itemId || _a[key][0]?.itemId)]
           if (Array.isArray(_vo)) {
             _vo.forEach((_task) => _act.tasks.push({ _raw: _task, id: _task.itemId, name: _task.title || _task.shopName || _task.taskName || '未知名称' }))
           } else {
@@ -129,8 +129,8 @@ function getProdAct(act) {
     const body = { taskIds: act.tasks.map((task) => task.id).toString() }
     $.post(taskurl('cakebaker_getFeedDetail', JSON.stringify(body)), (error, response, data) => {
       try {
-        const _result = JSON.parse(data).data.result
-        const _vo = _result[Object.keys(_result).find((key) => Array.isArray(_result[key] && _result[key][0] && _result[key][0].productInfoVos))]
+        const _result = JSON.parse(data)?.data?.result
+        const _vo = _result[Object.keys(_result).find((key) => Array.isArray(_result[key]?.[0]?.productInfoVos))]
         act.subacts = []
         _vo.forEach((_suba) => {
           const _subact = {
@@ -178,7 +178,7 @@ function sendtask(act, task, isClaim = false) {
     $.post(taskurl('cakebaker_ckCollectScore', JSON.stringify(body)), (error, response, data) => {
       try {
         const _data = JSON.parse(data)
-        const _issuc = _data.data.bizCode === 0
+        const _issuc = _data?.data?.bizCode === 0
         if (isClaim) task.isClaimSuc = _issuc
         else task.isExecSuc = _issuc
       } catch (e) {
