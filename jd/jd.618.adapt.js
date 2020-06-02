@@ -7,6 +7,7 @@ $.VAL_headers = $.getdata('chavy_headers_jd816')
   $.log('', `🔔 ${$.name}, 开始!`, '')
   await getData()
   await getActs()
+  await getShops()
   await execActs()
   showmsg()
 })()
@@ -31,6 +32,31 @@ function getData() {
         $.log(`   分数 = ${_info.raiseInfo.totalScore} => ${_info.raiseInfo.nextLevelScore}`, '')
       } catch (e) {
         $.log(`❗️ ${$.name}, 获取密钥!`, ` error = ${error || e}`, `response = ${JSON.stringify(response)}`, `data = ${data}`, '')
+      } finally {
+        resove()
+      }
+    })
+  })
+}
+
+function getShops() {
+  return new Promise((resove) => {
+    $.post(taskurl('cakebaker_bigBrandHomeData'), (error, response, data) => {
+      try {
+        $.log(`❕ ${$.name}, 获取商店!`)
+        if (error) throw new Error(error)
+        $.shopActs = []
+        JSON.parse(data).data.result.bigBrandList.forEach((_shopa) => {
+          const _shopact = {
+            _raw: _shopa,
+            id: _shopa.venderId,
+            name: _shopa.name,
+          }
+          $.shopActs.push(_shopact)
+        })
+        $.log(`   商店数量 = ${$.shopActs.length}`, '')
+      } catch (e) {
+        $.log(`❗️ ${$.name}, 获取商店!`, ` error = ${error || e}`, `response = ${JSON.stringify(response)}`, `data = ${data}`, '')
       } finally {
         resove()
       }
@@ -97,10 +123,16 @@ async function execActs() {
           $.log(`         ${subataskIdx + 1}. ${subatask.name.slice(0, 15)}...`)
           await sendtask(subact, subatask, true)
           $.log(`         @认领任务: ${subatask.isClaimSuc ? '🟢' : '🔴'}`)
-          $.log(`         @等待: ${subact.waitDuration} 秒`)
-          await new Promise($.wait(subact.waitDuration * 1000))
-          await sendtask(subact, subatask)
-          $.log(`         @完成任务: ${subatask.isExecSuc ? '🟢' : '🔴'}`, '')
+          if (subatask.isskip) {
+            $.log(`         @跳过: ${subatask.msg}`)
+            $.log(`         @等待: 0.5 秒`, '')
+            await new Promise($.wait(500))
+          } else {
+            $.log(`         @等待: ${subact.waitDuration} 秒`)
+            await new Promise($.wait(subact.waitDuration * 1000))
+            await sendtask(subact, subatask)
+            $.log(`         @完成任务: ${subatask.isExecSuc ? '🟢' : '🔴'}`, '')
+          }
         }
         $.log('')
       }
@@ -112,14 +144,32 @@ async function execActs() {
         $.log(`      ${taskIdx + 1}. ${task.name}`)
         await sendtask(_act, task, true)
         $.log(`         @认领任务: ${task.isClaimSuc ? '🟢' : '🔴'}`)
-        $.log(`         @等待: ${_act.waitDuration} 秒`)
-        await new Promise($.wait(_act.waitDuration * 1000))
-        await sendtask(_act, task)
-        $.log(`         @完成任务: ${task.isExecSuc ? '🟢' : '🔴'}`, '')
+        if (task.isskip || task.ishot) {
+          $.log(`         @跳过: ${task.msg}`)
+          $.log(`         @等待: 0.5 秒`, '')
+          await new Promise($.wait(500))
+        } else {
+          $.log(`         @等待: ${_act.waitDuration} 秒`)
+          await new Promise($.wait(_act.waitDuration * 1000))
+          await sendtask(_act, task)
+          $.log(`         @完成任务: ${task.isExecSuc ? '🟢' : '🔴'}`, '')
+        }
       }
       $.log('')
     }
     $.log('')
+  }
+
+  // 商店签到
+  $.log(`   ${$.acts.length + 1}. 商店签到 (${$.shopActs.length})`)
+  for (let _shopIdx = 0; _shopIdx < $.shopActs.length; _shopIdx++) {
+    const shop = $.shopActs[_shopIdx]
+    $.log(`      ${_shopIdx + 1}. ${shop.name}`)
+    await signshop(shop)
+    shop.msg = /,/.test(shop.msg) ? shop.msg.split(',')[1] : shop.msg
+    $.log(`         @签到: ${shop.isSuc ? '🟢 已领取!' : shop.code === 402 ? '⚪️ 无效活动!' : `🔴 ${shop.msg}`}`)
+    $.log(`         @等待: 1 秒`, '')
+    await new Promise($.wait(1000))
   }
 }
 
@@ -171,19 +221,40 @@ function sendtask(act, task, isClaim = false) {
       safeStr: JSON.stringify({ secretp: $.secretp }),
     }
 
-    if (isClaim) task.isClaimSuc = true
-    else task.isExecSuc = true
-    resove()
-
     $.post(taskurl('cakebaker_ckCollectScore', JSON.stringify(body)), (error, response, data) => {
       try {
         const _data = JSON.parse(data)
-        const _issuc = _data.data.bizCode === 0
+        const _issuc = _data.data.bizCode === 0 || _data.data.bizCode === -5 || _data.data.bizCode === -15
         if (isClaim) task.isClaimSuc = _issuc
         else task.isExecSuc = _issuc
+        task.isskip = _data.data.bizCode === -5
+        task.ishot = _data.data.bizCode === -15
+        task.msg = _data.data.bizMsg || '无'
       } catch (e) {
         if (isClaim) task.isClaimSuc = false
         else task.isExecSuc = false
+        task.isskip = false
+        task.ishot = false
+        task.msg = error || e
+      } finally {
+        resove()
+      }
+    })
+  })
+}
+
+function signshop(shop) {
+  return new Promise((resove) => {
+    const body = { channel: 2, venderId: shop.id }
+    $.post(taskurl('interact_center_sign_collectGift', JSON.stringify(body)), (error, response, data) => {
+      try {
+        const _data = JSON.parse(data)
+        shop.isSuc = _data.code === 407000005 || _data.code === 200 ? true : false
+        shop.code = _data.code
+        shop.msg = _data.msg
+      } catch (e) {
+        shop.isSuc = false
+        shop.msg = error || e
       } finally {
         resove()
       }
