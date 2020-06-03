@@ -31,8 +31,10 @@ function Env(name) {
     if (this.isSurge()) {
       const __send = method == 'POST' ? $httpClient.post : $httpClient.get
       __send(url, (error, response, data) => {
-        response.body = data
-        response.statusCode = response.status
+        if (response) {
+          response.body = data
+          response.statusCode = response.status
+        }
         callback(error, response, data)
       })
     }
