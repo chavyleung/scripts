@@ -79,6 +79,7 @@ function showmsg() {
     $.subt = ''
     $.desc = ''
     // web
+    $.subt += '网页: '
     if ($.web.status == 1) {
       if ($.web.data.new_login) $.subt += '成功'
       else $.subt += '成功 (重复)'
@@ -90,7 +91,7 @@ function showmsg() {
     }
 
     // app
-    $.subt += `; APP: `
+    $.subt += '; APP: '
     if ($.app.status == 1) $.subt += '成功'
     else if ($.app.status == 4005) $.subt += '成功 (重复)'
     else if ($.app.status == 1021) $.subt += '未登录'
