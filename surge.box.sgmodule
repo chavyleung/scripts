@@ -1,0 +1,9 @@
+#!name=Chavy Box Module
+#!desc=Chavy 应用盒模块
+
+[Script]
+Rewrite: Scripts Manager = type=http-request,pattern=^https://8.8.8.8/api,script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/chavy.box.js,requires-body=true,max-size=0
+Rewrite: Scripts Manager = type=http-response,pattern=^https://8.8.8.8/(home|app|log\/),script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/chavy.box.js,requires-body=true,max-size=0
+
+[MITM]
+hostname = %INSERT%, 8.8.8.8
