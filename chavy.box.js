@@ -279,7 +279,7 @@ function handleHome() {
             <v-container fluid v-if="ui.curview === 'appsession'">
               <v-card class="mx-auto">
                 <v-subheader>
-                  当前会话
+                  当前会话 ({{ ui.curapp.datas.length }})
                   <v-spacer></v-spacer>
                   <v-menu bottom left>
                     <template v-slot:activator="{ on }">
@@ -307,9 +307,9 @@ function handleHome() {
                   <v-btn small text color="success" @click="onSaveSession">保存会话</v-btn>
                 </v-card-actions>
               </v-card>
-              <v-card class="ma-4" v-for="(session, sessionIdx) in ui.curappSessions" :key="session.id">
+              <v-card class="ml-10 mt-4" v-for="(session, sessionIdx) in ui.curappSessions" :key="session.id">
                 <v-subheader>
-                  {{ session.name }}
+                  #{{ sessionIdx + 1 }} {{ session.name }}
                   <v-spacer></v-spacer>
                   <v-menu bottom left>
                     <template v-slot:activator="{ on }">
@@ -378,7 +378,6 @@ function handleHome() {
               <v-icon>mdi-calendar-text</v-icon>
             </v-btn>
           </v-bottom-navigation>
-          <v-footer app> </v-footer>
         </v-app>
       </div>
       <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
@@ -407,6 +406,17 @@ function handleHome() {
             }
           },
           computed: {},
+          watch: {
+            'ui.curview': {
+              handler(newval, oldval) {
+                this.ui.bfview = oldval
+                if (newval === 'app') {
+                  this.ui.curapp = null
+                  this.ui.curappSessions = null
+                }
+              }
+            }
+          },
           methods: {
             goAppSessionView(app) {
               this.ui.bfview = this.ui.curview
