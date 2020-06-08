@@ -16,7 +16,7 @@ $.html = $.name
   }
   // 处理 App 请求 => /app
   else if (/^\/app/.test(path)) {
-    handleApp()
+    handleApp(path.split('/app/')[1])
   }
   // 处理 Api 请求 => /api
   else if (/^\/api/.test(path)) {
@@ -237,18 +237,38 @@ function handleApi() {
   }
 }
 
-function handleHome() {
-  const data = JSON.stringify({
+function handleApp(appId) {
+  const box = {
     sessions: getSessions(),
     sysapps: getSystemApps(),
     userapps: getUserApps(),
     syscfgs: getSystemCfgs(),
     colors: getSystemThemes()
-  })
-  $.html = `
+  }
+  const curapp = appId ? box.sysapps.find((app) => app.id === appId) : null
+  $.html = printHtml(JSON.stringify(box), JSON.stringify(curapp))
+  console.log($.html)
+}
+
+function handleHome() {
+  $.html = printHtml(
+    JSON.stringify({
+      sessions: getSessions(),
+      sysapps: getSystemApps(),
+      userapps: getUserApps(),
+      syscfgs: getSystemCfgs(),
+      colors: getSystemThemes()
+    })
+  )
+  console.log($.html)
+}
+
+function printHtml(data, curapp = null) {
+  return `
   <!DOCTYPE html>
   <html lang="zh-CN">
     <head>
+      <title>BoxJs</title>
       <meta charset="utf-8" />
       <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet" />
       <link href="https://cdn.jsdelivr.net/npm/@mdi/font@5.x/css/materialdesignicons.min.css" rel="stylesheet" />
@@ -444,7 +464,8 @@ function handleHome() {
               ui: {
                 bfview: 'app',
                 curview: 'app',
-                curapp: null,
+                curapp: ${curapp},
+                curappTabs: { curtab: 'sessions' },
                 curappSessions: null,
                 impSessionDialog: { show: false, impval: '' },
                 snackbar: { show: false, text: '已复制!', timeout: 2000 },
@@ -462,6 +483,9 @@ function handleHome() {
                 if (newval === 'app') {
                   this.ui.curapp = null
                   this.ui.curappSessions = null
+                  var state = { title: 'BoxJs' }
+                  document.title = state.title
+                  history.pushState(state, '', '/home')
                 }
               }
             }
@@ -472,6 +496,9 @@ function handleHome() {
               this.ui.curapp = app
               this.ui.curappSessions = this.box.sessions.filter((s) => s.appId === this.ui.curapp.id)
               this.ui.curview = 'appsession'
+              var state = { title: 'BoxJs - ' + this.ui.curapp.name, url: window.location.href }
+              history.pushState(state, '', '/app/' + this.ui.curapp.id)
+              document.title = state.title
             },
             onSaveSession() {
               const session = {
@@ -527,6 +554,11 @@ function handleHome() {
             onCopy(e) {
               this.ui.snackbar.show = true
             }
+          },
+          mounted: function () {
+            if (this.ui.curapp) {
+              this.goAppSessionView(this.ui.curapp)
+            }
           }
         })
       </script>
@@ -534,12 +566,8 @@ function handleHome() {
   </html>
   
   `
-  console.log($.html)
 }
 
-function printHtml() {
-  return ''
-}
 function printJson() {
   return ''
 }
