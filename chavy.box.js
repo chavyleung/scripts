@@ -122,6 +122,10 @@ function getSystemApps() {
       id: 'JD618',
       name: '京东618',
       keys: ['chavy_url_jd816', 'chavy_body_jd816', 'chavy_headers_jd816'],
+      settings: [
+        { id: 'CFG_BOOM_times_JD618', name: '炸弹次数', val: '1', type: 'text', desc: '总共发送多少次炸弹!' },
+        { id: 'CFG_BOOM_interval_JD618', name: '炸弹间隔 (毫秒)', val: '100', type: 'text', desc: '每次间隔多少毫秒!' }
+      ],
       author: '@chavyleung',
       repo: 'https://github.com/chavyleung/scripts/tree/master/jd',
       icon: 'https://is4-ssl.mzstatic.com/image/thumb/Purple113/v4/0b/7c/08/0b7c08b3-4c03-1d92-5461-32c176a6fc30/AppIcon-0-0-1x_U007emarketing-0-0-0-6-0-0-85-220.png/460x0w.png'
@@ -159,6 +163,10 @@ function getSystemApps() {
     app.keys.forEach((key) => {
       app.datas.push({ key, val: $.getdata(key) })
     })
+    Array.isArray(app.settings) &&
+      app.settings.forEach((setting) => {
+        setting.val = $.getdata(setting.id) || setting.val
+      })
   })
   return sysapps
 }
@@ -201,6 +209,22 @@ function handleApi() {
       $.desc = []
       $.desc.push(`会话名称: ${session.name}`, `应用名称: ${session.appName}`, `会话编号: ${session.id}`, `应用编号: ${session.appId}`, `数据: ${JSON.stringify(session)}`)
       $.msg($.name, $.subt, $.desc.join('\n'))
+    }
+  }
+  // 保存设置
+  else if (data.cmd === 'savePops') {
+    $.log(`❕ ${$.name}, 保存设置!`)
+    const settings = data.val
+    if (Array.isArray(settings)) {
+      settings.forEach((setting) => {
+        const oldval = $.getdata(setting.id)
+        const newval = setting.val
+        const usesuc = $.setdata(newval, setting.id)
+        $.log(`❕ ${$.name}, 保存设置: ${setting.id} ${usesuc ? '成功' : '失败'}!`, `旧值: ${oldval}`, `新值: ${newval}`)
+        $.setdata(newval, setting.id)
+      })
+      $.subt = `保存设置: 成功! `
+      $.msg($.name, $.subt, '')
     }
   }
   // 应用会话
@@ -347,6 +371,23 @@ function printHtml(data, curapp = null) {
             </v-container>
             <v-container fluid v-if="ui.curview === 'appsession'">
               <v-card class="mx-auto">
+                <template v-if="Array.isArray(ui.curapp.settings)">
+                  <v-subheader v-if="Array.isArray(ui.curapp.settings)">
+                    应用设置 ({{ ui.curapp.settings.length }})
+                  </v-subheader>
+                  <v-form class="pl-4 pr-4">
+                    <template v-for="(setting, settingIdx) in ui.curapp.settings">
+                      <v-text-field :label="setting.name" v-model="setting.val" :hint="setting.desc" v-if="setting.type === 'text'"></v-text-field>
+                      <v-slider :label="setting.name" v-model="setting.val" :hint="setting.desc" :min="setting.min" :max="setting.max" thumb-label="always" v-if="setting.type === 'slider'"></v-slider>
+                    </template>
+                  </v-form>
+                  <v-divider></v-divider>
+                  <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn small text color="success" @click="onSavePops">保存设置</v-btn>
+                  </v-card-actions>
+                  <v-divider></v-divider>
+                </template>
                 <v-subheader>
                   当前会话 ({{ ui.curapp.datas.length }})
                   <v-spacer></v-spacer>
@@ -513,6 +554,9 @@ function printHtml(data, curapp = null) {
               this.box.sessions.push(session)
               this.ui.curappSessions.push(session)
               axios.post('/api', JSON.stringify({ cmd: 'saveSession', val: session }))
+            },
+            onSavePops() {
+              axios.post('/api', JSON.stringify({ cmd: 'savePops', val: this.ui.curapp.settings }))
             },
             onImpSession() {
               const impjson = this.ui.impSessionDialog.impval

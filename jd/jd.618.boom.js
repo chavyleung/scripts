@@ -2,6 +2,8 @@ const $ = new Env('京东618炸弹')
 $.VAL_url = $.getdata('chavy_url_jd816')
 $.VAL_body = $.getdata('chavy_body_jd816')
 $.VAL_headers = $.getdata('chavy_headers_jd816')
+$.VAL_boomtimes = $.getdata('CFG_BOOM_times_JD618') || 1
+$.VAL_boominterval = $.getdata('CFG_BOOM_interval_JD618') || 100
 
 !(async () => {
   $.log('', `🔔 ${$.name}, 开始!`, '')
@@ -12,25 +14,57 @@ $.VAL_headers = $.getdata('chavy_headers_jd816')
     $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
   })
   .finally(() => {
-    $.msg($.name, $.subt, $.desc), $.log('', `🔔 ${$.name}, 结束!`, ''), $.done()
+    $.log('', `🔔 ${$.name}, 结束!`, ''), $.done()
   })
 
-function boom() {
-  return new Promise((resove) => {
-    $.post(taskurl('cakebaker_pk_getCakeBomb'), (error, response, data) => {
-      try {
-        if (error) throw new Error(error)
-        const _data = JSON.parse(data)
-        const _issuc = _data.code === 0 && _data.data && _data.data.bizCode === 0
-        $.boom = { isSuc: _issuc, ..._data.data.result }
-        $.log('', `❕ ${JSON.stringify(data)}`, '')
-      } catch (e) {
-        $.log(`❗️ ${$.name}, 执行失败!`, ` error = ${error || e}`, `response = ${JSON.stringify(response)}`, `data = ${data}`, '')
-      } finally {
-        resove()
-      }
+async function boom() {
+  $.boomacts = []
+  $.boomdesc = []
+  for (let boomIdx = 0; boomIdx < $.VAL_boomtimes; boomIdx++) {
+    const isLastBoom = boomIdx === $.VAL_boomtimes - 1
+    $.boomdesc.push(`💣 [${moment('mm:ss')}] 发送第 ${boomIdx + 1} 个炸弹 ${isLastBoom ? '(最后一个)' : ''}`)
+    const boomAct = new Promise((resove) => {
+      $.post(taskurl('cakebaker_pk_getCakeBomb'), (error, response, data) => {
+        try {
+          if (error) throw new Error(error)
+          const _data = JSON.parse(data)
+          const _issuc = _data.code === 0 && _data.data && _data.data.bizCode === 0
+          $.boom = { isSuc: _issuc, boomIdx, ..._data.data.result }
+          if (isLastBoom) $.boomdesc.push(`❕ [${moment('mm:ss')}] 第 ${boomIdx + 1} 炸: ${$.boom.tip}`)
+        } catch (e) {
+          $.log(`❗️ ${$.name}, 执行失败!`, ` error = ${error || e}`, `response = ${JSON.stringify(response)}`, `data = ${data}`, '')
+        } finally {
+          resove()
+        }
+      })
     })
-  })
+    $.boomacts.push(boomAct)
+    if (isLastBoom) await boomAct
+    await new Promise($.wait($.VAL_boominterval * 1))
+    $.boomdesc.push(`❕ [${moment('mm:ss')}] 等待: ${$.VAL_boominterval} 毫秒!`)
+  }
+}
+
+function moment(fmt) {
+  const now = new Date()
+  const o = {
+    'M+': now.getMonth() + 1,
+    'd+': now.getDate(),
+    'h+': now.getHours(),
+    'm+': now.getMinutes(),
+    's+': now.getSeconds(),
+    'q+': Math.floor((now.getMonth() + 3) / 3),
+    S: now.getMilliseconds()
+  }
+  if (/(y+)/.test(fmt)) {
+    fmt = fmt.replace(RegExp.$1, (now.getFullYear() + '').substr(4 - RegExp.$1.length))
+  }
+  for (var k in o) {
+    if (new RegExp('(' + k + ')').test(fmt)) {
+      fmt = fmt.replace(RegExp.$1, RegExp.$1.length == 1 ? o[k] : ('00' + o[k]).substr(('' + o[k]).length))
+    }
+  }
+  return fmt
 }
 
 function taskurl(fid, body = '{}') {
@@ -40,12 +74,14 @@ function taskurl(fid, body = '{}') {
   return url
 }
 
-function showmsg() {
-  return new Promise((resove) => {
-    $.subt = `我方: ${$.boom.groupLevel || '❓'}层, 对方: ${$.boom.opponentLevel || 0}层, 炸掉: ${$.boom.destroyLevel || 0}层`
-    $.desc = $.boom.tip || '提示: 无!'
-    resove()
-  })
+async function showmsg() {
+  await Promise.all($.boomacts)
+  $.subt = `我方: ${$.boom.groupLevel || '❓'}层, 对方: ${$.boom.opponentLevel || 0}层, 炸掉: ${$.boom.destroyLevel || 0}层`
+  $.desc = [$.boom.tip || '提示: 无!', '点击查看详情', ...$.boomdesc]
+  $.msg(`${$.name} (第 ${$.boom.boomIdx + 1} 炸)`, $.subt, $.desc.join('\n'))
+  // return new Promise((resove) => {
+  //   resove()
+  // })
 }
 
 // prettier-ignore
