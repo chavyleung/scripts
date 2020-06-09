@@ -2,6 +2,7 @@ const $ = new Env('京东618')
 $.VAL_url = $.getdata('chavy_url_jd816')
 $.VAL_body = $.getdata('chavy_body_jd816')
 $.VAL_headers = $.getdata('chavy_headers_jd816')
+$.VAL_isSignShop = $.getdata('CFG_618_isSignShop') || 'true'
 
 !(async () => {
   $.log('', `🔔 ${$.name}, 开始!`, '')
@@ -50,7 +51,7 @@ function getShops() {
           const _shopact = {
             _raw: _shopa,
             id: _shopa.venderId,
-            name: _shopa.name,
+            name: _shopa.name
           }
           $.shopActs.push(_shopact)
         })
@@ -80,7 +81,7 @@ function getActs() {
             maxTimes: _a.maxTimes,
             waitDuration: _a.waitDuration === 0 ? 1 : _a.waitDuration,
             isProd: _a.productInfoVos ? true : false,
-            tasks: [],
+            tasks: []
           }
           const _vo = _a[Object.keys(_a).find((key) => _a[key]?.itemId || _a[key][0]?.itemId)]
           if (Array.isArray(_vo)) {
@@ -162,14 +163,18 @@ async function execActs() {
 
   // 商店签到
   $.log(`   ${$.acts.length + 1}. 商店签到 (${$.shopActs.length})`)
-  for (let _shopIdx = 0; _shopIdx < $.shopActs.length; _shopIdx++) {
-    const shop = $.shopActs[_shopIdx]
-    $.log(`      ${_shopIdx + 1}. ${shop.name}`)
-    await signshop(shop)
-    shop.msg = /,/.test(shop.msg) ? shop.msg.split(',')[1] : shop.msg
-    $.log(`         @签到: ${shop.isSuc ? '🟢 已领取!' : shop.code === 402 ? '⚪️ 无效活动!' : `🔴 ${shop.msg}`}`)
-    $.log(`         @等待: 1 秒`, '')
-    await new Promise($.wait(1000))
+  if ($.VAL_isSignShop === 'true' || $.VAL_isSignShop === true) {
+    for (let _shopIdx = 0; _shopIdx < $.shopActs.length; _shopIdx++) {
+      const shop = $.shopActs[_shopIdx]
+      $.log(`      ${_shopIdx + 1}. ${shop.name}`)
+      await signshop(shop)
+      shop.msg = /,/.test(shop.msg) ? shop.msg.split(',')[1] : shop.msg
+      $.log(`         @签到: ${shop.isSuc ? '🟢 已领取!' : shop.code === 402 ? '⚪️ 无效活动!' : `🔴 ${shop.msg}`}`)
+      $.log(`         @等待: 1 秒`, '')
+      await new Promise($.wait(1000))
+    }
+  } else {
+    $.log(`         @跳过: BoxJs 设置为 关闭 商店签到!`, '')
   }
 }
 
@@ -191,14 +196,14 @@ function getProdAct(act) {
             maxTimes: _suba.maxTimes,
             waitDuration: _suba.waitDuration === 0 ? 1 : _suba.waitDuration,
             isProd: _suba.productInfoVos ? true : false,
-            tasks: [],
+            tasks: []
           }
           _suba.productInfoVos.slice(0, 5).forEach((_prodvo) => {
             const _taskname = _prodvo.skuName || _prodvo.title || _prodvo.shopName || _prodvo.taskName || '未知名称'
             _subact.tasks.push({
               _raw: _prodvo,
               id: _prodvo.itemId,
-              name: _taskname,
+              name: _taskname
             })
           })
           act.subacts.push(_subact)
@@ -218,7 +223,7 @@ function sendtask(act, task, isClaim = false) {
       taskId: act.id,
       itemId: task.id,
       actionType: isClaim ? 1 : undefined,
-      safeStr: JSON.stringify({ secretp: $.secretp }),
+      safeStr: JSON.stringify({ secretp: $.secretp })
     }
 
     $.post(taskurl('cakebaker_ckCollectScore', JSON.stringify(body)), (error, response, data) => {
