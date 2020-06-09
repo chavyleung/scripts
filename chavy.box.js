@@ -124,7 +124,7 @@ function getSystemApps() {
       keys: ['chavy_url_jd816', 'chavy_body_jd816', 'chavy_headers_jd816'],
       settings: [
         { id: 'CFG_618_isSignShop', name: '商店签到', val: true, type: 'boolean', desc: '71 家商店, 如果每天都签不上, 可以关掉了! 默认: true' },
-        { id: 'CFG_618_isJoinBrand', name: '品牌会员', val: true, type: 'boolean', desc: '25 个品牌, 会自动加入品牌会员! 默认: true' },
+        { id: 'CFG_618_isJoinBrand', name: '品牌会员', val: false, type: 'boolean', desc: '25 个品牌, 会自动加入品牌会员! 默认: true' },
         { id: 'CFG_BOOM_times_JD618', name: '炸弹次数', val: 1, type: 'text', desc: '总共发送多少次炸弹! 默认: 1' },
         { id: 'CFG_BOOM_interval_JD618', name: '炸弹间隔 (毫秒)', val: 100, type: 'text', desc: '每次间隔多少毫秒! 默认: 100' }
       ],
