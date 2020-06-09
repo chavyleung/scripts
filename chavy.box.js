@@ -123,7 +123,8 @@ function getSystemApps() {
       name: '京东618',
       keys: ['chavy_url_jd816', 'chavy_body_jd816', 'chavy_headers_jd816'],
       settings: [
-        { id: 'CFG_618_isSignShop', name: '商店签到', val: true, type: 'boolean', desc: '71家商店, 如果每天都签不上, 可以关掉了! 默认: true' },
+        { id: 'CFG_618_isSignShop', name: '商店签到', val: true, type: 'boolean', desc: '71 家商店, 如果每天都签不上, 可以关掉了! 默认: true' },
+        { id: 'CFG_618_isJoinBrand', name: '品牌会员', val: true, type: 'boolean', desc: '25 个品牌, 会自动加入品牌会员! 默认: true' },
         { id: 'CFG_BOOM_times_JD618', name: '炸弹次数', val: 1, type: 'text', desc: '总共发送多少次炸弹! 默认: 1' },
         { id: 'CFG_BOOM_interval_JD618', name: '炸弹间隔 (毫秒)', val: 100, type: 'text', desc: '每次间隔多少毫秒! 默认: 100' }
       ],
@@ -146,6 +147,14 @@ function getSystemApps() {
       author: '@chavyleung',
       repo: 'https://github.com/chavyleung/scripts/tree/master/v2ex',
       icon: 'https://raw.githubusercontent.com/Orz-3/mini/master/v2ex.png'
+    },
+    {
+      id: 'WPS',
+      name: 'WPS',
+      keys: ['chavy_signhomeurl_wps', 'chavy_signhomeheader_wps', 'chavy_signwxurl_wps', 'chavy_signwxheader_wps'],
+      author: '@chavyleung',
+      repo: 'https://github.com/chavyleung/scripts/tree/master/wps',
+      icon: 'https://is3-ssl.mzstatic.com/image/thumb/Purple123/v4/a0/15/bc/a015bcec-e853-cdb3-a97b-573c15771265/AppIcon-0-1x_U007emarketing-0-7-0-0-0-0-85-220.png/492x0w.png'
     },
     {
       id: 'NoteYoudao',
