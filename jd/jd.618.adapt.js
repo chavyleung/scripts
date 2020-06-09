@@ -3,7 +3,7 @@ $.VAL_url = $.getdata('chavy_url_jd816')
 $.VAL_body = $.getdata('chavy_body_jd816')
 $.VAL_headers = $.getdata('chavy_headers_jd816')
 $.VAL_isSignShop = $.getdata('CFG_618_isSignShop') || 'true'
-$.VAL_isJoinBrand = $.getdata('CFG_618_isJoinBrand') || 'true'
+$.VAL_isJoinBrand = $.getdata('CFG_618_isJoinBrand') || 'false'
 
 !(async () => {
   $.log('', `🔔 ${$.name}, 开始!`, '')
