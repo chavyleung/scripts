@@ -294,6 +294,7 @@ function joinBrand(task) {
     }
     const joinurl = `https://api.m.jd.com/client.action?appid=jd_shop_member&functionId=bindWithVender&body=${encodeURIComponent(JSON.stringify(body))}&client=H5&clientVersion=8.5.6&uuid=88888`
     const url = { url: joinurl, headers: JSON.parse($.VAL_headers) }
+    delete url.headers['Content-Length']
     $.get(url, (error, response, data) => {
       try {
         const _data = JSON.parse(data)
