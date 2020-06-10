@@ -1,54 +1,49 @@
-const chavy = init()
-const cookieName = 'WPS'
-const KEY_signhomeurl = 'chavy_signhomeurl_wps'
-const KEY_signhomeheader = 'chavy_signhomeheader_wps'
-const KEY_signwxurl = 'chavy_signwxurl_wps'
-const KEY_signwxheader = 'chavy_signwxheader_wps'
+const $ = new Env('WPS')
+$.VAL_signhomeurl = $.getdata('chavy_signhomeurl_wps')
+$.VAL_signhomeheader = $.getdata('chavy_signhomeheader_wps')
+$.VAL_signwxurl = $.getdata('chavy_signwxurl_wps')
+$.VAL_signwxheader = $.getdata('chavy_signwxheader_wps')
 
-const signinfo = {}
-let VAL_signhomeurl = chavy.getdata(KEY_signhomeurl)
-let VAL_signhomeheader = chavy.getdata(KEY_signhomeheader)
-let VAL_signwxurl = chavy.getdata(KEY_signwxurl)
-let VAL_signwxheader = chavy.getdata(KEY_signwxheader)
-
-;(sign = async () => {
-  chavy.log(`🔔 ${cookieName}`)
-  await gethome()
+!(async () => {
+  $.log('', `🔔 ${$.name}, 开始!`, '')
+  await loginapp()
   await signapp()
-  await getinfo()
-  if (VAL_signwxurl) {
-    await getwxinfo()
-    if (signinfo.is_sign_up == 0) {
-      await signwxapp()
-      await getwxinfo()
-    }
-  }
-  await getreward()
-  showmsg()
-  chavy.done()
-})().catch((e) => chavy.log(`❌ ${cookieName} 签到失败: ${e}`), chavy.done())
+  await getquestion()
+  await answerwx()
+  await signwx()
+  await getUserInfo()
+  await invite()
+  await getSigninfo()
+  await getSignreward()
+  await showmsg()
+})()
+  .catch((e) => {
+    $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
+  })
+  .finally(() => {
+    $.msg($.name, $.subt, $.desc.join('\n')), $.log('', `🔔 ${$.name}, 结束!`, ''), $.done()
+  })
 
-function gethome() {
-  return new Promise((resolve, reject) => {
-    const url = { url: VAL_signhomeurl, headers: JSON.parse(VAL_signhomeheader) }
-    chavy.get(url, (error, response, data) => {
+// 登录 App
+function loginapp() {
+  return new Promise((resove) =>
+    $.get({ url: $.VAL_signhomeurl, headers: JSON.parse($.VAL_signhomeheader) }, (error, response, data) => {
       try {
-        signinfo.homeinfo = JSON.parse(data)
-        resolve()
+        if (error) throw new Error(error)
+        $.homeinfo = JSON.parse(data)
       } catch (e) {
-        chavy.msg(cookieName, `获取签到: 失败`, `说明: ${e}`)
-        chavy.log(`❌ ${cookieName} gethome - 获取签到失败: ${e}`)
-        chavy.log(`❌ ${cookieName} gethome - response: ${JSON.stringify(response)}`)
-        resolve()
+        $.log(`❗️ ${$.name}, 执行失败!`, ` error = ${error || e}`, `response = ${JSON.stringify(response)}`, `data = ${data}`, '')
+      } finally {
+        resove()
       }
     })
-  })
+  )
 }
 
+// 签到 App
 function signapp() {
-  return new Promise((resolve, reject) => {
-    const VAL_signurl = `https://zt.wps.cn/2018/docer_check_in/api/checkin_today`
-    const url = { url: VAL_signurl, headers: JSON.parse(VAL_signhomeheader) }
+  return new Promise((resove) => {
+    const url = { url: 'https://zt.wps.cn/2018/docer_check_in/api/checkin_today', headers: JSON.parse($.VAL_signhomeheader) }
     url.headers['Accept'] = 'application/json, text/javascript, */*; q=0.01'
     url.headers['Accept-Encoding'] = 'gzip, deflate, br'
     url.headers['Origin'] = 'https://zt.wps.cn'
@@ -58,41 +53,115 @@ function signapp() {
     url.headers['Referer'] = 'https://zt.wps.cn/static/2019/docer_check_in_ios/dist/?position=member_ios'
     url.headers['Accept-Language'] = 'zh-cn'
     url.headers['X-Requested-With'] = 'XMLHttpRequest'
-    chavy.post(url, (error, response, data) => {
+    $.post(url, (error, response, data) => {
       try {
-        signinfo.signapp = JSON.parse(data)
-        resolve()
+        if (error) throw new Error(error)
+        $.signapp = JSON.parse(data)
       } catch (e) {
-        chavy.msg(cookieName, `签到结果: 失败`, `说明: ${e}`)
-        chavy.log(`❌ ${cookieName} signapp - 签到失败: ${e}`)
-        chavy.log(`❌ ${cookieName} signapp - response: ${JSON.stringify(response)}`)
-        resolve()
+        $.log(`❗️ ${$.name}, 执行失败!`, ` error = ${error || e}`, `response = ${JSON.stringify(response)}`, `data = ${data}`, '')
+      } finally {
+        resove()
       }
     })
   })
 }
 
-function signwxapp() {
-  return new Promise((resolve, reject) => {
-    const url = { url: VAL_signwxurl, headers: JSON.parse(VAL_signwxheader) }
-    chavy.get(url, (error, response, data) => {
+// 获取并回答问题
+async function answerwx() {
+  const answers = ['WPS会员全文检索', '100G', 'WPS会员数据恢复', 'WPS会员PDF转doc', 'WPS会员PDF转图片', 'WPS图片转PDF插件', '金山PDF转WORD', 'WPS会员拍照转文字', '使用WPS会员修复', 'WPS全文检索功能', '有，且无限次', '文档修复']
+  // 尝试最多 10 次回答问题
+  for (let idx = 0; idx < 10; idx++) {
+    $.log(`问题: ${$.question.title}`)
+    if ($.question.multi_select === 0) {
+      const optionIdx = $.question.options.findIndex((option) => answers.includes(option))
+      if (optionIdx === -1) {
+        $.log(`选项: ${$.question.options.join(', ')}`)
+        $.log('跳过! 原因: 找不到答案.', '')
+        await getquestion()
+      } else {
+        $.log(`选项: ${$.question.options.join(', ')}`)
+        $.log(`答案: ${optionIdx + 1}.${$.question.options[optionIdx]}`, '')
+        await answerquestion(optionIdx + 1)
+        if ($.answer.right) {
+          $.answer.optionIdx = optionIdx
+          $.log('回答正确!')
+          break
+        } else {
+          $.log(`回答错误! 详情: ${$.answer._raw.msg}`)
+          await getquestion()
+          continue
+        }
+      }
+    } else {
+      $.log(`选项: ${$.question.options.join(', ')}`)
+      $.log('跳过! 原因: 不做多选.', '')
+      await getquestion()
+    }
+  }
+}
+
+// 获取问题
+function getquestion() {
+  return new Promise((resove) => {
+    const url = { url: 'https://zt.wps.cn/2018/clock_in/api/get_question?award=wps', headers: JSON.parse($.VAL_signwxheader) }
+    $.get(url, (error, response, data) => {
       try {
-        signinfo.signwxapp = JSON.parse(data)
-        resolve()
+        if (error) throw new Error(error)
+        $.question = JSON.parse(data).data
       } catch (e) {
-        chavy.msg(cookieName, `小程序签到结果: 失败`, `说明: ${e}`)
-        chavy.log(`❌ ${cookieName} signwxapp - 小程序签到失败: ${e}`)
-        chavy.log(`❌ ${cookieName} signwxapp - response: ${JSON.stringify(response)}`)
-        resolve()
+        $.log(`❗️ ${$.name}, 执行失败!`, ` error = ${error || e}`, `response = ${JSON.stringify(response)}`, `data = ${data}`, '')
+      } finally {
+        resove()
       }
     })
   })
 }
 
-function getinfo() {
-  return new Promise((resolve, reject) => {
-    const VAL_getinfourl = `https://zt.wps.cn/2018/docer_check_in/api/checkin_record`
-    const url = { url: VAL_getinfourl, headers: JSON.parse(VAL_signhomeheader) }
+// 回答问题
+function answerquestion(optIdx) {
+  return new Promise((resove) => {
+    const body = JSON.stringify({ answer: optIdx })
+    const url = { url: 'https://zt.wps.cn/2018/clock_in/api/answer?member=wps', body, headers: JSON.parse($.VAL_signwxheader) }
+    $.post(url, (error, response, data) => {
+      try {
+        if (error) throw new Error(error)
+        const _data = JSON.parse(data)
+        $.answer = { _raw: _data, right: _data.result === 'ok' }
+      } catch (e) {
+        $.log(`❗️ ${$.name}, 执行失败!`, ` error = ${error || e}`, `response = ${JSON.stringify(response)}`, `data = ${data}`, '')
+      } finally {
+        resove()
+      }
+    })
+  })
+}
+
+function signwx() {
+  return new Promise((resove) => {
+    const url = { url: 'https://zt.wps.cn/2018/clock_in/api/clock_in?award=wps', headers: JSON.parse($.VAL_signwxheader) }
+    $.get(url, (error, response, data) => {
+      try {
+        if (error) throw new Error(error)
+        const _data = JSON.parse(data)
+        $.signwx = {
+          _raw: _data,
+          isSuc: _data.result === 'ok' || (_data.result === 'error' && _data.msg === '已打卡'),
+          isRepeat: _data.result === 'error' && _data.msg === '已打卡',
+          msg: _data.msg
+        }
+      } catch (e) {
+        $.log(`❗️ ${$.name}, 执行失败!`, ` error = ${error || e}`, `response = ${JSON.stringify(response)}`, `data = ${data}`, '')
+      } finally {
+        resove()
+      }
+    })
+  })
+}
+
+// 获取签到详情
+function getSigninfo() {
+  return new Promise((resove) => {
+    const url = { url: 'https://zt.wps.cn/2018/docer_check_in/api/checkin_record', headers: JSON.parse($.VAL_signhomeheader) }
     url.headers['Accept-Encoding'] = 'gzip, deflate, br'
     url.headers['Connection'] = 'keep-alive'
     url.headers['Referer'] = 'https://zt.wps.cn/static/2019/docer_check_in_ios/dist/?position=member_ios'
@@ -100,46 +169,23 @@ function getinfo() {
     url.headers['Host'] = 'zt.wps.cn'
     url.headers['Accept-Language'] = 'zh-cn'
     url.headers['X-Requested-With'] = 'XMLHttpRequest'
-
-    chavy.get(url, (error, response, data) => {
+    $.get(url, (error, response, data) => {
       try {
-        signinfo.info = JSON.parse(data)
-        resolve()
+        if (error) throw new Error(error)
+        $.signinfo = JSON.parse(data)
       } catch (e) {
-        chavy.msg(cookieName, `获取结果: 失败`, `说明: ${e}`)
-        chavy.log(`❌ ${cookieName} getinfo - 获取结果失败: ${e}`)
-        chavy.log(`❌ ${cookieName} getinfo - response: ${JSON.stringify(response)}`)
-        resolve()
+        $.log(`❗️ ${$.name}, 执行失败!`, ` error = ${error || e}`, `response = ${JSON.stringify(response)}`, `data = ${data}`, '')
+      } finally {
+        resove()
       }
     })
   })
 }
 
-function getwxinfo() {
-  return new Promise((resolve, reject) => {
-    const VAL_getwxinfourl = `https://zt.wps.cn/2018/clock_in/api/get_data?member=wps`
-    const url = { url: VAL_getwxinfourl, headers: JSON.parse(VAL_signwxheader) }
-
-    chavy.get(url, (error, response, data) => {
-      try {
-        const wxinfo = JSON.parse(data)
-        if (!signinfo.wxinfo) signinfo.is_sign_up = wxinfo.is_sign_up
-        signinfo.wxinfo = wxinfo
-        resolve()
-      } catch (e) {
-        chavy.msg(cookieName, `获取小程序结果: 失败`, `说明: ${e}`)
-        chavy.log(`❌ ${cookieName} getwxinfo - 获取小程序结果失败: ${e}`)
-        chavy.log(`❌ ${cookieName} getwxinfo - response: ${JSON.stringify(response)}`)
-        resolve()
-      }
-    })
-  })
-}
-
-function getreward() {
-  return new Promise((resolve, reject) => {
-    const VAL_getrewardurl = `https://zt.wps.cn/2018/docer_check_in/api/reward_record`
-    const url = { url: VAL_getrewardurl, headers: JSON.parse(VAL_signhomeheader) }
+// 获取签到奖励
+function getSignreward() {
+  return new Promise((resove) => {
+    const url = { url: 'https://zt.wps.cn/2018/docer_check_in/api/reward_record', headers: JSON.parse($.VAL_signhomeheader) }
     url.headers['Accept-Encoding'] = 'gzip, deflate, br'
     url.headers['Connection'] = 'keep-alive'
     url.headers['Referer'] = 'https://zt.wps.cn/static/2019/docer_check_in_ios/dist/?position=member_ios'
@@ -147,109 +193,125 @@ function getreward() {
     url.headers['Host'] = 'zt.wps.cn'
     url.headers['Accept-Language'] = 'zh-cn'
     url.headers['X-Requested-With'] = 'XMLHttpRequest'
-
-    chavy.get(url, (error, response, data) => {
+    $.get(url, (error, response, data) => {
       try {
-        signinfo.reward = JSON.parse(data)
-        resolve()
+        if (error) throw new Error(error)
+        $.signreward = JSON.parse(data)
       } catch (e) {
-        chavy.msg(cookieName, `获取奖励: 失败`, `说明: ${e}`)
-        chavy.log(`❌ ${cookieName} getreward - 获取奖励失败: ${e}`)
-        chavy.log(`❌ ${cookieName} getreward - response: ${JSON.stringify(response)}`)
-        resolve()
+        $.log(`❗️ ${$.name}, 执行失败!`, ` error = ${error || e}`, `response = ${JSON.stringify(response)}`, `data = ${data}`, '')
+      } finally {
+        resove()
       }
     })
   })
+}
+
+// 获取用户信息
+function getUserInfo() {
+  return new Promise((resove) => {
+    const headers = { sid: JSON.parse($.VAL_signwxheader).sid }
+    const url = { url: 'https://vip.wps.cn/userinfo', headers }
+    $.get(url, (error, response, data) => {
+      try {
+        if (error) throw new Error(error)
+        $.userinfo = JSON.parse(data)
+      } catch (e) {
+        $.log(`❗️ ${$.name}, 执行失败!`, ` error = ${error || e}`, `response = ${JSON.stringify(response)}`, `data = ${data}`, '')
+      } finally {
+        resove()
+      }
+    })
+  })
+}
+
+function invite() {
+  const sids = [
+    'V02S2UBSfNlvEprMOn70qP3jHPDqiZU00a7ef4a800341c7c3b',
+    'V02StVuaNcoKrZ3BuvJQ1FcFS_xnG2k00af250d4002664c02f',
+    'V02SWIvKWYijG6Rggo4m0xvDKj1m7ew00a8e26d3002508b828',
+    'V02Sr3nJ9IicoHWfeyQLiXgvrRpje6E00a240b890023270f97',
+    'V02SBsNOf4sJZNFo4jOHdgHg7-2Tn1s00a338776000b669579',
+    'V02ScVbtm2pQD49ArcgGLv360iqQFLs014c8062e000b6c37b6',
+    'V02S2oI49T-Jp0_zJKZ5U38dIUSIl8Q00aa679530026780e96',
+    'V02ShotJqqiWyubCX0VWTlcbgcHqtSQ00a45564e002678124c',
+    'V02SFiqdXRGnH5oAV2FmDDulZyGDL3M00a61660c0026781be1',
+    'V02S7tldy5ltYcikCzJ8PJQDSy_ElEs00a327c3c0026782526',
+    'V02SPoOluAnWda0dTBYTXpdetS97tyI00a16135e002684bb5c',
+    'V02Sb8gxW2inr6IDYrdHK_ywJnayd6s00ab7472b0026849b17',
+    'V02SwV15KQ_8n6brU98_2kLnnFUDUOw00adf3fda0026934a7f',
+    'V02SC1mOHS0RiUBxeoA8NTliH2h2NGc00a803c35002693584d'
+  ]
+  $.invites = []
+  const inviteActs = []
+  $.log('', '开始邀请: ')
+  for (let sidIdx = 0; sidIdx < sids.length; sidIdx++) {
+    inviteActs.push(
+      new Promise((resove) => {
+        const headers = { sid: sids[sidIdx] }
+        const body = `invite_userid=${$.userinfo.data.userid}`
+        const url = { url: 'http://zt.wps.cn/2018/clock_in/api/invite', body, headers }
+        $.post(url, (error, response, data) => {
+          try {
+            if (error) throw new Error(error)
+            const _data = JSON.parse(data)
+            const _invite = { _raw: _data, inviteIdx: sidIdx, isSuc: _data.result === 'ok' }
+            $.invites.push(_invite)
+            $.log(`   邀请第 ${_invite.inviteIdx + 1} 个用户: ${_invite.isSuc ? '成功!' : '失败!'}`)
+          } catch (e) {
+            $.log(`❗️ ${$.name}, 执行失败!`, ` error = ${error || e}`, `response = ${JSON.stringify(response)}`, `data = ${data}`, '')
+          } finally {
+            resove()
+          }
+        })
+      })
+    )
+  }
+  return Promise.all(inviteActs)
 }
 
 function showmsg() {
-  let subTitle = ''
-  let detail = ''
-  if (signinfo.signapp && signinfo.signapp.result == 'ok') {
-    subTitle = `日常签到: 成功`
-    // detail = `获得金币${result.data.coin}, 金豆${result.data.flow}`
-  } else if (signinfo.signapp && signinfo.signapp.result == 'error' && signinfo.signapp.msg == 'recheckin') {
-    subTitle = `日常签到: 重复`
-    // detail = `说明: ${result.data.msg}`
-  } else {
-    subTitle = `日常签到: 失败`
-    detail = `详见日志`
-    chavy.log(`❌ ${cookieName} showmsg - homeinfo: ${JSON.stringify(signinfo.homeinfo)}`)
-    chavy.log(`❌ ${cookieName} showmsg - signapp: ${JSON.stringify(signinfo.signapp)}`)
-  }
-
-  if (signinfo.wxinfo) {
-    subTitle += subTitle == '' ? '' : '; '
-    if (signinfo.is_sign_up == 0 && signinfo.signwxapp && signinfo.signwxapp.result == 'ok') subTitle += `小程序: 成功`
-    else if (signinfo.is_sign_up == 1) subTitle += `小程序: 重复`
-    else {
-      subTitle += `小程序: 失败`
-      chavy.log(`❌ ${cookieName} showmsg - wxinfo: ${JSON.stringify(signinfo.wxinfo)}`)
-      chavy.log(`❌ ${cookieName} showmsg - signwxapp: ${JSON.stringify(signinfo.signwxapp)}`)
+  return new Promise((resove) => {
+    $.subt = ''
+    $.desc = []
+    $.subt = `签到: ${/ok/.test($.signapp.result) ? '成功' : '失败'}`
+    $.subt = `签到: ${/error/.test($.signapp.result) && /recheckin/.test($.signapp.msg) ? '重复' : '失败'}`
+    if ($.signinfo && $.homeinfo.data[0]) {
+      const current = $.homeinfo.data[0]
+      $.desc.push(`连签: ${$.signinfo.data.max_days}天, 本期: ${current.end_date} (第${current.id}期)`)
+      $.desc.push('查看签到详情', '')
     }
-  }
-
-  if (signinfo.homeinfo && signinfo.signapp && signinfo.info && signinfo.homeinfo.data[0]) {
-    const cur = signinfo.homeinfo.data[0]
-    detail += `连签: ${signinfo.info.data.max_days}天, 本期: ${cur.end_date} (第${cur.id}期)`
-  }
-
-  if (signinfo.reward && signinfo.reward.data) {
-    detail += `\n查看签到详情`
-    days = signinfo.info.data.max_days
-    curDays = 0
-    for (r of signinfo.reward.data) {
-      const rstatus = r.status == 'unreceived' ? '[未领]' : '[已领]'
-      const limit_days = parseInt(r.limit_days)
-      const daysstatus = days >= limit_days ? '✅' : '❕'
-      if (curDays < limit_days) (curDays = limit_days), (detail += `\n\n${daysstatus}连签${limit_days}天: `)
-      detail += `\n${rstatus} ${r.reward_name}`
+    if ($.signwx) {
+      $.subt += ', '
+      if ($.signwx.isSuc && !$.signwx.isRepeat) $.subt += `打卡: 成功`
+      else if ($.signwx.isSuc && $.signwx.isRepeat) $.subt += `打卡: 重复`
+      else $.subt += `打卡: 失败`
+      $.desc.push(`打卡: ${$.signwx.msg}`)
+      $.desc.push(`问题: ${$.question.title}`)
+      $.desc.push(`答案: ${$.answer.optionIdx + 1}.${$.question.options[$.answer.optionIdx]}`)
     }
-  }
-
-  chavy.msg(cookieName, subTitle, detail)
+    if ($.invites) {
+      const invitedCnt = $.invites.filter((invite) => invite.isSuc).length
+      const inviteCnt = $.invites.length
+      $.subt += ', 邀请: '
+      $.subt += `${invitedCnt}/${inviteCnt}`
+    }
+    if ($.signreward && $.signreward.data) {
+      const maxdays = $.signinfo.data.max_days
+      let curDays = 0
+      $.signreward.data.forEach((r) => {
+        const rstatus = r.status == 'unreceived' ? '[未领]' : '[已领]'
+        const limit_days = parseInt(r.limit_days)
+        const daysstatus = maxdays >= limit_days ? '✅' : '❕'
+        if (curDays < limit_days) {
+          curDays = limit_days
+          $.desc.push('', `${daysstatus} 连签${limit_days}天: `)
+        }
+        $.desc.push(`   ${rstatus} ${r.reward_name}`)
+      })
+    }
+    resove()
+  })
 }
 
-function init() {
-  isSurge = () => {
-    return undefined === this.$httpClient ? false : true
-  }
-  isQuanX = () => {
-    return undefined === this.$task ? false : true
-  }
-  getdata = (key) => {
-    if (isSurge()) return $persistentStore.read(key)
-    if (isQuanX()) return $prefs.valueForKey(key)
-  }
-  setdata = (key, val) => {
-    if (isSurge()) return $persistentStore.write(key, val)
-    if (isQuanX()) return $prefs.setValueForKey(key, val)
-  }
-  msg = (title, subtitle, body) => {
-    if (isSurge()) $notification.post(title, subtitle, body)
-    if (isQuanX()) $notify(title, subtitle, body)
-  }
-  log = (message) => console.log(message)
-  get = (url, cb) => {
-    if (isSurge()) {
-      $httpClient.get(url, cb)
-    }
-    if (isQuanX()) {
-      url.method = 'GET'
-      $task.fetch(url).then((resp) => cb(null, resp, resp.body))
-    }
-  }
-  post = (url, cb) => {
-    if (isSurge()) {
-      $httpClient.post(url, cb)
-    }
-    if (isQuanX()) {
-      url.method = 'POST'
-      $task.fetch(url).then((resp) => cb(null, resp, resp.body))
-    }
-  }
-  done = (value = {}) => {
-    $done(value)
-  }
-  return { isSurge, isQuanX, msg, log, getdata, setdata, get, post, done }
-}
+// prettier-ignore
+function Env(t){this.name=t,this.logs=[],this.isSurge=(()=>"undefined"!=typeof $httpClient),this.isQuanX=(()=>"undefined"!=typeof $task),this.log=((...t)=>{this.logs=[...this.logs,...t],t?console.log(t.join("\n")):console.log(this.logs.join("\n"))}),this.msg=((t=this.name,s="",i="")=>{this.isSurge()&&$notification.post(t,s,i),this.isQuanX()&&$notify(t,s,i);const e=["","==============\ud83d\udce3\u7cfb\u7edf\u901a\u77e5\ud83d\udce3=============="];t&&e.push(t),s&&e.push(s),i&&e.push(i),console.log(e.join("\n"))}),this.getdata=(t=>this.isSurge()?$persistentStore.read(t):this.isQuanX()?$prefs.valueForKey(t):void 0),this.setdata=((t,s)=>this.isSurge()?$persistentStore.write(t,s):this.isQuanX()?$prefs.setValueForKey(t,s):void 0),this.get=((t,s)=>this.send(t,"GET",s)),this.wait=((t,s=t)=>i=>setTimeout(()=>i(),Math.floor(Math.random()*(s-t+1)+t))),this.post=((t,s)=>this.send(t,"POST",s)),this.send=((t,s,i)=>{if(this.isSurge()){const e="POST"==s?$httpClient.post:$httpClient.get;e(t,(t,s,e)=>{s&&(s.body=e,s.statusCode=s.status),i(t,s,e)})}this.isQuanX()&&(t.method=s,$task.fetch(t).then(t=>{t.status=t.statusCode,i(null,t,t.body)},t=>i(t.error,t,t)))}),this.done=((t={})=>$done(t))}

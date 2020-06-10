@@ -11,10 +11,11 @@ function Env(name) {
   this.msg = (title = this.name, subt = '', desc = '') => {
     if (this.isSurge()) $notification.post(title, subt, desc)
     if (this.isQuanX()) $notify(title, subt, desc)
-    this.log('==============📣系统通知📣==============')
-    if (title) this.log(title)
-    if (subt) this.log(subt)
-    if (desc) this.log(desc)
+    const _logs = ['', '==============📣系统通知📣==============']
+    if (title) _logs.push(title)
+    if (subt) _logs.push(subt)
+    if (desc) _logs.push(desc)
+    console.log(_logs.join('\n'))
   }
   this.getdata = (key) => {
     if (this.isSurge()) return $persistentStore.read(key)

@@ -4,6 +4,10 @@
 
 > 2020.3.15 增加小程序签到
 
+> 2020.6.10 1.小程序打卡可以自动答题; 2.自动做满邀请 10 个用户任务 (次日打卡送 10 天会员). 感谢 @Wenmoux 提供的邀请人列表
+> 注意 1: 获取 Cookie 的正则有变动, 但不用重取 Cookie
+> 注意 2: 把签到时间调整为 06:00 - 13:00 之间
+
 ## 配置 (Surge)
 
 ```properties
@@ -12,7 +16,7 @@ hostname = zt.wps.cn
 
 [Script]
 http-request ^https:\/\/zt.wps.cn\/2018\/docer_check_in\/api\/act_list script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/wps/wps.cookie.js
-http-request ^https:\/\/zt.wps.cn\/2018\/clock_in\/api\/sign_up script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/wps/wps.cookie.js
+http-request ^https:\/\/zt.wps.cn\/2018\/clock_in\/api\/clock_in script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/wps/wps.cookie.js
 cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/wps/wps.js
 ```
 
@@ -24,7 +28,7 @@ hostname = 110.43.90.61, zt.wps.cn
 
 [rewrite_local]
 ^https:\/\/zt.wps.cn\/2018\/docer_check_in\/api\/act_list url script-request-header wps.cookie.js
-^https:\/\/zt.wps.cn\/2018\/clock_in\/api\/sign_up url script-request-header wps.cookie.js
+^https:\/\/zt.wps.cn\/2018\/clock_in\/api\/clock_in url script-request-header wps.cookie.js
 
 [task_local]
 1 0 * * * wps.js
