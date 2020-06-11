@@ -11,6 +11,7 @@ $.VAL_signwxheader = $.getdata('chavy_signwxheader_wps')
   await getquestion()
   await answerwx()
   await signwx()
+  await signupwx()
   await getUserInfo()
   await invite()
   await getSigninfo()
@@ -31,6 +32,11 @@ function loginapp() {
       try {
         if (error) throw new Error(error)
         $.homeinfo = JSON.parse(data)
+        if ($.homeinfo.result === 'ok') {
+          const headers = JSON.parse($.VAL_signhomeheader)
+          const [m, sid] = headers.Cookie.match(/wps_sid=(.*?)(;|,|$)/) || []
+          $.VAL_signwxheader = JSON.stringify({ sid })
+        }
       } catch (e) {
         $.log(`❗️ ${$.name}, 执行失败!`, ` error = ${error || e}`, `response = ${JSON.stringify(response)}`, `data = ${data}`, '')
       } finally {
@@ -49,7 +55,6 @@ function signapp() {
     url.headers['Origin'] = 'https://zt.wps.cn'
     url.headers['Connection'] = 'keep-alive'
     url.headers['Host'] = 'zt.wps.cn'
-    url.headers['Content-Length'] = '0'
     url.headers['Referer'] = 'https://zt.wps.cn/static/2019/docer_check_in_ios/dist/?position=member_ios'
     url.headers['Accept-Language'] = 'zh-cn'
     url.headers['X-Requested-With'] = 'XMLHttpRequest'
@@ -120,7 +125,7 @@ function getquestion() {
 // 回答问题
 function answerquestion(optIdx) {
   return new Promise((resove) => {
-    const body = JSON.stringify({ answer: optIdx })
+    const body = `answer=${optIdx}`
     const url = { url: 'https://zt.wps.cn/2018/clock_in/api/answer?member=wps', body, headers: JSON.parse($.VAL_signwxheader) }
     $.post(url, (error, response, data) => {
       try {
@@ -145,8 +150,31 @@ function signwx() {
         const _data = JSON.parse(data)
         $.signwx = {
           _raw: _data,
-          isSuc: _data.result === 'ok' || (_data.result === 'error' && _data.msg === '已打卡'),
+          isSuc: _data.result === 'ok' || (_data.result === 'error' && '已打卡' === _data.msg),
           isRepeat: _data.result === 'error' && _data.msg === '已打卡',
+          isSignupNeed: _data.result === 'error' && _data.msg === '前一天未报名',
+          msg: _data.msg
+        }
+      } catch (e) {
+        $.log(`❗️ ${$.name}, 执行失败!`, ` error = ${error || e}`, `response = ${JSON.stringify(response)}`, `data = ${data}`, '')
+      } finally {
+        resove()
+      }
+    })
+  })
+}
+
+function signupwx() {
+  if (!$.signwx.isSignupNeed) return null
+  return new Promise((resove) => {
+    const url = { url: 'http://zt.wps.cn/2018/clock_in/api/sign_up', headers: JSON.parse($.VAL_signwxheader) }
+    $.get(url, (error, response, data) => {
+      try {
+        if (error) throw new Error(error)
+        const _data = JSON.parse(data)
+        $.signupwx = {
+          _raw: _data,
+          isSuc: _data.result === 'ok',
           msg: _data.msg
         }
       } catch (e) {
@@ -209,8 +237,7 @@ function getSignreward() {
 // 获取用户信息
 function getUserInfo() {
   return new Promise((resove) => {
-    const headers = { sid: JSON.parse($.VAL_signwxheader).sid }
-    const url = { url: 'https://vip.wps.cn/userinfo', headers }
+    const url = { url: 'https://vip.wps.cn/userinfo', headers: JSON.parse($.VAL_signwxheader) }
     $.get(url, (error, response, data) => {
       try {
         if (error) throw new Error(error)
@@ -247,9 +274,8 @@ function invite() {
   for (let sidIdx = 0; sidIdx < sids.length; sidIdx++) {
     inviteActs.push(
       new Promise((resove) => {
-        const headers = { sid: sids[sidIdx] }
         const body = `invite_userid=${$.userinfo.data.userid}`
-        const url = { url: 'http://zt.wps.cn/2018/clock_in/api/invite', body, headers }
+        const url = { url: 'http://zt.wps.cn/2018/clock_in/api/invite', body, headers: JSON.parse($.VAL_signwxheader) }
         $.post(url, (error, response, data) => {
           try {
             if (error) throw new Error(error)
@@ -284,8 +310,13 @@ function showmsg() {
       $.subt += ', '
       if ($.signwx.isSuc && !$.signwx.isRepeat) $.subt += `打卡: 成功`
       else if ($.signwx.isSuc && $.signwx.isRepeat) $.subt += `打卡: 重复`
+      else if (!$.signwx.isSuc && $.signwx.isSignupNeed && $.signupwx.isSuc) $.subt += `打卡: 报名成功`
+      else if (!$.signwx.isSuc && $.signwx.isSignupNeed && !$.signupwx.isSuc) $.subt += `打卡: 报名失败`
       else $.subt += `打卡: 失败`
       $.desc.push(`打卡: ${$.signwx.msg}`)
+      if ($.signwx.isSignupNeed) {
+        $.desc.push(`报名: ${$.signupwx.isSuc ? '成功' : `失败! 原因: ${$.signupwx.msg}`}`)
+      }
       $.desc.push(`问题: ${$.question.title}`)
       $.desc.push(`答案: ${$.answer.optionIdx + 1}.${$.question.options[$.answer.optionIdx]}`)
     }
