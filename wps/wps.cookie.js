@@ -4,17 +4,10 @@ const $ = new Env('WPS')
   $.log('', `🔔 ${$.name}, 获取会话: 开始!`, '')
   const VAL_url = $request.url
   const VAL_headers = JSON.stringify($request.headers)
-  $.log('', `❌ ${$.name}`, `url: ${$request.url}`, `headers: ${JSON.stringify($request.headers)}`, '')
-
-  if (VAL_url && VAL_headers && /act_list/.test(VAL_url)) {
-    $.setdata(VAL_url, 'chavy_signhomeurl_wps')
-    $.setdata(VAL_headers, 'chavy_signhomeheader_wps')
-    $.subt = '获取会话: 成功 (签到)!'
-  } else if (VAL_url && VAL_headers && /clock_in/.test(VAL_url)) {
-    $.setdata(VAL_url, 'chavy_signwxurl_wps')
-    $.setdata(VAL_headers, 'chavy_signwxheader_wps')
-    $.subt = '获取会话: 成功 (打卡)!'
-  }
+  $.log('', `❕ ${$.name}`, `url: ${$request.url}`, `headers: ${JSON.stringify($request.headers)}`, '')
+  $.setdata(VAL_url, 'chavy_signhomeurl_wps')
+  $.setdata(VAL_headers, 'chavy_signhomeheader_wps')
+  $.subt = '获取会话: 成功!'
 })()
   .catch((e) => {
     $.subt = '获取会话: 失败!'

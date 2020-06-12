@@ -1,8 +1,6 @@
 const $ = new Env('WPS')
 $.VAL_signhomeurl = $.getdata('chavy_signhomeurl_wps')
 $.VAL_signhomeheader = $.getdata('chavy_signhomeheader_wps')
-$.VAL_signwxurl = $.getdata('chavy_signwxurl_wps')
-$.VAL_signwxheader = $.getdata('chavy_signwxheader_wps')
 
 !(async () => {
   $.log('', `🔔 ${$.name}, 开始!`, '')
@@ -34,8 +32,8 @@ function loginapp() {
         $.homeinfo = JSON.parse(data)
         if ($.homeinfo.result === 'ok') {
           const headers = JSON.parse($.VAL_signhomeheader)
-          const [m, sid] = headers.Cookie.match(/wps_sid=(.*?)(;|,|$)/) || []
-          $.VAL_signwxheader = JSON.stringify({ sid })
+          const [, sid] = /wps_sid=(.*?)(;|,|$)/.exec(headers.Cookie)
+          $.sid = sid
         }
       } catch (e) {
         $.log(`❗️ ${$.name}, 执行失败!`, ` error = ${error || e}`, `response = ${JSON.stringify(response)}`, `data = ${data}`, '')
@@ -108,7 +106,7 @@ async function answerwx() {
 // 获取问题
 function getquestion() {
   return new Promise((resove) => {
-    const url = { url: 'https://zt.wps.cn/2018/clock_in/api/get_question?award=wps', headers: JSON.parse($.VAL_signwxheader) }
+    const url = { url: 'https://zt.wps.cn/2018/clock_in/api/get_question?award=wps', headers: { sid: $.sid } }
     $.get(url, (error, response, data) => {
       try {
         if (error) throw new Error(error)
@@ -126,7 +124,7 @@ function getquestion() {
 function answerquestion(optIdx) {
   return new Promise((resove) => {
     const body = `answer=${optIdx}`
-    const url = { url: 'https://zt.wps.cn/2018/clock_in/api/answer?member=wps', body, headers: JSON.parse($.VAL_signwxheader) }
+    const url = { url: 'https://zt.wps.cn/2018/clock_in/api/answer?member=wps', body, headers: { sid: $.sid } }
     $.post(url, (error, response, data) => {
       try {
         if (error) throw new Error(error)
@@ -143,7 +141,7 @@ function answerquestion(optIdx) {
 
 function signwx() {
   return new Promise((resove) => {
-    const url = { url: 'https://zt.wps.cn/2018/clock_in/api/clock_in?award=wps', headers: JSON.parse($.VAL_signwxheader) }
+    const url = { url: 'https://zt.wps.cn/2018/clock_in/api/clock_in?award=wps', headers: { sid: $.sid } }
     $.get(url, (error, response, data) => {
       try {
         if (error) throw new Error(error)
@@ -167,7 +165,7 @@ function signwx() {
 function signupwx() {
   if (!$.signwx.isSignupNeed) return null
   return new Promise((resove) => {
-    const url = { url: 'http://zt.wps.cn/2018/clock_in/api/sign_up', headers: JSON.parse($.VAL_signwxheader) }
+    const url = { url: 'http://zt.wps.cn/2018/clock_in/api/sign_up', headers: { sid: $.sid } }
     $.get(url, (error, response, data) => {
       try {
         if (error) throw new Error(error)
@@ -237,7 +235,7 @@ function getSignreward() {
 // 获取用户信息
 function getUserInfo() {
   return new Promise((resove) => {
-    const url = { url: 'https://vip.wps.cn/userinfo', headers: JSON.parse($.VAL_signwxheader) }
+    const url = { url: 'https://vip.wps.cn/userinfo', headers: { sid: $.sid } }
     $.get(url, (error, response, data) => {
       try {
         if (error) throw new Error(error)
@@ -275,7 +273,7 @@ function invite() {
     inviteActs.push(
       new Promise((resove) => {
         const body = `invite_userid=${$.userinfo.data.userid}`
-        const url = { url: 'http://zt.wps.cn/2018/clock_in/api/invite', body, headers: JSON.parse($.VAL_signwxheader) }
+        const url = { url: 'http://zt.wps.cn/2018/clock_in/api/invite', body, headers: { sid: $.sid } }
         $.post(url, (error, response, data) => {
           try {
             if (error) throw new Error(error)
@@ -299,8 +297,13 @@ function showmsg() {
   return new Promise((resove) => {
     $.subt = ''
     $.desc = []
-    $.subt = `签到: ${/ok/.test($.signapp.result) ? '成功' : '失败'}`
-    $.subt = `签到: ${/error/.test($.signapp.result) && /recheckin/.test($.signapp.msg) ? '重复' : '失败'}`
+    if (/ok/.test($.signapp.result)) {
+      $.subt = '签到: 成功'
+    } else if (/error/.test($.signapp.result) && /recheckin/.test($.signapp.msg)) {
+      $.subt = '签到: 重复'
+    } else {
+      $.subt = '签到: 失败'
+    }
     if ($.signinfo && $.homeinfo.data[0]) {
       const current = $.homeinfo.data[0]
       $.desc.push(`连签: ${$.signinfo.data.max_days}天, 本期: ${current.end_date} (第${current.id}期)`)
