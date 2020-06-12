@@ -9,7 +9,7 @@ Rewrite: 10010 = type=http-request,pattern=^https:\/\/m.client.10010.com\/dailyl
 Rewrite: 10086 = type=http-request,pattern=^http:\/\/wx.10086.cn\/website\/taskCenter\/index\?,script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/10086/10086.cookie.js
 Rewrite: 10086 = type=http-request,pattern=^http:\/\/wx.10086.cn\/website\/taskCenter\/sign\?,script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/10086/10086.cookie.js
 Rewrite: AcFun = type=http-request,pattern=^https:\/\/api\-new\.app\.acfun\.cn\/rest\/app\/user\/personalInfo,script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/acfun/acfun.cookie.js
-Rewrite: ApkTw = type=http-request,pattern=^https:\/\/apk\.tw\/?.?,script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/apktw/apktw.cookie.js
+Rewrite: ApkTw = type=http-request,pattern=^https://apk.tw\/member.php(.*?)action=login,script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/apktw/apktw.cookie.js,requires-body=true
 Rewrite: BiliBili = type=http-request,pattern=^https:\/\/(www|live)\.bilibili\.com\/?.?,script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/bilibili/bilibili.cookie.js
 Rewrite: CSDN = type=http-request,pattern=^https:\/\/gw.csdn.net\/mini-app\/v2\/lucky_draw\/login\/sign_in\?,script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/csdn/csdn.cookie.js
 Rewrite: CSDN = type=http-request,pattern=^https:\/\/passport.csdn.net\/v2\/api\/app\/login\/checkAndRefreshToken,script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/csdn/csdn.cookie.js

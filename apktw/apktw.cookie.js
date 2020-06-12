@@ -1,54 +1,28 @@
-const cookieName = "APK.TW";
-const cookieKey = "chavy_cookie_apktw";
-const chavy = init();
-const cookieVal = $request.headers["Cookie"];
-if (cookieVal) {
-  if (chavy.setdata(cookieVal, cookieKey)) {
-    chavy.msg(`${cookieName}`, "获取Cookie: 成功", "");
-    chavy.log(`[${cookieName}] 获取Cookie: 成功, cookie: ${cookieVal}`);
+const $ = new Env('ApkTw')
+
+!(async () => {
+  $.log('', `🔔 ${$.name}, 获取会话: 开始!`, '')
+  const session = {}
+  session.url = $request.url
+  session.body = $request.body
+  session.headers = $request.headers
+  delete session.headers['Content-Length']
+  delete session.headers['Cookie']
+  $.log('', `url: ${session.url}`, `body: ${session.body}`, `headers: ${JSON.stringify(session.headers)}`)
+  if ($.setdata(JSON.stringify(session), 'chavy_cookie_apktw')) {
+    $.subt = '获取会话: 成功!'
+  } else {
+    $.subt = '获取会话: 失败!'
   }
-}
-function init() {
-  isSurge = () => {
-    return undefined === this.$httpClient ? false : true;
-  };
-  isQuanX = () => {
-    return undefined === this.$task ? false : true;
-  };
-  getdata = key => {
-    if (isSurge()) return $persistentStore.read(key);
-    if (isQuanX()) return $prefs.valueForKey(key);
-  };
-  setdata = (key, val) => {
-    if (isSurge()) return $persistentStore.write(key, val);
-    if (isQuanX()) return $prefs.setValueForKey(key, val);
-  };
-  msg = (title, subtitle, body) => {
-    if (isSurge()) $notification.post(title, subtitle, body);
-    if (isQuanX()) $notify(title, subtitle, body);
-  };
-  log = message => console.log(message);
-  get = (url, cb) => {
-    if (isSurge()) {
-      $httpClient.get(url, cb);
-    }
-    if (isQuanX()) {
-      url.method = "GET";
-      $task.fetch(url).then(resp => cb(null, {}, resp.body));
-    }
-  };
-  post = (url, cb) => {
-    if (isSurge()) {
-      $httpClient.post(url, cb);
-    }
-    if (isQuanX()) {
-      url.method = "POST";
-      $task.fetch(url).then(resp => cb(null, {}, resp.body));
-    }
-  };
-  done = (value = {}) => {
-    $done(value);
-  };
-  return { isSurge, isQuanX, msg, log, getdata, setdata, get, post, done };
-}
-chavy.done();
+})()
+  .catch((e) => {
+    $.subt = '获取会话: 失败!'
+    $.desc = `原因: ${e}`
+    $.log(`❌ ${$.name}, 获取会话: 失败! 原因: ${e}!`)
+  })
+  .finally(() => {
+    $.msg($.name, $.subt, $.desc), $.log('', `🔔 ${$.name}, 获取会话: 结束!`, ''), $.done()
+  })
+
+// prettier-ignore
+function Env(t){this.name=t,this.logs=[],this.isSurge=(()=>"undefined"!=typeof $httpClient),this.isQuanX=(()=>"undefined"!=typeof $task),this.log=((...t)=>{this.logs=[...this.logs,...t],t?console.log(t.join("\n")):console.log(this.logs.join("\n"))}),this.msg=((t=this.name,s="",i="")=>{this.isSurge()&&$notification.post(t,s,i),this.isQuanX()&&$notify(t,s,i);const e=["","==============\ud83d\udce3\u7cfb\u7edf\u901a\u77e5\ud83d\udce3=============="];t&&e.push(t),s&&e.push(s),i&&e.push(i),console.log(e.join("\n"))}),this.getdata=(t=>this.isSurge()?$persistentStore.read(t):this.isQuanX()?$prefs.valueForKey(t):void 0),this.setdata=((t,s)=>this.isSurge()?$persistentStore.write(t,s):this.isQuanX()?$prefs.setValueForKey(t,s):void 0),this.get=((t,s)=>this.send(t,"GET",s)),this.wait=((t,s=t)=>i=>setTimeout(()=>i(),Math.floor(Math.random()*(s-t+1)+t))),this.post=((t,s)=>this.send(t,"POST",s)),this.send=((t,s,i)=>{if(this.isSurge()){const e="POST"==s?$httpClient.post:$httpClient.get;e(t,(t,s,e)=>{s&&(s.body=e,s.statusCode=s.status),i(t,s,e)})}this.isQuanX()&&(t.method=s,$task.fetch(t).then(t=>{t.status=t.statusCode,i(null,t,t.body)},t=>i(t.error,t,t)))}),this.done=((t={})=>$done(t))}

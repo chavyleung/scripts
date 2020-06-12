@@ -1,22 +1,6 @@
 # APK.TW
 
-> 代码已同时兼容 Surge & QuanX, 使用同一份签到脚本即可
-
-> iOS 需要网关级翻墙!
-
-> iOS 需要网关级翻墙!
-
-> iOS 需要网关级翻墙!
-
-> surge mac 环节下无需网关级翻墙, 可直接运行 (可能需要打开增强模式)!
-
-> 目前尚不清楚 Cookie 有效期如何
-
-> 如果你看到这里还没放弃, 请仔细下面的操作说明 (需要点骚操作)
-
-解释:
-
-由于 apk.tw 需要翻墙, 又由于 iOS 的限制, Surge & QuanX 在脚本内的请求都无法走代理, 所以 iOS 环境下, 请保证本脚本在路由或网关级翻墙环境下运行!
+> 调整获取会话正则 (使用账号密码登录获取)
 
 ## 配置 (Surge)
 
@@ -25,7 +9,7 @@
 apk.tw
 
 [Script]
-http-request ^https:\/\/apk\.tw\/?.? script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/apktw/apktw.cookie.js
+http-request ^https://apk.tw\/member.php(.*?)action=login script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/apktw/apktw.cookie.js,requires-body=true
 cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/apktw/apktw.js
 ```
 
@@ -36,10 +20,7 @@ cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scr
 apk.tw
 
 [rewrite_local]
-# 189及以前版本
-^https:\/\/apk\.tw\/?.? url script-response-body apktw.cookie.js
-# 190及以后版本
-^https:\/\/apk\.tw\/?.? url script-request-header apktw.cookie.js
+^https://apk.tw\/member.php(.*?)action=login url script-request-body apktw.cookie.js
 
 [task_local]
 1 0 * * * apktw.js
@@ -47,17 +28,9 @@ apk.tw
 
 ## 说明
 
-> 先在登录成功后, 再打开获取 Cookie 的脚本
-
-1. 先在浏览器登录 `(先登录! 先登录! 先登录!)`, https://apk.tw/
-2. 滑到页面底部, 点击`电脑版`, 把页面切换为电脑版, 确认登录成功后再执行下面步骤
-3. 先把`apk.tw`加到`[MITM]`
-4. 再配置重写规则:
-   - Surge: 把两条远程脚本放到`[Script]`
-   - QuanX: 把`apktw.cookie.js`和`apktw.js`传到`On My iPhone - Quantumult X - Scripts` (传到 iCloud 相同目录也可, 注意要打开 quanx 的 iCloud 开关)
-5. 打开浏览器访问: https://apk.tw
-6. 系统提示: `获取Cookie: 成功`
-7. 最后就可以把第 1 条脚本注释掉了
+1. 访问: `https://apk.tw/` (如果你已经登录, 请先注销)
+2. 使用账号密码登录
+3. 系统提示: `获取会话: 成功` (以登录成功后弹出的通知为准!)
 
 > 第 1 条脚本是用来获取 cookie 的, 用浏览器访问一次获取 cookie 成功后就可以删掉或注释掉了, 但请确保在`登录成功`后再获取 cookie.
 

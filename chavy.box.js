@@ -91,8 +91,8 @@ function getSystemApps() {
       repo: 'https://github.com/chavyleung/scripts/tree/master/apktw',
       url: 'https://apk.tw/',
       icon: 'https://raw.githubusercontent.com/Orz-3/mini/master/apktw.png',
-      tasks: [{ cron: '3 0 * * *', script: 'noteyoudao.js' }],
-      rewrites: [{ type: 'request', pattern: '^https://note.youdao.com/yws/mapi/user?method=checkin', script: 'noteyoudao.cookie.js', body: true }]
+      tasks: [{ cron: '3 0 * * *', script: 'apktw.js' }],
+      rewrites: [{ type: 'request', pattern: '^https://apk.tw/member.php(.*?)action=login', script: 'apktw.cookie.js', body: true }]
     },
     {
       id: 'BAIDU',
