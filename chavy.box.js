@@ -491,10 +491,14 @@ function printHtml(data, curapp = null) {
               </v-snackbar>
               <v-dialog v-model="ui.impSessionDialog.show" scrollable>
                 <v-card>
-                  <v-card-title>导入会话</v-card-title>
+                  <v-card-title>
+                    导入会话
+                    <v-spacer></v-spacer>
+                    <v-btn text class="mr-n4" color="red darken-1" @click="ui.impSessionDialog.impval = ''">清空</v-btn>
+                  </v-card-title>
                   <v-divider></v-divider>
                   <v-card-text>
-                    <v-textarea autofocus auto-grow v-model="ui.impSessionDialog.impval" label="会话数据 (JSON)" hint="请粘贴 JSON 格式的会话数据! 你可以通过 复制会话 获得数据."></v-textarea>
+                    <v-textarea clearable autofocus auto-grow v-model="ui.impSessionDialog.impval" label="会话数据 (JSON)" hint="请粘贴 JSON 格式的会话数据! 你可以通过 复制会话 获得数据."></v-textarea>
                   </v-card-text>
                   <v-divider></v-divider>
                   <v-card-actions>
