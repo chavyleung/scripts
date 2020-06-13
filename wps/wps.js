@@ -273,7 +273,7 @@ function invite() {
     inviteActs.push(
       new Promise((resove) => {
         const body = `invite_userid=${$.userinfo.data.userid}`
-        const url = { url: 'http://zt.wps.cn/2018/clock_in/api/invite', body, headers: { sid: $.sid } }
+        const url = { url: 'http://zt.wps.cn/2018/clock_in/api/invite', body, headers: { sid: sids[sidIdx] } }
         $.post(url, (error, response, data) => {
           try {
             if (error) throw new Error(error)
