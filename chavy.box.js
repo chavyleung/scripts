@@ -498,10 +498,12 @@ function printHtml(data, curapp = null) {
                   </v-card-title>
                   <v-divider></v-divider>
                   <v-card-text>
-                    <v-textarea clearable autofocus auto-grow v-model="ui.impSessionDialog.impval" label="会话数据 (JSON)" hint="请粘贴 JSON 格式的会话数据! 你可以通过 复制会话 获得数据."></v-textarea>
+                    <v-textarea clearable auto-grow v-model="ui.impSessionDialog.impval" label="会话数据 (JSON)" hint="请粘贴 JSON 格式的会话数据! 你可以通过 复制会话 获得数据."></v-textarea>
                   </v-card-text>
                   <v-divider></v-divider>
                   <v-card-actions>
+                    <v-btn text @click="" v-clipboard:copy="JSON.stringify(ui.impSessionDialog.impval)" v-clipboard:success="onCopy">复制</v-btn>
+                    <v-btn text @click="onImpSessionPaste">粘粘</v-btn>
                     <v-spacer></v-spacer>
                     <v-btn text color="grey darken-1" text @click="ui.impSessionDialog.show = false">取消</v-btn>
                     <v-btn text color="success darken-1" text @click="onImpSession">导入</v-btn>
@@ -601,6 +603,12 @@ function printHtml(data, curapp = null) {
             },
             onSaveSettings() {
               axios.post('/api', JSON.stringify({ cmd: 'saveSettings', val: this.ui.curapp.settings }))
+            },
+            onImpSessionPaste() {
+              navigator.clipboard.readText().then((text) => {
+                this.ui.impSessionDialog.impval = ''
+                this.ui.impSessionDialog.impval = text
+              });
             },
             onImpSession() {
               const impjson = this.ui.impSessionDialog.impval
