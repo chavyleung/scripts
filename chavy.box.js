@@ -494,7 +494,7 @@ function printHtml(data, curapp = null) {
                   <v-card-title>
                     导入会话
                     <v-spacer></v-spacer>
-                    <v-btn text class="mr-n4" color="red darken-1" @click="ui.impSessionDialog.impval = ''">清空</v-btn>
+                    <v-btn text small class="mr-n4" color="red darken-1" @click="ui.impSessionDialog.impval = ''">清空</v-btn>
                   </v-card-title>
                   <v-divider></v-divider>
                   <v-card-text>
@@ -502,11 +502,11 @@ function printHtml(data, curapp = null) {
                   </v-card-text>
                   <v-divider></v-divider>
                   <v-card-actions>
-                    <v-btn text @click="" v-clipboard:copy="JSON.stringify(ui.impSessionDialog.impval)" v-clipboard:success="onCopy">复制</v-btn>
-                    <v-btn text @click="onImpSessionPaste">粘粘</v-btn>
+                    <v-btn text small @click="" v-clipboard:copy="JSON.stringify(ui.impSessionDialog.impval)" v-clipboard:success="onCopy">复制</v-btn>
+                    <v-btn text small @click="onImpSessionPaste">粘粘</v-btn>
                     <v-spacer></v-spacer>
-                    <v-btn text color="grey darken-1" text @click="ui.impSessionDialog.show = false">取消</v-btn>
-                    <v-btn text color="success darken-1" text @click="onImpSession">导入</v-btn>
+                    <v-btn text small color="grey darken-1" text @click="ui.impSessionDialog.show = false">取消</v-btn>
+                    <v-btn text small color="success darken-1" text @click="onImpSession">导入</v-btn>
                   </v-card-actions>
                 </v-card>
               </v-dialog>
