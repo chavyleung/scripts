@@ -502,7 +502,7 @@ function printHtml(data, curapp = null) {
                   </v-card-text>
                   <v-divider></v-divider>
                   <v-card-actions>
-                    <v-btn text small @click="" v-clipboard:copy="JSON.stringify(ui.impSessionDialog.impval)" v-clipboard:success="onCopy">复制</v-btn>
+                    <v-btn text small @click="" v-clipboard:copy="ui.impSessionDialog.impval" v-clipboard:success="onCopy">复制</v-btn>
                     <v-btn text small @click="onImpSessionPaste">粘粘</v-btn>
                     <v-spacer></v-spacer>
                     <v-btn text small color="grey darken-1" text @click="ui.impSessionDialog.show = false">取消</v-btn>
