@@ -123,6 +123,8 @@ function getSystemApps() {
       name: '京东618',
       keys: ['chavy_url_jd816', 'chavy_body_jd816', 'chavy_headers_jd816'],
       settings: [
+        { id: 'CFG_618_radomms_min', name: '最小随机等待 (毫秒)', val: 2000, type: 'text', desc: '在任务默认的等待时间基础上，再增加的随机等待时间！' },
+        { id: 'CFG_618_radomms_max', name: '最大随机等待 (毫秒)', val: 5000, type: 'text', desc: '在任务默认的等待时间基础上，再增加的随机等待时间！' },
         { id: 'CFG_618_isSignShop', name: '商店签到', val: true, type: 'boolean', desc: '71 家商店, 如果每天都签不上, 可以关掉了! 默认: true' },
         { id: 'CFG_618_isJoinBrand', name: '品牌会员', val: false, type: 'boolean', desc: '25 个品牌, 会自动加入品牌会员! 默认: true' },
         { id: 'CFG_BOOM_times_JD618', name: '炸弹次数', val: 1, type: 'text', desc: '总共发送多少次炸弹! 默认: 1' },

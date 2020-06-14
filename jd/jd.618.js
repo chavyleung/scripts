@@ -4,6 +4,8 @@ $.VAL_body = $.getdata('chavy_body_jd816')
 $.VAL_headers = $.getdata('chavy_headers_jd816')
 $.VAL_isSignShop = $.getdata('CFG_618_isSignShop') || 'true'
 $.VAL_isJoinBrand = $.getdata('CFG_618_isJoinBrand') || 'false'
+$.VAL_radommsMin = $.getdata('CFG_618_radomms_min') || '2000'
+$.VAL_radommsMax = $.getdata('CFG_618_radomms_max') || '5000'
 
 !(async () => {
   $.log('', `🔔 ${$.name}, 开始!`, '')
@@ -31,7 +33,8 @@ function getData() {
         $.log(`❕ ${$.name}, 获取密钥!`)
         $.log(`   密钥 = ${$.secretp.slice(0, 10)}...`)
         $.log(`   等级 = ${_info.raiseInfo.scoreLevel}`)
-        $.log(`   分数 = ${_info.raiseInfo.totalScore} => ${_info.raiseInfo.nextLevelScore}`, '')
+        $.log(`   分数 = ${_info.raiseInfo.totalScore} => ${_info.raiseInfo.nextLevelScore}`)
+        $.log(`   延时 = ${$.VAL_radommsMin} => ${$.VAL_radommsMax} 毫秒`, '')
       } catch (e) {
         $.log(`❗️ ${$.name}, 获取密钥!`, ` error = ${error || e}`, `response = ${JSON.stringify(response)}`, `data = ${data}`, '')
       } finally {
@@ -109,7 +112,11 @@ async function execActs() {
   for (let _actIdx = 0; _actIdx < $.acts.length; _actIdx++) {
     const _act = $.acts[_actIdx]
     $.log(`   ${_actIdx + 1}. ${_act.name} (${_act.times}/${_act.maxTimes})`)
-    // // 跳过：邀请好友、加入战队
+    if (_act.times === _act.maxTimes) {
+      $.log(`      @跳过: 全部完成!`, '')
+      continue
+    }
+    // 跳过：邀请好友、加入战队
     if ([2, 12].includes(_act.id)) {
       $.log('      跳过!', '')
       continue
@@ -120,20 +127,32 @@ async function execActs() {
       for (let subactIdx = 0; subactIdx < _act.subacts.length; subactIdx++) {
         const subact = _act.subacts[subactIdx]
         $.log(`      ${subactIdx + 1}. ${subact.name} (${subact.times}/${subact.maxTimes})`)
+        if (subact.times === subact.maxTimes) {
+          $.log(`         @跳过: 全部完成!`, '')
+          continue
+        }
         for (let subataskIdx = 0; subataskIdx < subact.tasks.length; subataskIdx++) {
           const subatask = subact.tasks[subataskIdx]
           $.log(`         ${subataskIdx + 1}. ${subatask.name.slice(0, 15)}...`)
+          if (subatask._raw.status && subatask._raw.status === 2) {
+            $.log(`         @跳过: 已经做过!`, '')
+            continue
+          }
           await sendtask(subact, subatask, true)
           $.log(`         @认领任务: ${subatask.isClaimSuc ? '🟢' : '🔴'}`)
           if (subatask.isskip) {
             $.log(`         @跳过: ${subatask.msg}`)
-            $.log(`         @等待: 0.5 秒`, '')
-            await new Promise($.wait(500))
+            const randomms = genRadomms()
+            $.log(`         @等待: 8 秒 + ${randomms} 毫秒`, '')
+            await new Promise($.wait(8000 + randomms))
           } else {
-            $.log(`         @等待: ${subact.waitDuration} 秒`)
-            await new Promise($.wait(subact.waitDuration * 1000))
+            const randomms = genRadomms()
+            $.log(`         @等待: ${subact.waitDuration} 秒 + ${randomms} 毫秒`)
+            await new Promise($.wait(subact.waitDuration * 1000 + randomms))
             await sendtask(subact, subatask)
-            $.log(`         @完成任务: ${subatask.isExecSuc ? '🟢' : '🔴'}`, '')
+            $.log(`         @完成任务: ${subatask.isExecSuc ? '🟢' : '🔴'}`)
+            $.log(`         @等待: 5 秒 + ${randomms} 毫秒`, '')
+            await new Promise($.wait(5000 + randomms))
           }
         }
       }
@@ -146,10 +165,13 @@ async function execActs() {
           $.log(`      ${taskIdx + 1}. ${task.name}`)
           await joinBrand(task)
           $.log(`         @加入会员: ${task.isJoinSuc ? '🟢' : '🔴'}`)
-          $.log(`         @等待: ${_act.waitDuration} 秒`)
-          await new Promise($.wait(_act.waitDuration * 1000))
+          const randomms = genRadomms()
+          $.log(`         @等待: ${_act.waitDuration} 秒 + ${randomms} 毫秒`)
+          await new Promise($.wait(_act.waitDuration * 1000 + randomms))
           await brandAward(task)
-          $.log(`         @完成任务: ${task.isAwardSuc ? '🟢' : '🔴'}`, '')
+          $.log(`         @完成任务: ${task.isAwardSuc ? '🟢' : '🔴'}`)
+          $.log(`         @等待: 5 秒 + ${randomms} 毫秒`, '')
+          await new Promise($.wait(5000 + randomms))
         }
       } else {
         $.log(`         @跳过: BoxJs 设置为 关闭 品牌会员!`, '')
@@ -160,17 +182,25 @@ async function execActs() {
       for (let taskIdx = 0; taskIdx < _act.tasks.length; taskIdx++) {
         const task = _act.tasks[taskIdx]
         $.log(`      ${taskIdx + 1}. ${task.name}`)
+        if (task._raw.status && task._raw.status === 2) {
+          $.log(`         @跳过: 已经做过!`, '')
+          continue
+        }
         await sendtask(_act, task, true)
         $.log(`         @认领任务: ${task.isClaimSuc ? '🟢' : '🔴'}`)
         if (task.isskip || task.ishot) {
           $.log(`         @跳过: ${task.msg}`)
-          $.log(`         @等待: 0.5 秒`, '')
-          await new Promise($.wait(500))
+          const randomms = genRadomms()
+          $.log(`         @等待: 8 秒 + ${randomms} 毫秒`, '')
+          await new Promise($.wait(8000 + randomms))
         } else {
-          $.log(`         @等待: ${_act.waitDuration} 秒`)
-          await new Promise($.wait(_act.waitDuration * 1000))
+          const randomms = genRadomms()
+          $.log(`         @等待: ${_act.waitDuration} 秒 + ${randomms} 毫秒`)
+          await new Promise($.wait(_act.waitDuration * 1000 + randomms))
           await sendtask(_act, task)
-          $.log(`         @完成任务: ${task.isExecSuc ? '🟢' : '🔴'}`, '')
+          $.log(`         @完成任务: ${task.isExecSuc ? '🟢' : '🔴'}`)
+          $.log(`         @等待: 5 秒 + ${randomms} 毫秒`, '')
+          await new Promise($.wait(5000 + randomms))
         }
       }
     }
@@ -185,8 +215,9 @@ async function execActs() {
       await signshop(shop)
       shop.msg = /,/.test(shop.msg) ? shop.msg.split(',')[1] : shop.msg
       $.log(`         @签到: ${shop.isSuc ? '🟢 已领取!' : shop.code === 402 ? '⚪️ 无效活动!' : `🔴 ${shop.msg}`}`)
-      $.log(`         @等待: 1 秒`, '')
-      await new Promise($.wait(1000))
+      const randomms = genRadomms()
+      $.log(`         @等待: 8 秒 + ${randomms} 毫秒`, '')
+      await new Promise($.wait(8000 + randomms))
     }
   } else {
     $.log(`         @跳过: BoxJs 设置为 关闭 商店签到!`, '')
@@ -240,8 +271,8 @@ function sendtask(act, task, isClaim = false) {
       actionType: isClaim ? 1 : undefined,
       safeStr: JSON.stringify({ secretp: $.secretp })
     }
-
     $.post(taskurl('cakebaker_ckCollectScore', JSON.stringify(body)), (error, response, data) => {
+      console.log(data)
       try {
         const _data = JSON.parse(data)
         const _issuc = _data.data.bizCode === 0 || _data.data.bizCode === -5 || _data.data.bizCode === -15
@@ -333,6 +364,12 @@ function taskurl(fid, body = '{}') {
   url.headers = JSON.parse($.VAL_headers)
   url.body = `functionId=${fid}&body=${body}&client=wh5&clientVersion=1.0.0`
   return url
+}
+
+function genRadomms() {
+  const max = $.VAL_radommsMax * 1
+  const min = $.VAL_radommsMin * 1
+  return parseInt(Math.random() * (max - min + 1) + min, 10)
 }
 
 function showmsg() {}
