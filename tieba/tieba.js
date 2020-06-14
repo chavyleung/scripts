@@ -1,11 +1,11 @@
 const $ = new Env('百度签到')
 $.VAL_cookies = $.getdata('chavy_cookie_tieba') || $.getdata('CookieTB')
 
-$.CFG_isOrderBars = 1 // 1: 经验排序, 2: 连签排序
-$.CFG_maxShowBars = 15 //每次通知数量
+$.CFG_isOrderBars = $.getdata('CFG_tieba_isOrderBars') || 'false' // 1: 经验排序, 2: 连签排序
+$.CFG_maxShowBars = $.getdata('CFG_tieba_maxShowBars') * 1 || 15 //每次通知数量
 
-$.CFG_maxSignBars = 5 // 每次并发执行多少个任务
-$.CFG_signWaitTime = 2000 // 每次并发间隔时间 (毫秒)
+$.CFG_maxSignBars = $.getdata('CFG_tieba_maxSignBars') * 1 || 5 // 每次并发执行多少个任务
+$.CFG_signWaitTime = $.getdata('CFG_tieba_signWaitTime') * 1 || 2000 // 每次并发间隔时间 (毫秒)
 
 !(async () => {
   $.log('', `🔔 ${$.name}, 开始!`, '')
@@ -53,7 +53,6 @@ async function signbars(bars) {
   // 处理`已签`数据
   bars.filter((bar) => bar.isSign).forEach((bar) => (bar.iscurSign = false))
   // 处理`未签`数据
-  const waitact = (resove) => setTimeout(() => resove(), $.CFG_signWaitTime)
   let _curbarIdx = 1
   let _signbarCnt = 0
   bars.filter((bar) => !bar.isSign).forEach((bar) => _signbarCnt++)
@@ -78,7 +77,7 @@ async function signbars(bars) {
           bar.signMsg = error !== null ? error : e
           $.log('', `❗️ 贴吧: ${bar.name}, 签到失败! 原因: `, e, '错误: ', error, '响应: ', JSON.stringify(response), '数据: ', data)
         } finally {
-          $.log(`❕ 贴吧:【${bar.name}】签到完成!`, data, '')
+          $.log(`❕ 贴吧:【${bar.name}】签到完成!`)
           resove()
         }
       })
@@ -87,7 +86,7 @@ async function signbars(bars) {
     if (signbarActs.length === $.CFG_maxSignBars || _signbarCnt === _curbarIdx) {
       $.log('', `⏳ 正在发起 ${signbarActs.length} 个签到任务!`)
       await Promise.all(signbarActs)
-      await new Promise(waitact)
+      await new Promise($.wait($.CFG_signWaitTime))
       signbarActs = []
     }
     _curbarIdx++
@@ -192,7 +191,7 @@ function showmsg() {
   $.bars.filter((bar) => bar.isSign).forEach((bar) => (allsignCnt += 1))
   $.bars.filter((bar) => bar.iscurSign && bar.issignSuc).forEach((bar) => (cursignCnt += 1))
   $.bars.filter((bar) => bar.iscurSign && !bar.issignSuc).forEach((bar) => (curfailCnt += 1))
-  $.bars = $.CFG_isOrderBars === 2 ? $.bars.sort((a, b) => b.exp - a.exp) : $.bars
+  $.bars = [true, 'true'].includes($.CFG_isOrderBars) ? $.bars.sort((a, b) => b.contsignCnt - a.contsignCnt) : $.bars
   allsignCnt += cursignCnt
   // 通知: 副标题
   let tiebasubt = '贴吧: '
@@ -218,9 +217,6 @@ function showmsg() {
     $.desc.push(`${signbar}`)
     $.desc.push(`${signlevel}, ${signexp}, ${signcnt}`)
     $.desc.push(`${signmsg}`)
-    $.log(`${signbar}`)
-    $.log(`${signlevel}, ${signexp}, ${signcnt}`)
-    $.log(`${signmsg}`)
     if (barno % $.CFG_maxShowBars === 0 || barno === allbarCnt) {
       const _descinfo = []
       _descinfo.push(`共签: ${allsignCnt}/${allbarCnt}, 本次成功: ${cursignCnt}, 本次失败: ${curfailCnt}`)
@@ -234,4 +230,4 @@ function showmsg() {
 }
 
 // prettier-ignore
-function Env(t){this.name=t,this.logs=[],this.isSurge=(()=>"undefined"!=typeof $httpClient),this.isQuanX=(()=>"undefined"!=typeof $task),this.log=((...t)=>{this.logs=[...this.logs,...t],t?console.log(t.join("\n")):console.log(this.logs.join("\n"))}),this.msg=((t=this.name,s="",i="")=>{this.isSurge()&&$notification.post(t,s,i),this.isQuanX()&&$notify(t,s,i),this.log("==============\ud83d\udce3\u7cfb\u7edf\u901a\u77e5\ud83d\udce3=============="),t&&this.log(t),s&&this.log(s),i&&this.log(i)}),this.getdata=(t=>this.isSurge()?$persistentStore.read(t):this.isQuanX()?$prefs.valueForKey(t):void 0),this.setdata=((t,s)=>this.isSurge()?$persistentStore.write(t,s):this.isQuanX()?$prefs.setValueForKey(t,s):void 0),this.get=((t,s)=>this.send(t,"GET",s)),this.wait=((t,s=t)=>i=>setTimeout(()=>i(),Math.floor(Math.random()*(s-t+1)+t))),this.post=((t,s)=>this.send(t,"POST",s)),this.send=((t,s,i)=>{if(this.isSurge()){const e="POST"==s?$httpClient.post:$httpClient.get;e(t,(t,s,e)=>{s&&(s.body=e,s.statusCode=s.status),i(t,s,e)})}this.isQuanX()&&(t.method=s,$task.fetch(t).then(t=>{t.status=t.statusCode,i(null,t,t.body)},t=>i(t.error,t,t)))}),this.done=((t={})=>$done(t))}
+function Env(t){this.name=t,this.logs=[],this.isSurge=(()=>"undefined"!=typeof $httpClient),this.isQuanX=(()=>"undefined"!=typeof $task),this.log=((...t)=>{this.logs=[...this.logs,...t],t?console.log(t.join("\n")):console.log(this.logs.join("\n"))}),this.msg=((t=this.name,s="",i="")=>{this.isSurge()&&$notification.post(t,s,i),this.isQuanX()&&$notify(t,s,i);const e=["","==============\ud83d\udce3\u7cfb\u7edf\u901a\u77e5\ud83d\udce3=============="];t&&e.push(t),s&&e.push(s),i&&e.push(i),console.log(e.join("\n"))}),this.getdata=(t=>this.isSurge()?$persistentStore.read(t):this.isQuanX()?$prefs.valueForKey(t):void 0),this.setdata=((t,s)=>this.isSurge()?$persistentStore.write(t,s):this.isQuanX()?$prefs.setValueForKey(t,s):void 0),this.get=((t,s)=>this.send(t,"GET",s)),this.wait=((t,s=t)=>i=>setTimeout(()=>i(),Math.floor(Math.random()*(s-t+1)+t))),this.post=((t,s)=>this.send(t,"POST",s)),this.send=((t,s,i)=>{if(this.isSurge()){const e="POST"==s?$httpClient.post:$httpClient.get;e(t,(t,s,e)=>{s&&(s.body=e,s.statusCode=s.status),i(t,s,e)})}this.isQuanX()&&(t.method=s,$task.fetch(t).then(t=>{t.status=t.statusCode,i(null,t,t.body)},t=>i(t.error,t,t)))}),this.done=((t={})=>$done(t))}

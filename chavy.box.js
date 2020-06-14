@@ -98,6 +98,12 @@ function getSystemApps() {
       id: 'BAIDU',
       name: '百度签到',
       keys: ['chavy_cookie_tieba'],
+      settings: [
+        { id: 'CFG_tieba_isOrderBars', name: '按连签排序', val: false, type: 'boolean', desc: '默认按经验排序' },
+        { id: 'CFG_tieba_maxShowBars', name: '每页显示数', val: 15, type: 'text', desc: '每页最显示多少个吧信息' },
+        { id: 'CFG_tieba_maxSignBars', name: '每次并发', val: 5, type: 'text', desc: '每次并发签到多少个吧' },
+        { id: 'CFG_tieba_signWaitTime', name: '并发间隔 (毫秒)', val: 2000, type: 'text', desc: '每次并发间隔时间' }
+      ],
       author: '@chavyleung',
       repo: 'https://github.com/chavyleung/scripts/tree/master/tieba',
       icon: 'https://is4-ssl.mzstatic.com/image/thumb/Purple113/v4/0a/33/50/0a335055-952a-6860-76aa-c657b2627a78/AppIcon-0-0-1x_U007emarketing-0-0-0-7-0-0-sRGB-85-220.jpeg/434x0w.jpg'
