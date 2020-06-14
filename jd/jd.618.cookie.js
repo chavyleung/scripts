@@ -4,26 +4,23 @@
  *
  * Surge:
  * Rewrite: JD618 = type=http-request,pattern=^https:\/\/api.m.jd.com\/client.action\?functionId=cakebaker_getHomeData,script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/jd/jd.618.cookie.js,requires-body=true
- * Tasks: JD618 = type=cron,cronexp="10,20,30,40,50 0 * * *",script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/jd/jd.618.js,wake-system=true,timeout=600
+ * Tasks: JD618 = type=cron,cronexp="10,30,50 0,1 * * *",script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/jd/jd.618.js,wake-system=true,timeout=1200
  * Tasks: JD618.Boom = type=cron,cronexp="0 10,12,18,20,21 * * *",script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/jd/jd.618.boom.js,wake-system=true
+ * Tasks: JD618.Boom = type=cron,cronexp="30 21 * * *",script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/jd/jd.618.boom.js,wake-system=true
  *
  * QuanX:
- * # 本地
- * ^https:\/\/api.m.jd.com\/client.action\?functionId=cakebaker_getHomeData url script-request-body jd.618.cookie.js
- * # 远程
  * ^https:\/\/api.m.jd.com\/client.action\?functionId=cakebaker_getHomeData url script-request-body https://raw.githubusercontent.com/chavyleung/scripts/master/jd/jd.618.cookie.js
  *
  * [task_local]
- * # 本地
- * 10,20,30,40,50 0 * * * jd.618.js, tag=京东618
- * 0 10,12,18,20,21 * * * jd.618.boom.js, tag=京东618炸弹
  * # 远程
- * 10,20,30,40,50 0 * * * https://raw.githubusercontent.com/chavyleung/scripts/master/jd/jd.618.adapt.js, tag=京东618
+ * 10,30,50 0,1 * * * https://raw.githubusercontent.com/chavyleung/scripts/master/jd/jd.618.adapt.js, tag=京东618
  * 0 10,12,18,20,21 * * * https://raw.githubusercontent.com/chavyleung/scripts/master/jd/jd.618.boom.js, tag=京东618炸弹
+ * 30 21 * * * https://raw.githubusercontent.com/chavyleung/scripts/master/jd/jd.618.boom.js, tag=京东618炸弹
  *
  * Loon:
- * cron "10,20,30,40,50 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/jd/jd.618.adapt.js, timeout=600, tag=京东618
+ * cron "10,30,50 0,1 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/jd/jd.618.adapt.js, timeout=600, tag=京东618
  * cron "0 10,12,18,20,21 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/jd/jd.618.boom.js, tag=京东618炸弹
+ * cron "30 21 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/jd/jd.618.boom.js, tag=京东618炸弹
  * http-request ^https:\/\/api.m.jd.com\/client.action\?functionId=cakebaker_getHomeData script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/jd/jd.618.cookie.js,requires-body=true
  *
  * [MITM]
