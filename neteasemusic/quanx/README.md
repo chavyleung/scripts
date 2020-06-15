@@ -9,10 +9,7 @@
 music.163.com
 
 [rewrite_local]
-# 189及以前版本
-^https:\/\/music\.163\.com\/m\/?.? url script-response-body neteasemusic.cookie.js
-# 190及以后版本
-^https:\/\/music\.163\.com\/m\/?.? url script-request-header neteasemusic.cookie.js
+^https:\/\/c\.m\.163\.com\/uc\/api\/sign\/v3\/commit url script-request-header neteasemusic.cookie.js
 
 [task_local]
 1 0 * * * neteasemusic.js
