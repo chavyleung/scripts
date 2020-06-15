@@ -186,7 +186,63 @@ function getSystemApps() {
       icon: 'https://is1-ssl.mzstatic.com/image/thumb/Purple113/v4/25/6a/00/256a002d-b5f0-46e1-ef55-841d41f8aafc/AppIcon-0-1x_U007emarketing-0-7-0-0-85-220.png/460x0w.png',
       tasks: [{ cron: '3 0 * * *', script: 'noteyoudao.js' }],
       rewrites: [{ type: 'request', pattern: '^https://note.youdao.com/yws/mapi/user?method=checkin', script: 'noteyoudao.cookie.js', body: true }]
-    }
+    },
+    {
+      id: 'QTT',
+      name: '趣头条',
+      keys: ['senku_signKey_qtt', 'senku_signXTK_qtt', 'senku_readKey_qtt','senku_navCoinKey_qtt'],
+      author: '@GideonSenku',
+      repo: 'https://github.com/chavyleung/scripts/tree/master/qtt',
+      icon: 'https://raw.githubusercontent.com/Orz-3/mini/master/qtt.png',
+    },
+    {
+      id: 'qmkg',
+      name: '全民K歌',
+      keys: ['senku_signurl_qmkg', 'senku_signheader_qmkg', 'senku_signbody_qmkg'],
+      author: '@GideonSenku',
+      repo: 'https://github.com/chavyleung/scripts/tree/master/qmkg',
+      icon: 'https://raw.githubusercontent.com/Orz-3/mini/master/qmkg.png',
+    },
+    {
+      id: 'bcz',
+      name: '百词斩',
+      keys: ['senku_cookie_bcz', 'senku_key_bcz'],
+      author: '@GideonSenku',
+      repo: 'https://github.com/chavyleung/scripts/tree/master/bcz',
+      icon: 'https://raw.githubusercontent.com/Orz-3/mini/master/midu.png',
+    },
+    {
+      id: 'zxhc',
+      name: '智行火车票',
+      keys: ['senku_signurl_zxhc', 'senku_signheader_zxhc','senku_signbody_zxhc'],
+      author: '@GideonSenku',
+      repo: 'https://github.com/chavyleung/scripts/tree/master/zxhc',
+      icon: 'https://raw.githubusercontent.com/Orz-3/mini/master/zxhc.png',
+    },
+    {
+      id: 'fenqile',
+      name: '分期乐',
+      keys: ['senku_signurl_fenqile', 'senku_signheader_fenqile','senku_signbody_fenqile','senku_signDailyKey_fenqile','senku_signDailyUrlKey_fenqile'],
+      author: '@GideonSenku',
+      repo: 'https://github.com/chavyleung/scripts/tree/master/fenqile',
+      icon: 'https://raw.githubusercontent.com/Orz-3/mini/master/fenqile.png',
+    },
+    {
+      id: 'fandeng',
+      name: '樊登读书',
+      keys: ['senku_signurl_pandeng', 'senku_signheader_pandeng','senku_signbody_pandeng'],
+      author: '@GideonSenku',
+      repo: 'https://github.com/chavyleung/scripts/tree/master/fandeng',
+      icon: 'https://raw.githubusercontent.com/Orz-3/mini/master/fandeng.png',
+    },
+    {
+      id: 'dbsj',
+      name: '豆瓣时间',
+      keys: ['senku_signurl_dbsj', 'senku_signheader_dbsj','senku_signbody_dbsj'],
+      author: '@GideonSenku',
+      repo: 'https://github.com/chavyleung/scripts/tree/master/dbsj',
+      icon: 'https://raw.githubusercontent.com/Orz-3/mini/master/dbsj.png',
+    },
   ]
   sysapps.forEach((app) => {
     app.datas = Array.isArray(app.datas) ? app.datas : []
