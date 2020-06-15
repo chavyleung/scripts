@@ -51,7 +51,7 @@ Rewrite: 苏宁易购 = type=http-request,pattern=^https:\/\/sign.suning.com\/si
 Rewrite: 顺丰速运 = type=http-request,pattern=^https:\/\/mcs-mimp-web.sf-express.com\/mcs-mimp\/share\/(.*?)Redirect,script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/sfexpress/sfexpress.cookie.js
 Rewrite: 顺丰速运 = type=http-request,pattern=^https:\/\/sf-integral-sign-in.weixinjia.net\/app\/index,script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/sfexpress/sfexpress.cookie.js
 Rewrite: 腾讯视频 = type=http-request,pattern=^https:\/\/access.video.qq.com\/user\/auth_refresh,script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/videoqq/videoqq.cookie.js
-Rewrite: 网易新闻 = type=http-request,pattern=^https:\/\/v6-c\.m\.163\.com\/uc\/api\/sign\/v3\/commit,script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/neteasenews/neteasenews.cookie.js,requires-body=true
+Rewrite: 网易新闻 = type=http-request,pattern=^https:\/\/(.*?)c\.m\.163\.com\/uc\/api\/sign\/v3\/commit,script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/neteasenews/neteasenews.cookie.js,requires-body=true
 Rewrite: 网易考拉 = type=http-request,pattern=^https:\/\/m-bean\.kaola\.com/m/point/sign\.html,script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/wykl/wykl.cookie.js,requires-body=true
 Rewrite: 蔚来 = type=http-request,pattern=^https:\/\/app\.nio\.com\/api\/1\/app\/daily_checkin,script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/nio/nio.cookie.js
 Rewrite: 喜马拉雅 = type=http-request,pattern=^https?:\/\/.*\/mobile\-user\/homePage\/.*,script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/ximalaya/ximalaya.cookie.js
