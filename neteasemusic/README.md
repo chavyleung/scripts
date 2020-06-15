@@ -5,28 +5,28 @@
 > 1. 增加自动重试机制 (BoxJs 可调整次数及间隔)
 > 2. 增加等级显示 (需按新方式获取会话)
 
-## 配置 （Surge & Loon）
-
-```properties
-[MITM]
-music.163.com
-
-[rewrite_local]
-^https:\/\/music.163.com\/weapi\/user\/level url script-request-header neteasemusic.cookie.js
-
-[task_local]
-1 0 * * * neteasemusic.js
-```
-
-## 配置 (QuanX)
+## 配置 (Surge & Loon)
 
 ```properties
 [MITM]
 music.163.com
 
 [Script]
-http-request ^https?:\/\/music\.163\.com\/?.? script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/neteasemusic/neteasemusic.cookie.js
+http-request ^https?:\/\/music\.163\.com\/?.? script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/neteasemusic/neteasemusic.cookie.js,requires-body=true
 cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/neteasemusic/neteasemusic.js
+```
+
+## 配置 （QuanX）
+
+```properties
+[MITM]
+music.163.com
+
+[rewrite_local]
+^https:\/\/music.163.com\/weapi\/user\/level url script-request-body neteasemusic.cookie.js
+
+[task_local]
+1 0 * * * neteasemusic.js
 ```
 
 ## 说明
