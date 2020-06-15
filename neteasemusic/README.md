@@ -1,6 +1,24 @@
 # 网易云音乐
 
-## 配置
+> 2020.6.15
+>
+> 1. 增加自动重试机制 (BoxJs 可调整次数及间隔)
+> 2. 增加等级显示 (需按新方式获取会话)
+
+## 配置 （Surge & Loon）
+
+```properties
+[MITM]
+music.163.com
+
+[rewrite_local]
+^https:\/\/music.163.com\/weapi\/user\/level url script-request-header neteasemusic.cookie.js
+
+[task_local]
+1 0 * * * neteasemusic.js
+```
+
+## 配置 (QuanX)
 
 ```properties
 [MITM]
@@ -13,12 +31,9 @@ cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scr
 
 ## 说明
 
-1. 先把`music.163.com`加到`[MITM]`
-2. 再把两条远程脚本放到`[Script]`
-3. 浏览器访问并登录: https://music.163.com/m/login
-4. 登录成功后再用浏览器访问一下: https://music.163.com/
-5. `Surge`提示: `Cookie [网易云音乐] 写入成功`
-6. 最后就可以把第 1 条脚本注释掉了
+1. 先登录: <https://music.163.com/m/login>
+2. 再访问: <https://music.163.com/#/user/level>
+3. 提示: `获取会话: 成功!`
 
 > 第 1 条脚本是用来获取 cookie 的, 用浏览器访问一次获取 cookie 成功后就可以删掉或注释掉了, 但请确保在`登录成功`后再获取 cookie.
 
