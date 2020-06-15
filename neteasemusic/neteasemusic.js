@@ -92,6 +92,7 @@ function showmsg() {
     $.subt += $.isAppSuc ? ', APP: 成功' : ', APP: 失败'
     if ($.isNewCookie && $.userInfo) {
       $.desc = `等级: ${$.userInfo.data.level}, 听歌: ${$.userInfo.data.nowPlayCount} => ${$.userInfo.data.nextPlayCount} 升级 (首)`
+      $.desc = $.userInfo.data.level === 10 ? `等级: ${$.userInfo.data.level}, 你的等级已爆表!` : $.desc
     }
     resove()
   })
