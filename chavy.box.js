@@ -162,7 +162,7 @@ function getSystemApps() {
       keys: ['chavy_cookie_neteasemusic'],
       settings: [
         { id: 'CFG_neteasemusic_retryCnt', name: '重试次数', val: 10, type: 'text', desc: '一直尝试签到直至出现“重复签到”标识!' },
-        { id: 'CFG_neteasemusic_retryInterval', name: '重试间隔 (毫秒)', val: 1000, type: 'text', desc: '每次重试间隔时间 (毫秒)！' }
+        { id: 'CFG_neteasemusic_retryInterval', name: '重试间隔 (毫秒)', val: 500, type: 'text', desc: '每次重试间隔时间 (毫秒)！' }
       ],
       author: '@chavyleung',
       repo: 'https://github.com/chavyleung/scripts/tree/master/neteasemusic',
