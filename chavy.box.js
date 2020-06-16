@@ -261,6 +261,15 @@ function getSystemApps() {
       author: '@Sunert',
       repo: 'https://github.com/Sunert/Scripts/blob/master/Task/txnews.js',
       icons: ['https://raw.githubusercontent.com/Orz-3/mini/master/txnews.png', 'https://raw.githubusercontent.com/Orz-3/task/master/txnews.png']
+    },
+    {
+      id: 'BoxSwitcher',
+      name: '会话切换',
+      keys: [],
+      settings: [{ id: 'CFG_BoxSwitcher_isSilent', name: '静默运行', val: false, type: 'boolean', desc: '切换会话时不发出系统通知!' }],
+      author: '@chavyleung',
+      repo: 'https://github.com/chavyleung/scripts/blob/master/box/switcher/box.switcher.js',
+      icons: ['https://raw.githubusercontent.com/Orz-3/mini/master/box.png', 'https://raw.githubusercontent.com/Orz-3/task/master/box.png']
     }
   ]
   sysapps
@@ -560,7 +569,7 @@ function printHtml(data, curapp = null) {
                   </v-card-actions>
                 </template>
               </v-card>
-              <v-card class="mx-auto">
+              <v-card class="mx-auto" v-if="ui.curapp.datas && ui.curapp.datas.length > 0">
                 <v-subheader>
                   当前会话 ({{ ui.curapp.datas.length }})
                   <v-spacer></v-spacer>

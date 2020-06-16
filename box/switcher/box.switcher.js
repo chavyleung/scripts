@@ -1,15 +1,17 @@
 const $ = new Env('会话切换')
 $.KEY_sessions = 'chavy_boxjs_sessions'
+$.CFG_isSilent = $.getdata('CFG_BoxSwitcher_isSilent')
 
 !(async () => {
   $.log('', `🔔 ${$.name}, 开始!`, '')
   await execSwitch()
+  await showmsg()
 })()
   .catch((e) => {
     $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
   })
   .finally(() => {
-    $.msg($.name, $.subt, $.desc), $.log('', `🔔 ${$.name}, 结束!`, ''), $.done()
+    $.log('', `🔔 ${$.name}, 结束!`, ''), $.done()
   })
 
 function execSwitch() {
@@ -67,6 +69,15 @@ function getSessions() {
   const sessionstr = $.getdata($.KEY_sessions)
   const sessions = sessionstr ? JSON.parse(sessionstr) : []
   return Array.isArray(sessions) ? sessions : []
+}
+
+function showmsg() {
+  return new Promise((resove) => {
+    if (!$.CFG_isSilent || $.CFG_isSilent === 'false') {
+      $.msg($.name, $.subt, $.desc)
+    }
+    resove()
+  })
 }
 
 // prettier-ignore
