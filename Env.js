@@ -1,8 +1,10 @@
 function Env(name) {
   this.name = name
+  this.data = null
   this.logs = []
   this.isSurge = () => 'undefined' !== typeof $httpClient
   this.isQuanX = () => 'undefined' !== typeof $task
+  this.isNode = () => 'undefined' !== typeof module && !!module.exports
   this.log = (...log) => {
     this.logs = [...this.logs, ...log]
     if (log) console.log(log.join('\n'))
@@ -20,13 +22,35 @@ function Env(name) {
   this.getdata = (key) => {
     if (this.isSurge()) return $persistentStore.read(key)
     if (this.isQuanX()) return $prefs.valueForKey(key)
+    if (this.isNode()) {
+      const datafile = 'box.dat'
+      this.fs = this.fs ? this.fs : require('fs')
+      if (this.fs.existsSync(datafile)) {
+        this.data = JSON.parse(this.fs.readFileSync(datafile))
+        return this.data[key]
+      } else {
+        return null
+      }
+    }
   }
   this.setdata = (val, key) => {
     if (this.isSurge()) return $persistentStore.write(val, key)
     if (this.isQuanX()) return $prefs.setValueForKey(val, key)
+    if (this.isNode()) {
+      const datafile = 'box.dat'
+      this.fs = this.fs ? this.fs : require('fs')
+      if (this.fs.existsSync(datafile)) {
+        this.data = JSON.parse(this.fs.readFileSync(datafile))
+        this.data[key] = val
+        this.fs.writeFileSync(datafile, JSON.stringify(this.data))
+        return true
+      } else {
+        return false
+      }
+    }
   }
-  this.get = (url, callback) => this.send(url, 'GET', callback)
   this.wait = (min, max = min) => (resove) => setTimeout(() => resove(), Math.floor(Math.random() * (max - min + 1) + min))
+  this.get = (url, callback) => this.send(url, 'GET', callback)
   this.post = (url, callback) => this.send(url, 'POST', callback)
   this.send = (url, method, callback) => {
     if (this.isSurge()) {
@@ -49,6 +73,15 @@ function Env(name) {
         (reason) => callback(reason.error, reason, reason)
       )
     }
+    if (this.isNode()) {
+      this.request = this.request ? this.request : require('request')
+      url.method = method
+      url.gzip = true
+      this.request(url, (err, response, body) => {
+        if (response) response.status = response.statusCode
+        callback(null, response, body)
+      })
+    }
   }
-  this.done = (value = {}) => $done(value)
+  this.done = (value = {}) => (!this.isNode() ? $done(value) : null)
 }
