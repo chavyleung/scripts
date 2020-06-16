@@ -253,6 +253,14 @@ function getSystemApps() {
       author: '@GideonSenku',
       repo: 'https://github.com/chavyleung/scripts/tree/master/dbsj',
       icons: ['https://raw.githubusercontent.com/Orz-3/mini/master/dbsj.png', 'https://raw.githubusercontent.com/Orz-3/task/master/dbsj.png']
+    },
+    {
+      id: 'txnews',
+      name: '腾讯新闻',
+      keys: ['sy_signurl_txnews', 'sy_cookie_txnews', 'sy_signurl_txnews2', 'sy_cookie_txnews2'],
+      author: '@Sunert',
+      repo: 'https://github.com/Sunert/Scripts/blob/master/Task/txnews.js',
+      icons: ['https://raw.githubusercontent.com/Orz-3/mini/master/txnews.png', 'https://raw.githubusercontent.com/Orz-3/task/master/txnews.png']
     }
   ]
   sysapps
@@ -429,6 +437,8 @@ function printHtml(data, curapp = null) {
     <head>
       <title>BoxJs</title>
       <meta charset="utf-8" />
+      <link rel="Bookmark" href="https://raw.githubusercontent.com/chavyleung/scripts/master/BOXJS.png">
+      <link rel="shortcut icon" href="https://raw.githubusercontent.com/chavyleung/scripts/master/BOXJS.png">
       <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/chavyleung/scripts/master/BOXJS.png"/> 
       <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet" />
       <link href="https://cdn.jsdelivr.net/npm/@mdi/font@5.x/css/materialdesignicons.min.css" rel="stylesheet" />
