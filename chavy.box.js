@@ -220,7 +220,7 @@ function getSystemApps() {
       keys: ['senku_cookie_bcz', 'senku_key_bcz'],
       author: '@GideonSenku',
       repo: 'https://github.com/chavyleung/scripts/tree/master/bcz',
-      icons: ['https://raw.githubusercontent.com/Orz-3/mini/master/midu.png', 'https://raw.githubusercontent.com/Orz-3/task/master/midu.png']
+      icons: ['https://raw.githubusercontent.com/Orz-3/mini/master/bcz.png', 'https://raw.githubusercontent.com/Orz-3/task/master/bcz.png']
     },
     {
       id: 'zxhc',
@@ -429,8 +429,6 @@ function printHtml(data, curapp = null) {
     <head>
       <title>BoxJs</title>
       <meta charset="utf-8" />
-      <link rel="shortcut icon" href="https://raw.githubusercontent.com/chavyleung/scripts/master/BOXJS.png"/>
-      <link rel="Bookmark" href="https://raw.githubusercontent.com/chavyleung/scripts/master/BOXJS.png"/>
       <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/chavyleung/scripts/master/BOXJS.png"/> 
       <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet" />
       <link href="https://cdn.jsdelivr.net/npm/@mdi/font@5.x/css/materialdesignicons.min.css" rel="stylesheet" />
