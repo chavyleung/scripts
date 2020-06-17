@@ -466,7 +466,7 @@ function printHtml(data, curapp = null) {
     </head>
     <body>
       <div id="app">
-        <v-app>
+        <v-app v-scroll="onScroll">
           <v-app-bar :color="ui.appbar.color" app dense>
             <v-menu bottom left v-if="['app', 'home', 'log', 'data'].includes(ui.curview) && box.syscfgs.env === ''">
               <template v-slot:activator="{ on }">
@@ -737,6 +737,7 @@ function printHtml(data, curapp = null) {
           data() {
             return {
               ui: {
+                scrollY: 0,
                 bfview: 'app',
                 curview: 'app',
                 curapp: ${curapp},
@@ -782,6 +783,7 @@ function printHtml(data, curapp = null) {
                   var state = { title: 'BoxJs' }
                   document.title = state.title
                   history.pushState(state, '', '/home')
+                  this.$vuetify.goTo(this.ui.scrollY, {duration: 0, offset: 0})
                 }
               }
             }
@@ -790,16 +792,10 @@ function printHtml(data, curapp = null) {
             onLink(link) {
               window.open(link)
             },
-            onShare() {
-              const KEY_sessions = 'chavy_boxjs_sessions'
-              const KEY_userCfgs = 'chavy_boxjs_userCfgs'
-              const data = {}
-              data[KEY_sessions] = this.box.sessions
-              data[KEY_userCfgs] = this.box.usercfgs
-              this.box.sessions.forEach((session, sessionIdx) => {
-                session.datas.forEach((_data, dataIdx) => (data[_data.key] = _data.val))
-              })
-              this.$copyText(JSON.stringify(data))
+            onScroll(e) {
+              if(this.ui.curview === 'app') {
+                this.ui.scrollY = e.currentTarget.scrollY + 48
+              }
             },
             onUserCfgsChange() {
               axios.post('/api', JSON.stringify({ cmd: 'saveUserCfgs', val: this.box.usercfgs }))
