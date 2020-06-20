@@ -93,6 +93,18 @@ function Env(name, opts) {
       }
     }
 
+    initGotEnv(opts) {
+      this.got = this.got ? this.got : require('got')
+      this.cktough = this.cktough ? this.cktough : require('tough-cookie')
+      this.ckjar = this.ckjar ? this.ckjar : new this.cktough.CookieJar()
+      if (opts) {
+        opts.headers = opts.headers ? opts.headers : {}
+        if (undefined === opts.headers.Cookie && undefined === opts.cookieJar) {
+          opts.cookieJar = this.ckjar
+        }
+      }
+    }
+
     get(opts, callback = () => {}) {
       if (opts.headers) {
         delete opts.headers['Content-Type']
@@ -115,14 +127,25 @@ function Env(name, opts) {
           (err) => callback(err)
         )
       } else if (this.isNode()) {
-        this.got = this.got ? this.got : require('got')
-        this.got(opts).then(
-          (resp) => {
-            const { statusCode: status, statusCode, headers, body } = resp
-            callback(null, { status, statusCode, headers, body }, body)
-          },
-          (err) => callback(err)
-        )
+        this.initGotEnv(opts)
+        this.got(opts)
+          .on('redirect', (resp, nextOpts) => {
+            try {
+              const ck = resp.headers['set-cookie'].map(this.cktough.Cookie.parse).toString()
+              this.ckjar.setCookieSync(ck, null)
+              nextOpts.cookieJar = this.ckjar
+            } catch (e) {
+              this.logErr(e)
+            }
+            // this.ckjar.setCookieSync(resp.headers['set-cookie'].map(Cookie.parse).toString())
+          })
+          .then(
+            (resp) => {
+              const { statusCode: status, statusCode, headers, body } = resp
+              callback(null, { status, statusCode, headers, body }, body)
+            },
+            (err) => callback(err)
+          )
       }
     }
 
@@ -150,7 +173,7 @@ function Env(name, opts) {
           (err) => callback(err)
         )
       } else if (this.isNode()) {
-        this.got = this.got ? this.got : require('got')
+        this.initGotEnv(opts)
         const { url, ..._opts } = opts
         this.got.post(url, _opts).then(
           (resp) => {
