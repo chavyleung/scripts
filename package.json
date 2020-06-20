@@ -6,6 +6,6 @@
   "author": "Chavy <chavyleung@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "request": "^2.88.2"
+    "got": "^11.3.0"
   }
 }
