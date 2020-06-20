@@ -286,6 +286,7 @@ function getSystemApps() {
   sysapps
     .sort((a, b) => a.id.localeCompare(b.id))
     .forEach((app) => {
+      // 获取持久化数据
       app.datas = Array.isArray(app.datas) ? app.datas : []
       app.keys.forEach((key) => {
         app.datas.push({ key, val: $.getdata(key) })
@@ -301,13 +302,20 @@ function getSystemApps() {
             setting.val = val || setting.val
           }
         })
+      // 判断是否收藏应用
+      const usercfgs = getUserCfgs()
+      const favapps = usercfgs && usercfgs.favapps
+      if (favapps) {
+        app.isFav = favapps.findIndex((appId) => app.id === appId) > -1 ? true : false
+      }
     })
   return sysapps
 }
 
 function getUserCfgs() {
+  const defcfgs = { favapps: [] }
   const userCfgsStr = $.getdata($.KEY_userCfgs)
-  return userCfgsStr ? JSON.parse(userCfgsStr) : {}
+  return userCfgsStr ? Object.assign(defcfgs, JSON.parse(userCfgsStr)) : defcfgs
 }
 
 function getUserApps() {
@@ -477,7 +485,7 @@ function printHtml(data, curapp = null) {
               <template v-slot:activator="{ on }">
                 <v-btn icon v-on="on"><v-icon>mdi-palette</v-icon></v-btn>
               </template>
-              <v-list>
+              <v-list dense>
                 <v-list-item v-for="(color, colorIdx) in box.colors" :key="color.id" @click="ui.appbar.color=color.id">
                   <v-list-item-title>22{{ color.name }}</v-list-item-title>
                 </v-list-item>
@@ -491,7 +499,7 @@ function printHtml(data, curapp = null) {
                   </v-avatar>
                 </v-btn>
               </template>
-              <v-list>
+              <v-list dense>
                 <v-list-item v-for="(env, envIdx) in box.syscfgs.envs" :key="env.id" @click="box.syscfgs.env=env.id">
                   <v-list-item-avatar size="24"><v-img :src="env.icon"></v-img></v-list-item-avatar>
                   <v-list-item-title>{{ env.id }}</v-list-item-title>
@@ -575,9 +583,41 @@ function printHtml(data, curapp = null) {
               </v-list-item>
             </v-list>
           </v-navigation-drawer>
-          <v-content>
+          <v-content :class="box.usercfgs.isHideNavi ? 'mb-0' : 'mb-14'">
             <v-container fluid v-if="ui.curview === 'app'">
-              <v-card class="mx-auto" tile>
+              <v-card class="mx-auto" v-if="favapps.length > 0">
+                <v-list nav dense>
+                  <v-subheader inset>收藏应用 ({{ favapps.length }})</v-subheader>
+                  <v-list-item three-line dense v-for="(app, appIdx) in favapps" :key="app.id" @click="goAppSessionView(app)">
+                    <v-list-item-avatar><v-img :src="app.icons[box.usercfgs.isTransparentIcons ? 0 : 1]"></v-img></v-list-item-avatar>
+                    <v-list-item-content>
+                      <v-list-item-title>{{ app.name }} ({{ app.id }})</v-list-item-title>
+                      <v-list-item-subtitle>{{ app.repo }}</v-list-item-subtitle>
+                      <v-list-item-subtitle color="blue">{{ app.author }}</v-list-item-subtitle>
+                    </v-list-item-content>
+                    <v-list-item-action>
+                      <v-menu bottom left>
+                        <template v-slot:activator="{ on }">
+                          <v-btn icon v-on="on"><v-icon>mdi-dots-vertical</v-icon></v-btn>
+                        </template>
+                        <v-list dense>
+                          <v-list-item v-if="appIdx > 0" @click="onMoveFav(appIdx, -1)">
+                            <v-list-item-title>上移</v-list-item-title>
+                          </v-list-item>
+                          <v-list-item v-if="appIdx + 1 < favapps.length" @click="onMoveFav(appIdx, 1)">
+                            <v-list-item-title>下移</v-list-item-title>
+                          </v-list-item>
+                          <v-divider v-if="favapps.length > 1"></v-divider>
+                          <v-list-item @click="onFav(app)">
+                            <v-list-item-title>取消收藏</v-list-item-title>
+                          </v-list-item>
+                        </v-list>
+                      </v-menu>
+                    </v-list-item-action>
+                  </v-list-item>
+                </v-list>
+              </v-card>
+              <v-card class="mx-auto mt-4">
                 <v-list nav dense>
                   <v-subheader inset>内置应用 ({{ box.sysapps.length }})</v-subheader>
                   <v-list-item three-line dense v-for="(app, appIdx) in box.sysapps" :key="app.id" @click="goAppSessionView(app)">
@@ -588,24 +628,8 @@ function printHtml(data, curapp = null) {
                       <v-list-item-subtitle color="blue">{{ app.author }}</v-list-item-subtitle>
                     </v-list-item-content>
                     <v-list-item-action>
-                      <v-btn icon> <v-icon color="grey lighten-1">mdi-chevron-right</v-icon></v-btn>
-                    </v-list-item-action>
-                  </v-list-item>
-                  <v-divider></v-divider>
-                  <v-subheader inset>
-                    <span>自建应用 ({{ box.userapps.length }})</span>
-                    <v-spacer></v-spacer>
-                    <v-btn icon> <v-icon color="green">mdi-plus-circle</v-icon></v-btn>
-                  </v-subheader>
-                  <v-list-item three-line dense v-for="(app, appIdx) in box.userapps" :key="app.id" @click="goAppSessionView(app)">
-                    <v-list-item-avatar><v-img :src="app.icon"></v-img></v-list-item-avatar>
-                    <v-list-item-content>
-                      <v-list-item-title>{{ app.name }}</v-list-item-title>
-                      <v-list-item-subtitle>{{ app.repo }}</v-list-item-subtitle>
-                      <v-list-item-subtitle color="blue">{{ app.author }}</v-list-item-subtitle>
-                    </v-list-item-content>
-                    <v-list-item-action>
-                      <v-btn icon> <v-icon color="grey lighten-1">mdi-chevron-right</v-icon></v-btn>
+                      <v-btn icon v-if="app.isFav" @click.stop="onFav(app, appIdx)"><v-icon color="yellow darken-2">mdi-star</v-icon></v-btn>
+                      <v-btn icon v-else @click.stop="onFav(app, appIdx)"><v-icon color="grey">mdi-star-outline</v-icon></v-btn>
                     </v-list-item-action>
                   </v-list-item>
                 </v-list>
@@ -639,7 +663,7 @@ function printHtml(data, curapp = null) {
                     <template v-slot:activator="{ on }">
                       <v-btn icon v-on="on"><v-icon>mdi-dots-vertical</v-icon></v-btn>
                     </template>
-                    <v-list>
+                    <v-list dense>
                       <v-list-item @click="" v-clipboard:copy="JSON.stringify(ui.curapp)" v-clipboard:success="onCopy">
                         <v-list-item-title>复制会话</v-list-item-title>
                       </v-list-item>
@@ -712,7 +736,7 @@ function printHtml(data, curapp = null) {
             <v-snackbar top color="success" v-model="ui.snackbar.show" :timeout="ui.snackbar.timeout">
               {{ ui.snackbar.text }}
               <template v-slot:action>
-              <v-btn text @click="ui.snackbar.show = false">关闭</v-btn>
+                <v-btn text @click="ui.snackbar.show = false">关闭</v-btn>
               </template>
             </v-snackbar>
           </v-content>
@@ -786,6 +810,18 @@ function printHtml(data, curapp = null) {
                 })
               })
               return dat
+            },
+            favapps: function () {
+              const favapps = []
+              if (this.box.usercfgs.favapps) {
+                this.box.usercfgs.favapps.forEach((favappId) => {
+                  const app = this.box.sysapps.find((app) => app.id === favappId)
+                  if (app) {
+                    favapps.push(app)
+                  }
+                })
+              }
+              return favapps
             }
           },
           watch: {
@@ -798,7 +834,7 @@ function printHtml(data, curapp = null) {
                   var state = { title: 'BoxJs' }
                   document.title = state.title
                   history.pushState(state, '', '/home')
-                  this.$vuetify.goTo(this.ui.scrollY, {duration: 0, offset: 0})
+                  this.$vuetify.goTo(this.ui.scrollY, { duration: 0, offset: 0 })
                 }
               }
             }
@@ -808,9 +844,29 @@ function printHtml(data, curapp = null) {
               window.open(link)
             },
             onScroll(e) {
-              if(this.ui.curview === 'app') {
+              if (this.ui.curview === 'app') {
                 this.ui.scrollY = e.currentTarget.scrollY + 48
               }
+            },
+            onMoveFav(favIdx, moveCnt) {
+              const fromIdx = favIdx
+              const toIdx = favIdx + moveCnt
+              this.box.usercfgs.favapps.splice(fromIdx, 1, ...this.box.usercfgs.favapps.splice(toIdx, 1, this.box.usercfgs.favapps[fromIdx]))
+              this.onUserCfgsChange()
+            },
+            onFav(app) {
+              const appIdx = this.box.sysapps.findIndex((appId) => appId === app.id)
+              app.isFav = !app.isFav
+              Vue.set(this.box.sysapps, appIdx, this.box.sysapps[appIdx])
+              const usercfgs = this.box.usercfgs ? this.box.usercfgs : { favapps: [] }
+              usercfgs.favapps = usercfgs.favapps ? usercfgs.favapps : []
+              const idx = usercfgs.favapps.findIndex((appId) => appId === app.id)
+              if (app.isFav === true && idx === -1) {
+                usercfgs.favapps.push(app.id)
+              } else if (app.isFav === false && idx > -1) {
+                usercfgs.favapps.splice(idx, 1)
+              }
+              this.onUserCfgsChange()
             },
             onUserCfgsChange() {
               axios.post('/api', JSON.stringify({ cmd: 'saveUserCfgs', val: this.box.usercfgs }))
