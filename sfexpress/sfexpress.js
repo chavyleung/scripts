@@ -1,143 +1,51 @@
-const chavy = init()
-const cookieName = '顺丰速运'
-const KEY_loginurl = 'chavy_loginurl_sfexpress'
-const KEY_loginheader = 'chavy_loginheader_sfexpress'
-const KEY_login27url = 'chavy_login27url_sfexpress'
-const KEY_login27header = 'chavy_login27header_sfexpress'
+const $ = new Env('顺丰速运')
+$.VAL_loginurl = $.getdata('chavy_loginurl_sfexpress')
+$.VAL_loginheader = $.getdata('chavy_loginheader_sfexpress')
 
-const signinfo = {}
-let VAL_loginurl = chavy.getdata(KEY_loginurl)
-let VAL_loginheader = chavy.getdata(KEY_loginheader)
-let VAL_login27url = chavy.getdata(KEY_login27url)
-let VAL_login27header = chavy.getdata(KEY_login27header)
-
-;(sign = async () => {
-  chavy.log(`🔔 ${cookieName}`)
+!(async () => {
+  await refresh()
   await loginapp()
   await signapp()
-  // if (VAL_login27url && VAL_login27header) {
-  //   await loginapp27()
-  //   await signapp27()
-  //   await getinfo27()
-  // }
   await getinfo()
-  showmsg()
-  chavy.done()
-})().catch((e) => chavy.log(`❌ ${cookieName} 签到失败: ${e}`), chavy.done())
+  await showmsg()
+})()
+  .catch((e) => $.logErr(e))
+  .finally(() => $.done())
 
-function loginapp() {
-  return new Promise((resolve, reject) => {
-    const url = { url: VAL_loginurl, headers: { Cookie: '' } }
-    chavy.get(url, (error, response, data) => {
-      try {
-        resolve()
-      } catch (e) {
-        chavy.msg(cookieName, `登录结果: 失败`, `说明: ${e}`)
-        chavy.log(`❌ ${cookieName} loginapp - 登录失败: ${e}`)
-        chavy.log(`❌ ${cookieName} loginapp - response: ${JSON.stringify(response)}`)
-        resolve()
-      }
-    })
+function refresh() {
+  if (!$.isQuanX()) return
+  return new Promise((resolve) => {
+    const url = { url: `https://sf-integral-sign-in.weixinjia.net/app/signin`, headers: { Cookie: '' } }
+    url.body = `date=${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`
+    $.post(url, () => resolve())
   })
 }
 
-function loginapp27() {
-  return new Promise((resolve, reject) => {
-    const url = { url: VAL_login27url, headers: JSON.parse(VAL_login27header) }
-    chavy.get(url, (error, response, data) => {
-      try {
-        resolve()
-      } catch (e) {
-        chavy.msg(cookieName, `登录结果: 失败 (27周年)`, `说明: ${e}`)
-        chavy.log(`❌ ${cookieName} loginapp27 - 登录失败: ${e}`)
-        chavy.log(`❌ ${cookieName} loginapp27 - response: ${JSON.stringify(response)}`)
-        resolve()
-      }
-    })
+function loginapp() {
+  return new Promise((resolve) => {
+    const url = { url: $.VAL_loginurl }
+    $.get(url, () => resolve())
   })
 }
 
 function signapp() {
-  return new Promise((resolve, reject) => {
-    let url = { url: `https://sf-integral-sign-in.weixinjia.net/app/signin`, headers: JSON.parse(VAL_loginheader) }
+  return new Promise((resolve) => {
+    const url = { url: `https://sf-integral-sign-in.weixinjia.net/app/signin`, headers: JSON.parse($.VAL_loginheader) }
     delete url.headers['Cookie']
     url.headers['Origin'] = 'https://sf-integral-sign-in.weixinjia.net'
     url.headers['Connection'] = 'keep-alive'
     url.headers['Content-Type'] = 'application/x-www-form-urlencoded'
     url.headers['Accept'] = 'application/json, text/plain, */*'
     url.headers['Host'] = 'sf-integral-sign-in.weixinjia.net'
-    url.headers['Content-Length'] = '15'
     url.headers['Accept-Language'] = 'zh-cn'
     url.headers['Accept-Encoding'] = 'gzip, deflate, br'
     url.body = `date=${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`
-    chavy.post(url, (error, response, data) => {
+    $.post(url, (err, resp, data) => {
       try {
-        chavy.log(`❕ ${cookieName} signapp - response: ${JSON.stringify(response)}`)
-        signinfo.signapp = JSON.parse(data)
-        resolve()
+        $.signapp = JSON.parse(data)
       } catch (e) {
-        chavy.msg(cookieName, `签到结果: 失败`, `说明: ${e}`)
-        chavy.log(`❌ ${cookieName} signapp - 签到失败: ${e}`)
-        chavy.log(`❌ ${cookieName} signapp - response: ${JSON.stringify(response)}`)
-        resolve()
-      }
-    })
-  })
-}
-
-function signapp27() {
-  return new Promise((resolve, reject) => {
-    let url = { url: `https://mcs-mimp-web.sf-express.com/mcs-mimp/activity/sign`, headers: {} }
-    delete url.headers['Cookie']
-    url.headers['Accept'] = 'application/json, text/plain, */*'
-    url.headers['Accept-Encoding'] = 'gzip, deflate, br'
-    url.headers['Accept-Language'] = 'zh-cn'
-    url.headers['Connection'] = 'keep-alive'
-    url.headers['Content-Type'] = 'application/json;charset=utf-8'
-    url.headers['Host'] = 'mcs-mimp-web.sf-express.com'
-    url.headers['Origin'] = 'https://mcs-mimp-web.sf-express.com'
-    url.headers['Referer'] = 'https://mcs-mimp-web.sf-express.com/sfAnniversary'
-    url.headers['User-Agent'] = 'Mozilla/5.0 (iPhone; CPU iPhone OS 13_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 mediaCode=SFEXPRESSAPP-iOS-ML'
-    url.body = '{"channel": "SFAPP","secondChannel": "APP_HOME_ENTRY"}'
-    chavy.post(url, (error, response, data) => {
-      try {
-        chavy.log(`❕ ${cookieName} signapp27 - response: ${JSON.stringify(response)}`)
-        signinfo.signapp27 = JSON.parse(data)
-        resolve()
-      } catch (e) {
-        chavy.msg(cookieName, `签到结果: 失败 (27周年)`, `说明: ${e}`)
-        chavy.log(`❌ ${cookieName} signapp27 - 签到失败: ${e}`)
-        chavy.log(`❌ ${cookieName} signapp27 - response: ${JSON.stringify(response)}`)
-        resolve()
-      }
-    })
-  })
-}
-
-function getinfo27() {
-  return new Promise((resolve, reject) => {
-    let url = { url: `https://mcs-mimp-web.sf-express.com/mcs-mimp/activity/sign/days`, headers: JSON.parse(VAL_loginheader) }
-    delete url.headers['Cookie']
-    url.headers['Accept'] = 'application/json, text/plain, */*'
-    url.headers['Accept-Encoding'] = 'gzip, deflate, br'
-    url.headers['Accept-Language'] = 'zh-cn'
-    url.headers['Connection'] = 'keep-alive'
-    url.headers['Content-Length'] = '2'
-    url.headers['Content-Type'] = 'application/json;charset=utf-8'
-    url.headers['Host'] = 'mcs-mimp-web.sf-express.com'
-    url.headers['Origin'] = 'https://mcs-mimp-web.sf-express.com'
-    url.headers['Referer'] = 'https://mcs-mimp-web.sf-express.com/sfAnniversary'
-    url.headers['User-Agent'] = 'Mozilla/5.0 (iPhone; CPU iPhone OS 13_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 mediaCode=SFEXPRESSAPP-iOS-ML'
-    url.body = '{}'
-    chavy.post(url, (error, response, data) => {
-      try {
-        chavy.log(`❕ ${cookieName} getinfo27 - response: ${JSON.stringify(response)}`)
-        signinfo.getinfo27 = JSON.parse(data)
-        resolve()
-      } catch (e) {
-        chavy.msg(cookieName, `获取信息: 失败 (27周年)`, `说明: ${e}`)
-        chavy.log(`❌ ${cookieName} getinfo27 - 获取信息: ${e}`)
-        chavy.log(`❌ ${cookieName} getinfo27 - response: ${JSON.stringify(response)}`)
+        $.logErr(e, resp)
+      } finally {
         resolve()
       }
     })
@@ -145,8 +53,8 @@ function getinfo27() {
 }
 
 function getinfo() {
-  return new Promise((resolve, reject) => {
-    let url = { url: `https://sf-integral-sign-in.weixinjia.net/app/init`, headers: JSON.parse(VAL_loginheader) }
+  return new Promise((resolve) => {
+    const url = { url: `https://sf-integral-sign-in.weixinjia.net/app/init`, headers: JSON.parse($.VAL_loginheader) }
     delete url.headers['Cookie']
     url.headers['Origin'] = 'https://sf-integral-sign-in.weixinjia.net'
     url.headers['Connection'] = 'keep-alive'
@@ -155,17 +63,12 @@ function getinfo() {
     url.headers['Host'] = 'sf-integral-sign-in.weixinjia.net'
     url.headers['Accept-Encoding'] = 'gzip, deflate, br'
     url.headers['Accept-Language'] = 'zh-cn'
-    url.headers['Content-Length'] = '0'
-
-    chavy.post(url, (error, response, data) => {
+    $.post(url, (err, resp, data) => {
       try {
-        chavy.log(`❕ ${cookieName} getinfo - response: ${JSON.stringify(response)}`)
-        signinfo.info = JSON.parse(data)
-        resolve()
+        $.info = JSON.parse(data)
       } catch (e) {
-        chavy.msg(cookieName, `获取信息: 失败`, `说明: ${e}`)
-        chavy.log(`❌ ${cookieName} getinfo - 获取信息失败: ${e}`)
-        chavy.log(`❌ ${cookieName} getinfo - response: ${JSON.stringify(response)}`)
+        $.logErr(e, resp)
+      } finally {
         resolve()
       }
     })
@@ -173,90 +76,26 @@ function getinfo() {
 }
 
 function showmsg() {
-  let subTitle = ''
-  let detail = ''
-  if (signinfo.signapp.code == 0 && signinfo.signapp.msg == 'success') {
-    subTitle = `签到: 成功`
-  } else if (signinfo.signapp.code == -1) {
-    if (signinfo.signapp.msg == 'ALREADY_CHECK') {
-      subTitle = `签到: 重复`
-    } else {
-      subTitle = `签到: 失败`
-    }
-  } else {
-    subTitle = `签到: 未知`
-    detail = `说明: ${signinfo.signapp.msg}`
-  }
-
-  if (signinfo.info && signinfo.info.code == 0) {
-    detail = `积分: ${signinfo.info.data.member_info.integral}, 本周连签: ${signinfo.info.data.check_count}天`
-  }
-
-  if (signinfo.signapp27) {
-    subTitle += subTitle == '' ? '' : '; '
-    if (signinfo.signapp27.success == true) {
-      subTitle += `周年: 成功 (+${signinfo.signapp27.obj}积分)`
-    } else if (signinfo.signapp27.success == false) {
-      if (signinfo.signapp27.errorCode == '200010') {
-        subTitle += `签到: 重复`
-      } else if (signinfo.signapp27.errorCode == '100111') {
-        subTitle += `签到: 未登录`
+  return new Promise((resolve) => {
+    if ($.signapp.code == 0 && $.signapp.msg == 'success') {
+      $.subt = `签到: 成功`
+    } else if ($.signapp.code == -1) {
+      if ($.signapp.msg == 'ALREADY_CHECK') {
+        $.subt = `签到: 重复`
       } else {
-        subTitle += `签到: 失败`
+        $.subt = `签到: 失败`
       }
     } else {
-      subTitle += `周年: 未知`
-      detail += `说明: ${signinfo.signapp.msg}`
+      $.subt = `签到: 未知`
+      $.desc = `说明: ${$.signapp.msg}`
     }
-
-    if (signinfo.getinfo27 && signinfo.getinfo27.success == true) {
-      detail += `, 周年连签: ${signinfo.getinfo27.obj.length}天`
+    if ($.info && $.info.code == 0) {
+      $.desc = `积分: ${$.info.data.member_info.integral}, 本周连签: ${$.info.data.check_count}天`
     }
-  }
-
-  chavy.msg(cookieName, subTitle, detail)
+    $.msg($.name, $.subt, $.desc)
+    resolve()
+  })
 }
 
-function init() {
-  isSurge = () => {
-    return undefined === this.$httpClient ? false : true
-  }
-  isQuanX = () => {
-    return undefined === this.$task ? false : true
-  }
-  getdata = (key) => {
-    if (isSurge()) return $persistentStore.read(key)
-    if (isQuanX()) return $prefs.valueForKey(key)
-  }
-  setdata = (key, val) => {
-    if (isSurge()) return $persistentStore.write(key, val)
-    if (isQuanX()) return $prefs.setValueForKey(key, val)
-  }
-  msg = (title, subtitle, body) => {
-    if (isSurge()) $notification.post(title, subtitle, body)
-    if (isQuanX()) $notify(title, subtitle, body)
-  }
-  log = (message) => console.log(message)
-  get = (url, cb) => {
-    if (isSurge()) {
-      $httpClient.get(url, cb)
-    }
-    if (isQuanX()) {
-      url.method = 'GET'
-      $task.fetch(url).then((resp) => cb(null, resp, resp.body))
-    }
-  }
-  post = (url, cb) => {
-    if (isSurge()) {
-      $httpClient.post(url, cb)
-    }
-    if (isQuanX()) {
-      url.method = 'POST'
-      $task.fetch(url).then((resp) => cb(null, resp, resp.body))
-    }
-  }
-  done = (value = {}) => {
-    $done(value)
-  }
-  return { isSurge, isQuanX, msg, log, getdata, setdata, get, post, done }
-}
+// prettier-ignore
+function Env(t,s){return new class{constructor(t,s){this.name=t,this.data=null,this.dataFile="box.dat",this.logs=[],this.logSeparator="\n",this.startTime=(new Date).getTime(),Object.assign(this,s),this.log("",`\ud83d\udd14${this.name}, \u5f00\u59cb!`)}isNode(){return"undefined"!=typeof module&&!!module.exports}isQuanX(){return"undefined"!=typeof $task}isSurge(){return"undefined"!=typeof $httpClient}isLoon(){return"undefined"!=typeof $loon}loaddata(){if(!this.isNode)return{};{this.fs=this.fs?this.fs:require("fs"),this.path=this.path?this.path:require("path");const t=this.path.resolve(this.dataFile),s=this.path.resolve(process.cwd(),this.dataFile),e=this.fs.existsSync(t),i=!e&&this.fs.existsSync(s);if(!e&&!i)return{};{const i=e?t:s;try{return JSON.parse(this.fs.readFileSync(i))}catch{return{}}}}}writedata(){if(this.isNode){this.fs=this.fs?this.fs:require("fs"),this.path=this.path?this.path:require("path");const t=this.path.resolve(this.dataFile),s=this.path.resolve(process.cwd(),this.dataFile),e=this.fs.existsSync(t),i=!e&&this.fs.existsSync(s),h=JSON.stringify(this.data);e?this.fs.writeFileSync(t,h):i?this.fs.writeFileSync(s,h):this.fs.writeFileSync(t,h)}}getdata(t){return this.isSurge()||this.isLoon()?$persistentStore.read(t):this.isQuanX()?$prefs.valueForKey(t):this.isNode()?(this.data=this.loaddata(),this.data[t]):this.data&&this.data[t]||null}setdata(t,s){return this.isSurge()||this.isLoon()?$persistentStore.write(t,s):this.isQuanX()?$prefs.setValueForKey(t,s):this.isNode()?(this.data=this.loaddata(),this.data[s]=t,this.writedata(),!0):this.data&&this.data[s]||null}get(t,s=(()=>{})){t.headers&&(delete t.headers["Content-Type"],delete t.headers["Content-Length"]),this.isSurge()||this.isLoon()?$httpClient.get(t,(t,e,i)=>{!t&&e&&(e.body=i,e.statusCode=e.status,s(t,e,i))}):this.isQuanX()?$task.fetch(t).then(t=>{const{statusCode:e,statusCode:i,headers:h,body:o}=t;s(null,{status:e,statusCode:i,headers:h,body:o},o)},t=>s(t)):this.isNode()&&(this.got=this.got?this.got:require("got"),this.got(t).then(t=>{const{statusCode:e,statusCode:i,headers:h,body:o}=t;s(null,{status:e,statusCode:i,headers:h,body:o},o)},t=>s(t)))}post(t,s=(()=>{})){if(t.body&&t.headers&&!t.headers["Content-Type"]&&(t.headers["Content-Type"]="application/x-www-form-urlencoded"),delete t.headers["Content-Length"],this.isSurge()||this.isLoon())$httpClient.post(t,(t,e,i)=>{!t&&e&&(e.body=i,e.statusCode=e.status,s(t,e,i))});else if(this.isQuanX())t.method="POST",$task.fetch(t).then(t=>{const{statusCode:e,statusCode:i,headers:h,body:o}=t;s(null,{status:e,statusCode:i,headers:h,body:o},o)},t=>s(t));else if(this.isNode()){this.got=this.got?this.got:require("got");const{url:e,...i}=t;this.got.post(e,i).then(t=>{const{statusCode:e,statusCode:i,headers:h,body:o}=t;s(null,{status:e,statusCode:i,headers:h,body:o},o)},t=>s(t))}}msg(s=t,e="",i="",h){this.isSurge()||this.isLoon()?$notification.post(s,e,i):this.isQuanX()&&$notify(s,e,i),this.logs.push("","==============\ud83d\udce3\u7cfb\u7edf\u901a\u77e5\ud83d\udce3=============="),this.logs.push(s),e&&this.logs.push(e),i&&this.logs.push(i)}log(...t){t.length>0?this.logs=[...this.logs,...t]:console.log(this.logs.join(this.logSeparator))}logErr(t,s){const e=!this.isSurge()&&!this.isQuanX()&&!this.isLoon();e?$.log("",`\u2757\ufe0f${this.name}, \u9519\u8bef!`,t.stack):$.log("",`\u2757\ufe0f${this.name}, \u9519\u8bef!`,t.message)}wait(t){return new Promise(s=>setTimeout(s,t))}done(t=null){const s=(new Date).getTime(),e=(s-this.startTime)/1e3;this.log("",`\ud83d\udd14${this.name}, \u7ed3\u675f! \ud83d\udd5b ${e} \u79d2`),this.log(),(this.isSurge()||this.isQuanX()||this.isLoon())&&$done(t)}}(t,s)}
