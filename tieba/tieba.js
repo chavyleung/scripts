@@ -3,33 +3,27 @@ $.VAL_cookies = $.getdata('chavy_cookie_tieba') || $.getdata('CookieTB')
 
 $.CFG_isOrderBars = $.getdata('CFG_tieba_isOrderBars') || 'false' // 1: 经验排序, 2: 连签排序
 $.CFG_maxShowBars = $.getdata('CFG_tieba_maxShowBars') * 1 || 15 //每次通知数量
-
 $.CFG_maxSignBars = $.getdata('CFG_tieba_maxSignBars') * 1 || 5 // 每次并发执行多少个任务
 $.CFG_signWaitTime = $.getdata('CFG_tieba_signWaitTime') * 1 || 2000 // 每次并发间隔时间 (毫秒)
 
 !(async () => {
-  $.log('', `🔔 ${$.name}, 开始!`, '')
   await tieba()
   await zhidao()
-  showmsg()
+  await showmsg()
 })()
-  .catch((e) => {
-    $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
-  })
-  .finally(() => {
-    $.log('', `🔔 ${$.name}, 结束!`, ''), $.done()
-  })
+  .catch((e) => $.logErr(e))
+  .finally(() => $.done())
 
 // 贴吧
 function tieba() {
-  return new Promise((resove, reject) => {
+  return new Promise((resove) => {
     const url = { url: 'https://tieba.baidu.com/mo/q/newmoindex', headers: { Cookie: $.VAL_cookies } }
-    $.get(url, async (error, response, data) => {
+    $.get(url, async (err, resp, data) => {
       try {
         const _data = JSON.parse(data)
         // 处理异常
         if (_data.no !== 0) {
-          throw new Error(`贴吧: 获取清单失败! 原因: ${_data.error}`)
+          throw new Error(`获取清单失败! 原因: ${_data.error}`)
         }
         // 组装数据
         $.bars = []
@@ -40,7 +34,7 @@ function tieba() {
         await signbars($.bars)
         await getbars($.bars)
       } catch (e) {
-        reject(`贴吧: 获取清单失败! 原因: ${e}`)
+        $.logErr(e, resp)
       } finally {
         resove()
       }
@@ -62,7 +56,7 @@ async function signbars(bars) {
       url.body = `ie=utf-8&kw=${encodeURIComponent(bar.name)}&tbs=${$.tieba.tbs}`
       url.headers['Host'] = 'tieba.baidu.com'
       url.headers['User-Agent'] = 'User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 13_4_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1 Mobile/15E148 Safari/604.1'
-      $.post(url, (error, response, data) => {
+      $.post(url, (err, resp, data) => {
         try {
           const _data = JSON.parse(data)
           bar.iscurSign = true
@@ -75,7 +69,7 @@ async function signbars(bars) {
           bar.issignSuc = false
           bar.signNo = null
           bar.signMsg = error !== null ? error : e
-          $.log('', `❗️ 贴吧: ${bar.name}, 签到失败! 原因: `, e, '错误: ', error, '响应: ', JSON.stringify(response), '数据: ', data)
+          $.logErr(e, resp)
         } finally {
           $.log(`❕ 贴吧:【${bar.name}】签到完成!`)
           resove()
@@ -86,7 +80,7 @@ async function signbars(bars) {
     if (signbarActs.length === $.CFG_maxSignBars || _signbarCnt === _curbarIdx) {
       $.log('', `⏳ 正在发起 ${signbarActs.length} 个签到任务!`)
       await Promise.all(signbarActs)
-      await new Promise($.wait($.CFG_signWaitTime))
+      await $.wait($.CFG_signWaitTime)
       signbarActs = []
     }
     _curbarIdx++
@@ -100,7 +94,7 @@ function getbars(bars) {
       const url = { url: `http://tieba.baidu.com/sign/loadmonth?kw=${encodeURIComponent(bar.name)}&ie=utf-8`, headers: { Cookie: $.VAL_cookies } }
       url.headers['Host'] = 'tieba.baidu.com'
       url.headers['User-Agent'] = 'User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 13_4_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1 Mobile/15E148 Safari/604.1'
-      $.get(url, (error, response, data) => {
+      $.get(url, (err, resp, data) => {
         try {
           const _signinfo = JSON.parse(data).data.sign_user_info
           bar.signRank = _signinfo.rank
@@ -108,6 +102,7 @@ function getbars(bars) {
           bar.totalsignCnt = _signinfo.sign_total
         } catch (e) {
           bar.contsignCnt = '❓'
+          $.logErr(e, response)
         } finally {
           resove()
         }
@@ -129,7 +124,7 @@ function loginZhidao() {
     url.headers['Host'] = 'zhidao.baidu.com'
     url.headers['User-Agent'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_5) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1.1 Safari/605.1.15'
     $.zhidao = {}
-    $.post(url, (error, response, data) => {
+    $.post(url, (err, resp, data) => {
       try {
         $.zhidao.stoken = data.match(/"stoken"[^"]*"([^"]*)"/)[1]
         if (!$.zhidao.stoken) {
@@ -140,7 +135,7 @@ function loginZhidao() {
       } catch (e) {
         $.zhidao.isloginSuc = false
         $.zhidao.loginMsg = '登录失败'
-        $.log('', '❗️ 知道: 登录失败! 原因: ', e, '')
+        $.logErr(e, resp)
       } finally {
         resove()
       }
@@ -160,7 +155,7 @@ function signZhidao() {
     const timestamp = Date.parse(new Date())
     const utdata = `61,61,7,0,0,0,12,61,5,2,12,4,24,5,4,1,4,${timestamp}`
     url.body = `cm=100509&utdata=${utdata}&stoken=${$.zhidao.stoken}`
-    $.post(url, (error, response, data) => {
+    $.post(url, (err, resp, data) => {
       try {
         const _data = JSON.parse(data)
         $.zhidao.isSignSuc = true
@@ -170,7 +165,7 @@ function signZhidao() {
         $.zhidao.isSignSuc = false
         $.zhidao.signNo = null
         $.zhidao.signMsg = e
-        $.log('', '❗️知道: 签到失败! 原因: ', e, '数据: ', data, '')
+        $.logErr(e, resp)
       } finally {
         resove()
       }
@@ -183,51 +178,54 @@ function barWrapper(bar) {
 }
 
 function showmsg() {
-  // 数据: 签到数量
-  const allbarCnt = $.bars.length
-  let allsignCnt = 0
-  let cursignCnt = 0
-  let curfailCnt = 0
-  $.bars.filter((bar) => bar.isSign).forEach((bar) => (allsignCnt += 1))
-  $.bars.filter((bar) => bar.iscurSign && bar.issignSuc).forEach((bar) => (cursignCnt += 1))
-  $.bars.filter((bar) => bar.iscurSign && !bar.issignSuc).forEach((bar) => (curfailCnt += 1))
-  $.bars = [true, 'true'].includes($.CFG_isOrderBars) ? $.bars.sort((a, b) => b.contsignCnt - a.contsignCnt) : $.bars
-  allsignCnt += cursignCnt
-  // 通知: 副标题
-  let tiebasubt = '贴吧: '
-  if (allbarCnt == allsignCnt) tiebasubt += '成功'
-  else if (allbarCnt == curfailCnt) tiebasubt += '失败'
-  else tiebasubt += '部分'
-  let zhidaosubt = '知道: '
-  if ($.zhidao.isSignSuc && $.zhidao.signNo === 0) zhidaosubt += '成功'
-  else if ($.zhidao.isSignSuc && $.zhidao.signNo === 2) zhidaosubt += '重复'
-  else zhidaosubt += '失败'
-  // 通知: 详情
-  let _curPage = 1
-  const _totalPage = Math.ceil(allbarCnt / $.CFG_maxShowBars)
+  return new Promise((resolve) => {
+    // 数据: 签到数量
+    const allbarCnt = $.bars.length
+    let allsignCnt = 0
+    let cursignCnt = 0
+    let curfailCnt = 0
+    $.bars.filter((bar) => bar.isSign).forEach((bar) => (allsignCnt += 1))
+    $.bars.filter((bar) => bar.iscurSign && bar.issignSuc).forEach((bar) => (cursignCnt += 1))
+    $.bars.filter((bar) => bar.iscurSign && !bar.issignSuc).forEach((bar) => (curfailCnt += 1))
+    $.bars = [true, 'true'].includes($.CFG_isOrderBars) ? $.bars.sort((a, b) => b.contsignCnt - a.contsignCnt) : $.bars
+    allsignCnt += cursignCnt
+    // 通知: 副标题
+    let tiebasubt = '贴吧: '
+    if (allbarCnt == allsignCnt) tiebasubt += '成功'
+    else if (allbarCnt == curfailCnt) tiebasubt += '失败'
+    else tiebasubt += '部分'
+    let zhidaosubt = '知道: '
+    if ($.zhidao.isSignSuc && $.zhidao.signNo === 0) zhidaosubt += '成功'
+    else if ($.zhidao.isSignSuc && $.zhidao.signNo === 2) zhidaosubt += '重复'
+    else zhidaosubt += '失败'
+    // 通知: 详情
+    let _curPage = 1
+    const _totalPage = Math.ceil(allbarCnt / $.CFG_maxShowBars)
 
-  $.desc = []
-  $.bars.forEach((bar, index) => {
-    const barno = index + 1
-    const signbar = `${bar.isSign || bar.issignSuc ? '🟢' : '🔴'} [${barno}]【${bar.name}】排名: ${bar.signRank}`
-    const signlevel = `等级: ${bar.level}`
-    const signexp = `经验: ${bar.exp}`
-    const signcnt = `连签: ${bar.contsignCnt}/${bar.totalsignCnt}天`
-    const signmsg = `${bar.isSign || bar.issignSuc ? '' : `失败原因: ${bar.signMsg}\n`}`
-    $.desc.push(`${signbar}`)
-    $.desc.push(`${signlevel}, ${signexp}, ${signcnt}`)
-    $.desc.push(`${signmsg}`)
-    if (barno % $.CFG_maxShowBars === 0 || barno === allbarCnt) {
-      const _descinfo = []
-      _descinfo.push(`共签: ${allsignCnt}/${allbarCnt}, 本次成功: ${cursignCnt}, 本次失败: ${curfailCnt}`)
-      _descinfo.push(`点击查看详情, 第 ${_curPage++}/${_totalPage} 页`)
-      $.subt = `${tiebasubt}, ${zhidaosubt}`
-      $.desc = [..._descinfo, '', ...$.desc].join('\n')
-      $.msg($.name, $.subt, $.desc)
-      $.desc = []
-    }
+    $.desc = []
+    $.bars.forEach((bar, index) => {
+      const barno = index + 1
+      const signbar = `${bar.isSign || bar.issignSuc ? '🟢' : '🔴'} [${barno}]【${bar.name}】排名: ${bar.signRank}`
+      const signlevel = `等级: ${bar.level}`
+      const signexp = `经验: ${bar.exp}`
+      const signcnt = `连签: ${bar.contsignCnt}/${bar.totalsignCnt}天`
+      const signmsg = `${bar.isSign || bar.issignSuc ? '' : `失败原因: ${bar.signMsg}\n`}`
+      $.desc.push(`${signbar}`)
+      $.desc.push(`${signlevel}, ${signexp}, ${signcnt}`)
+      $.desc.push(`${signmsg}`)
+      if (barno % $.CFG_maxShowBars === 0 || barno === allbarCnt) {
+        const _descinfo = []
+        _descinfo.push(`共签: ${allsignCnt}/${allbarCnt}, 本次成功: ${cursignCnt}, 本次失败: ${curfailCnt}`)
+        _descinfo.push(`点击查看详情, 第 ${_curPage++}/${_totalPage} 页`)
+        $.subt = `${tiebasubt}, ${zhidaosubt}`
+        $.desc = [..._descinfo, '', ...$.desc].join('\n')
+        $.msg($.name, $.subt, $.desc)
+        $.desc = []
+      }
+    })
+    resolve()
   })
 }
 
 // prettier-ignore
-function Env(s){this.name=s,this.data=null,this.logs=[],this.isSurge=(()=>"undefined"!=typeof $httpClient),this.isQuanX=(()=>"undefined"!=typeof $task),this.isNode=(()=>"undefined"!=typeof module&&!!module.exports),this.log=((...s)=>{this.logs=[...this.logs,...s],s?console.log(s.join("\n")):console.log(this.logs.join("\n"))}),this.msg=((s=this.name,t="",i="")=>{this.isSurge()&&$notification.post(s,t,i),this.isQuanX()&&$notify(s,t,i);const e=["","==============\ud83d\udce3\u7cfb\u7edf\u901a\u77e5\ud83d\udce3=============="];s&&e.push(s),t&&e.push(t),i&&e.push(i),console.log(e.join("\n"))}),this.getdata=(s=>{if(this.isSurge())return $persistentStore.read(s);if(this.isQuanX())return $prefs.valueForKey(s);if(this.isNode()){const t="box.dat";return this.fs=this.fs?this.fs:require("fs"),this.fs.existsSync(t)?(this.data=JSON.parse(this.fs.readFileSync(t)),this.data[s]):null}}),this.setdata=((s,t)=>{if(this.isSurge())return $persistentStore.write(s,t);if(this.isQuanX())return $prefs.setValueForKey(s,t);if(this.isNode()){const i="box.dat";return this.fs=this.fs?this.fs:require("fs"),!!this.fs.existsSync(i)&&(this.data=JSON.parse(this.fs.readFileSync(i)),this.data[t]=s,this.fs.writeFileSync(i,JSON.stringify(this.data)),!0)}}),this.wait=((s,t=s)=>i=>setTimeout(()=>i(),Math.floor(Math.random()*(t-s+1)+s))),this.get=((s,t)=>this.send(s,"GET",t)),this.post=((s,t)=>this.send(s,"POST",t)),this.send=((s,t,i)=>{if(this.isSurge()){const e="POST"==t?$httpClient.post:$httpClient.get;e(s,(s,t,e)=>{t&&(t.body=e,t.statusCode=t.status),i(s,t,e)})}this.isQuanX()&&(s.method=t,$task.fetch(s).then(s=>{s.status=s.statusCode,i(null,s,s.body)},s=>i(s.error,s,s))),this.isNode()&&(this.request=this.request?this.request:require("request"),s.method=t,s.gzip=!0,this.request(s,(s,t,e)=>{t&&(t.status=t.statusCode),i(null,t,e)}))}),this.done=((s={})=>this.isNode()?null:$done(s))}
+function Env(t,s){return new class{constructor(t,s){this.name=t,this.data=null,this.dataFile="box.dat",this.logs=[],this.logSeparator="\n",this.startTime=(new Date).getTime(),Object.assign(this,s),this.log("",`\ud83d\udd14${this.name}, \u5f00\u59cb!`)}isNode(){return"undefined"!=typeof module&&!!module.exports}isQuanX(){return"undefined"!=typeof $task}isSurge(){return"undefined"!=typeof $httpClient}isLoon(){return"undefined"!=typeof $loon}loaddata(){if(!this.isNode)return{};{this.fs=this.fs?this.fs:require("fs"),this.path=this.path?this.path:require("path");const t=this.path.resolve(this.dataFile),s=this.path.resolve(process.cwd(),this.dataFile),e=this.fs.existsSync(t),i=!e&&this.fs.existsSync(s);if(!e&&!i)return{};{const i=e?t:s;try{return JSON.parse(this.fs.readFileSync(i))}catch{return{}}}}}writedata(){if(this.isNode){this.fs=this.fs?this.fs:require("fs"),this.path=this.path?this.path:require("path");const t=this.path.resolve(this.dataFile),s=this.path.resolve(process.cwd(),this.dataFile),e=this.fs.existsSync(t),i=!e&&this.fs.existsSync(s),h=JSON.stringify(this.data);e?this.fs.writeFileSync(t,h):i?this.fs.writeFileSync(s,h):this.fs.writeFileSync(t,h)}}getdata(t){return this.isSurge()||this.isLoon()?$persistentStore.read(t):this.isQuanX()?$prefs.valueForKey(t):this.isNode()?(this.data=this.loaddata(),this.data[t]):this.data&&this.data[t]||null}setdata(t,s){return this.isSurge()||this.isLoon()?$persistentStore.write(t,s):this.isQuanX()?$prefs.setValueForKey(t,s):this.isNode()?(this.data=this.loaddata(),this.data[s]=t,this.writedata(),!0):this.data&&this.data[s]||null}get(t,s=(()=>{})){t.headers&&(delete t.headers["Content-Type"],delete t.headers["Content-Length"]),this.isSurge()||this.isLoon()?$httpClient.get(t,(t,e,i)=>{!t&&e&&(e.body=i,e.statusCode=e.status,s(t,e,i))}):this.isQuanX()?$task.fetch(t).then(t=>{const{statusCode:e,statusCode:i,headers:h,body:o}=t;s(null,{status:e,statusCode:i,headers:h,body:o},o)},t=>s(t)):this.isNode()&&(this.got=this.got?this.got:require("got"),this.got(t).then(t=>{const{statusCode:e,statusCode:i,headers:h,body:o}=t;s(null,{status:e,statusCode:i,headers:h,body:o},o)},t=>s(t)))}post(t,s=(()=>{})){if(t.body&&t.headers&&!t.headers["Content-Type"]&&(t.headers["Content-Type"]="application/x-www-form-urlencoded"),delete t.headers["Content-Length"],this.isSurge()||this.isLoon())$httpClient.post(t,(t,e,i)=>{!t&&e&&(e.body=i,e.statusCode=e.status,s(t,e,i))});else if(this.isQuanX())t.method="POST",$task.fetch(t).then(t=>{const{statusCode:e,statusCode:i,headers:h,body:o}=t;s(null,{status:e,statusCode:i,headers:h,body:o},o)},t=>s(t));else if(this.isNode()){this.got=this.got?this.got:require("got");const{url:e,...i}=t;this.got.post(e,i).then(t=>{const{statusCode:e,statusCode:i,headers:h,body:o}=t;s(null,{status:e,statusCode:i,headers:h,body:o},o)},t=>s(t))}}msg(s=t,e="",i="",h){this.isSurge()||this.isLoon()?$notification.post(s,e,i):this.isQuanX()&&$notify(s,e,i),this.logs.push("","==============\ud83d\udce3\u7cfb\u7edf\u901a\u77e5\ud83d\udce3=============="),this.logs.push(s),e&&this.logs.push(e),i&&this.logs.push(i)}log(...t){t.length>0?this.logs=[...this.logs,...t]:console.log(this.logs.join(this.logSeparator))}logErr(t,s){const e=!this.isSurge()&&!this.isQuanX()&&!this.isLoon();e?$.log("",`\u2757\ufe0f${this.name}, \u9519\u8bef!`,t.stack):$.log("",`\u2757\ufe0f${this.name}, \u9519\u8bef!`,t.message)}wait(t){return new Promise(s=>setTimeout(s,t))}done(t=null){const s=(new Date).getTime(),e=(s-this.startTime)/1e3;this.log("",`\ud83d\udd14${this.name}, \u7ed3\u675f! \ud83d\udd5b ${e} \u79d2`),this.log(),(this.isSurge()||this.isQuanX()||this.isLoon())&&$done(t)}}(t,s)}
