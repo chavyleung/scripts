@@ -306,7 +306,7 @@ async function getAppSubs() {
     const sub = usercfgs.appsubs[subIdx]
     subActs.push(
       new Promise((resolve) => {
-        $.get(sub.url, (err, resp, data) => {
+        $.get({ url: sub.url }, (err, resp, data) => {
           try {
             const respsub = JSON.parse(data)
             if (Array.isArray(respsub.apps)) {
@@ -315,6 +315,7 @@ async function getAppSubs() {
               appsubs.push(respsub)
             }
           } catch (e) {
+            $.logErr(e, resp)
             sub.isErr = true
             sub.apps = []
             sub._raw = JSON.parse(JSON.stringify(sub))
