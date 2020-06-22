@@ -50,7 +50,7 @@ function getPath(url) {
 
 function getSystemCfgs() {
   return {
-    env: $.isSurge() ? 'Surge' : $.isQuanX ? 'QuanX' : 'Loon',
+    env: $.isSurge() ? 'Surge' : $.isQuanX() ? 'QuanX' : $.isLoon() ? 'Loon' : 'Node',
     envs: [
       { id: 'Surge', icon: 'https://raw.githubusercontent.com/Orz-3/task/master/surge.png' },
       { id: 'QuanX', icon: 'https://raw.githubusercontent.com/Orz-3/task/master/quantumultx.png' },
@@ -388,32 +388,26 @@ function handleApi() {
   if (data.cmd === 'saveSession') {
     const session = data.val
     const sessions = getSessions()
-    const isExistsApp = getSystemApps().find((app) => app.id === session.appId)
-    if (isExistsApp) {
-      sessions.push(session)
-      const savesuc = $.setdata(JSON.stringify(sessions), $.KEY_sessions)
-      $.subt = `保存会话: ${savesuc ? '成功' : '失败'} (${session.appName})`
-      $.desc = []
-      $.desc.push(`会话名称: ${session.name}`, `应用名称: ${session.appName}`, `会话编号: ${session.id}`, `应用编号: ${session.appId}`, `数据: ${JSON.stringify(session)}`)
-      $.msg($.name, $.subt, $.desc.join('\n'))
-    }
+    sessions.push(session)
+    const savesuc = $.setdata(JSON.stringify(sessions), $.KEY_sessions)
+    $.subt = `保存会话: ${savesuc ? '成功' : '失败'} (${session.appName})`
+    $.desc = []
+    $.desc.push(`会话名称: ${session.name}`, `应用名称: ${session.appName}`, `会话编号: ${session.id}`, `应用编号: ${session.appId}`, `数据: ${JSON.stringify(session)}`)
+    $.msg($.name, $.subt, $.desc.join('\n'))
   }
   // 保存当前会话
   else if (data.cmd === 'saveCurAppSession') {
     const app = data.val
-    const isExistsApp = getSystemApps().find((_app) => _app.id === app.id)
-    if (isExistsApp) {
-      let isAllSaveSuc = true
-      app.datas.forEach((data) => {
-        const oldval = $.getdata(data.key)
-        const newval = data.val
-        const savesuc = $.setdata(`${newval}`, data.key)
-        isAllSaveSuc = !savesuc ? false : isAllSaveSuc
-        $.log('', `❕ ${app.name}, 保存设置: ${data.key} ${savesuc ? '成功' : '失败'}!`, `旧值: ${oldval}`, `新值: ${newval}`)
-      })
-      $.subt = `保存会话: ${isAllSaveSuc ? '成功' : '失败'} (${app.name})`
-      $.msg($.name, $.subt, '')
-    }
+    let isAllSaveSuc = true
+    app.datas.forEach((data) => {
+      const oldval = $.getdata(data.key)
+      const newval = data.val
+      const savesuc = $.setdata(`${newval}`, data.key)
+      isAllSaveSuc = !savesuc ? false : isAllSaveSuc
+      $.log('', `❕ ${app.name}, 保存设置: ${data.key} ${savesuc ? '成功' : '失败'}!`, `旧值: ${oldval}`, `新值: ${newval}`)
+    })
+    $.subt = `保存会话: ${isAllSaveSuc ? '成功' : '失败'} (${app.name})`
+    $.msg($.name, $.subt, '')
   }
   // 保存设置
   else if (data.cmd === 'saveSettings') {
@@ -514,7 +508,9 @@ async function handleApp(appId) {
   const box = await getBoxData()
   const apps = []
   const cursysapp = box.sysapps.find((app) => app.id === appId)
-  apps.push(cursysapp)
+  if (cursysapp) {
+    apps.push(cursysapp)
+  }
   box.appsubs.filter((sub) => sub.enable !== false).forEach((sub) => apps.push(...sub.apps))
   const curapp = apps.find((app) => app.id === appId)
   $.html = printHtml(JSON.stringify(box), JSON.stringify(curapp), 'appsession')
