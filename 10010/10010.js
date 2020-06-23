@@ -238,13 +238,13 @@ function init() {
   }
   post = (url, cb) => {
   	// if (url.hasOwnProperty['headers'] && url['headers'].hasOwnProperty('Content-Length')) delete url['headers']['Content-Length']
-    if (isSurge()) {
-      $httpClient.post(url, cb)
-    }
-    if (isQuanX()) {
-      url.method = 'POST'
-      $task.fetch(url).then((resp) => cb(null, resp, resp.body))
-    }
+    // if (isSurge()) {
+    //   $httpClient.post(url, cb)
+    // }
+    // if (isQuanX()) {
+    //   url.method = 'POST'
+    //   $task.fetch(url).then((resp) => cb(null, resp, resp.body))
+    // }
   }
   done = (value = {}) => {
     $done(value)
