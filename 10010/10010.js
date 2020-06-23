@@ -222,8 +222,9 @@ function init() {
   log = (message) => console.log(message)
   get = (url, cb) => {
     console.log(url)
-  	if (url.hasOwnProperty['headers'] && url['headers'].hasOwnProperty('Content-Length')) {
-      delete url['headers']['Content-Length']
+  	if (url.hasOwnProperty['headers']) {
+      // delete url['headers']['Content-Length']
+      // if (url.hasOwnProperty['headers'] && url['headers'].hasOwnProperty('Content-Length'))
       console.log("66666666666")
     }
     if (isSurge()) {
