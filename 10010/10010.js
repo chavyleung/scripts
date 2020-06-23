@@ -221,13 +221,14 @@ function init() {
   }
   log = (message) => console.log(message)
   get = (url, cb) => {
-    console.log(url)
-    console.log(url['headers'])
-  	if (url.hasOwnProperty['headers']) {
-      // delete url['headers']['Content-Length']
-      // if (url.hasOwnProperty['headers'] && url['headers'].hasOwnProperty('Content-Length'))
-      console.log("66666666666")
-    }
+    // console.log(url)
+    url = JSON.parse(url)
+    console.log(url['url'])
+  	// if (url.hasOwnProperty['headers']) {
+   //    // delete url['headers']['Content-Length']
+   //    // if (url.hasOwnProperty['headers'] && url['headers'].hasOwnProperty('Content-Length'))
+   //    console.log("66666666666")
+   //  }
     if (isSurge()) {
       $httpClient.get(url, cb)
     }
