@@ -23,7 +23,9 @@ if ($request && $request.method != 'OPTIONS' && $request.url.indexOf('querySigni
   chavy.msg(cookieName, `获取Cookie: 成功 (每日签到)`, ``)
 } else if ($request && $request.method != 'OPTIONS' && $request.url.indexOf('userLogin') >= 0) {
   const loginlotteryurlVal = $request.url
-  const loginlotteryheaderVal = JSON.stringify($request.headers)
+  var loginlotteryheaderVal = $request.headers
+  if (loginlotteryheaderVal.hasOwnProperty('Content-Length')) delete loginlotteryheaderVal['Content-Length']
+  loginlotteryheaderVal = JSON.stringify(loginlotteryheaderVal)
   if (loginlotteryurlVal) chavy.setdata(loginlotteryurlVal, loginlotteryurlKey)
   if (loginlotteryheaderVal) chavy.setdata(loginlotteryheaderVal, loginlotteryheaderKey)
   chavy.msg(cookieName, `获取Cookie: 成功 (登录抽奖)`, ``)
