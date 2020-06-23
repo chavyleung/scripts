@@ -1,0 +1,17 @@
+{
+  "releases": [
+    {
+      "version": "1.0.0",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "icon": "https://avatars3.githubusercontent.com/u/29748519",
+      "repo": "https://github.com/chavyleung",
+      "note": [
+        {
+          "name": "新增",
+          "list": ["增加版本时间线"]
+        }
+      ]
+    }
+  ]
+}

@@ -1175,25 +1175,32 @@ function printHtml(data, curapp = null, curview = 'app') {
             'ui.curview': {
               handler(newval, oldval) {
                 this.ui.bfview = oldval
+                const isFullScreen = window.navigator.standalone
                 if (newval === 'app') {
                   this.ui.curapp = null
                   this.ui.curappSessions = null
                   var state = { title: 'BoxJs' }
                   document.title = state.title
-                  history.pushState(state, '', '/home')
+                  if (!isFullScreen) {
+                    history.pushState(state, '', '/home')
+                  }
                   this.$vuetify.goTo(this.ui.scrollY, { duration: 0, offset: 0 })
                 } else if (newval === 'sub') {
                   this.ui.curapp = null
                   this.ui.curappSessions = null
                   var state = { title: 'BoxJs' }
                   document.title = state.title
-                  history.pushState(state, '', '/sub')
+                  if (!isFullScreen) {
+                    history.pushState(state, '', '/sub')
+                  }
                 } else if (newval === 'my') {
                   this.ui.curapp = null
                   this.ui.curappSessions = null
                   var state = { title: 'BoxJs' }
                   document.title = state.title
-                  history.pushState(state, '', '/my')
+                  if (!isFullScreen) {
+                    history.pushState(state, '', '/my')
+                  }
                 }
               }
             }
@@ -1241,7 +1248,10 @@ function printHtml(data, curapp = null, curview = 'app') {
               this.ui.curappSessions = this.box.sessions.filter((s) => s.appId === this.ui.curapp.id)
               this.ui.curview = 'appsession'
               var state = { title: 'BoxJs - ' + this.ui.curapp.name, url: window.location.href }
-              history.pushState(state, '', '/app/' + this.ui.curapp.id)
+              const isFullScreen = window.navigator.standalone
+              if (!isFullScreen) {
+                history.pushState(state, '', '/app/' + this.ui.curapp.id)
+              }
               document.title = state.title
             },
             onClearCurAppSessionData(app, datas, data) {
