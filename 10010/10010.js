@@ -222,18 +222,19 @@ function init() {
   log = (message) => console.log(message)
   get = (url, cb) => {
     console.log(url)
+    console.log(url['headers'])
   	if (url.hasOwnProperty['headers']) {
       // delete url['headers']['Content-Length']
       // if (url.hasOwnProperty['headers'] && url['headers'].hasOwnProperty('Content-Length'))
       console.log("66666666666")
     }
-    if (isSurge()) {
-      $httpClient.get(url, cb)
-    }
-    if (isQuanX()) {
-      url.method = 'GET'
-      $task.fetch(url).then((resp) => cb(null, resp, resp.body))
-    }
+    // if (isSurge()) {
+    //   $httpClient.get(url, cb)
+    // }
+    // if (isQuanX()) {
+    //   url.method = 'GET'
+    //   $task.fetch(url).then((resp) => cb(null, resp, resp.body))
+    // }
   }
   post = (url, cb) => {
   	// if (url.hasOwnProperty['headers'] && url['headers'].hasOwnProperty('Content-Length')) delete url['headers']['Content-Length']
