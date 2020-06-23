@@ -221,7 +221,7 @@ function init() {
   }
   log = (message) => console.log(message)
   get = (url, cb) => {
-    console.log(url)
+    
   	if (url['headers'].hasOwnProperty('Content-Length')) delete url['headers']['Content-Length']
     if (isSurge()) {
       $httpClient.get(url, cb)
@@ -230,6 +230,7 @@ function init() {
       url.method = 'GET'
       $task.fetch(url).then((resp) => cb(null, resp, resp.body))
     }
+    console.log(url)
   }
   post = (url, cb) => {
   	if (url['headers'].hasOwnProperty('Content-Length')) delete url['headers']['Content-Length']
