@@ -1,8 +1,11 @@
 const $ = new Env('BoxJs')
 $.domain = '8.8.8.8'
 
+$.version = '0.0.1'
+$.versionType = 'beta'
 $.KEY_sessions = 'chavy_boxjs_sessions'
 $.KEY_userCfgs = 'chavy_boxjs_userCfgs'
+$.KEY_globalBaks = 'chavy_boxjs_globalBaks'
 
 $.json = $.name
 $.html = $.name
@@ -25,6 +28,10 @@ $.html = $.name
   else if (/^\/api/.test(path)) {
     $.isapi = true
     handleApi()
+  }
+  // 处理 Api 请求 => /my
+  else if (/^\/my/.test(path)) {
+    await handleMy()
   }
 })()
   .catch((e) => {
@@ -51,6 +58,8 @@ function getPath(url) {
 function getSystemCfgs() {
   return {
     env: $.isSurge() ? 'Surge' : $.isQuanX() ? 'QuanX' : $.isLoon() ? 'Loon' : 'Node',
+    version: $.version,
+    versionType: $.versionType,
     envs: [
       { id: 'Surge', icon: 'https://raw.githubusercontent.com/Orz-3/task/master/surge.png' },
       { id: 'QuanX', icon: 'https://raw.githubusercontent.com/Orz-3/task/master/quantumultx.png' },
@@ -58,7 +67,7 @@ function getSystemCfgs() {
     ],
     chavy: {
       id: 'Chavy Scripts',
-      icon: 'https://avatars3.githubusercontent.com/u/29748519?s=460&u=392a19e85465abbcb1791c9b8b32184a16e6795e&v=4',
+      icon: 'https://avatars3.githubusercontent.com/u/29748519',
       repo: 'https://github.com/chavyleung/scripts'
     },
     orz3: {
@@ -298,6 +307,11 @@ function getUserCfgs() {
   return userCfgsStr ? Object.assign(defcfgs, JSON.parse(userCfgsStr)) : defcfgs
 }
 
+function getGlobalBaks() {
+  const globalBaksStr = $.getdata($.KEY_globalBaks)
+  return globalBaksStr ? JSON.parse(globalBaksStr) : []
+}
+
 async function getAppSubs() {
   const usercfgs = getUserCfgs()
   const appsubs = []
@@ -480,6 +494,41 @@ function handleApi() {
       $.msg($.name, $.subt, '')
     }
   }
+  // 全局备份
+  else if (data.cmd === 'globalBak') {
+    const baks = getGlobalBaks()
+    baks.push(data.val)
+    const baksuc = $.setdata(JSON.stringify(baks), $.KEY_globalBaks)
+    $.subt = `全局备份: ${baksuc ? '成功' : '失败'}`
+    $.msg($.name, $.subt, '')
+  }
+  // 删除全局备份
+  else if (data.cmd === 'delGlobalBak') {
+    const baks = getGlobalBaks()
+    const bakIdx = baks.findIndex((b) => b.id === data.val)
+    if (baks.splice(bakIdx, 1) !== -1) {
+      const delsuc = $.setdata(JSON.stringify(baks), $.KEY_globalBaks) ? '成功' : '失败'
+      $.subt = `删除备份: ${delsuc ? '成功' : '失败'}`
+      $.msg($.name, $.subt, '')
+    }
+  }
+  // 还原全局备份
+  else if (data.cmd === 'revertGlobalBak') {
+    const baks = getGlobalBaks()
+    const bakobj = baks.find((b) => b.id === data.val)
+    if (bakobj && bakobj.bak) {
+      const { chavy_boxjs_sessions, chavy_boxjs_sysCfgs, chavy_boxjs_userCfgs, chavy_boxjs_sysApps, ...datas } = bakobj.bak
+      $.setdata(JSON.stringify(chavy_boxjs_sessions), $.KEY_sessions)
+      $.setdata(JSON.stringify(chavy_boxjs_userCfgs), $.KEY_userCfgs)
+      Object.keys(datas).forEach((datkey) => $.setdata(datas[datkey] ? datas[datkey] : '', datkey))
+      $.subt = '还原备份: 成功'
+      $.msg($.name, $.subt, $.desc)
+    } else {
+      $.subt = '还原备份: 失败'
+      $.desc = `找不到备份: ${data.val}`
+      $.msg($.name, $.subt, $.desc)
+    }
+  }
 }
 
 async function getBoxData() {
@@ -490,6 +539,7 @@ async function getBoxData() {
     appsubs: await getAppSubs(),
     syscfgs: getSystemCfgs(),
     usercfgs: getUserCfgs(),
+    globalbaks: getGlobalBaks(),
     colors: getSystemThemes()
   }
 }
@@ -524,6 +574,16 @@ async function handleApp(appId) {
 async function handleSub() {
   const box = await getBoxData()
   $.html = printHtml(JSON.stringify(box), null, 'sub')
+  if (box.usercfgs.isDebugFormat) {
+    console.log(printHtml(`'\${data}'`, `'\${curapp}'`, `\${curview}`))
+  } else if (box.usercfgs.isDebugData) {
+    console.log($.html)
+  }
+}
+
+async function handleMy() {
+  const box = await getBoxData()
+  $.html = printHtml(JSON.stringify(box), null, 'my')
   if (box.usercfgs.isDebugFormat) {
     console.log(printHtml(`'\${data}'`, `'\${curapp}'`, `\${curview}`))
   } else if (box.usercfgs.isDebugData) {
@@ -585,7 +645,7 @@ function printHtml(data, curapp = null, curview = 'app') {
               <v-btn fab small color="grey" @click="box.usercfgs.isHideBoxIcon = true, onUserCfgsChange()">
                 <v-icon>mdi-eye-off</v-icon>
               </v-btn>
-              <v-btn fab small color="indigo" disabled>
+              <v-btn fab small color="indigo" @click="ui.impGlobalBakDialog.show = true">
                 <v-icon>mdi-database-import</v-icon>
               </v-btn>
               <v-btn fab small color="green" @click="" v-clipboard:copy="JSON.stringify(boxdat)" v-clipboard:success="onCopy">
@@ -836,7 +896,7 @@ function printHtml(data, curapp = null, curview = 'app') {
                           <v-btn icon v-on="on"><v-icon>mdi-dots-vertical</v-icon></v-btn>
                         </template>
                         <v-list dense>
-                          <v-list-item @click="onDelAppSub(sub)" color="red">
+                          <v-list-item @click="onDelAppSub(sub)">
                             <v-list-item-title>删除</v-list-item-title>
                           </v-list-item>
                         </v-list>
@@ -867,14 +927,96 @@ function printHtml(data, curapp = null, curview = 'app') {
                   </v-card-actions>
                 </v-card>
               </v-dialog>
-              <v-dialog v-model="ui.reloadConfirmDialog.show" persistent max-width="290">
+            </v-container>
+            <v-container fluid v-if="ui.curview === 'my'">
+              <v-card class="mx-auto">
+                <v-card-title class="headline">
+                  {{ box.usercfgs.name ? box.usercfgs.name : '大侠, 留个名字吧!' }}
+                  <v-spacer></v-spacer>
+                  <v-btn icon @click="ui.editProfileDialog.show=true"><v-icon>mdi-cog-outline</v-icon></v-btn>
+                </v-card-title>
+                <v-divider class="mx-4"></v-divider>
+                <v-card-text>
+                  <span class="subheading">我的数据</span>
+                  <v-chip-group>
+                    <v-chip>应用: {{ appcnt }}</v-chip>
+                    <v-chip>订阅: {{ subcnt }}</v-chip>
+                    <v-chip>会话: {{ sessioncnt}}</v-chip>
+                  </v-chip-group>
+                </v-card-text>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn @click="ui.impGlobalBakDialog.show = true">导入</v-btn>
+                  <v-btn @click="onGlobalBak">备份</v-btn>
+                </v-card-actions>
+              </v-card>
+              <v-card class="mx-auto mt-4">
+                <template v-for="(bak, bakIdx) in box.globalbaks">
+                  <v-divider v-if="bakIdx>0"></v-divider>
+                  <v-list-item three-line dense @click="">
+                    <v-list-item-content>
+                      <v-list-item-title>{{ bak.name }}</v-list-item-title>
+                      <v-list-item-subtitle>{{ bak.createTime}}</v-list-item-subtitle>
+                      <v-list-item-subtitle>
+                        <v-chip x-small class="mr-2" v-for="(tag, tagIdx) in bak.tags">{{ tag }}</v-chip>
+                      </v-list-item-subtitle>
+                    </v-list-item-content>
+                    <v-list-item-action>
+                      <v-menu bottom left>
+                        <template v-slot:activator="{ on }">
+                          <v-btn icon v-on="on"><v-icon>mdi-dots-vertical</v-icon></v-btn>
+                        </template>
+                        <v-list dense>
+                          <v-list-item @click="" v-clipboard:copy="JSON.stringify(boxdat)" v-clipboard:success="onCopy">
+                            <v-list-item-title>复制</v-list-item-title>
+                          </v-list-item>
+                          <v-divider></v-divider>
+                          <v-list-item @click="onRevertGlobalBak(bak.id)">
+                            <v-list-item-title>还原</v-list-item-title>
+                          </v-list-item>
+                          <v-list-item @click="onDelGlobalBak(bak.id)">
+                            <v-list-item-title>删除</v-list-item-title>
+                          </v-list-item>
+                        </v-list>
+                      </v-menu>
+                    </v-list-item-action>
+                  </v-list-item>
+                </template>
+              </v-card>
+              <v-dialog v-model="ui.impGlobalBakDialog.show">
                 <v-card>
-                  <v-card-title class="headline">{{ ui.reloadConfirmDialog.title }}</v-card-title>
-                  <v-card-text>{{ ui.reloadConfirmDialog.message }}</v-card-text>
+                  <v-card-title>
+                    导入备份
+                    <v-spacer></v-spacer>
+                    <v-btn text small class="mr-n4" color="red darken-1" @click="ui.impGlobalBakDialog.bak = ''">清空</v-btn>
+                  </v-card-title>
+                  <v-divider></v-divider>
+                  <v-card-text>
+                    <v-textarea clearable v-model="ui.impGlobalBakDialog.bak" label="备份内容" hint="请粘贴全局备份内容!"></v-textarea>
+                  </v-card-text>
+                  <v-divider></v-divider>
+                  <v-card-actions>
+                    <v-btn text small @click="" v-clipboard:copy="ui.impGlobalBakDialog.bak" v-clipboard:success="onCopy">复制</v-btn>
+                    <v-btn text small @click="onImpGlobalBakPaste">粘粘</v-btn>
+                    <v-spacer></v-spacer>
+                    <v-btn text small color="grey darken-1" text @click="ui.impGlobalBakDialog.show = false">取消</v-btn>
+                    <v-btn text small color="success darken-1" text @click="onImpGlobalBak">导入</v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
+              <v-dialog v-model="ui.editProfileDialog.show">
+                <v-card>
+                  <v-card-title>个人资料</v-card-title>
+                  <v-divider></v-divider>
+                  <v-card-text>
+                  <v-text-field label="昵称" v-model="box.usercfgs.name" hint="少侠请留名!"></v-text-field>
+                  <v-text-field label="头像 (选填)" v-model="box.usercfgs.icon" hint="头像链接, 建议直接从 GitHub 获取!"></v-text-field>
+                  </v-card-text>
+                  <v-divider></v-divider>
                   <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn color="grey darken-1" text @click="ui.reloadConfirmDialog.show = false">稍候</v-btn>
-                    <v-btn color="green darken-1" text @click="onReload">马上刷新</v-btn>
+                    <v-btn text text @click="ui.editProfileDialog.show = false">取消</v-btn>
+                    <v-btn text color="success darken-1" text @click="ui.editProfileDialog.show = false, onUserCfgsChange()">保存</v-btn>
                   </v-card-actions>
                 </v-card>
               </v-dialog>
@@ -885,6 +1027,17 @@ function printHtml(data, curapp = null, curview = 'app') {
                 <v-btn text @click="ui.snackbar.show = false">关闭</v-btn>
               </template>
             </v-snackbar>
+            <v-dialog v-model="ui.reloadConfirmDialog.show" persistent max-width="290">
+              <v-card>
+                <v-card-title class="headline">{{ ui.reloadConfirmDialog.title }}</v-card-title>
+                <v-card-text>{{ ui.reloadConfirmDialog.message }}</v-card-text>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="grey darken-1" text @click="ui.reloadConfirmDialog.show = false">稍候</v-btn>
+                  <v-btn color="green darken-1" text @click="onReload">马上刷新</v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
           </v-main>
           <v-expand-transition>
             <v-bottom-navigation v-model="ui.curview" app v-show="ui.navi.show && !box.usercfgs.isHideNavi">
@@ -904,9 +1057,12 @@ function printHtml(data, curapp = null, curview = 'app') {
                 <span>订阅</span>
                 <v-icon>mdi-database</v-icon>
               </v-btn>
-              <v-btn value="log">
-                <span>日志</span>
-                <v-icon>mdi-calendar-text</v-icon>
+              <v-btn value="my">
+                <v-avatar size="32" v-if="box.usercfgs.icon"><v-img :src="box.usercfgs.icon"></v-img></v-avatar>
+                <template v-else>
+                  <span>我的</span>
+                  <v-icon>mdi-face-profile</v-icon>
+                </template>
               </v-btn>
             </v-bottom-navigation>
           </v-expand-transition>
@@ -931,6 +1087,8 @@ function printHtml(data, curapp = null, curview = 'app') {
                 curapp: ${curapp},
                 curappTabs: { curtab: 'sessions' },
                 curappSessions: null,
+                editProfileDialog: { show: false, bak: '' },
+                impGlobalBakDialog: { show: false, bak: '' },
                 reloadConfirmDialog: { show: false, title: '操作成功', message: '是否马上刷新页面?' },
                 impSessionDialog: { show: false, impval: '' },
                 addAppSubDialog: { show: false, url: '' },
@@ -944,12 +1102,31 @@ function printHtml(data, curapp = null, curview = 'app') {
             }
           },
           computed: {
+            appcnt: function () {
+              let cnt = 0
+              cnt += Array.isArray(this.box.sysapps) ? this.box.sysapps.length : 0
+              if (Array.isArray(this.box.appsubs)) {
+                this.box.appsubs.forEach((sub, subIdx) => {
+                  cnt += Array.isArray(sub.apps) ? sub.apps.length : 0
+                })
+              }
+              return cnt
+            },
+            subcnt: function () {
+              return Array.isArray(this.box.appsubs) ? this.box.appsubs.length : 0
+            },
+            sessioncnt: function () {
+              return Array.isArray(this.box.sessions) ? this.box.sessions.length : 0
+            },
             boxdat: function () {
               const KEY_sessions = 'chavy_boxjs_sessions'
               const KEY_sysCfgs = 'chavy_boxjs_sysCfgs'
               const KEY_userCfgs = 'chavy_boxjs_userCfgs'
               const KEY_sysApps = 'chavy_boxjs_sysApps'
               const dat = {}
+              dat['env'] = this.box.syscfgs.env
+              dat['version'] = this.box.syscfgs.version
+              dat['versionType'] = this.box.syscfgs.versionType
               dat[KEY_sessions] = this.box.sessions
               dat[KEY_sysCfgs] = this.box.syscfgs
               dat[KEY_userCfgs] = this.box.usercfgs
@@ -959,6 +1136,15 @@ function printHtml(data, curapp = null, curview = 'app') {
                   if (![undefined, null].includes(data.val)) {
                     dat[data.key] = data.val
                   }
+                })
+              })
+              this.box.appsubs.forEach((sub, subIdx) => {
+                sub.apps.forEach((app, appIdx) => {
+                  app.datas.forEach((data, dataIdx) => {
+                    if (![undefined, null].includes(data.val)) {
+                      dat[data.key] = data.val
+                    }
+                  })
                 })
               })
               return dat
@@ -1001,6 +1187,12 @@ function printHtml(data, curapp = null, curview = 'app') {
                   var state = { title: 'BoxJs' }
                   document.title = state.title
                   history.pushState(state, '', '/sub')
+                } else if (newval === 'my') {
+                  this.ui.curapp = null
+                  this.ui.curappSessions = null
+                  var state = { title: 'BoxJs' }
+                  document.title = state.title
+                  history.pushState(state, '', '/my')
                 }
               }
             }
@@ -1082,6 +1274,11 @@ function printHtml(data, curapp = null, curview = 'app') {
                 this.ui.addAppSubDialog.url = text
               })
             },
+            onImpGlobalBakPaste() {
+              navigator.clipboard.readText().then((text) => {
+                this.ui.impGlobalBakDialog.bak = text
+              })
+            },
             onImpSession() {
               const impjson = this.ui.impSessionDialog.impval
               const impSession = impjson && JSON.parse(impjson)
@@ -1131,6 +1328,51 @@ function printHtml(data, curapp = null, curview = 'app') {
             onUseSession(session) {
               axios.post('/api', JSON.stringify({ cmd: 'useSession', val: session }))
               this.ui.curapp.datas = JSON.parse(JSON.stringify(session.datas))
+            },
+            onImpGlobalBak() {
+              const env = this.box.syscfgs.env
+              const version = this.box.syscfgs.version
+              const versionType = this.box.syscfgs.versionType
+              const bakobj = {
+                id: uuidv4(),
+                name: '全局备份 ' + (this.box.globalbaks.length + 1),
+                env,
+                version,
+                versionType,
+                createTime: moment().format('YYYY-MM-DD HH:mm:ss'),
+                bak: JSON.parse(this.ui.impGlobalBakDialog.bak)
+              }
+              bakobj.tags = [env, version, versionType]
+              this.box.globalbaks.push(bakobj)
+              this.ui.impGlobalBakDialog.show = false
+              axios.post('/api', JSON.stringify({ cmd: 'globalBak', val: bakobj }))
+            },
+            onGlobalBak() {
+              const env = this.box.syscfgs.env
+              const version = this.box.syscfgs.version
+              const versionType = this.box.syscfgs.versionType
+              const bakobj = {
+                id: uuidv4(),
+                name: '全局备份 ' + (this.box.globalbaks.length + 1),
+                env,
+                version,
+                versionType,
+                createTime: moment().format('YYYY-MM-DD HH:mm:ss'),
+                bak: this.boxdat
+              }
+              bakobj.tags = [env, version, versionType]
+              this.box.globalbaks.push(bakobj)
+              this.ui.impGlobalBakDialog.show = false
+              axios.post('/api', JSON.stringify({ cmd: 'globalBak', val: bakobj }))
+            },
+            onDelGlobalBak(id) {
+              const bakIdx = this.box.globalbaks.findIndex((b) => b.id === id)
+              this.box.globalbaks.splice(bakIdx, 1) !== -1
+              axios.post('/api', JSON.stringify({ cmd: 'delGlobalBak', val: id }))
+            },
+            onRevertGlobalBak(id) {
+              axios.post('/api', JSON.stringify({ cmd: 'revertGlobalBak', val: id }))
+              this.ui.reloadConfirmDialog.show = true
             },
             onCopy(e) {
               this.ui.snackbar.show = true
