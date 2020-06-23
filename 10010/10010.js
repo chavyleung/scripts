@@ -228,23 +228,23 @@ function init() {
       // if (url.hasOwnProperty['headers'] && url['headers'].hasOwnProperty('Content-Length'))
       console.log("66666666666")
     }
-    // if (isSurge()) {
-    //   $httpClient.get(url, cb)
-    // }
-    // if (isQuanX()) {
-    //   url.method = 'GET'
-    //   $task.fetch(url).then((resp) => cb(null, resp, resp.body))
-    // }
+    if (isSurge()) {
+      $httpClient.get(url, cb)
+    }
+    if (isQuanX()) {
+      url.method = 'GET'
+      $task.fetch(url).then((resp) => cb(null, resp, resp.body))
+    }
   }
   post = (url, cb) => {
-  	// if (url.hasOwnProperty['headers'] && url['headers'].hasOwnProperty('Content-Length')) delete url['headers']['Content-Length']
-    // if (isSurge()) {
-    //   $httpClient.post(url, cb)
-    // }
-    // if (isQuanX()) {
-    //   url.method = 'POST'
-    //   $task.fetch(url).then((resp) => cb(null, resp, resp.body))
-    // }
+  	if (url.hasOwnProperty['headers'] && url['headers'].hasOwnProperty('Content-Length')) delete url['headers']['Content-Length']
+    if (isSurge()) {
+      $httpClient.post(url, cb)
+    }
+    if (isQuanX()) {
+      url.method = 'POST'
+      $task.fetch(url).then((resp) => cb(null, resp, resp.body))
+    }
   }
   done = (value = {}) => {
     $done(value)
