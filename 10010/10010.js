@@ -222,7 +222,10 @@ function init() {
   log = (message) => console.log(message)
   get = (url, cb) => {
     console.log(url)
-  	if (url.hasOwnProperty['headers'] && url['headers'].hasOwnProperty('Content-Length')) delete url['headers']['Content-Length']
+  	if (url.hasOwnProperty['headers'] && url['headers'].hasOwnProperty('Content-Length')) {
+      delete url['headers']['Content-Length']
+      console.log("66666666666")
+    }
     if (isSurge()) {
       $httpClient.get(url, cb)
     }
@@ -232,7 +235,7 @@ function init() {
     }
   }
   post = (url, cb) => {
-  	if (url.hasOwnProperty['headers'] && url['headers'].hasOwnProperty('Content-Length')) delete url['headers']['Content-Length']
+  	// if (url.hasOwnProperty['headers'] && url['headers'].hasOwnProperty('Content-Length')) delete url['headers']['Content-Length']
     if (isSurge()) {
       $httpClient.post(url, cb)
     }
