@@ -221,7 +221,7 @@ function init() {
   }
   log = (message) => console.log(message)
   get = (url, cb) => {
-  	if (url['headers'].hasOwnProperty('Content-Length')) delete loginlotteryheaderVal['Content-Length']
+  	if (url['headers'].hasOwnProperty('Content-Length')) delete url['headers']['Content-Length']
     if (isSurge()) {
       $httpClient.get(url, cb)
     }
@@ -231,7 +231,7 @@ function init() {
     }
   }
   post = (url, cb) => {
-  	if (url['headers'].hasOwnProperty('Content-Length')) delete loginlotteryheaderVal['Content-Length']
+  	if (url['headers'].hasOwnProperty('Content-Length')) delete url['headers']['Content-Length']
     if (isSurge()) {
       $httpClient.post(url, cb)
     }
