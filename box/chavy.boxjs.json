@@ -11,10 +11,7 @@
       "keys": ["chavy_tokenurl_10086", "chavy_tokenheader_10086", "chavy_signurl_10086", "chavy_signheader_10086"],
       "author": "@chavyleung",
       "repo": "https://github.com/chavyleung/scripts/blob/master/10086/10086.js",
-      "icons": [
-        "https://raw.githubusercontent.com/Orz-3/mini/master/10086.png",
-        "https://raw.githubusercontent.com/Orz-3/task/master/10086.png"
-      ]
+      "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/10086.png", "https://raw.githubusercontent.com/Orz-3/task/master/10086.png"]
     },
     {
       "id": "chavyleung.suning",
@@ -22,10 +19,7 @@
       "keys": ["chavy_login_url_suning", "chavy_login_body_suning", "chavy_login_header_suning", "chavy_sign_url_suning", "chavy_sign_header_suning", "chavy_signweb_url_suning", "snyg_userTokenKey", "chavy_signweb_header_suning", "chavy_signgame_url_suning", "chavy_signgame_header_suning", "chavy_signgetgame_url_suning", "chavy_signgetgame_header_suning"],
       "author": "@chavyleung",
       "repo": "https://github.com/chavyleung/scripts/blob/master/suning/suning.js",
-      "icons": [
-        "https://raw.githubusercontent.com/Orz-3/mini/master/suning.png",
-        "https://raw.githubusercontent.com/Orz-3/task/master/weibo.png"
-      ]
+      "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/suning.png", "https://raw.githubusercontent.com/Orz-3/task/master/suning.png"]
     },
     {
       "id": "chavyleung.bilibili.live",
@@ -33,10 +27,7 @@
       "keys": ["chavy_cookie_bilibili"],
       "author": "@chavyleung",
       "repo": "https://github.com/chavyleung/scripts/blob/master/bilibili/bilibili.js",
-      "icons": [
-        "https://raw.githubusercontent.com/Orz-3/mini/master/bilibili.png",
-        "https://raw.githubusercontent.com/Orz-3/task/master/bilibili.png"
-      ]
+      "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/bilibili.png", "https://raw.githubusercontent.com/Orz-3/task/master/bilibili.png"]
     },
     {
       "id": "chavyleung.meituan",
@@ -44,10 +35,7 @@
       "keys": ["chavy_tokenurl_meituan", "chavy_tokenheader_meituan", "chavy_signurl_meituan", "chavy_signheader_meituan", "chavy_signbody_meituan"],
       "author": "@chavyleung",
       "repo": "https://github.com/chavyleung/scripts/blob/master/meituan/meituan.js",
-      "icons": [
-        "https://raw.githubusercontent.com/Orz-3/mini/master/meituan.png",
-        "https://raw.githubusercontent.com/Orz-3/task/master/meituan.png"
-      ]
+      "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/meituan.png", "https://raw.githubusercontent.com/Orz-3/task/master/meituan.png"]
     },
     {
       "id": "chavyleung.mgtv",
@@ -55,10 +43,7 @@
       "keys": ["chavy_signurl_mgtv", "chavy_signheader_mgtv"],
       "author": "@chavyleung",
       "repo": "https://github.com/chavyleung/scripts/blob/master/mgtv/mgtv.js",
-      "icons": [
-        "https://raw.githubusercontent.com/Orz-3/mini/master/mgtv.png",
-        "https://raw.githubusercontent.com/Orz-3/task/master/mgtv.png"
-      ]
+      "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/mgtv.png", "https://raw.githubusercontent.com/Orz-3/task/master/mgtv.png"]
     }
   ]
 }
