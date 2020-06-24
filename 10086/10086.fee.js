@@ -15,6 +15,7 @@ $.KEY_getfee = 'chavy_getfee_cmcc'
   $.CryptoJS = $.isNode() ? require('crypto-js') : CryptoJS
   await loginapp()
   await queryfee()
+  await querymeal()
   await showmsg()
 })()
   .catch((e) => $.logErr(e))
@@ -55,6 +56,27 @@ function queryfee() {
     })
   })
 }
+function querymeal() {
+  return new Promise((resolve) => {
+    const url = JSON.parse($.getdata($.KEY_getfee))
+    url.url = 'https://clientaccess.10086.cn/biz-orange/BN/newComboMealResouceUnite/getNewComboMealResource'
+    const body = JSON.parse(decrypt(url.body, 'bAIgvwAuA4tbDr9d'))
+    const cellNum = body.reqBody.cellNum
+    const bodystr = `{"t":"${$.CryptoJS.MD5($.setck).toString()}","cv":"9.9.9","reqBody":{"cellNum":"${cellNum}","tag":"3"}}`
+    url.body = encrypt(bodystr, 'bAIgvwAuA4tbDr9d')
+    url.headers['Cookie'] = $.setck
+    url.headers['xs'] = $.CryptoJS.MD5(url.url + '_' + bodystr + '_Leadeon/SecurityOrganization').toString()
+    $.post(url, (err, resp, data) => {
+      try {
+        $.meal = JSON.parse(decrypt(data, 'GS7VelkJl5IT1uwQ'))
+      } catch (e) {
+        $.logErr(e, resp)
+      } finally {
+        resolve()
+      }
+    })
+  })
+}
 
 function encrypt(str, key) {
   return $.CryptoJS.AES.encrypt($.CryptoJS.enc.Utf8.parse(str), $.CryptoJS.enc.Utf8.parse(key), {
@@ -74,8 +96,26 @@ function decrypt(str, key) {
 
 function showmsg() {
   return new Promise((resolve) => {
-    $.subt = `余额: ${$.fee.rspBody.curFeeTotal}, 剩余: ${$.fee.rspBody.curFee}, 实际消费: ${$.fee.rspBody.realFee}`
-    $.msg($.name, $.subt, '')
+    $.subt = `话费: ${$.fee.rspBody.curFeeTotal}, 剩余: ${$.fee.rspBody.curFee}, 已用: ${$.fee.rspBody.realFee}`
+    const res = $.meal.rspBody.qryInfoRsp[0].resourcesTotal
+
+    const flowRes = res.find((r) => r.resourcesCode === '04')
+    const voiceRes = res.find((r) => r.resourcesCode === '01')
+    console.log(JSON.stringify(flowRes))
+    $.desc = []
+    if (flowRes) {
+      const remUnit = flowRes.remUnit === '05' ? 'GB' : 'MB'
+      const usedUnit = flowRes.usedUnit === '05' ? 'GB' : 'MB'
+      const unit = flowRes.allUnit === '05' ? 'GB' : 'MB'
+      $.desc.push(`流量: ${flowRes.allUsedRes}${usedUnit}/${flowRes.allTotalRes}${unit}, 剩余: ${flowRes.allRemainRes}${remUnit}`)
+    }
+    if (voiceRes) {
+      const remUnit = flowRes.remUnit === '01' ? '分钟' : ''
+      const usedUnit = flowRes.usedUnit === '01' ? '分钟' : ''
+      const allUnit = '分钟'
+      $.desc.push(`语音: ${voiceRes.allUsedRes}/${voiceRes.allTotalRes}${allUnit}, 剩余: ${voiceRes.allRemainRes}${allUnit}`)
+    }
+    $.msg($.name, $.subt, $.desc.join('\n'))
     resolve()
   })
 }
