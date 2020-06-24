@@ -652,6 +652,9 @@ function printHtml(data, curapp = null, curview = 'app') {
               <v-btn fab small color="green" @click="" v-clipboard:copy="JSON.stringify(boxdat)" v-clipboard:success="onCopy">
                 <v-icon>mdi-export-variant</v-icon>
               </v-btn>
+              <v-btn fab small color="orange" @click="onReload">
+                <v-icon>mdi-refresh</v-icon>
+              </v-btn>
             </v-speed-dial>
           </v-fab-transition>
           <v-navigation-drawer v-model="ui.drawer.show" app temporary right>
