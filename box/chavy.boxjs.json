@@ -1,0 +1,64 @@
+{
+  "id": "chavyleung.app.sub",
+  "name": "chavyleung应用订阅",
+  "author": "@chavyleung",
+  "icon": "https://avatars3.githubusercontent.com/u/29748519?s=460&u=392a19e85465abbcb1791c9b8b32184a16e6795e&v=4",
+  "repo": "https://github.com/chavyleung/scripts",
+  "apps": [
+    {
+      "id": "chavyleung.10086",
+      "name": "10086",
+      "keys": ["chavy_tokenurl_10086", "chavy_tokenheader_10086", "chavy_signurl_10086", "chavy_signheader_10086"],
+      "author": "@chavyleung",
+      "repo": "https://github.com/chavyleung/scripts/blob/master/10086/10086.js",
+      "icons": [
+        "https://raw.githubusercontent.com/Orz-3/mini/master/10086.png",
+        "https://raw.githubusercontent.com/Orz-3/task/master/10086.png"
+      ]
+    },
+    {
+      "id": "chavyleung.suning",
+      "name": "苏宁易购",
+      "keys": ["chavy_login_url_suning", "chavy_login_body_suning", "chavy_login_header_suning", "chavy_sign_url_suning", "chavy_sign_header_suning", "chavy_signweb_url_suning", "snyg_userTokenKey", "chavy_signweb_header_suning", "chavy_signgame_url_suning", "chavy_signgame_header_suning", "chavy_signgetgame_url_suning", "chavy_signgetgame_header_suning"],
+      "author": "@chavyleung",
+      "repo": "https://github.com/chavyleung/scripts/blob/master/suning/suning.js",
+      "icons": [
+        "https://raw.githubusercontent.com/Orz-3/mini/master/suning.png",
+        "https://raw.githubusercontent.com/Orz-3/task/master/weibo.png"
+      ]
+    },
+    {
+      "id": "chavyleung.bilibili.live",
+      "name": "bilibili直播",
+      "keys": ["chavy_cookie_bilibili"],
+      "author": "@chavyleung",
+      "repo": "https://raw.githubusercontent.com/chavyleung/scripts/master/bilibili/bilibili.js",
+      "icons": [
+        "https://raw.githubusercontent.com/Orz-3/mini/master/bilibili.png",
+        "https://raw.githubusercontent.com/Orz-3/task/master/bilibili.png"
+      ]
+    },
+    {
+      "id": "chavyleung.meituan",
+      "name": "美团",
+      "keys": ["chavy_tokenurl_meituan", "chavy_tokenheader_meituan", "chavy_signurl_meituan", "chavy_signheader_meituan", "chavy_signbody_meituan"],
+      "author": "@chavyleung",
+      "repo": "https://raw.githubusercontent.com/chavyleung/scripts/master/meituan/meituan.js",
+      "icons": [
+        "https://raw.githubusercontent.com/Orz-3/mini/master/meituan.png",
+        "https://raw.githubusercontent.com/Orz-3/task/master/meituan.png"
+      ]
+    },
+    {
+      "id": "chavyleung.mgtv",
+      "name": "芒果TV",
+      "keys": ["chavy_signurl_mgtv", "chavy_signheader_mgtv"],
+      "author": "@chavyleung",
+      "repo": "https://raw.githubusercontent.com/chavyleung/scripts/master/mgtv/mgtv.js",
+      "icons": [
+        "https://raw.githubusercontent.com/Orz-3/mini/master/mgtv.png",
+        "https://raw.githubusercontent.com/Orz-3/task/master/mgtv.png"
+      ]
+    }
+  ]
+}
