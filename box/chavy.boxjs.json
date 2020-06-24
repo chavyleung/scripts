@@ -32,7 +32,7 @@
       "name": "bilibili直播",
       "keys": ["chavy_cookie_bilibili"],
       "author": "@chavyleung",
-      "repo": "https://raw.githubusercontent.com/chavyleung/scripts/master/bilibili/bilibili.js",
+      "repo": "https://github.com/chavyleung/scripts/blob/master/bilibili/bilibili.js",
       "icons": [
         "https://raw.githubusercontent.com/Orz-3/mini/master/bilibili.png",
         "https://raw.githubusercontent.com/Orz-3/task/master/bilibili.png"
@@ -43,7 +43,7 @@
       "name": "美团",
       "keys": ["chavy_tokenurl_meituan", "chavy_tokenheader_meituan", "chavy_signurl_meituan", "chavy_signheader_meituan", "chavy_signbody_meituan"],
       "author": "@chavyleung",
-      "repo": "https://raw.githubusercontent.com/chavyleung/scripts/master/meituan/meituan.js",
+      "repo": "https://github.com/chavyleung/scripts/blob/master/meituan/meituan.js",
       "icons": [
         "https://raw.githubusercontent.com/Orz-3/mini/master/meituan.png",
         "https://raw.githubusercontent.com/Orz-3/task/master/meituan.png"
@@ -54,7 +54,7 @@
       "name": "芒果TV",
       "keys": ["chavy_signurl_mgtv", "chavy_signheader_mgtv"],
       "author": "@chavyleung",
-      "repo": "https://raw.githubusercontent.com/chavyleung/scripts/master/mgtv/mgtv.js",
+      "repo": "https://github.com/chavyleung/scripts/blob/master/mgtv/mgtv.js",
       "icons": [
         "https://raw.githubusercontent.com/Orz-3/mini/master/mgtv.png",
         "https://raw.githubusercontent.com/Orz-3/task/master/mgtv.png"
