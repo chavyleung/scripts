@@ -8,7 +8,7 @@
     {
       "id": "chavyleung.10086",
       "name": "10086",
-      "keys": ["chavy_tokenurl_10086", "chavy_tokenheader_10086", "chavy_signurl_10086", "chavy_signheader_10086"],
+      "keys": ["chavy_autologin_cmcc", "chavy_getfee_cmcc", "chavy_tokenurl_10086", "chavy_tokenheader_10086", "chavy_signurl_10086", "chavy_signheader_10086"],
       "author": "@chavyleung",
       "repo": "https://github.com/chavyleung/scripts/blob/master/10086/10086.js",
       "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/10086.png", "https://raw.githubusercontent.com/Orz-3/task/master/10086.png"]

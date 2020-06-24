@@ -6,6 +6,7 @@
   "author": "Chavy <chavyleung@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "crypto-js": "^4.0.0",
     "got": "^11.3.0",
     "tough-cookie": "^4.0.0"
   }
