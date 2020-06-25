@@ -1,7 +1,7 @@
 const $ = new Env('BoxJs')
 $.domain = '8.8.8.8'
 
-$.version = '0.1.1'
+$.version = '0.1.2'
 $.versionType = 'beta'
 $.KEY_sessions = 'chavy_boxjs_sessions'
 $.KEY_userCfgs = 'chavy_boxjs_userCfgs'
@@ -1138,16 +1138,26 @@ function printHtml(data, curapp = null, curview = 'app') {
               dat[KEY_sysApps] = this.box.sysapps
               this.box.sysapps.forEach((app, appIdx) => {
                 app.datas.forEach((data, dataIdx) => {
-                  if (![undefined, null].includes(data.val)) {
+                  if (![undefined, null, 'null'].includes(data.val) && !/^@/.test(data.key)) {
                     dat[data.key] = data.val
+                  }
+                })
+                app.settings && app.settings.forEach((setting, settingIdx) => {
+                  if (![undefined, null, 'null'].includes(setting.val) && !/^@/.test(setting.id)) {
+                    dat[setting.id] = setting.val
                   }
                 })
               })
               this.box.appsubs.forEach((sub, subIdx) => {
                 sub.apps.forEach((app, appIdx) => {
                   app.datas.forEach((data, dataIdx) => {
-                    if (![undefined, null].includes(data.val)) {
+                    if (![undefined, null, 'null'].includes(data.val) && !/^@/.test(data.key)) {
                       dat[data.key] = data.val
+                    }
+                  })
+                  app.settings && app.settings.forEach((setting, settingIdx) => {
+                    if (![undefined, null, 'null'].includes(setting.val) && !/^@/.test(setting.id)) {
+                      dat[setting.id] = setting.val
                     }
                   })
                 })
