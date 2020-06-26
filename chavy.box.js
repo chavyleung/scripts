@@ -1,7 +1,7 @@
 const $ = new Env('BoxJs')
 $.domain = '8.8.8.8'
 
-$.version = '0.1.2'
+$.version = '0.1.3'
 $.versionType = 'beta'
 $.KEY_sessions = 'chavy_boxjs_sessions'
 $.KEY_userCfgs = 'chavy_boxjs_userCfgs'
@@ -11,6 +11,7 @@ $.json = $.name
 $.html = $.name
 
 !(async () => {
+  // $.setdata('', 'github')
   const path = getPath($request.url)
   // 处理主页请求 => /home
   if (/^\/home/.test(path)) {
@@ -22,7 +23,8 @@ $.html = $.name
   }
   // 处理 App 请求 => /app
   else if (/^\/app/.test(path)) {
-    await handleApp(path.split('/app/')[1])
+    const [, appId] = path.split('/app/')
+    await handleApp(decodeURIComponent(decodeURIComponent(appId)))
   }
   // 处理 Api 请求 => /api
   else if (/^\/api/.test(path)) {
@@ -369,6 +371,11 @@ function wrapapps(apps) {
         } else {
           setting.val = val || setting.val
         }
+        if (!Array.isArray(app.icons)) {
+          app.icons = ['https://raw.githubusercontent.com/Orz-3/mini/master/appstore.png', 'https://raw.githubusercontent.com/Orz-3/task/master/appstore.png']
+        }
+        app.author = app.author ? app.author : '@anonymous'
+        app.repo = app.repo ? app.repo : '作者很神秘, 没有留下任何线索!'
       })
     // 判断是否收藏应用
     const usercfgs = getUserCfgs()
