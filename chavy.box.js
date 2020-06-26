@@ -354,11 +354,14 @@ function wrapapps(apps) {
     // 获取持久化数据
     app.datas = Array.isArray(app.datas) ? app.datas : []
     app.keys.forEach((key) => {
-      app.datas.push({ key, val: $.getdata(key) })
+      const valdat = $.getdata(key)
+      const val = [undefined, null, 'null', ''].includes(valdat) ? null : valdat
+      app.datas.push({ key, val })
     })
     Array.isArray(app.settings) &&
       app.settings.forEach((setting) => {
-        const val = $.getdata(setting.id)
+        const valdat = $.getdata(setting.id)
+        const val = [undefined, null, 'null', ''].includes(valdat) ? null : valdat
         if (setting.type === 'boolean') {
           setting.val = val === null ? setting.val : val === 'true'
         } else if (setting.type === 'int') {
@@ -785,10 +788,10 @@ function printHtml(data, curapp = null, curview = 'app') {
                   </v-subheader>
                   <v-form class="pl-4 pr-4">
                     <template v-for="(setting, settingIdx) in ui.curapp.settings">
-                    <v-slider :label="setting.name" v-model="setting.val" :hint="setting.desc" :min="setting.min" :max="setting.max" thumb-label="always" v-if="setting.type === 'slider'"></v-slider>
-                    <v-switch :label="setting.name" v-model="setting.val" :hint="setting.desc" v-else-if="setting.type === 'boolean'"></v-switch>
-                    <v-textarea :label="setting.name" v-model="setting.val" :hint="setting.desc" :auto-grow="setting.autoGrow" v-else-if="setting.type === 'textarea'"></v-textarea>
-                    <v-text-field :label="setting.name" v-model="setting.val" :hint="setting.desc" v-else="setting.type === 'text'"></v-text-field>
+                    <v-slider :label="setting.name" v-model="setting.val" :hint="setting.desc" :min="setting.min" :max="setting.max" thumb-label="always" :placeholder="setting.placeholder" v-if="setting.type === 'slider'"></v-slider>
+                    <v-switch :label="setting.name" v-model="setting.val" :hint="setting.desc" :placeholder="setting.placeholder" v-else-if="setting.type === 'boolean'"></v-switch>
+                    <v-textarea :label="setting.name" v-model="setting.val" :hint="setting.desc" :auto-grow="setting.autoGrow" :placeholder="setting.placeholder" v-else-if="setting.type === 'textarea'"></v-textarea>
+                    <v-text-field :label="setting.name" v-model="setting.val" :hint="setting.desc" :placeholder="setting.placeholder" v-else="setting.type === 'text'"></v-text-field>
                     </template>
                   </v-form>
                   <v-divider></v-divider>
@@ -988,27 +991,6 @@ function printHtml(data, curapp = null, curview = 'app') {
                   </v-list-item>
                 </template>
               </v-card>
-              <v-dialog v-model="ui.impGlobalBakDialog.show">
-                <v-card>
-                  <v-card-title>
-                    导入备份
-                    <v-spacer></v-spacer>
-                    <v-btn text small class="mr-n4" color="red darken-1" @click="ui.impGlobalBakDialog.bak = ''">清空</v-btn>
-                  </v-card-title>
-                  <v-divider></v-divider>
-                  <v-card-text>
-                    <v-textarea clearable v-model="ui.impGlobalBakDialog.bak" label="备份内容" hint="请粘贴全局备份内容!"></v-textarea>
-                  </v-card-text>
-                  <v-divider></v-divider>
-                  <v-card-actions>
-                    <v-btn text small @click="" v-clipboard:copy="ui.impGlobalBakDialog.bak" v-clipboard:success="onCopy">复制</v-btn>
-                    <v-btn text small @click="onImpGlobalBakPaste">粘粘</v-btn>
-                    <v-spacer></v-spacer>
-                    <v-btn text small color="grey darken-1" text @click="ui.impGlobalBakDialog.show = false">取消</v-btn>
-                    <v-btn text small color="success darken-1" text @click="onImpGlobalBak">导入</v-btn>
-                  </v-card-actions>
-                </v-card>
-              </v-dialog>
               <v-dialog v-model="ui.editProfileDialog.show">
                 <v-card>
                   <v-card-title>个人资料</v-card-title>
@@ -1043,6 +1025,30 @@ function printHtml(data, curapp = null, curview = 'app') {
                 </v-card-actions>
               </v-card>
             </v-dialog>
+            <v-dialog v-model="ui.impGlobalBakDialog.show">
+              <v-card>
+                <v-card-title>
+                  导入备份
+                  <v-spacer></v-spacer>
+                  <v-btn text small class="mr-n4" color="red darken-1" @click="ui.impGlobalBakDialog.bak = ''">清空</v-btn>
+                </v-card-title>
+                <v-divider></v-divider>
+                <v-card-text>
+                  <v-textarea clearable v-model="ui.impGlobalBakDialog.bak" label="备份内容" hint="请粘贴全局备份内容!"></v-textarea>
+                </v-card-text>
+                <v-divider></v-divider>
+                <v-card-actions>
+                  <v-btn text small @click="" v-clipboard:copy="ui.impGlobalBakDialog.bak" v-clipboard:success="onCopy">复制</v-btn>
+                  <v-btn text small @click="onImpGlobalBakPaste">粘粘</v-btn>
+                  <v-spacer></v-spacer>
+                  <v-btn text small color="grey darken-1" text @click="ui.impGlobalBakDialog.show = false">取消</v-btn>
+                  <v-btn text small color="success darken-1" text @click="onImpGlobalBak">导入</v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+            <v-overlay v-model="ui.overlay.show">
+              <v-progress-circular indeterminate size="64"></v-progress-circular>
+            </v-overlay>
           </v-main>
           <v-expand-transition>
             <v-bottom-navigation v-model="ui.curview" app v-show="ui.navi.show && !box.usercfgs.isHideNavi">
@@ -1092,6 +1098,7 @@ function printHtml(data, curapp = null, curview = 'app') {
                 curapp: ${curapp},
                 curappTabs: { curtab: 'sessions' },
                 curappSessions: null,
+                overlay: { show: false },
                 editProfileDialog: { show: false, bak: '' },
                 impGlobalBakDialog: { show: false, bak: '' },
                 reloadConfirmDialog: { show: false, title: '操作成功', message: '是否马上刷新页面?' },
@@ -1138,12 +1145,12 @@ function printHtml(data, curapp = null, curview = 'app') {
               dat[KEY_sysApps] = this.box.sysapps
               this.box.sysapps.forEach((app, appIdx) => {
                 app.datas.forEach((data, dataIdx) => {
-                  if (![undefined, null, 'null'].includes(data.val) && !/^@/.test(data.key)) {
+                  if (![undefined, null, 'null'].includes(data.val)) {
                     dat[data.key] = data.val
                   }
                 })
                 app.settings && app.settings.forEach((setting, settingIdx) => {
-                  if (![undefined, null, 'null'].includes(setting.val) && !/^@/.test(setting.id)) {
+                  if (![undefined, null, 'null'].includes(setting.val)) {
                     dat[setting.id] = setting.val
                   }
                 })
@@ -1151,12 +1158,12 @@ function printHtml(data, curapp = null, curview = 'app') {
               this.box.appsubs.forEach((sub, subIdx) => {
                 sub.apps.forEach((app, appIdx) => {
                   app.datas.forEach((data, dataIdx) => {
-                    if (![undefined, null, 'null'].includes(data.val) && !/^@/.test(data.key)) {
+                    if (![undefined, null, 'null'].includes(data.val)) {
                       dat[data.key] = data.val
                     }
                   })
                   app.settings && app.settings.forEach((setting, settingIdx) => {
-                    if (![undefined, null, 'null'].includes(setting.val) && !/^@/.test(setting.id)) {
+                    if (![undefined, null, 'null'].includes(setting.val)) {
                       dat[setting.id] = setting.val
                     }
                   })
@@ -1271,6 +1278,7 @@ function printHtml(data, curapp = null, curview = 'app') {
             onClearCurAppSessionData(app, datas, data) {
               data.val = ''
               axios.post('/api', JSON.stringify({ cmd: 'saveCurAppSession', val: app }))
+              this.onReload()
             },
             onSaveSession() {
               const session = {
@@ -1280,7 +1288,7 @@ function printHtml(data, curapp = null, curview = 'app') {
                 appName: this.ui.curapp.name,
                 enable: true,
                 createTime: moment().format('YYYY-MM-DD HH:mm:ss'),
-                datas: this.ui.curapp.datas
+                datas: JSON.parse(JSON.stringify(this.ui.curapp.datas))
               }
               this.box.sessions.push(session)
               this.ui.curappSessions.push(session)
@@ -1288,6 +1296,7 @@ function printHtml(data, curapp = null, curview = 'app') {
             },
             onSaveSettings() {
               axios.post('/api', JSON.stringify({ cmd: 'saveSettings', val: this.ui.curapp.settings }))
+              this.onReload()
             },
             onImpSessionPaste() {
               navigator.clipboard.readText().then((text) => {
@@ -1341,6 +1350,7 @@ function printHtml(data, curapp = null, curview = 'app') {
               this.ui.reloadConfirmDialog.show = true
             },
             onReload() {
+              this.ui.overlay.show = true
               window.location.reload()
             },
             onDelSession(session) {
@@ -1353,6 +1363,7 @@ function printHtml(data, curapp = null, curview = 'app') {
             onUseSession(session) {
               axios.post('/api', JSON.stringify({ cmd: 'useSession', val: session }))
               this.ui.curapp.datas = JSON.parse(JSON.stringify(session.datas))
+              this.onReload()
             },
             onImpGlobalBak() {
               const env = this.box.syscfgs.env
@@ -1371,6 +1382,7 @@ function printHtml(data, curapp = null, curview = 'app') {
               this.box.globalbaks.push(bakobj)
               this.ui.impGlobalBakDialog.show = false
               axios.post('/api', JSON.stringify({ cmd: 'globalBak', val: bakobj }))
+              this.onReload()
             },
             onGlobalBak() {
               const env = this.box.syscfgs.env
@@ -1427,4 +1439,4 @@ function printJson() {
 }
 
 // prettier-ignore
-function Env(t,s){return new class{constructor(t,s){this.name=t,this.data=null,this.dataFile="box.dat",this.logs=[],this.logSeparator="\n",this.startTime=(new Date).getTime(),Object.assign(this,s),this.log("",`\ud83d\udd14${this.name}, \u5f00\u59cb!`)}isNode(){return"undefined"!=typeof module&&!!module.exports}isQuanX(){return"undefined"!=typeof $task}isSurge(){return"undefined"!=typeof $httpClient}isLoon(){return"undefined"!=typeof $loon}loaddata(){if(!this.isNode)return{};{this.fs=this.fs?this.fs:require("fs"),this.path=this.path?this.path:require("path");const t=this.path.resolve(this.dataFile),s=this.path.resolve(process.cwd(),this.dataFile),e=this.fs.existsSync(t),i=!e&&this.fs.existsSync(s);if(!e&&!i)return{};{const i=e?t:s;try{return JSON.parse(this.fs.readFileSync(i))}catch{return{}}}}}writedata(){if(this.isNode){this.fs=this.fs?this.fs:require("fs"),this.path=this.path?this.path:require("path");const t=this.path.resolve(this.dataFile),s=this.path.resolve(process.cwd(),this.dataFile),e=this.fs.existsSync(t),i=!e&&this.fs.existsSync(s),h=JSON.stringify(this.data);e?this.fs.writeFileSync(t,h):i?this.fs.writeFileSync(s,h):this.fs.writeFileSync(t,h)}}getdata(t){return this.isSurge()||this.isLoon()?$persistentStore.read(t):this.isQuanX()?$prefs.valueForKey(t):this.isNode()?(this.data=this.loaddata(),this.data[t]):this.data&&this.data[t]||null}setdata(t,s){return this.isSurge()||this.isLoon()?$persistentStore.write(t,s):this.isQuanX()?$prefs.setValueForKey(t,s):this.isNode()?(this.data=this.loaddata(),this.data[s]=t,this.writedata(),!0):this.data&&this.data[s]||null}initGotEnv(t){this.got=this.got?this.got:require("got"),this.cktough=this.cktough?this.cktough:require("tough-cookie"),this.ckjar=this.ckjar?this.ckjar:new this.cktough.CookieJar,t&&(t.headers=t.headers?t.headers:{},void 0===t.headers.Cookie&&void 0===t.cookieJar&&(t.cookieJar=this.ckjar))}get(t,s=(()=>{})){t.headers&&(delete t.headers["Content-Type"],delete t.headers["Content-Length"]),this.isSurge()||this.isLoon()?$httpClient.get(t,(t,e,i)=>{!t&&e&&(e.body=i,e.statusCode=e.status,s(t,e,i))}):this.isQuanX()?$task.fetch(t).then(t=>{const{statusCode:e,statusCode:i,headers:h,body:o}=t;s(null,{status:e,statusCode:i,headers:h,body:o},o)},t=>s(t)):this.isNode()&&(this.initGotEnv(t),this.got(t).on("redirect",(t,s)=>{try{const e=t.headers["set-cookie"].map(this.cktough.Cookie.parse).toString();this.ckjar.setCookieSync(e,null),s.cookieJar=this.ckjar}catch(t){this.logErr(t)}}).then(t=>{const{statusCode:e,statusCode:i,headers:h,body:o}=t;s(null,{status:e,statusCode:i,headers:h,body:o},o)},t=>s(t)))}post(t,s=(()=>{})){if(t.body&&t.headers&&!t.headers["Content-Type"]&&(t.headers["Content-Type"]="application/x-www-form-urlencoded"),delete t.headers["Content-Length"],this.isSurge()||this.isLoon())$httpClient.post(t,(t,e,i)=>{!t&&e&&(e.body=i,e.statusCode=e.status,s(t,e,i))});else if(this.isQuanX())t.method="POST",$task.fetch(t).then(t=>{const{statusCode:e,statusCode:i,headers:h,body:o}=t;s(null,{status:e,statusCode:i,headers:h,body:o},o)},t=>s(t));else if(this.isNode()){this.initGotEnv(t);const{url:e,...i}=t;this.got.post(e,i).then(t=>{const{statusCode:e,statusCode:i,headers:h,body:o}=t;s(null,{status:e,statusCode:i,headers:h,body:o},o)},t=>s(t))}}msg(s=t,e="",i="",h){this.isSurge()||this.isLoon()?$notification.post(s,e,i):this.isQuanX()&&$notify(s,e,i),this.logs.push("","==============\ud83d\udce3\u7cfb\u7edf\u901a\u77e5\ud83d\udce3=============="),this.logs.push(s),e&&this.logs.push(e),i&&this.logs.push(i)}log(...t){t.length>0?this.logs=[...this.logs,...t]:console.log(this.logs.join(this.logSeparator))}logErr(t,s){const e=!this.isSurge()&&!this.isQuanX()&&!this.isLoon();e?$.log("",`\u2757\ufe0f${this.name}, \u9519\u8bef!`,t.stack):$.log("",`\u2757\ufe0f${this.name}, \u9519\u8bef!`,t.message)}wait(t){return new Promise(s=>setTimeout(s,t))}done(t=null){const s=(new Date).getTime(),e=(s-this.startTime)/1e3;this.log("",`\ud83d\udd14${this.name}, \u7ed3\u675f! \ud83d\udd5b ${e} \u79d2`),this.log(),(this.isSurge()||this.isQuanX()||this.isLoon())&&$done(t)}}(t,s)}
+function Env(t,s){return new class{constructor(t,s){this.name=t,this.data=null,this.dataFile="box.dat",this.logs=[],this.logSeparator="\n",this.startTime=(new Date).getTime(),Object.assign(this,s),this.log("",`\ud83d\udd14${this.name}, \u5f00\u59cb!`)}isNode(){return"undefined"!=typeof module&&!!module.exports}isQuanX(){return"undefined"!=typeof $task}isSurge(){return"undefined"!=typeof $httpClient}isLoon(){return"undefined"!=typeof $loon}loaddata(){if(!this.isNode)return{};{this.fs=this.fs?this.fs:require("fs"),this.path=this.path?this.path:require("path");const t=this.path.resolve(this.dataFile),s=this.path.resolve(process.cwd(),this.dataFile),e=this.fs.existsSync(t),i=!e&&this.fs.existsSync(s);if(!e&&!i)return{};{const i=e?t:s;try{return JSON.parse(this.fs.readFileSync(i))}catch{return{}}}}}writedata(){if(this.isNode){this.fs=this.fs?this.fs:require("fs"),this.path=this.path?this.path:require("path");const t=this.path.resolve(this.dataFile),s=this.path.resolve(process.cwd(),this.dataFile),e=this.fs.existsSync(t),i=!e&&this.fs.existsSync(s),o=JSON.stringify(this.data);e?this.fs.writeFileSync(t,o):i?this.fs.writeFileSync(s,o):this.fs.writeFileSync(t,o)}}lodash_get(t,s,e){const i=s.replace(/\[(\d+)\]/g,".$1").split(".");let o=t;for(const t of i)if(o=Object(o)[t],void 0===o)return e;return o}lodash_set(t,s,e){return Object(t)!==t?t:(Array.isArray(s)||(s=s.toString().match(/[^.[\]]+/g)||[]),s.slice(0,-1).reduce((t,e,i)=>Object(t[e])===t[e]?t[e]:t[e]=Math.abs(s[i+1])>>0==+s[i+1]?[]:{},t)[s[s.length-1]]=e,t)}getdata(t){let s=this.getval(t);if(/^@/.test(t)){const[,e,i]=/^@(.*?)\.(.*?)$/.exec(t),o=e?this.getval(e):"";if(o)try{const t=JSON.parse(o);s=t?this.lodash_get(t,i,""):s}catch(t){s=""}}return s}setdata(t,s){let e=!1;if(/^@/.test(s)){const[,i,o]=/^@(.*?)\.(.*?)$/.exec(s),h=this.getval(i),a=i?"null"===h?null:h||"{}":"{}";try{const s=JSON.parse(a);this.lodash_set(s,o,t),e=this.setval(JSON.stringify(s),i),console.log(`${i}: ${JSON.stringify(s)}`)}catch{const s={};this.lodash_set(s,o,t),e=this.setval(JSON.stringify(s),i),console.log(`${i}: ${JSON.stringify(s)}`)}}else e=$.setval(t,s);return e}getval(t){return this.isSurge()||this.isLoon()?$persistentStore.read(t):this.isQuanX()?$prefs.valueForKey(t):this.isNode()?(this.data=this.loaddata(),this.data[t]):this.data&&this.data[t]||null}setval(t,s){return this.isSurge()||this.isLoon()?$persistentStore.write(t,s):this.isQuanX()?$prefs.setValueForKey(t,s):this.isNode()?(this.data=this.loaddata(),this.data[s]=t,this.writedata(),!0):this.data&&this.data[s]||null}initGotEnv(t){this.got=this.got?this.got:require("got"),this.cktough=this.cktough?this.cktough:require("tough-cookie"),this.ckjar=this.ckjar?this.ckjar:new this.cktough.CookieJar,t&&(t.headers=t.headers?t.headers:{},void 0===t.headers.Cookie&&void 0===t.cookieJar&&(t.cookieJar=this.ckjar))}get(t,s=(()=>{})){t.headers&&(delete t.headers["Content-Type"],delete t.headers["Content-Length"]),this.isSurge()||this.isLoon()?$httpClient.get(t,(t,e,i)=>{!t&&e&&(e.body=i,e.statusCode=e.status,s(t,e,i))}):this.isQuanX()?$task.fetch(t).then(t=>{const{statusCode:e,statusCode:i,headers:o,body:h}=t;s(null,{status:e,statusCode:i,headers:o,body:h},h)},t=>s(t)):this.isNode()&&(this.initGotEnv(t),this.got(t).on("redirect",(t,s)=>{try{const e=t.headers["set-cookie"].map(this.cktough.Cookie.parse).toString();this.ckjar.setCookieSync(e,null),s.cookieJar=this.ckjar}catch(t){this.logErr(t)}}).then(t=>{const{statusCode:e,statusCode:i,headers:o,body:h}=t;s(null,{status:e,statusCode:i,headers:o,body:h},h)},t=>s(t)))}post(t,s=(()=>{})){if(t.body&&t.headers&&!t.headers["Content-Type"]&&(t.headers["Content-Type"]="application/x-www-form-urlencoded"),delete t.headers["Content-Length"],this.isSurge()||this.isLoon())$httpClient.post(t,(t,e,i)=>{!t&&e&&(e.body=i,e.statusCode=e.status,s(t,e,i))});else if(this.isQuanX())t.method="POST",$task.fetch(t).then(t=>{const{statusCode:e,statusCode:i,headers:o,body:h}=t;s(null,{status:e,statusCode:i,headers:o,body:h},h)},t=>s(t));else if(this.isNode()){this.initGotEnv(t);const{url:e,...i}=t;this.got.post(e,i).then(t=>{const{statusCode:e,statusCode:i,headers:o,body:h}=t;s(null,{status:e,statusCode:i,headers:o,body:h},h)},t=>s(t))}}msg(s=t,e="",i="",o){this.isSurge()||this.isLoon()?$notification.post(s,e,i):this.isQuanX()&&$notify(s,e,i),this.logs.push("","==============\ud83d\udce3\u7cfb\u7edf\u901a\u77e5\ud83d\udce3=============="),this.logs.push(s),e&&this.logs.push(e),i&&this.logs.push(i)}log(...t){t.length>0?this.logs=[...this.logs,...t]:console.log(this.logs.join(this.logSeparator))}logErr(t,s){const e=!this.isSurge()&&!this.isQuanX()&&!this.isLoon();e?$.log("",`\u2757\ufe0f${this.name}, \u9519\u8bef!`,t.stack):$.log("",`\u2757\ufe0f${this.name}, \u9519\u8bef!`,t.message)}wait(t){return new Promise(s=>setTimeout(s,t))}done(t=null){const s=(new Date).getTime(),e=(s-this.startTime)/1e3;this.log("",`\ud83d\udd14${this.name}, \u7ed3\u675f! \ud83d\udd5b ${e} \u79d2`),this.log(),(this.isSurge()||this.isQuanX()||this.isLoon())&&$done(t)}}(t,s)}
