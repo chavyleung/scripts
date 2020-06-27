@@ -1,15 +1,28 @@
 {
   "releases": [
     {
-      "version": "1.0.0",
+      "version": "0.2.0",
       "tags": ["beta"],
       "author": "@chavyleung",
       "icon": "https://avatars3.githubusercontent.com/u/29748519",
       "repo": "https://github.com/chavyleung",
-      "note": [
+      "notes": [
         {
           "name": "新增",
-          "list": ["增加版本时间线"]
+          "descs": ["版本更新提醒", "BoxJs升级教程"]
+        }
+      ]
+    },
+    {
+      "version": "0.1.3",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "icon": "https://avatars3.githubusercontent.com/u/29748519",
+      "repo": "https://github.com/chavyleung",
+      "notes": [
+        {
+          "name": "新增",
+          "descs": ["长文本控件", "读写表达式"]
         }
       ]
     }
