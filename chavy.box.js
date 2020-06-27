@@ -861,7 +861,7 @@ function printHtml(data, curapp = null, curview = 'app') {
                   <v-btn small text color="success" @click="onUseSession(session)">应用</v-btn>
                 </v-card-actions>
               </v-card>
-              <v-card class="ma-4" v-if="!ui.curappSessions || ui.curappSessions.length === 0">
+              <v-card class="ma-4" v-if="(!ui.curappSessions || ui.curappSessions.length === 0) && ui.curapp.keys.length > 0">
                 <v-card-text>当前脚本没有自建会话!</v-card-text>
               </v-card>
               <v-dialog v-model="ui.impSessionDialog.show" scrollable>
@@ -1028,7 +1028,7 @@ function printHtml(data, curapp = null, curview = 'app') {
                 <v-card-actions>
                   <v-spacer></v-spacer>
                   <v-btn color="grey darken-1" text @click="ui.reloadConfirmDialog.show = false">稍候</v-btn>
-                  <v-btn color="green darken-1" text @click="onReload">马上刷新</v-btn>
+                  <v-btn color="green darken-1" text @click="reload">马上刷新</v-btn>
                 </v-card-actions>
               </v-card>
             </v-dialog>
@@ -1354,11 +1354,13 @@ function printHtml(data, curapp = null, curview = 'app') {
               }
               axios.post('/api', JSON.stringify({ cmd: 'addAppSub', val: sub }))
               this.ui.addAppSubDialog.show = false
-              this.ui.reloadConfirmDialog.show = true
+              this.onReload()
+            },
+            reload() {
+              window.location.reload()
             },
             onReload() {
-              this.ui.overlay.show = true
-              window.location.reload()
+              this.ui.reloadConfirmDialog.show = true
             },
             onDelSession(session) {
               axios.post('/api', JSON.stringify({ cmd: 'delSession', val: session }))
@@ -1416,7 +1418,7 @@ function printHtml(data, curapp = null, curview = 'app') {
             },
             onRevertGlobalBak(id) {
               axios.post('/api', JSON.stringify({ cmd: 'revertGlobalBak', val: id }))
-              this.ui.reloadConfirmDialog.show = true
+              this.onReload()
             },
             onCopy(e) {
               this.ui.snackbar.show = true
