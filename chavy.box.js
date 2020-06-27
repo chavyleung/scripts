@@ -1,7 +1,7 @@
 const $ = new Env('BoxJs')
 $.domain = '8.8.8.8'
 
-$.version = '0.2.1'
+$.version = '0.2.2'
 $.versionType = 'beta'
 $.KEY_sessions = 'chavy_boxjs_sessions'
 $.KEY_versions = 'chavy_boxjs_versions'
@@ -396,7 +396,8 @@ function getSessions() {
 async function getVersions() {
   let vers = []
   await new Promise((resolve) => {
-    const verurl = 'https://github.com/chavyleung/scripts/raw/master/box/release/box.release.json'
+    // const verurl = 'https://github.com/chavyleung/scripts/raw/master/box/release/box.release.json'
+    const verurl = 'https://gist.github.com/chavyleung/e1f1021391143c961d925bcdc21dca24/raw/4185a281c1861ceadd870ca55a497077ae6fefc2/box.release.json'
     $.get({ url: verurl }, (err, resp, data) => {
       try {
         const _data = JSON.parse(data)
@@ -673,7 +674,7 @@ function printHtml(data, curapp = null, curview = 'app') {
                   </v-avatar>
                 </v-btn>
               </template>
-              <v-btn fab small color="grey" @click="ui.versheet.show = true">
+              <v-btn v-if="!box.usercfgs.isHideHelp" fab small color="grey" @click="ui.versheet.show = true">
                 <v-icon>mdi-help</v-icon>
               </v-btn>
               <v-btn fab small color="pink" @click="box.usercfgs.isLeftBoxIcon = !box.usercfgs.isLeftBoxIcon, onUserCfgsChange()">
@@ -686,7 +687,7 @@ function printHtml(data, curapp = null, curview = 'app') {
               <v-btn fab small color="green" @click="" v-clipboard:copy="JSON.stringify(boxdat)" v-clipboard:success="onCopy">
                 <v-icon>mdi-export-variant</v-icon>
               </v-btn>
-              <v-btn fab small color="orange" @click="onReload">
+              <v-btn fab small color="orange" @click="reload">
                 <v-icon>mdi-refresh</v-icon>
               </v-btn>
             </v-speed-dial>
@@ -720,6 +721,16 @@ function printHtml(data, curapp = null, curview = 'app') {
                 <v-list-item-action @click="onLink(box.syscfgs.boxjs.repo)">
                   <v-btn fab small text>
                     <v-avatar size="32"><img :src="box.syscfgs.boxjs.icon" :alt="box.syscfgs.boxjs.repo" /></v-avatar>
+                  </v-btn>
+                </v-list-item-action>
+              </v-list-item>
+              <v-list-item>
+                <v-list-item-content>
+                  <v-switch label="隐藏帮助按钮" v-model="box.usercfgs.isHideHelp" @change="onUserCfgsChange"></v-switch>
+                </v-list-item-content>
+                <v-list-item-action @click="onLink(box.syscfgs.boxjs.repo)">
+                  <v-btn fab small text>
+                    <v-avatar size="32"><v-icon>mdi-help</v-icon></v-avatar>
                   </v-btn>
                 </v-list-item-action>
               </v-list-item>
@@ -1108,28 +1119,28 @@ function printHtml(data, curapp = null, curview = 'app') {
               </v-btn>
             </v-bottom-navigation>
           </v-expand-transition>
-          <v-bottom-sheet v-model="ui.versheet.show" hide-overlay>
-            <v-sheet>
-              <v-card flat>
-                <v-subheader>
-                  <v-btn text @click="ui.versheet.show = false, ui.updatesheet.show = true">升级教程</v-btn>
-                  <v-spacer></v-spacer>
-                  <v-btn text @click="ui.versheet.show = false">朕, 知道了!</v-btn>
-                </v-subheader>
-              </v-card>
-              <v-timeline dense>
-                <v-timeline-item small v-for="(ver, verIdx) in box.versions" :key="ver.version">
-                  <div class="py-4">
-                    <h2 v-if="box.syscfgs.version === ver.version" class="headline font-weight-bold mb-4 green--text">v{{ ver.version }} (当前)</h2>
-                    <h2 v-else class="headline font-weight-bold mb-4 grey--text">v{{ ver.version }}</h2>
-                    <template v-for="(note, noteIdx) in ver.notes">
-                      <strong>{{ note.name }}</strong>
-                      <ul><li v-for="(desc, descIdx) in note.descs">{{ desc }}</li></ul>
-                    </template>
-                  </div>
-                </v-timeline-item>
-              </v-timeline>
-            </v-sheet>
+          <v-bottom-sheet v-model="ui.versheet.show" hide-overlay scrollable>
+            <v-card flat scrollable>
+              <v-subheader>
+                <v-btn text @click="ui.versheet.show = false, ui.updatesheet.show = true">升级教程</v-btn>
+                <v-spacer></v-spacer>
+                <v-btn text @click="ui.versheet.show = false">朕, 知道了!</v-btn>
+              </v-subheader>
+              <v-card-text>
+                <v-timeline dense>
+                  <v-timeline-item small v-for="(ver, verIdx) in box.versions" :key="ver.version">
+                    <div class="py-4">
+                      <h2 v-if="box.syscfgs.version === ver.version" class="headline font-weight-bold mb-4 green--text">v{{ ver.version }} (当前)</h2>
+                      <h2 v-else class="headline font-weight-bold mb-4 grey--text">v{{ ver.version }}</h2>
+                      <template v-for="(note, noteIdx) in ver.notes">
+                        <strong>{{ note.name }}</strong>
+                        <ul><li v-for="(desc, descIdx) in note.descs">{{ desc }}</li></ul>
+                      </template>
+                    </div>
+                  </v-timeline-item>
+                </v-timeline>
+              </v-card-text>
+            </v-card>
           </v-bottom-sheet>
           <v-bottom-sheet v-model="ui.updatesheet.show" hide-overlay>
             <v-sheet>

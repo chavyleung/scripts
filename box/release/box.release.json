@@ -1,6 +1,19 @@
 {
   "releases": [
     {
+      "version": "0.2.2",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "icon": "https://avatars3.githubusercontent.com/u/29748519",
+      "repo": "https://github.com/chavyleung",
+      "notes": [
+        {
+          "name": "优化",
+          "descs": ["悬浮按钮刷新不用确认", "侧栏可以隐藏帮助按钮"]
+        }
+      ]
+    },
+    {
       "version": "0.2.1",
       "tags": ["beta"],
       "author": "@chavyleung",
