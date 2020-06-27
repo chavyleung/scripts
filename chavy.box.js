@@ -1,7 +1,7 @@
 const $ = new Env('BoxJs')
 $.domain = '8.8.8.8'
 
-$.version = '0.2.0'
+$.version = '0.2.1'
 $.versionType = 'beta'
 $.KEY_sessions = 'chavy_boxjs_sessions'
 $.KEY_versions = 'chavy_boxjs_versions'
@@ -665,7 +665,7 @@ function printHtml(data, curapp = null, curview = 'app') {
             </v-btn>
           </v-app-bar>
           <v-fab-transition>
-            <v-speed-dial v-show="ui.box.show && !box.usercfgs.isHideBoxIcon" fixed fab bottom :left="ui.drawer.show" :right="!ui.drawer.show" class="mb-12">
+            <v-speed-dial v-show="ui.box.show && !box.usercfgs.isHideBoxIcon" fixed fab bottom direction="top" :left="ui.drawer.show || box.usercfgs.isLeftBoxIcon" :right="!box.usercfgs.isLeftBoxIcon === true" class="mb-12">
               <template v-slot:activator>
                 <v-btn fab>
                   <v-avatar size="48">
@@ -675,6 +675,10 @@ function printHtml(data, curapp = null, curview = 'app') {
               </template>
               <v-btn fab small color="grey" @click="ui.versheet.show = true">
                 <v-icon>mdi-help</v-icon>
+              </v-btn>
+              <v-btn fab small color="pink" @click="box.usercfgs.isLeftBoxIcon = !box.usercfgs.isLeftBoxIcon, onUserCfgsChange()">
+                <v-icon v-if="!box.usercfgs.isLeftBoxIcon">mdi-format-horizontal-align-left</v-icon>
+                <v-icon v-else>mdi-format-horizontal-align-right</v-icon>
               </v-btn>
               <v-btn fab small color="indigo" @click="ui.impGlobalBakDialog.show = true">
                 <v-icon>mdi-database-import</v-icon>
