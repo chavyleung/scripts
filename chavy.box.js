@@ -1,7 +1,7 @@
 const $ = new Env('BoxJs')
 $.domain = '8.8.8.8'
 
-$.version = '0.2.2'
+$.version = '0.2.3'
 $.versionType = 'beta'
 $.KEY_sessions = 'chavy_boxjs_sessions'
 $.KEY_versions = 'chavy_boxjs_versions'
@@ -1121,8 +1121,10 @@ function printHtml(data, curapp = null, curview = 'app') {
           </v-expand-transition>
           <v-bottom-sheet v-model="ui.versheet.show" hide-overlay scrollable>
             <v-card flat scrollable>
-              <v-subheader>
+              <v-subheader class="my-4">
                 <v-btn text @click="ui.versheet.show = false, ui.updatesheet.show = true">升级教程</v-btn>
+                <v-spacer></v-spacer>
+                <v-btn text>新版本</v-btn>
                 <v-spacer></v-spacer>
                 <v-btn text @click="ui.versheet.show = false">朕, 知道了!</v-btn>
               </v-subheader>
