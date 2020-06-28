@@ -1,7 +1,7 @@
 {
   "releases": [
     {
-      "version": "0.2.3",
+      "version": "0.2.4",
       "tags": ["beta"],
       "author": "@chavyleung",
       "icon": "https://avatars3.githubusercontent.com/u/29748519",
@@ -9,7 +9,7 @@
       "notes": [
         {
           "name": "优化",
-          "descs": ["帮助页面样式"]
+          "descs": ["帮助页面样式", "订阅链接多余空格&换行等字符"]
         }
       ]
     },
