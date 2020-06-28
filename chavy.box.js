@@ -396,8 +396,7 @@ function getSessions() {
 async function getVersions() {
   let vers = []
   await new Promise((resolve) => {
-    // const verurl = 'https://github.com/chavyleung/scripts/raw/master/box/release/box.release.json'
-    const verurl = 'https://gist.github.com/chavyleung/e1f1021391143c961d925bcdc21dca24/raw/4185a281c1861ceadd870ca55a497077ae6fefc2/box.release.json'
+    const verurl = 'https://github.com/chavyleung/scripts/raw/master/box/release/box.release.json'
     $.get({ url: verurl }, (err, resp, data) => {
       try {
         const _data = JSON.parse(data)
