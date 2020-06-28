@@ -1,9 +1,9 @@
-const $ = new Env('万达影城')
+const $ = new Env('万达电影')
 $._mi_ = 'senku_wanda_mi_'
+$.desc = []
 const ts = new Date().getTime()
 const date = tTime(ts)
 const key = 'Wanda1_3B3AA12B0145E1982F282BEDD8A3305B89A9811280C0B8CC3A6A60D81022E4903'+ts
-
 const mx_api = {
     "ver":"v1.0.0",
     "sCode":"Wanda",
@@ -18,10 +18,12 @@ const mx_api = {
 }
 
 !(async () => {
-    await check()
-    // await question()
-    // await answer()
-    // await drawprize()
+    await sign()
+    await signRecord()
+    await question()
+    await answer()
+    await drawprize_ans()
+    await drawprize_ans()
     await showmsg()
   })()
     .catch((e) => $.logErr(e))
@@ -29,10 +31,10 @@ const mx_api = {
   
 
 
-function check() {
+function sign() {
     return new Promise((resolve) => {
-        const siginVal = key+'/activityWholeSign/wholeSignUp.apiactivityCode=12786638&signDate='+date
-        mx_api['check'] = hex_md5(siginVal)
+        const signVal = key+'/activityWholeSign/wholeSignUp.apiactivityCode=12786638&signDate='+date
+        mx_api['check'] = hex_md5(signVal)
         const url = {
             url:'https://activity-api-mx.wandafilm.com/activityWholeSign/wholeSignUp.api',
             headers:{
@@ -42,7 +44,30 @@ function check() {
             }
         $.post(url, (err, resp, data) => {
             try {
-                $.check = JSON.parse(data)
+                $.sign = JSON.parse(data)
+            } catch (e) {
+            $.logErr(e, resp)
+            } finally {
+            resolve()
+            }
+        })
+    })
+}
+
+function signRecord() {
+    return new Promise((resolve) => {
+        const signRecordVal = key+'/activityWholeSign/getSignRecord.apiactivityCode=12786638'
+        mx_api['check'] = hex_md5(signRecordVal)
+        const url = {
+            url:'https://activity-api-mx.wandafilm.com/activityWholeSign/getSignRecord.api',
+            headers:{
+                'MX-API':JSON.stringify(mx_api),
+            },
+            body : 'activityCode=12786638'
+            }
+        $.post(url, (err, resp, data) => {
+            try {
+                $.signRecord = JSON.parse(data)
             } catch (e) {
             $.logErr(e, resp)
             } finally {
@@ -68,7 +93,6 @@ function question() {
             try {
                 const res = JSON.parse(data)
                 $.answer = res.data.questionList[0].movie.nameCN
-                $.log(data)
             } catch (e) {
             $.logErr(e, resp)
             } finally {
@@ -81,19 +105,18 @@ function question() {
 // 答题
 function answer() {
     return new Promise((resolve) => {
-        const answerVal = key + '/question/qustion/answer.apiactivityCode=15884027&answer={"1":"'+$.answer+'"}'
-        console.log(answerVal)
+        const answerVal = key + '/question/qustion/answer.apiactivityCode=15884027&answer=%7b%221%22%3a%22'+escape(`${$.answer}`).toLowerCase()+'%22%7d'
         mx_api['check'] = hex_md5(answerVal)
         const url = {
             url:'https://activity-api-mx.wandafilm.com/question/qustion/answer.api',
             headers:{
                 'MX-API':JSON.stringify(mx_api),
             },
-            body : 'activityCode=15884027&answer={"1":"'+$.answer+'"}'
+            body : 'activityCode=15884027&answer=%7B%221%22%3A%22'+encodeURI(`${$.answer}`) + '%22%7D'
         }
         $.post(url, (err, resp, data) => {
             try {
-            $.log(data)
+                $.answer = JSON.parse(data)
             } catch (e) {
             $.logErr(e, resp)
             } finally {
@@ -104,7 +127,7 @@ function answer() {
 }
 
 // 答题后抽奖
-function drawprize() {
+function drawprize_ans() {
     return new Promise((resolve) => {
         const drawprizeVal = key+'/question/prize/lottery.apiactivityCode=15884027'
         mx_api['check'] = hex_md5(drawprizeVal)
@@ -117,8 +140,8 @@ function drawprize() {
         }
         $.post(url, (err, resp, data) => {
             try {
-                console.log(data)
-            $.log(data)
+                const res  = JSON.parse(data)
+                $.desc.push(`答题抽奖:${res.data.prize.prizeName}`)
             } catch (e) {
             $.logErr(e, resp)
             } finally {
@@ -130,12 +153,19 @@ function drawprize() {
 
 function showmsg() {
     return new Promise((resolve) => {
-        $.subt = `签到结果:${$.check.code == 1 ? `签到成功` : $.check.msg}`
-        $.desc = []
+        $.subt = `签到:${$.sign.code == 1 ? `成功` : $.sign.msg}`
+        
+        if ($.signRecord.code == 1) {
+            const totalMedal = $.signRecord.data.totalMedal
+            const remainMedal = $.signRecord.data.remainMedal
+            $.desc.push(`本次获得${totalMedal}能量,剩余可用${remainMedal}能量`)
+        }
+        $.subt += ` 答题详情:${$.answer.code == 1 ? `答案:${$.answer.data.answer},获得:${$.answer.data.remainChance}次抽奖`:$.answer.msg}`
         $.msg($.name, $.subt, $.desc.join('\n'))
         resolve()
     })
 }
+
 function tTime(timestamp) {
     const date = new Date(timestamp)
     const Y = date.getFullYear() + '-'

@@ -16,7 +16,7 @@
  * 
  */
 
-const $ = new Env('万达影城')
+const $ = new Env('万达电影')
 $._mi_ = 'senku_wanda_mi_'
 
 !(async () => {
