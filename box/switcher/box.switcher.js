@@ -40,7 +40,7 @@ function execSwitch() {
       const isNewRound = curSessionIdx + 1 === app.sessions.length
       const nextSessionIdx = isNewRound ? 0 : curSessionIdx + 1
       const nextSession = app.sessions[nextSessionIdx]
-      nextSession.datas.forEach((_data) => $.setdata(_data.val, _data.key) || true)
+      nextSession.datas.forEach((_data) => $.setdata([undefined, null, 'undefined', 'null', ''].includes(_data.val) ? '' : _data.val, _data.key))
       curSessions[appId] = nextSession.id
       $.desc.push(`${curSession.appName}: ${curSession.name} => #${nextSessionIdx + 1} ${nextSession.name} ${isNewRound ? '(新一轮)' : ''}`)
     })
