@@ -1,12 +1,13 @@
 const $ = new Env('BoxJs')
 $.domain = '8.8.8.8'
 
-$.version = '0.3.0'
+$.version = '0.3.1'
 $.versionType = 'beta'
 $.KEY_sessions = 'chavy_boxjs_sessions'
 $.KEY_versions = 'chavy_boxjs_versions'
 $.KEY_userCfgs = 'chavy_boxjs_userCfgs'
 $.KEY_globalBaks = 'chavy_boxjs_globalBaks'
+$.KEY_curSessions = 'chavy_boxjs_cur_sessions'
 
 $.json = $.name
 $.html = $.name
@@ -471,6 +472,8 @@ function handleApi() {
   // 应用会话
   else if (data.cmd === 'useSession') {
     $.log(`❕ ${$.name}, 应用会话!`)
+    const curSessionsstr = $.getdata($.KEY_curSessions)
+    const curSessions = ![undefined, null, 'null', ''].includes(curSessionsstr) ? JSON.parse(curSessionsstr) : {}
     const session = data.val
     const sessions = getSessions()
     const sessionIdx = sessions.findIndex((s) => session.id === s.id)
@@ -481,6 +484,8 @@ function handleApi() {
         const usesuc = $.setdata(`${newval}`, data.key)
         $.log(`❕ ${$.name}, 替换数据: ${data.key} ${usesuc ? '成功' : '失败'}!`, `旧值: ${oldval}`, `新值: ${newval}`)
       })
+      curSessions[session.appId] = session.id
+      $.setdata(JSON.stringify(curSessions), $.KEY_curSessions)
       $.subt = `应用会话: 成功 (${session.appName})`
       $.desc = []
       $.desc.push(`会话名称: ${session.name}`, `应用名称: ${session.appName}`, `会话编号: ${session.id}`, `应用编号: ${session.appId}`, `数据: ${JSON.stringify(session)}`)

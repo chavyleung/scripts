@@ -1,6 +1,19 @@
 {
   "releases": [
     {
+      "version": "0.3.1",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "icon": "https://avatars3.githubusercontent.com/u/29748519",
+      "repo": "https://github.com/chavyleung",
+      "notes": [
+        {
+          "name": "修复",
+          "descs": ["手动切换会话会导致自动切换顺序错误问题"]
+        }
+      ]
+    },
+    {
       "version": "0.3.0",
       "tags": ["beta"],
       "author": "@chavyleung",
