@@ -12,7 +12,7 @@
  *
  * # Loon
  * http-response ^https:\/\/user-api-prd-mx\.wandafilm\.com\/user\/islogin\.api script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/wanda/wanda.cookie.js
- * cron "10 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/wanda/wanda.cookie.js
+ * cron "10 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/wanda/wanda.js
  * 
  */
 
@@ -24,7 +24,7 @@ $._mi_ = 'senku_wanda_mi_'
   session.url = $request.url
   session.headers = JSON.parse($request.headers['MX-API'])['_mi_']
   let key = ''
-  if (/islogin.api/.test(session.url)) {
+  if (/user_info.api/.test(session.url)) {
     key = $._mi_
   }
   if ($.setdata(session.headers, key)) {
