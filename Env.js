@@ -255,9 +255,9 @@ function Env(name, opts) {
      */
     msg(title = name, subt = '', desc = '', opts) {
       if (this.isSurge() || this.isLoon()) {
-        $notification.post(title, subt, desc)
+        $notification.post(title, subt, desc, opts)
       } else if (this.isQuanX()) {
-        $notify(title, subt, desc)
+        $notify(title, subt, desc, opts)
       }
       this.logs.push('', '==============📣系统通知📣==============')
       this.logs.push(title)
