@@ -1,6 +1,32 @@
 {
   "releases": [
     {
+      "version": "0.3.0",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "icon": "https://avatars3.githubusercontent.com/u/29748519",
+      "repo": "https://github.com/chavyleung",
+      "notes": [
+        {
+          "name": "新增",
+          "descs": ["全局搜索"]
+        }
+      ]
+    },
+    {
+      "version": "0.2.4",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "icon": "https://avatars3.githubusercontent.com/u/29748519",
+      "repo": "https://github.com/chavyleung",
+      "notes": [
+        {
+          "name": "优化",
+          "descs": ["帮助页面样式", "订阅链接多余空格&换行等字符"]
+        }
+      ]
+    },
+    {
       "version": "0.2.2",
       "tags": ["beta"],
       "author": "@chavyleung",
