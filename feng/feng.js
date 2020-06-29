@@ -30,7 +30,7 @@ async function signin() {
       }
     })
   if ($.accounts.length === 0) {
-    $.subt = '请在 BoxJs 填写手机号码!'
+    $.subt = '请在 BoxJs 填写账号密码!'
     $.desc = []
   } else {
     $.desc = ['点击查看详情']
@@ -97,7 +97,7 @@ function sign(account) {
     $.post(url, (err, resp, data) => {
       try {
         const _data = JSON.parse(data)
-        account.issuc = $.lodash_get(_data, 'status.code') === '0'
+        account.issuc = $.lodash_get(_data, 'status.code') === 0
         account.isrepeat = $.lodash_get(_data, 'status.code') === 1021
         account.msg = account.issuc ? '成功' : $.lodash_get(_data, 'status.message')
       } catch (e) {
