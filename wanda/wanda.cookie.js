@@ -3,34 +3,31 @@
  * hostname = user-api-prd-mx.wandafilm.com
  *
  * # Surge
- * Rewrite: wanda = type=http-request,pattern=^https:\/\/user-api-prd-mx\.wandafilm\.com\/user\/islogin\.api,script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/wanda/wanda.cookie.js,debug=true
+ * Rewrite: wanda = type=http-request,pattern=^https:\/\/user-api-prd-mx\.wandafilm\.com,script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/wanda/wanda.cookie.js,debug=true
  * Tasks: wanda-签到 = type=cron,cronexp=10 0 * * *,script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/wanda/wanda.js,wake-system=true
  *
  * # QuanX
- * ^https:\/\/user-api-prd-mx\.wandafilm\.com\/user\/islogin\.api url script-request-header https://raw.githubusercontent.com/chavyleung/scripts/master/wanda/wanda.cookie.js
+ * ^https:\/\/user-api-prd-mx\.wandafilm\.com url script-request-header https://raw.githubusercontent.com/chavyleung/scripts/master/wanda/wanda.cookie.js
  * 10 0 * * * https://raw.githubusercontent.com/chavyleung/scripts/master/wanda/wanda.js, tag=wanda-签到
  *
  * # Loon
- * http-response ^https:\/\/user-api-prd-mx\.wandafilm\.com\/user\/islogin\.api script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/wanda/wanda.cookie.js
+ * http-response ^https:\/\/user-api-prd-mx\.wandafilm\.com script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/wanda/wanda.cookie.js
  * cron "10 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/wanda/wanda.js
  * 
+ * # 获取方式:进入签到页面获取，网页端:https://act-m.wandacinemas.com/2005/17621a8caacc4d190dadd/
  */
 
-const $ = new Env('万达电影')
+const $ = new Env('万达影城')
 $._mi_ = 'senku_wanda_mi_'
 
 !(async () => {
   const session = {}
   session.url = $request.url
   session.headers = JSON.parse($request.headers['MX-API'])['_mi_']
-  let key = ''
-  if (/user_info.api/.test(session.url)) {
-    key = $._mi_
-  }
-  if ($.setdata(session.headers, key)) {
-    $.subt = `获取会话: 成功! (${key})`
+  if (session.headers&&$.setdata(session.headers, $._mi_)) {
+    $.subt = `获取会话: 成功! (${$._mi_})`
   } else {
-    $.subt = `获取会话: 失败! (${key})`
+    $.subt = `获取会话: 失败! (${$._mi_})`
   }
   $.msg($.name, $.subt, $.desc)
 })()

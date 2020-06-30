@@ -70,6 +70,14 @@
       "author": "@chavyleung",
       "repo": "https://github.com/chavyleung/scripts/tree/master/feng",
       "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/feng.png", "https://raw.githubusercontent.com/Orz-3/task/master/feng.png"]
+    },
+    {
+      "id": "wanda",
+      "name": "万达电影",
+      "keys": ["senku_wanda_mi_"],
+      "author": "@GideonSenku",
+      "repo": "https://github.com/chavyleung/scripts/tree/master/wanda",
+      "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/wanda.png", "https://raw.githubusercontent.com/Orz-3/task/master/wanda.png"]
     }
   ]
 }
