@@ -1,6 +1,8 @@
 const $ = new Env('万达电影')
 $._mi_ = 'senku_wanda_mi_'
 $.desc = []
+$.signCode = '17787285'
+$.questionCode = '15884027'
 const date = tTime(new Date().getTime())
 
 function getKey(){
@@ -41,7 +43,7 @@ const mx_api = {
 
 function sign() {
     return new Promise((resolve) => {
-        const signVal = getKey()['key'] + '/activityWholeSign/wholeSignUp.apiactivityCode=12786638&signDate='+date
+        const signVal = getKey()['key'] + '/activityWholeSign/wholeSignUp.apiactivityCode='+$.signCode+'&signDate='+date
         mx_api['ts'] = getKey()['ts']
         mx_api['check'] = hex_md5(signVal)
         const url = {
@@ -49,7 +51,7 @@ function sign() {
             headers:{
                 'MX-API':JSON.stringify(mx_api),
             },
-            body : 'activityCode=12786638&signDate=' + date
+            body : 'activityCode='+$.signCode+'&signDate=' + date
             }
         $.post(url, (err, resp, data) => {
             try {
@@ -65,7 +67,7 @@ function sign() {
 
 function signRecord() {
     return new Promise((resolve) => {
-        const signRecordVal = getKey()['key']+'/activityWholeSign/getSignRecord.apiactivityCode=12786638'
+        const signRecordVal = getKey()['key']+'/activityWholeSign/getSignRecord.apiactivityCode='+$.signCode
         mx_api['ts'] = getKey()['ts']
         mx_api['check'] = hex_md5(signRecordVal)
         const url = {
@@ -73,7 +75,7 @@ function signRecord() {
             headers:{
                 'MX-API':JSON.stringify(mx_api),
             },
-            body : 'activityCode=12786638'
+            body : 'activityCode='+$.signCode
             }
         $.post(url, (err, resp, data) => {
             try {
@@ -89,7 +91,7 @@ function signRecord() {
 
 function lottery() {
     return new Promise((resolve) => {
-        const signVal = getKey()['key'] + '/activityWholeSign/prize/lottery.apiactivityCode=12786638&vcode=&requestId='
+        const signVal = getKey()['key'] + '/activityWholeSign/prize/lottery.apiactivityCode='+$.signCode+'&vcode=&requestId='
         mx_api['ts'] = getKey()['ts']
         mx_api['check'] = hex_md5(signVal)
         const url = {
@@ -97,7 +99,7 @@ function lottery() {
             headers:{
                 'MX-API':JSON.stringify(mx_api),
             },
-            body : 'activityCode=12786638&vcode=&requestId='
+            body : 'activityCode='+$.signCode+'&vcode=&requestId='
             }
         $.post(url, (err, resp, data) => {
             try {
@@ -114,7 +116,7 @@ function lottery() {
 
 function question_() {
     return new Promise((resolve) => {
-        const questionVal = getKey()['key']+'/question/qustion/strength.apiactivityCode=15884027'
+        const questionVal = getKey()['key']+'/question/qustion/strength.apiactivityCode='+$.questionCode
         mx_api['ts'] = getKey()['ts']
         mx_api['check'] = hex_md5(questionVal)
         const url = {
@@ -122,7 +124,7 @@ function question_() {
             headers:{
                 'MX-API':JSON.stringify(mx_api),
             },
-            body : 'activityCode=15884027'
+            body : 'activityCode='+$.questionCode
         }
         $.post(url, (err, resp, data) => {
             try {
@@ -139,7 +141,7 @@ function question_() {
 // 获取题目答案
 function question() {
     return new Promise((resolve) => {
-        const questionVal = getKey()['key']+'/question/question_list.apiactivityCode=15884027'
+        const questionVal = getKey()['key']+'/question/question_list.apiactivityCode='+$.questionCode
         mx_api['ts'] = getKey()['ts']
         mx_api['check'] = hex_md5(questionVal)
         const url = {
@@ -147,7 +149,7 @@ function question() {
             headers:{
                 'MX-API':JSON.stringify(mx_api),
             },
-            body : 'activityCode=15884027'
+            body : 'activityCode='+$.questionCode
         }
         $.post(url, (err, resp, data) => {
             try {
@@ -165,7 +167,7 @@ function question() {
 // 答题
 function answer() {
     return new Promise((resolve) => {
-        const answerVal = getKey()['key'] + '/question/qustion/answer.apiactivityCode=15884027&answer=%7b%221%22%3a%22'+escape(`${$.answer}`).toLowerCase()+'%22%7d'
+        const answerVal = getKey()['key'] + '/question/qustion/answer.apiactivityCode='+$.questionCode+'&answer=%7b%221%22%3a%22'+escape(`${$.answer}`).toLowerCase()+'%22%7d'
         mx_api['ts'] = getKey()['ts']
         mx_api['check'] = hex_md5(answerVal)
         const url = {
@@ -173,7 +175,7 @@ function answer() {
             headers:{
                 'MX-API':JSON.stringify(mx_api),
             },
-            body : 'activityCode=15884027&answer=%7B%221%22%3A%22'+encodeURI(`${$.answer}`) + '%22%7D'
+            body : 'activityCode='+$.questionCode+'&answer=%7B%221%22%3A%22'+encodeURI(`${$.answer}`) + '%22%7D'
         }
         $.post(url, (err, resp, data) => {
             try {
@@ -190,7 +192,7 @@ function answer() {
 // 答题后抽奖
 function drawprize_ans() {
     return new Promise((resolve) => {
-        const drawprizeVal = getKey()['key']+'/question/prize/lottery.apiactivityCode=15884027'
+        const drawprizeVal = getKey()['key']+'/question/prize/lottery.apiactivityCode='+$.questionCode
         mx_api['ts'] = getKey()['ts']
         mx_api['check'] = hex_md5(drawprizeVal)
         const url = {
@@ -198,7 +200,7 @@ function drawprize_ans() {
             headers:{
                 'MX-API':JSON.stringify(mx_api),
             },
-            body : 'activityCode=15884027'
+            body : 'activityCode='+$.questionCode
         }
         $.post(url, (err, resp, data) => {
             try {

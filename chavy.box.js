@@ -219,62 +219,6 @@ function getSystemApps() {
       rewrites: [{ type: 'request', pattern: '^https://note.youdao.com/yws/mapi/user?method=checkin', script: 'noteyoudao.cookie.js', body: true }]
     },
     {
-      id: 'QTT',
-      name: '趣头条',
-      keys: ['senku_signKey_qtt', 'senku_signXTK_qtt', 'senku_readKey_qtt', 'senku_navCoinKey_qtt'],
-      author: '@GideonSenku',
-      repo: 'https://github.com/chavyleung/scripts/tree/master/qtt',
-      icons: ['https://raw.githubusercontent.com/Orz-3/mini/master/qtt.png', 'https://raw.githubusercontent.com/Orz-3/task/master/qtt.png']
-    },
-    {
-      id: 'qmkg',
-      name: '全民K歌',
-      keys: ['senku_signurl_qmkg', 'senku_signheader_qmkg', 'senku_signbody_qmkg'],
-      author: '@GideonSenku',
-      repo: 'https://github.com/chavyleung/scripts/tree/master/qmkg',
-      icons: ['https://raw.githubusercontent.com/Orz-3/mini/master/qmkg.png', 'https://raw.githubusercontent.com/Orz-3/task/master/qmkg.png']
-    },
-    {
-      id: 'bcz',
-      name: '百词斩',
-      keys: ['senku_cookie_bcz', 'senku_key_bcz'],
-      author: '@GideonSenku',
-      repo: 'https://github.com/chavyleung/scripts/tree/master/bcz',
-      icons: ['https://raw.githubusercontent.com/Orz-3/mini/master/bcz.png', 'https://raw.githubusercontent.com/Orz-3/task/master/bcz.png']
-    },
-    {
-      id: 'zxhc',
-      name: '智行火车票',
-      keys: ['senku_signurl_zxhc', 'senku_signheader_zxhc', 'senku_signbody_zxhc'],
-      author: '@GideonSenku',
-      repo: 'https://github.com/chavyleung/scripts/tree/master/zxhc',
-      icons: ['https://raw.githubusercontent.com/Orz-3/mini/master/zxhc.png', 'https://raw.githubusercontent.com/Orz-3/task/master/zxhc.png']
-    },
-    {
-      id: 'fenqile',
-      name: '分期乐',
-      keys: ['senku_signurl_fenqile', 'senku_signheader_fenqile', 'senku_signbody_fenqile', 'senku_signDailyKey_fenqile', 'senku_signDailyUrlKey_fenqile'],
-      author: '@GideonSenku',
-      repo: 'https://github.com/chavyleung/scripts/tree/master/fenqile',
-      icons: ['https://raw.githubusercontent.com/Orz-3/mini/master/fenqile.png', 'https://raw.githubusercontent.com/Orz-3/task/master/fenqile.png']
-    },
-    {
-      id: 'fandeng',
-      name: '樊登读书',
-      keys: ['senku_signurl_pandeng', 'senku_signheader_pandeng', 'senku_signbody_pandeng'],
-      author: '@GideonSenku',
-      repo: 'https://github.com/chavyleung/scripts/tree/master/fandeng',
-      icons: ['https://raw.githubusercontent.com/Orz-3/mini/master/fandeng.png', 'https://raw.githubusercontent.com/Orz-3/task/master/fandeng.png']
-    },
-    {
-      id: 'dbsj',
-      name: '豆瓣时间',
-      keys: ['senku_signurl_dbsj', 'senku_signheader_dbsj', 'senku_signbody_dbsj'],
-      author: '@GideonSenku',
-      repo: 'https://github.com/chavyleung/scripts/tree/master/dbsj',
-      icons: ['https://raw.githubusercontent.com/Orz-3/mini/master/dbsj.png', 'https://raw.githubusercontent.com/Orz-3/task/master/dbsj.png']
-    },
-    {
       id: 'txnews',
       name: '腾讯新闻',
       keys: ['sy_signurl_txnews', 'sy_cookie_txnews', 'sy_signurl_txnews2', 'sy_cookie_txnews2'],
