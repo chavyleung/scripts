@@ -1,7 +1,7 @@
 const $ = new Env('BoxJs')
 $.domain = '8.8.8.8'
 
-$.version = '0.3.1'
+$.version = '0.3.2'
 $.versionType = 'beta'
 $.KEY_sessions = 'chavy_boxjs_sessions'
 $.KEY_versions = 'chavy_boxjs_versions'
@@ -31,7 +31,7 @@ $.html = $.name
   // 处理 Api 请求 => /api
   else if (/^\/api/.test(path)) {
     $.isapi = true
-    handleApi()
+    await handleApi()
   }
   // 处理 Api 请求 => /my
   else if (/^\/my/.test(path)) {
@@ -250,7 +250,7 @@ function getSystemApps() {
 }
 
 function getUserCfgs() {
-  const defcfgs = { favapps: [], appsubs: [] }
+  const defcfgs = { favapps: [], appsubs: [], appsubCaches: {} }
   const userCfgsStr = $.getdata($.KEY_userCfgs)
   return userCfgsStr ? Object.assign(defcfgs, JSON.parse(userCfgsStr)) : defcfgs
 }
@@ -260,36 +260,56 @@ function getGlobalBaks() {
   return globalBaksStr ? JSON.parse(globalBaksStr) : []
 }
 
-async function getAppSubs() {
+async function refreshAppSubs() {
   const usercfgs = getUserCfgs()
-  const appsubs = []
-  const subActs = []
   for (let subIdx = 0; subIdx < usercfgs.appsubs.length; subIdx++) {
     const sub = usercfgs.appsubs[subIdx]
-    subActs.push(
-      new Promise((resolve) => {
-        $.get({ url: sub.url.replace(/[ ]|[\r\n]/g, '') }, (err, resp, data) => {
-          try {
-            const respsub = JSON.parse(data)
-            if (Array.isArray(respsub.apps)) {
-              respsub._raw = sub
-              wrapapps(respsub.apps)
-              appsubs.push(respsub)
-            }
-          } catch (e) {
-            $.logErr(e, resp)
-            sub.isErr = true
-            sub.apps = []
-            sub._raw = JSON.parse(JSON.stringify(sub))
-            appsubs.push(sub)
-          } finally {
-            resolve()
+    const suburl = sub.url.replace(/[ ]|[\r\n]/g, '')
+    await new Promise((resolve) => {
+      $.get({ url: suburl }, (err, resp, data) => {
+        try {
+          const respsub = JSON.parse(data)
+          if (Array.isArray(respsub.apps)) {
+            respsub._raw = sub
+            respsub.updateTime = new Date()
+            wrapapps(respsub.apps)
+            usercfgs.appsubCaches[suburl] = respsub
+            console.log(`更新订阅, 成功! ${suburl}`)
           }
-        })
+        } catch (e) {
+          $.logErr(e, resp)
+          sub.isErr = true
+          sub.apps = []
+          sub._raw = JSON.parse(JSON.stringify(sub))
+          sub.updateTime = new Date()
+          usercfgs.appsubCaches[suburl] = sub
+          console.log(`更新订阅, 失败! ${suburl}`)
+        } finally {
+          resolve()
+        }
       })
-    )
+    })
   }
-  await Promise.all(subActs)
+  $.setdata(JSON.stringify(usercfgs), $.KEY_userCfgs)
+  console.log(`全部订阅, 完成!`)
+}
+
+function getAppSubs() {
+  const usercfgs = getUserCfgs()
+  const appsubs = []
+  for (let subIdx = 0; subIdx < usercfgs.appsubs.length; subIdx++) {
+    const sub = usercfgs.appsubs[subIdx]
+    const suburl = sub.url.replace(/[ ]|[\r\n]/g, '')
+    const cachedsub = usercfgs.appsubCaches[suburl]
+    if (cachedsub) {
+      appsubs.push(cachedsub)
+    } else {
+      sub.isErr = true
+      sub.apps = []
+      sub._raw = JSON.parse(JSON.stringify(sub))
+      appsubs.push(sub)
+    }
+  }
   return appsubs
 }
 
@@ -341,7 +361,8 @@ function getSessions() {
 async function getVersions() {
   let vers = []
   await new Promise((resolve) => {
-    const verurl = 'https://github.com/chavyleung/scripts/raw/master/box/release/box.release.json'
+    setTimeout(resolve, 1000)
+    const verurl = 'https://raw.githubusercontent.com/chavyleung/scripts/master/box/release/box.release.json'
     $.get({ url: verurl }, (err, resp, data) => {
       try {
         const _data = JSON.parse(data)
@@ -349,6 +370,7 @@ async function getVersions() {
       } catch (e) {
         $.logErr(e, resp)
       } finally {
+        console.log(`resolve`)
         resolve()
       }
     })
@@ -370,7 +392,7 @@ function getSystemThemes() {
   ]
 }
 
-function handleApi() {
+async function handleApi() {
   const data = JSON.parse($request.body)
   // 保存会话
   if (data.cmd === 'saveSession') {
@@ -507,6 +529,10 @@ function handleApi() {
       $.msg($.name, $.subt, $.desc)
     }
   }
+  // 刷新应用订阅
+  else if (data.cmd === 'refreshAppSubs') {
+    await refreshAppSubs()
+  }
 }
 
 async function getBoxData() {
@@ -515,7 +541,7 @@ async function getBoxData() {
     versions: await getVersions(),
     sysapps: getSystemApps(),
     userapps: getUserApps(),
-    appsubs: await getAppSubs(),
+    appsubs: getAppSubs(),
     syscfgs: getSystemCfgs(),
     usercfgs: getUserCfgs(),
     globalbaks: getGlobalBaks(),
@@ -892,9 +918,10 @@ function printHtml(data, curapp = null, curview = 'app') {
                   <v-subheader inset>
                     应用订阅 ({{ appsubs.length }})
                     <v-spacer></v-spacer>
+                    <v-btn icon @click="onRefreshAppSubs"><v-icon>mdi-refresh-circle</v-icon></v-btn>
                     <v-btn icon @click="ui.addAppSubDialog.show = true"><v-icon color="green">mdi-plus-circle</v-icon></v-btn>
                   </v-subheader>
-                  <v-list-item three-line dense v-for="(sub, subIdx) in appsubs" :key="sub.id" @click="">
+                  <v-list-item two-line dense v-for="(sub, subIdx) in appsubs" :key="sub.id" @click="">
                     <v-list-item-avatar v-if="sub.icon"><v-img :src="sub.icon"></v-img></v-list-item-avatar>
                     <v-list-item-avatar v-else color="grey"><v-icon dark>mdi-account</v-icon></v-list-item-avatar>
                     <v-list-item-content>
@@ -904,6 +931,7 @@ function printHtml(data, curapp = null, curview = 'app') {
                       </v-list-item-title>
                       <v-list-item-subtitle>{{ sub.repo ? sub.repo : sub._raw.url }}</v-list-item-subtitle>
                       <v-list-item-subtitle color="blue">{{ sub.author ? sub.author : '@anonymous' }}</v-list-item-subtitle>
+                      <v-list-item-subtitle color="blue">更新于: {{ moment(sub.updateTime) }}</v-list-item-subtitle>
                     </v-list-item-content>
                     <v-list-item-action>
                       <v-menu bottom left>
@@ -1189,6 +1217,7 @@ function printHtml(data, curapp = null, curview = 'app') {
       <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
       <script src="https://cdn.jsdelivr.net/npm/axios@0.19.2/dist/axios.min.js"></script>
       <script src="https://cdn.jsdelivr.net/npm/moment@2.26.0/moment.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/timeago.js@4.0.2/dist/timeago.full.min.js"></script>
       <script src="https://cdn.jsdelivr.net/npm/uuid@latest/dist/umd/uuidv4.min.js"></script>
       <script src="https://cdn.jsdelivr.net/npm/vue-clipboard2@0.3.1/dist/vue-clipboard.min.js"></script>
       <script>
@@ -1343,6 +1372,10 @@ function printHtml(data, curapp = null, curview = 'app') {
             }
           },
           methods: {
+            moment(date) {
+              return timeago.format(date, 'zh_CN');
+              // return moment(date).format('YYYY-MM-DD HH:mm:ss')
+            },
             appfilter(item, queryText, itemText) {
               return item.id.includes(queryText) || item.name.includes(queryText)
             },
@@ -1466,6 +1499,10 @@ function printHtml(data, curapp = null, curview = 'app') {
               }
               axios.post('/api', JSON.stringify({ cmd: 'addAppSub', val: sub }))
               this.ui.addAppSubDialog.show = false
+              this.onReload()
+            },
+            onRefreshAppSubs(){
+              axios.post('/api', JSON.stringify({ cmd: 'refreshAppSubs', val: null }))
               this.onReload()
             },
             reload() {
