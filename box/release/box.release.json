@@ -1,6 +1,19 @@
 {
   "releases": [
     {
+      "version": "0.3.2",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "icon": "https://avatars3.githubusercontent.com/u/29748519",
+      "repo": "https://github.com/chavyleung",
+      "notes": [
+        {
+          "name": "调整",
+          "descs": ["应用订阅启用缓存机制 (需要手动更新)"]
+        }
+      ]
+    },
+    {
       "version": "0.3.1",
       "tags": ["beta"],
       "author": "@chavyleung",
