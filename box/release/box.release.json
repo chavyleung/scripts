@@ -1,6 +1,19 @@
 {
   "releases": [
     {
+      "version": "0.3.3",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "icon": "https://avatars3.githubusercontent.com/u/29748519",
+      "repo": "https://github.com/chavyleung",
+      "notes": [
+        {
+          "name": "修复",
+          "descs": ["Loon环境判断错误问题"]
+        }
+      ]
+    },
+    {
       "version": "0.3.2",
       "tags": ["beta"],
       "author": "@chavyleung",
