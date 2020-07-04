@@ -142,6 +142,15 @@
       "author": "@chavyleung",
       "repo": "https://github.com/chavyleung/scripts/tree/master/zimuzu",
       "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/zimuzu.png", "https://raw.githubusercontent.com/Orz-3/task/master/zimuzu.png"]
+    },
+    {
+      "id": "smzdm",
+      "name": "什么值得买",
+      "keys": ["chavy_cookie_smzdm"],
+      "settings": [{ "id": "chavy_accounts_smzdm", "name": "大妈账号", "val": "", "type": "textarea", "placeholder": "账号,密码 (回车) 账号,密码", "autoGrow": true, "rows": 5, "desc": "以英文逗号分隔账号与密码, 回车添加多个账号" }],
+      "author": "@wangfei021325, @chavyleung",
+      "repo": "https://github.com/chavyleung/scripts/tree/master/smzdm",
+      "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/smzdm.png", "https://raw.githubusercontent.com/Orz-3/task/master/smzdm.png"]
     }
   ]
 }
