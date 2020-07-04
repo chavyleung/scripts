@@ -1,6 +1,19 @@
 {
   "releases": [
     {
+      "version": "0.3.5",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "icon": "https://avatars3.githubusercontent.com/u/29748519",
+      "repo": "https://github.com/chavyleung",
+      "notes": [
+        {
+          "name": "修复",
+          "descs": ["获取会话、应用会话、清空会话不生效问题"]
+        }
+      ]
+    },
+    {
       "version": "0.3.4",
       "tags": ["beta"],
       "author": "@chavyleung",

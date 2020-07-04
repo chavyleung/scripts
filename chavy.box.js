@@ -1,7 +1,7 @@
 const $ = new Env('BoxJs')
 $.domain = '8.8.8.8'
 
-$.version = '0.3.4'
+$.version = '0.3.5'
 $.versionType = 'beta'
 $.KEY_sessions = 'chavy_boxjs_sessions'
 $.KEY_versions = 'chavy_boxjs_versions'
@@ -302,6 +302,10 @@ function getAppSubs() {
     const suburl = sub.url.replace(/[ ]|[\r\n]/g, '')
     const cachedsub = usercfgs.appsubCaches[suburl]
     if (cachedsub) {
+      if (Array.isArray(cachedsub.apps)) {
+        cachedsub._raw = sub
+        wrapapps(cachedsub.apps)
+      }
       appsubs.push(cachedsub)
     } else {
       sub.isErr = true
