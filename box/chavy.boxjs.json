@@ -134,6 +134,14 @@
       "author": "@GideonSenku",
       "repo": "https://github.com/chavyleung/scripts/tree/master/dbsj",
       "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/dbsj.png", "https://raw.githubusercontent.com/Orz-3/task/master/dbsj.png"]
+    },
+    {
+      "id": "zimuzu",
+      "name": "字幕组",
+      "keys": ["chavy_cookie_zimuzu", "chavy_auth_url_zimuzu_app"],
+      "author": "@chavyleung",
+      "repo": "https://github.com/chavyleung/scripts/tree/master/zimuzu",
+      "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/zimuzu.png", "https://raw.githubusercontent.com/Orz-3/task/master/zimuzu.png"]
     }
   ]
 }
