@@ -1,6 +1,19 @@
 {
   "releases": [
     {
+      "version": "0.3.8",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "icon": "https://avatars3.githubusercontent.com/u/29748519",
+      "repo": "https://github.com/chavyleung",
+      "notes": [
+        {
+          "name": "优化",
+          "descs": ["刷新窗口增加 3 秒倒数自动刷新", "刷新窗口弹出时会顺便发起更新应用订阅", "可以隐藏手动更新订阅的提示"]
+        }
+      ]
+    },
+    {
       "version": "0.3.7",
       "tags": ["beta"],
       "author": "@chavyleung",
