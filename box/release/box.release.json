@@ -1,6 +1,19 @@
 {
   "releases": [
     {
+      "version": "0.3.6",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "icon": "https://avatars3.githubusercontent.com/u/29748519",
+      "repo": "https://github.com/chavyleung",
+      "notes": [
+        {
+          "name": "修复",
+          "descs": ["部分情况下当前会话变双份问题"]
+        }
+      ]
+    },
+    {
       "version": "0.3.5",
       "tags": ["beta"],
       "author": "@chavyleung",

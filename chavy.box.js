@@ -1,7 +1,7 @@
 const $ = new Env('BoxJs')
 $.domain = '8.8.8.8'
 
-$.version = '0.3.5'
+$.version = '0.3.6'
 $.versionType = 'beta'
 $.KEY_sessions = 'chavy_boxjs_sessions'
 $.KEY_versions = 'chavy_boxjs_versions'
@@ -13,7 +13,6 @@ $.json = $.name
 $.html = $.name
 
 !(async () => {
-  // $.setdata('', 'github')
   const path = getPath($request.url)
   // 处理主页请求 => /home
   if (/^\/home/.test(path)) {
@@ -301,11 +300,10 @@ function getAppSubs() {
     const sub = usercfgs.appsubs[subIdx]
     const suburl = sub.url.replace(/[ ]|[\r\n]/g, '')
     const cachedsub = usercfgs.appsubCaches[suburl]
-    if (cachedsub) {
-      if (Array.isArray(cachedsub.apps)) {
-        cachedsub._raw = sub
-        wrapapps(cachedsub.apps)
-      }
+    if (cachedsub && Array.isArray(cachedsub.apps)) {
+      cachedsub._raw = sub
+      cachedsub.apps.forEach((app) => (app.datas = []))
+      wrapapps(cachedsub.apps)
       appsubs.push(cachedsub)
     } else {
       sub.isErr = true
