@@ -1,6 +1,19 @@
 {
   "releases": [
     {
+      "version": "0.3.7",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "icon": "https://avatars3.githubusercontent.com/u/29748519",
+      "repo": "https://github.com/chavyleung",
+      "notes": [
+        {
+          "name": "修复",
+          "descs": ["部分情况下导入空数据产生的问题 (如: 京东没有账号2, 导入后提示账号 2 签到失败问题)"]
+        }
+      ]
+    },
+    {
       "version": "0.3.6",
       "tags": ["beta"],
       "author": "@chavyleung",

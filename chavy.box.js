@@ -449,7 +449,8 @@ async function handleApi() {
       session.datas.forEach((data) => {
         const oldval = $.getdata(data.key)
         const newval = data.val
-        const usesuc = $.setdata(`${newval}`, data.key)
+        const isNull = (val) => [undefined, null, 'null', 'undefined', ''].includes(val)
+        const usesuc = $.setdata(isNull(newval) ? '' : `${newval}`, data.key)
         $.log(`❕ ${$.name}, 替换数据: ${data.key} ${usesuc ? '成功' : '失败'}!`, `旧值: ${oldval}`, `新值: ${newval}`)
       })
       curSessions[session.appId] = session.id
@@ -522,7 +523,8 @@ async function handleApi() {
       const { chavy_boxjs_sessions, chavy_boxjs_sysCfgs, chavy_boxjs_userCfgs, chavy_boxjs_sysApps, ...datas } = bakobj.bak
       $.setdata(JSON.stringify(chavy_boxjs_sessions), $.KEY_sessions)
       $.setdata(JSON.stringify(chavy_boxjs_userCfgs), $.KEY_userCfgs)
-      Object.keys(datas).forEach((datkey) => $.setdata(datas[datkey] ? datas[datkey] : '', datkey))
+      const isNull = (val) => [undefined, null, 'null', 'undefined', ''].includes(val)
+      Object.keys(datas).forEach((datkey) => $.setdata(isNull(datas[datkey]) ? '' : `${datas[datkey]}`, datkey))
       $.subt = '还原备份: 成功'
       $.msg($.name, $.subt, $.desc)
     } else {
