@@ -1,6 +1,19 @@
 {
   "releases": [
     {
+      "version": "0.3.4",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "icon": "https://avatars3.githubusercontent.com/u/29748519",
+      "repo": "https://github.com/chavyleung",
+      "notes": [
+        {
+          "name": "优化",
+          "descs": ["页面渲染时会先出现一串代码问题", "进入应用订阅页面提示手动刷新", "可以隐藏|显示`我的`标题"]
+        }
+      ]
+    },
+    {
       "version": "0.3.3",
       "tags": ["beta"],
       "author": "@chavyleung",

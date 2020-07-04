@@ -611,10 +611,15 @@ function printHtml(data, curapp = null, curview = 'app') {
       <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet" />
       <link href="https://cdn.jsdelivr.net/npm/@mdi/font@5.x/css/materialdesignicons.min.css" rel="stylesheet" />
       <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet" />
+      <style>
+        [v-cloak]{
+          display: none
+        }
+      </style>
     </head>
     <body>
       <div id="app">
-        <v-app v-scroll="onScroll">
+        <v-app v-scroll="onScroll" v-cloak>
           <v-app-bar :color="ui.appbar.color" app dense>
             <v-menu bottom left v-if="['app', 'home', 'log', 'sub'].includes(ui.curview) && box.syscfgs.env !== ''">
               <template v-slot:activator="{ on }">
@@ -707,11 +712,22 @@ function printHtml(data, curapp = null, curview = 'app') {
               </v-list-item>
               <v-list-item>
                 <v-list-item-content>
-                  <v-switch label="隐藏图标 (Box)" v-model="box.usercfgs.isHideBoxIcon" @change="onUserCfgsChange"></v-switch>
+                  <v-switch label="隐藏悬浮图标" v-model="box.usercfgs.isHideBoxIcon" @change="onUserCfgsChange"></v-switch>
                 </v-list-item-content>
                 <v-list-item-action @click="onLink(box.syscfgs.boxjs.repo)">
                   <v-btn fab small text>
                     <v-avatar size="32"><img :src="box.syscfgs.boxjs.icon" :alt="box.syscfgs.boxjs.repo" /></v-avatar>
+                  </v-btn>
+                </v-list-item-action>
+              </v-list-item>
+              <v-list-item>
+                <v-list-item-content>
+                  <v-switch label="隐藏我的标题" v-model="box.usercfgs.isHideMyTitle" @change="onUserCfgsChange"></v-switch>
+                </v-list-item-content>
+                <v-list-item-action>
+                  <v-btn fab small text>
+                    <v-avatar v-if="box.usercfgs.icon" size="32"><img :src="box.usercfgs.icon" :alt="box.syscfgs.boxjs.repo" /></v-avatar>
+                    <v-icon v-else size="32">mdi-face-profile</v-icon>
                   </v-btn>
                 </v-list-item-action>
               </v-list-item>
@@ -918,7 +934,12 @@ function printHtml(data, curapp = null, curview = 'app') {
                   <v-subheader inset>
                     应用订阅 ({{ appsubs.length }})
                     <v-spacer></v-spacer>
-                    <v-btn icon @click="onRefreshAppSubs"><v-icon>mdi-refresh-circle</v-icon></v-btn>
+                    <v-tooltip v-model="ui.refreshtip.show" bottom>
+                      <template v-slot:activator="{ on }">
+                        <v-btn v-on="on" icon @click="onRefreshAppSubs"><v-icon>mdi-refresh-circle</v-icon></v-btn>
+                      </template>
+                      <span>手动更新订阅</span>
+                    </v-tooltip>
                     <v-btn icon @click="ui.addAppSubDialog.show = true"><v-icon color="green">mdi-plus-circle</v-icon></v-btn>
                   </v-subheader>
                   <v-list-item two-line dense v-for="(sub, subIdx) in appsubs" :key="sub.id" @click="">
@@ -1104,10 +1125,15 @@ function printHtml(data, curapp = null, curview = 'app') {
                 <v-icon>mdi-database</v-icon>
               </v-btn>
               <v-btn value="my">
-                <v-avatar size="32" v-if="box.usercfgs.icon"><v-img :src="box.usercfgs.icon"></v-img></v-avatar>
+                <template v-if="box.usercfgs.icon">
+                  <span v-if="!box.usercfgs.isHideMyTitle">我的</span>
+                  <v-avatar :size="box.usercfgs.isHideMyTitle ? 36 : 24">
+                    <v-img :src="box.usercfgs.icon"></v-img>
+                  </v-avatar>
+                </template>
                 <template v-else>
-                  <span>我的</span>
-                  <v-icon>mdi-face-profile</v-icon>
+                  <span v-if="!box.usercfgs.isHideMyTitle">我的</span>
+                  <v-icon :size="box.usercfgs.isHideMyTitle ? 36 : 24">mdi-face-profile</v-icon>
                 </template>
               </v-btn>
             </v-bottom-navigation>
@@ -1235,6 +1261,7 @@ function printHtml(data, curapp = null, curview = 'app') {
                 curappSessions: null,
                 overlay: { show: false },
                 autocomplete: { curapp: null },
+                refreshtip: { show: false },
                 editProfileDialog: { show: false, bak: '' },
                 impGlobalBakDialog: { show: false, bak: '' },
                 reloadConfirmDialog: { show: false, title: '操作成功', message: '是否马上刷新页面?' },
@@ -1354,6 +1381,7 @@ function printHtml(data, curapp = null, curview = 'app') {
                 } else if (newval === 'sub') {
                   this.ui.curapp = null
                   this.ui.curappSessions = null
+                  this.showRefreshTip()
                   var state = { title: 'BoxJs' }
                   document.title = state.title
                   if (!isFullScreen) {
@@ -1571,6 +1599,10 @@ function printHtml(data, curapp = null, curview = 'app') {
             },
             onCopy(e) {
               this.ui.snackbar.show = true
+            },
+            showRefreshTip() {
+              this.ui.refreshtip.show = true
+              setTimeout(() => this.ui.refreshtip.show = false, 2000)
             }
           },
           mounted: function () {
@@ -1586,6 +1618,9 @@ function printHtml(data, curapp = null, curview = 'app') {
 
             const curver = this.box.syscfgs.version
             const vers = this.box.versions
+            if (this.ui.curview === 'sub') {
+              this.showRefreshTip()
+            }
             if (curver && Array.isArray(vers)) {
               const lastestVer = vers[0].version
               if (curver < lastestVer) {
