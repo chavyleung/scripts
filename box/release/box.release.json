@@ -1,6 +1,19 @@
 {
   "releases": [
     {
+      "version": "0.3.9",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "icon": "https://avatars3.githubusercontent.com/u/29748519",
+      "repo": "https://github.com/chavyleung",
+      "notes": [
+        {
+          "name": "优化",
+          "descs": ["可以复制单个应用订阅地址", "增加底部间距避免界面被悬浮按钮遮挡"]
+        }
+      ]
+    },
+    {
       "version": "0.3.8",
       "tags": ["beta"],
       "author": "@chavyleung",

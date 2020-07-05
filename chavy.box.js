@@ -1,7 +1,7 @@
 const $ = new Env('BoxJs')
 $.domain = '8.8.8.8'
 
-$.version = '0.3.8'
+$.version = '0.3.9'
 $.versionType = 'beta'
 $.KEY_sessions = 'chavy_boxjs_sessions'
 $.KEY_versions = 'chavy_boxjs_versions'
@@ -767,7 +767,7 @@ function printHtml(data, curapp = null, curview = 'app') {
               </v-list-item>
             </v-list>
           </v-navigation-drawer>
-          <v-main :class="box.usercfgs.isHideNavi ? 'mb-0' : 'mb-14'">
+          <v-main :class="box.usercfgs.isHideNavi ? 'mb-0 pb-16' : 'mb-14 pb-16'">
             <v-container fluid v-if="ui.curview === 'app'">
               <v-card class="mx-auto" v-if="favapps.length > 0">
                 <v-list nav dense>
@@ -969,6 +969,10 @@ function printHtml(data, curapp = null, curview = 'app') {
                           <v-btn icon v-on="on"><v-icon>mdi-dots-vertical</v-icon></v-btn>
                         </template>
                         <v-list dense>
+                          <v-list-item @click="" v-clipboard:copy="sub._raw.url" v-clipboard:success="onCopy">
+                            <v-list-item-title>复制</v-list-item-title>
+                          </v-list-item>
+                          <v-divider></v-divider>
                           <v-list-item @click="onDelAppSub(sub)">
                             <v-list-item-title>删除</v-list-item-title>
                           </v-list-item>
