@@ -1,6 +1,19 @@
 {
   "releases": [
     {
+      "version": "0.3.10",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "icon": "https://avatars3.githubusercontent.com/u/29748519",
+      "repo": "https://github.com/chavyleung",
+      "notes": [
+        {
+          "name": "优化",
+          "descs": ["可以把当前会话保存至指定会话 (注意先保存设置再使用`保存至`)", "可以设置刷新等待秒数 (为 0 时直接刷新不弹窗)"]
+        }
+      ]
+    },
+    {
       "version": "0.3.9",
       "tags": ["beta"],
       "author": "@chavyleung",
