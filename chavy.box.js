@@ -1,7 +1,7 @@
 const $ = new Env('BoxJs')
 $.domain = '8.8.8.8'
 
-$.version = '0.3.10'
+$.version = '0.4.0'
 $.versionType = 'beta'
 $.KEY_sessions = 'chavy_boxjs_sessions'
 $.KEY_versions = 'chavy_boxjs_versions'
@@ -408,11 +408,25 @@ async function handleApi() {
     $.msg($.name, $.subt, $.desc.join('\n'))
   }
   // 保存至指定会话
-  if (data.cmd === 'saveSessionTo') {
+  else if (data.cmd === 'saveSessionTo') {
     const { fromapp, toSession } = data.val
     const sessions = getSessions()
     const session = sessions.find((s) => s.id === toSession.id)
     session.datas = fromapp.datas
+    const savesuc = $.setdata(JSON.stringify(sessions), $.KEY_sessions)
+    $.subt = `保存会话: ${savesuc ? '成功' : '失败'} (${session.appName})`
+    $.desc = []
+    $.desc.push(`会话名称: ${session.name}`, `应用名称: ${session.appName}`, `会话编号: ${session.id}`, `应用编号: ${session.appId}`, `数据: ${JSON.stringify(session)}`)
+    $.msg($.name, $.subt, $.desc.join('\n'))
+  }
+  // 修改指定会话
+  else if (data.cmd === 'onModSession') {
+    const sessiondat = data.val
+    const sessions = getSessions()
+    const session = sessions.find((s) => s.id === sessiondat.id)
+    $.log(JSON.stringify(session))
+    session.name = sessiondat.name
+    session.datas = sessiondat.datas
     const savesuc = $.setdata(JSON.stringify(sessions), $.KEY_sessions)
     $.subt = `保存会话: ${savesuc ? '成功' : '失败'} (${session.appName})`
     $.desc = []
@@ -909,7 +923,7 @@ function printHtml(data, curapp = null, curview = 'app') {
                 <v-divider></v-divider>
                 <v-card-actions>
                   <v-spacer></v-spacer>
-                  <v-menu bottom left v-if="ui.curappSessions.length > 0">
+                  <v-menu bottom left v-if="ui.curappSessions && ui.curappSessions.length > 0">
                     <template v-slot:activator="{ on }">
                       <v-btn v-on="on" small text color="success">保存至</v-btn>
                     </template>
@@ -925,6 +939,17 @@ function printHtml(data, curapp = null, curview = 'app') {
               <v-card class="ml-10 mt-4" v-for="(session, sessionIdx) in ui.curappSessions" :key="session.id">
                 <v-subheader>
                   #{{ sessionIdx + 1 }} {{ session.name }}
+                  <v-spacer></v-spacer>
+                  <v-menu bottom left>
+                    <template v-slot:activator="{ on }">
+                      <v-btn icon v-on="on"><v-icon>mdi-dots-vertical</v-icon></v-btn>
+                    </template>
+                    <v-list dense>
+                      <v-list-item @click="ui.modSessionDialog.show = true, ui.modSessionDialog.session = JSON.parse(JSON.stringify(session))">
+                        <v-list-item-title>修改会话</v-list-item-title>
+                      </v-list-item>
+                    </v-list>
+                  </v-menu>
                 </v-subheader>
                 <v-list-item two-line dense v-for="(data, dataIdx) in session.datas" :key="dataIdx">
                   <v-list-item-content>
@@ -961,6 +986,24 @@ function printHtml(data, curapp = null, curview = 'app') {
                     <v-spacer></v-spacer>
                     <v-btn text small color="grey darken-1" text @click="ui.impSessionDialog.show = false">取消</v-btn>
                     <v-btn text small color="success darken-1" text @click="onImpSession">导入</v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
+              <v-dialog v-model="ui.modSessionDialog.show">
+                <v-card v-if="ui.modSessionDialog.session">
+                  <v-card-title>
+                    修改会话
+                  </v-card-title>
+                  <v-divider></v-divider>
+                  <v-card-text>
+                    <v-text-field class="mt-4" v-model="ui.modSessionDialog.session.name" label="会话名称"></v-text-field>
+                    <v-text-field v-for="(data, dataIdx) in ui.modSessionDialog.session.datas" :key="dataIdx" v-model="data.val" :label="data.key"></v-text-field>
+                  </v-card-text>
+                  <v-divider></v-divider>
+                  <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn text small color="grey darken-1" text @click="ui.modSessionDialog.show = false, ui.modSessionDialog.session = null">取消</v-btn>
+                    <v-btn text small color="success darken-1" text @click="onModSession">保存</v-btn>
                   </v-card-actions>
                 </v-card>
               </v-dialog>
@@ -1303,6 +1346,7 @@ function printHtml(data, curapp = null, curview = 'app') {
                 overlay: { show: false },
                 autocomplete: { curapp: null },
                 refreshtip: { show: false },
+                modSessionDialog: { show: false, session: null },
                 editProfileDialog: { show: false, bak: '' },
                 impGlobalBakDialog: { show: false, bak: '' },
                 reloadConfirmDialog: { show: false, sec: 0, title: '操作成功', message: '是否马上刷新页面?' },
@@ -1452,7 +1496,6 @@ function printHtml(data, curapp = null, curview = 'app') {
           methods: {
             moment(date) {
               return timeago.format(date, 'zh_CN');
-              // return moment(date).format('YYYY-MM-DD HH:mm:ss')
             },
             appfilter(item, queryText, itemText) {
               return item.id.includes(queryText) || item.name.includes(queryText)
@@ -1516,6 +1559,10 @@ function printHtml(data, curapp = null, curview = 'app') {
                 toSession: session
               }
               axios.post('/api', JSON.stringify({ cmd: 'saveSessionTo', val }))
+              this.onReload()
+            },
+            onModSession () {
+              axios.post('/api', JSON.stringify({ cmd: 'onModSession', val: this.ui.modSessionDialog.session }))
               this.onReload()
             },
             onSaveSession() {

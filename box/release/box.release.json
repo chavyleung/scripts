@@ -1,6 +1,19 @@
 {
   "releases": [
     {
+      "version": "0.4.0",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "icon": "https://avatars3.githubusercontent.com/u/29748519",
+      "repo": "https://github.com/chavyleung",
+      "notes": [
+        {
+          "name": "新增",
+          "descs": ["可以修改已保存的会话"]
+        }
+      ]
+    },
+    {
       "version": "0.3.10",
       "tags": ["beta"],
       "author": "@chavyleung",
