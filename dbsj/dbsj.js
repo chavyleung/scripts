@@ -20,12 +20,10 @@ function sign() {
     const status = result.auto_check.status
     if (status == "success") {
       subTitle = `签到结果: 成功`
-      detail = `连续签到天数${continuous_check_in_count}`
-    } else if (has_checked == false) {
-      subTitle = `签到结果: 重复`
-    }
-    else if (has_checked == false) {
-      subTitle = `签到结果: 失败`
+      detail = `连续签到天数${continuous_check_in_count}天`
+    } else if (has_checked == 1) {
+      const date = result.today_check.created_at
+      subTitle = `签到结果: 重复 签到时间${date}`
     }
     senku.msg(cookieName, subTitle, detail)
     senku.done()
