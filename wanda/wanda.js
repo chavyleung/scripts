@@ -26,11 +26,11 @@ const mx_api = {
 !(async () => {
     await sign()
     await signRecord()
-    await question_()
-    await question()
-    await answer()
-    await drawprize_ans()
-    await drawprize_ans()
+    // await question_()
+    // await question()
+    // await answer()
+    // await drawprize_ans()
+    // await drawprize_ans()
     if ($.signRecord.data.remainMedal >= 50 ) {
         await lottery()
     }
@@ -224,7 +224,7 @@ function showmsg() {
             const remainMedal = $.signRecord.data.remainMedal
             $.desc.push(`总计获得${totalMedal}能量,剩余可用${remainMedal}能量`)
         }
-        $.subt += ` 答题详情:${$.answer.code == 1 ? `答案:${$.answer.data.answer},获得:${$.answer.data.remainChance}次抽奖`:$.answer.msg}`
+        //$.subt += ` 答题详情:${$.answer.code == 1 ? `答案:${$.answer.data.answer},获得:${$.answer.data.remainChance}次抽奖`:$.answer.msg}`
         $.lottery ? $.desc.push(`签到抽奖:${$.lottery.data.prize.prizeName}`) : ``
         $.msg($.name, $.subt, $.desc.join('\n'))
         resolve()
