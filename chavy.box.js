@@ -1,7 +1,7 @@
 const $ = new Env('BoxJs')
 $.domain = '8.8.8.8'
 
-$.version = '0.4.0'
+$.version = '0.4.1'
 $.versionType = 'beta'
 $.KEY_sessions = 'chavy_boxjs_sessions'
 $.KEY_versions = 'chavy_boxjs_versions'
@@ -362,6 +362,11 @@ function getSessions() {
 
 async function getVersions() {
   let vers = []
+  // 如果启用了修复功能, 则直接返回, 不发送检查版本请求
+  // const usercfgs = getUserCfgs()
+  // if (['true', true].includes(usercfgs.isFixVPN)) {
+  //   return vers
+  // }
   await new Promise((resolve) => {
     setTimeout(resolve, 1000)
     const verurl = 'https://raw.githubusercontent.com/chavyleung/scripts/master/box/release/box.release.json'
@@ -424,7 +429,6 @@ async function handleApi() {
     const sessiondat = data.val
     const sessions = getSessions()
     const session = sessions.find((s) => s.id === sessiondat.id)
-    $.log(JSON.stringify(session))
     session.name = sessiondat.name
     session.datas = sessiondat.datas
     const savesuc = $.setdata(JSON.stringify(sessions), $.KEY_sessions)
@@ -735,6 +739,38 @@ function printHtml(data, curapp = null, curview = 'app') {
                   <v-slider desen label="刷新等待" hide-details ticks="always" min="0" max="5" tick-size="1" v-model="box.usercfgs.refreshsecs" @change="onUserCfgsChange"></v-slider>
                 </v-list-item-content>
                 <v-list-item-action>{{ box.usercfgs.refreshsecs }} 秒</v-list-item-action>
+              </v-list-item>
+              <v-list-item>
+                <v-list-item-content>
+                  <v-switch label="修复断连" v-model="box.usercfgs.isFixVPN" @change="onUserCfgsChange"></v-switch>
+                </v-list-item-content>
+                <v-list-item-action>
+                  <v-dialog v-model="ui.fixvpnDialog" persistent max-width="290">
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-btn fab small text v-on="on" v-bind="attrs">
+                        <v-icon>mdi-information-variant</v-icon>
+                      </v-btn>
+                    </template>
+                    <v-card>
+                      <v-card-title class="headline">修复 VPN 断连 (实验)</v-card-title>
+                      <v-card-text>
+                        打开会导致: 
+                        <ul>
+                          <!-- <li>无法自动检查 BoxJs 版本</li> -->
+                          <li>无法自动刷新应用订阅</li>
+                        </ul>
+                        <p class="mt-4">
+                          注意: 仍可手动刷新订阅 <br />
+                          路径: 底栏 > 订阅 > 刷新 (右上)
+                        </p>
+                      </v-card-text>
+                      <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn color="green darken-1" text @click="ui.fixvpnDialog = false">朕, 知道了!</v-btn>
+                      </v-card-actions>
+                    </v-card>
+                  </v-dialog>
+                </v-list-item-action>
               </v-list-item>
               <v-list-item>
                 <v-list-item-content>
@@ -1635,13 +1671,19 @@ function printHtml(data, curapp = null, curview = 'app') {
               this.onReload()
             },
             onRefreshAppSubs(){
+              if (['true', true].includes(this.box.usercfgs.isFixVPN)) {
+                axios.post('/api', JSON.stringify({ cmd: 'refreshAppSubs', val: null }))
+                this.box.usercfgs.refreshsecs = 3
+              }
               this.onReload()
             },
             reload() {
               window.location.reload()
             },
             onReload() {
-              axios.post('/api', JSON.stringify({ cmd: 'refreshAppSubs', val: null }))
+              if (!['true', true].includes(this.box.usercfgs.isFixVPN)) {
+                axios.post('/api', JSON.stringify({ cmd: 'refreshAppSubs', val: null }))
+              }
               const refreshsecs = this.box.usercfgs.refreshsecs
               const sec = [undefined, null, 'null', 'undefined', ''].includes(refreshsecs) ? 3 : refreshsecs * 1
               if (sec === 0) {

@@ -1,6 +1,19 @@
 {
   "releases": [
     {
+      "version": "0.4.1",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "icon": "https://avatars3.githubusercontent.com/u/29748519",
+      "repo": "https://github.com/chavyleung",
+      "notes": [
+        {
+          "name": "增加",
+          "descs": ["修复VPN断连设置项 (实验)"]
+        }
+      ]
+    },
+    {
       "version": "0.4.0",
       "tags": ["beta"],
       "author": "@chavyleung",
