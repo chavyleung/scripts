@@ -1,7 +1,7 @@
 const $ = new Env('BoxJs')
 $.domain = '8.8.8.8'
 
-$.version = '0.4.1'
+$.version = '0.4.2'
 $.versionType = 'beta'
 $.KEY_sessions = 'chavy_boxjs_sessions'
 $.KEY_versions = 'chavy_boxjs_versions'
@@ -742,38 +742,6 @@ function printHtml(data, curapp = null, curview = 'app') {
               </v-list-item>
               <v-list-item>
                 <v-list-item-content>
-                  <v-switch label="修复断连" v-model="box.usercfgs.isFixVPN" @change="onUserCfgsChange"></v-switch>
-                </v-list-item-content>
-                <v-list-item-action>
-                  <v-dialog v-model="ui.fixvpnDialog" persistent max-width="290">
-                    <template v-slot:activator="{ on, attrs }">
-                      <v-btn fab small text v-on="on" v-bind="attrs">
-                        <v-icon>mdi-information-variant</v-icon>
-                      </v-btn>
-                    </template>
-                    <v-card>
-                      <v-card-title class="headline">修复 VPN 断连 (实验)</v-card-title>
-                      <v-card-text>
-                        打开会导致: 
-                        <ul>
-                          <!-- <li>无法自动检查 BoxJs 版本</li> -->
-                          <li>无法自动刷新应用订阅</li>
-                        </ul>
-                        <p class="mt-4">
-                          注意: 仍可手动刷新订阅 <br />
-                          路径: 底栏 > 订阅 > 刷新 (右上)
-                        </p>
-                      </v-card-text>
-                      <v-card-actions>
-                        <v-spacer></v-spacer>
-                        <v-btn color="green darken-1" text @click="ui.fixvpnDialog = false">朕, 知道了!</v-btn>
-                      </v-card-actions>
-                    </v-card>
-                  </v-dialog>
-                </v-list-item-action>
-              </v-list-item>
-              <v-list-item>
-                <v-list-item-content>
                   <v-switch label="透明图标" v-model="box.usercfgs.isTransparentIcons" @change="onUserCfgsChange"></v-switch>
                 </v-list-item-content>
                 <v-list-item-action @click="onLink(box.syscfgs.orz3.repo)">
@@ -1222,9 +1190,6 @@ function printHtml(data, curapp = null, curview = 'app') {
                 </v-card-actions>
               </v-card>
             </v-dialog>
-            <v-overlay v-model="ui.overlay.show">
-              <v-progress-circular indeterminate size="64"></v-progress-circular>
-            </v-overlay>
           </v-main>
           <v-expand-transition>
             <v-bottom-navigation v-model="ui.curview" app v-show="ui.navi.show && !box.usercfgs.isHideNavi">
@@ -1357,6 +1322,9 @@ function printHtml(data, curapp = null, curview = 'app') {
               </v-card>
             </v-sheet>
           </v-bottom-sheet>
+          <v-overlay v-model="ui.overlay.show" :opacity="0.7">
+            <v-progress-circular indeterminate size="64"></v-progress-circular>
+          </v-overlay>
         </v-app>
       </div>
       <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
@@ -1586,20 +1554,26 @@ function printHtml(data, curapp = null, curview = 'app') {
             },
             onClearCurAppSessionData(app, datas, data) {
               data.val = ''
-              axios.post('/api', JSON.stringify({ cmd: 'saveCurAppSession', val: app }))
-              this.onReload()
+              this.ui.overlay.show = true
+              axios.post('/api', JSON.stringify({ cmd: 'saveCurAppSession', val: app })).finally(() => {
+                this.onReload()
+              })
             },
             onSaveSessionTo(session) {
               const val = {
                 fromapp: this.ui.curapp,
                 toSession: session
               }
-              axios.post('/api', JSON.stringify({ cmd: 'saveSessionTo', val }))
-              this.onReload()
+              this.ui.overlay.show = true
+              axios.post('/api', JSON.stringify({ cmd: 'saveSessionTo', val })).finally(() => {
+                this.onReload()
+              })
             },
             onModSession () {
-              axios.post('/api', JSON.stringify({ cmd: 'onModSession', val: this.ui.modSessionDialog.session }))
-              this.onReload()
+              this.ui.overlay.show = true
+              axios.post('/api', JSON.stringify({ cmd: 'onModSession', val: this.ui.modSessionDialog.session })).finally(() => {
+                this.onReload()
+              })
             },
             onSaveSession() {
               const session = {
@@ -1616,8 +1590,10 @@ function printHtml(data, curapp = null, curview = 'app') {
               axios.post('/api', JSON.stringify({ cmd: 'saveSession', val: session }))
             },
             onSaveSettings() {
-              axios.post('/api', JSON.stringify({ cmd: 'saveSettings', val: this.ui.curapp.settings }))
-              this.onReload()
+              this.ui.overlay.show = true
+              axios.post('/api', JSON.stringify({ cmd: 'saveSettings', val: this.ui.curapp.settings })).finally(() => {
+                this.onReload()
+              })
             },
             onImpSessionPaste() {
               navigator.clipboard.readText().then((text) => {
@@ -1654,8 +1630,10 @@ function printHtml(data, curapp = null, curview = 'app') {
                 }
                 this.box.sessions.push(session)
                 this.ui.curappSessions.push(session)
-                axios.post('/api', JSON.stringify({ cmd: 'saveSession', val: session }))
-                this.ui.impSessionDialog.show = false
+                this.ui.overlay.show = true
+                axios.post('/api', JSON.stringify({ cmd: 'saveSession', val: session })).finally(() => {
+                  this.ui.impSessionDialog.show = false
+                })
               } else {
                 alert('导入失败! 原因: appId 为空?')
               }
@@ -1666,44 +1644,48 @@ function printHtml(data, curapp = null, curview = 'app') {
                 url: this.ui.addAppSubDialog.url,
                 enable: true
               }
-              axios.post('/api', JSON.stringify({ cmd: 'addAppSub', val: sub }))
-              this.ui.addAppSubDialog.show = false
-              this.onReload()
+              this.ui.overlay.show = true
+              axios.post('/api', JSON.stringify({ cmd: 'addAppSub', val: sub })).finally(() => {
+                this.ui.addAppSubDialog.show = false
+                this.onReload()
+              })
             },
             onRefreshAppSubs(){
-              if (['true', true].includes(this.box.usercfgs.isFixVPN)) {
-                axios.post('/api', JSON.stringify({ cmd: 'refreshAppSubs', val: null }))
+              this.ui.overlay.show = true
+              axios.post('/api', JSON.stringify({ cmd: 'refreshAppSubs', val: null })).finally(() => {
                 this.box.usercfgs.refreshsecs = 3
-              }
+              })
               this.onReload()
             },
             reload() {
               window.location.reload()
             },
             onReload() {
-              if (!['true', true].includes(this.box.usercfgs.isFixVPN)) {
-                axios.post('/api', JSON.stringify({ cmd: 'refreshAppSubs', val: null }))
-              }
               const refreshsecs = this.box.usercfgs.refreshsecs
               const sec = [undefined, null, 'null', 'undefined', ''].includes(refreshsecs) ? 3 : refreshsecs * 1
               if (sec === 0) {
                 this.reload()
               } else {
+                this.ui.overlay.show = false
                 this.ui.reloadConfirmDialog.show = true
                 this.ui.reloadConfirmDialog.sec = sec
               }
             },
             onDelSession(session) {
-              axios.post('/api', JSON.stringify({ cmd: 'delSession', val: session }))
-              const sessionIdx = this.box.sessions.findIndex((s) => session.id === s.id)
-              if (this.box.sessions.splice(sessionIdx, 1) !== -1) {
-                this.ui.curappSessions = this.box.sessions.filter((s) => s.appId === this.ui.curapp.id)
-              }
+              this.ui.overlay.show = true
+              axios.post('/api', JSON.stringify({ cmd: 'delSession', val: session })).finally(() => {
+                const sessionIdx = this.box.sessions.findIndex((s) => session.id === s.id)
+                if (this.box.sessions.splice(sessionIdx, 1) !== -1) {
+                  this.ui.curappSessions = this.box.sessions.filter((s) => s.appId === this.ui.curapp.id)
+                }
+              })
             },
             onUseSession(session) {
-              axios.post('/api', JSON.stringify({ cmd: 'useSession', val: session }))
-              this.ui.curapp.datas = JSON.parse(JSON.stringify(session.datas))
-              this.onReload()
+              this.ui.overlay.show = true
+              axios.post('/api', JSON.stringify({ cmd: 'useSession', val: session })).finally(() => {
+                this.ui.curapp.datas = JSON.parse(JSON.stringify(session.datas))
+                this.onReload()
+              })
             },
             onImpGlobalBak() {
               const env = this.box.syscfgs.env
@@ -1721,8 +1703,10 @@ function printHtml(data, curapp = null, curview = 'app') {
               bakobj.tags = [env, version, versionType]
               this.box.globalbaks.push(bakobj)
               this.ui.impGlobalBakDialog.show = false
-              axios.post('/api', JSON.stringify({ cmd: 'globalBak', val: bakobj }))
-              this.onReload()
+              this.ui.overlay.show = true
+              axios.post('/api', JSON.stringify({ cmd: 'globalBak', val: bakobj })).finally(() => {
+                this.onReload()
+              })
             },
             onGlobalBak() {
               const env = this.box.syscfgs.env
@@ -1748,8 +1732,10 @@ function printHtml(data, curapp = null, curview = 'app') {
               axios.post('/api', JSON.stringify({ cmd: 'delGlobalBak', val: id }))
             },
             onRevertGlobalBak(id) {
-              axios.post('/api', JSON.stringify({ cmd: 'revertGlobalBak', val: id }))
-              this.onReload()
+              this.ui.overlay.show = true
+              axios.post('/api', JSON.stringify({ cmd: 'revertGlobalBak', val: id })).finally(() => {
+                this.onReload()
+              })
             },
             onCopy(e) {
               this.ui.snackbar.show = true

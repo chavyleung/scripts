@@ -1,6 +1,23 @@
 {
   "releases": [
     {
+      "version": "0.4.2",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "icon": "https://avatars3.githubusercontent.com/u/29748519",
+      "repo": "https://github.com/chavyleung",
+      "notes": [
+        {
+          "name": "修复",
+          "descs": ["部分情况下保存数据不生效问题 (实验)", "Rewrite正则 (注意更新正则)"]
+        },
+        {
+          "name": "移除",
+          "descs": ["修复VPN断连设置项", "自动更新订阅 (可手动更新)"]
+        }
+      ]
+    },
+    {
       "version": "0.4.1",
       "tags": ["beta"],
       "author": "@chavyleung",
