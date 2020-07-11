@@ -1,6 +1,19 @@
 {
   "releases": [
     {
+      "version": "0.4.3",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "icon": "https://avatars3.githubusercontent.com/u/29748519",
+      "repo": "https://github.com/chavyleung",
+      "notes": [
+        {
+          "name": "修复",
+          "descs": ["删除&导入会话时 Loading 动画不能自动消失问题"]
+        }
+      ]
+    },
+    {
       "version": "0.4.2",
       "tags": ["beta"],
       "author": "@chavyleung",

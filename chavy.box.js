@@ -1,7 +1,7 @@
 const $ = new Env('BoxJs')
 $.domain = '8.8.8.8'
 
-$.version = '0.4.2'
+$.version = '0.4.3'
 $.versionType = 'beta'
 $.KEY_sessions = 'chavy_boxjs_sessions'
 $.KEY_versions = 'chavy_boxjs_versions'
@@ -1611,6 +1611,7 @@ function printHtml(data, curapp = null, curview = 'app') {
               })
             },
             onImpSession() {
+              this.ui.overlay.show = true
               const impjson = this.ui.impSessionDialog.impval
               const impSession = impjson && JSON.parse(impjson)
               if (impSession && impSession.id && impSession.id === this.ui.curapp.id) {
@@ -1630,11 +1631,12 @@ function printHtml(data, curapp = null, curview = 'app') {
                 }
                 this.box.sessions.push(session)
                 this.ui.curappSessions.push(session)
-                this.ui.overlay.show = true
                 axios.post('/api', JSON.stringify({ cmd: 'saveSession', val: session })).finally(() => {
                   this.ui.impSessionDialog.show = false
+                  this.ui.overlay.show = false
                 })
               } else {
+                this.ui.overlay.show = false
                 alert('导入失败! 原因: appId 为空?')
               }
             },
@@ -1678,6 +1680,7 @@ function printHtml(data, curapp = null, curview = 'app') {
                 if (this.box.sessions.splice(sessionIdx, 1) !== -1) {
                   this.ui.curappSessions = this.box.sessions.filter((s) => s.appId === this.ui.curapp.id)
                 }
+                this.ui.overlay.show = false
               })
             },
             onUseSession(session) {
@@ -1688,6 +1691,7 @@ function printHtml(data, curapp = null, curview = 'app') {
               })
             },
             onImpGlobalBak() {
+              this.ui.overlay.show = true
               const env = this.box.syscfgs.env
               const version = this.box.syscfgs.version
               const versionType = this.box.syscfgs.versionType
@@ -1703,7 +1707,6 @@ function printHtml(data, curapp = null, curview = 'app') {
               bakobj.tags = [env, version, versionType]
               this.box.globalbaks.push(bakobj)
               this.ui.impGlobalBakDialog.show = false
-              this.ui.overlay.show = true
               axios.post('/api', JSON.stringify({ cmd: 'globalBak', val: bakobj })).finally(() => {
                 this.onReload()
               })
