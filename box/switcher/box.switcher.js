@@ -26,6 +26,7 @@ function execSwitch() {
       const app = apps[appId]
       app.sessions.push(session)
     })
+    const switchkeys = {}
     Object.keys(apps).forEach((appId) => {
       const app = apps[appId]
       if (app.sessions.length <= 1) {
@@ -40,9 +41,27 @@ function execSwitch() {
       const isNewRound = curSessionIdx + 1 === app.sessions.length
       const nextSessionIdx = isNewRound ? 0 : curSessionIdx + 1
       const nextSession = app.sessions[nextSessionIdx]
-      nextSession.datas.forEach((_data) => $.setdata([undefined, null, 'undefined', 'null', ''].includes(_data.val) ? '' : _data.val, _data.key))
+      nextSession.datas.forEach((_data) => {
+        const key = _data.key
+        const val = [undefined, null, 'undefined', 'null', ''].includes(_data.val) ? '' : _data.val
+        if (switchkeys[key]) {
+          const swData = switchkeys[key]
+          const isClash = swData.val !== val ? true : false
+          if (isClash) {
+            nextSession.isClash = true
+            $.log('', `⚠️【${key}】冲突: `, `   ${nextSession.appName}.${nextSession.name} => ${swData.session.appName}.${swData.session.name}`)
+          }
+        } else {
+          switchkeys[key] = {}
+          const swData = switchkeys[key]
+          swData.val = val
+          swData.session = nextSession
+        }
+        $.setdata(val, key)
+      })
       curSessions[appId] = nextSession.id
-      $.desc.push(`${curSession.appName}: ${curSession.name} => #${nextSessionIdx + 1} ${nextSession.name} ${isNewRound ? '(新一轮)' : ''}`)
+      const clashstr = nextSession.isClash === true ? ' (冲突)' : ''
+      $.desc.push(`${curSession.appName}: ${curSession.name} => #${nextSessionIdx + 1} ${nextSession.name}${clashstr} ${isNewRound ? '(新一轮)' : ''}`)
     })
     $.setdata(JSON.stringify(curSessions), $.KEY_curSessions)
     resove()
