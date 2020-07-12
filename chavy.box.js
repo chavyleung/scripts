@@ -1,7 +1,7 @@
 const $ = new Env('BoxJs')
 $.domain = '8.8.8.8'
 
-$.version = '0.4.4'
+$.version = '0.4.5'
 $.versionType = 'beta'
 $.KEY_sessions = 'chavy_boxjs_sessions'
 $.KEY_versions = 'chavy_boxjs_versions'
@@ -866,7 +866,7 @@ function printHtml(data, curapp = null, curview = 'app') {
                   </v-expansion-panel-content>
                 </v-expansion-panel>
               </v-expansion-panels>
-              <v-expansion-panels class="mx-auto mt-4" v-if="favapps.length > 0" multiple v-model="box.usercfgs.sysapppanel">
+              <v-expansion-panels class="mx-auto mt-4" v-if="box.sysapps.length > 0" multiple v-model="box.usercfgs.sysapppanel">
                 <v-expansion-panel>
                   <v-expansion-panel-header>
                   内置应用 ({{ box.sysapps.length }})
