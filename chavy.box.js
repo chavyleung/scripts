@@ -1,7 +1,7 @@
 const $ = new Env('BoxJs')
 $.domain = '8.8.8.8'
 
-$.version = '0.4.5'
+$.version = '0.4.6'
 $.versionType = 'beta'
 $.KEY_sessions = 'chavy_boxjs_sessions'
 $.KEY_versions = 'chavy_boxjs_versions'
@@ -64,9 +64,9 @@ function getSystemCfgs() {
     version: $.version,
     versionType: $.versionType,
     envs: [
-      { id: 'Surge', icon: 'https://raw.githubusercontent.com/Orz-3/task/master/surge.png' },
-      { id: 'QuanX', icon: 'https://raw.githubusercontent.com/Orz-3/task/master/quantumultx.png' },
-      { id: 'Loon', icon: 'https://raw.githubusercontent.com/Orz-3/task/master/loon.png' }
+      { id: 'Surge', icons: ['https://raw.githubusercontent.com/Orz-3/mini/none/surge.png', 'https://raw.githubusercontent.com/Orz-3/task/master/surge.png'] },
+      { id: 'QuanX', icons: ['https://raw.githubusercontent.com/Orz-3/mini/none/quanX.png', 'https://raw.githubusercontent.com/Orz-3/task/master/quantumultx.png'] },
+      { id: 'Loon', icons: ['https://raw.githubusercontent.com/Orz-3/mini/none/loon.png', 'https://raw.githubusercontent.com/Orz-3/task/master/loon.png'] }
     ],
     chavy: {
       id: 'Chavy Scripts',
@@ -82,6 +82,7 @@ function getSystemCfgs() {
       id: 'BoxJs',
       show: false,
       icon: 'https://raw.githubusercontent.com/Orz-3/task/master/box.png',
+      icons: ['https://raw.githubusercontent.com/Orz-3/mini/master/box.png', 'https://raw.githubusercontent.com/Orz-3/task/master/box.png'],
       repo: 'https://github.com/chavyleung/scripts'
     }
   }
@@ -659,13 +660,13 @@ function printHtml(data, curapp = null, curview = 'app') {
               <template v-slot:activator="{ on }">
                 <v-btn icon v-on="on">
                   <v-avatar size="26">
-                    <img :src="box.syscfgs.envs.find(e=>e.id===box.syscfgs.env).icon" alt="box.syscfgs.env" />
+                    <img :src="box.syscfgs.envs.find(e=>e.id===box.syscfgs.env).icons[box.usercfgs.isTransparentIcons ? 0 : 1]" alt="box.syscfgs.env" />
                   </v-avatar>
                 </v-btn>
               </template>
               <v-list dense>
                 <v-list-item v-for="(env, envIdx) in box.syscfgs.envs" :key="env.id" @click="box.syscfgs.env=env.id">
-                  <v-list-item-avatar size="24"><v-img :src="env.icon"></v-img></v-list-item-avatar>
+                  <v-list-item-avatar size="24"><v-img :src="env.icons[box.usercfgs.isTransparentIcons ? 0 : 1]"></v-img></v-list-item-avatar>
                   <v-list-item-title>{{ env.id }}</v-list-item-title>
                 </v-list-item>
               </v-list>
@@ -683,7 +684,10 @@ function printHtml(data, curapp = null, curview = 'app') {
                     <v-list-item-subtitle>{{ item.author }}</v-list-item-subtitle>
                   </v-list-item-content>
                   <v-list-item-action>
-                    <v-btn icon v-if="item.isFav" @click.stop="onFav(item)"><v-icon color="yellow darken-2">mdi-star</v-icon></v-btn>
+                    <v-btn icon v-if="item.isFav" @click.stop="onFav(item)">
+                      <v-icon v-if="box.usercfgs.isTransparentIcons" color="white">mdi-star</v-icon>
+                      <v-icon v-else color="yellow darken-2">mdi-star</v-icon>
+                    </v-btn>
                     <v-btn icon v-else @click.stop="onFav(item)"><v-icon color="grey">mdi-star-outline</v-icon></v-btn>
                   </v-list-item-action>
                 </v-list-item>
@@ -700,7 +704,7 @@ function printHtml(data, curapp = null, curview = 'app') {
               <template v-slot:activator>
                 <v-btn fab>
                   <v-avatar size="48">
-                    <img :src="box.syscfgs.boxjs.icon" :alt="box.syscfgs.boxjs.repo" />
+                    <img :src="box.syscfgs.boxjs.icons[box.usercfgs.isTransparentIcons ? 0 : 1]" :alt="box.syscfgs.boxjs.repo" />
                   </v-avatar>
                 </v-btn>
               </template>
@@ -756,7 +760,7 @@ function printHtml(data, curapp = null, curview = 'app') {
                 </v-list-item-content>
                 <v-list-item-action @click="onLink(box.syscfgs.boxjs.repo)">
                   <v-btn fab small text>
-                    <v-avatar size="32"><img :src="box.syscfgs.boxjs.icon" :alt="box.syscfgs.boxjs.repo" /></v-avatar>
+                    <v-avatar size="32"><img :src="box.syscfgs.boxjs.icons[box.usercfgs.isTransparentIcons ? 0 : 1]" :alt="box.syscfgs.boxjs.repo" /></v-avatar>
                   </v-btn>
                 </v-list-item-action>
               </v-list-item>
@@ -858,7 +862,10 @@ function printHtml(data, curapp = null, curview = 'app') {
                           <v-list-item-subtitle color="blue">{{ app.author }}</v-list-item-subtitle>
                         </v-list-item-content>
                         <v-list-item-action>
-                          <v-btn icon v-if="app.isFav" @click.stop="onFav(app, appIdx)"><v-icon color="yellow darken-2">mdi-star</v-icon></v-btn>
+                          <v-btn icon v-if="app.isFav" @click.stop="onFav(app, appIdx)">
+                            <v-icon v-if="box.usercfgs.isTransparentIcons" color="white">mdi-star</v-icon>
+                            <v-icon v-else color="yellow darken-2">mdi-star</v-icon>
+                          </v-btn>
                           <v-btn icon v-else @click.stop="onFav(app, appIdx)"><v-icon color="grey">mdi-star-outline</v-icon></v-btn>
                         </v-list-item-action>
                       </v-list-item>
@@ -881,7 +888,10 @@ function printHtml(data, curapp = null, curview = 'app') {
                         <v-list-item-subtitle color="blue">{{ app.author }}</v-list-item-subtitle>
                       </v-list-item-content>
                       <v-list-item-action>
-                        <v-btn icon v-if="app.isFav" @click.stop="onFav(app, appIdx)"><v-icon color="yellow darken-2">mdi-star</v-icon></v-btn>
+                        <v-btn icon v-if="app.isFav" @click.stop="onFav(app, appIdx)">
+                          <v-icon v-if="box.usercfgs.isTransparentIcons" color="white">mdi-star</v-icon>
+                          <v-icon v-else color="yellow darken-2">mdi-star</v-icon>
+                        </v-btn>
                         <v-btn icon v-else @click.stop="onFav(app, appIdx)"><v-icon color="grey">mdi-star-outline</v-icon></v-btn>
                       </v-list-item-action>
                     </v-list-item>
@@ -1270,13 +1280,13 @@ function printHtml(data, curapp = null, curview = 'app') {
                   <template v-slot:activator="{ on }">
                     <v-btn icon v-on="on">
                       <v-avatar size="26">
-                        <img :src="box.syscfgs.envs.find(e=>e.id===box.syscfgs.env).icon" alt="box.syscfgs.env" />
+                        <img :src="box.syscfgs.envs.find(e=>e.id===box.syscfgs.env).icons[box.usercfgs.isTransparentIcons ? 0 : 1]" alt="box.syscfgs.env" />
                       </v-avatar>
                     </v-btn>
                   </template>
                   <v-list dense>
                     <v-list-item v-for="(env, envIdx) in box.syscfgs.envs" :key="env.id" @click="box.syscfgs.env=env.id">
-                      <v-list-item-avatar size="24"><v-img :src="env.icon"></v-img></v-list-item-avatar>
+                      <v-list-item-avatar size="24"><v-img :src="env.icons[box.usercfgs.isTransparentIcons ? 0 : 1]"></v-img></v-list-item-avatar>
                       <v-list-item-title>{{ env.id }}</v-list-item-title>
                     </v-list-item>
                   </v-list>

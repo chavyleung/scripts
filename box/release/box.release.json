@@ -1,6 +1,19 @@
 {
   "releases": [
     {
+      "version": "0.4.6",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "icon": "https://avatars3.githubusercontent.com/u/29748519",
+      "repo": "https://github.com/chavyleung",
+      "notes": [
+        {
+          "name": "优化",
+          "descs": ["透明图标处理"]
+        }
+      ]
+    },
+    {
       "version": "0.4.5",
       "tags": ["beta"],
       "author": "@chavyleung",
