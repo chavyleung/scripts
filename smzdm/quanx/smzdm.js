@@ -1,6 +1,7 @@
 const $ = new Env('什么值得买')
 $.VAL_cookies = $.getdata('chavy_cookie_smzdm')
 $.VAl_accounts = $.getdata('chavy_accounts_smzdm')
+$.CFG_tokens = 'chavy_tokens_smzdm'
 
 !(async () => {
   await signweb()
@@ -34,20 +35,29 @@ async function signapp() {
   for (let accIdx = 0; accIdx < accounts.length; accIdx++) {
     const account = accounts[accIdx]
     await loginapp(account)
-    await $.wait(1000)
+    await $.wait(account.isCached ? 0 : 3000)
     await signinapp(account)
-    await $.wait(1000)
+    await $.wait(accIdx + 1 === accounts.length ? 0 : 3000)
   }
   $.accounts = accounts
 }
 
 function loginapp(account) {
+  const tokens = getTokens()
+  if (tokens[account.acc]) {
+    account.isCached = true
+    account.token = tokens[account.acc]
+    return
+  }
   return new Promise((resove) => {
     const url = { url: 'https://api.smzdm.com/v1/user/login', headers: {} }
     url.body = `user_login=${account.acc}&user_pass=${account.pwd}&f=win`
     $.post(url, (err, resp, data) => {
       try {
         account.token = $.lodash_get(JSON.parse(data), 'data.token')
+        const tokens = getTokens()
+        tokens[account.acc] = account.token
+        $.setdata(JSON.stringify(tokens), $.CFG_tokens)
       } catch (e) {
         $.logErr(e, resp)
       } finally {
@@ -89,6 +99,11 @@ function getAccounts() {
       }
     })
   return accounts
+}
+
+function getTokens() {
+  const tokendat = $.getdata($.CFG_tokens)
+  return [undefined, null, 'null', 'undefined', ''].includes(tokendat) ? {} : JSON.parse(tokendat)
 }
 
 function showmsg() {
