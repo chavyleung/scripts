@@ -272,7 +272,7 @@ async function refreshAppSubs() {
           if (Array.isArray(respsub.apps)) {
             respsub._raw = sub
             respsub.updateTime = new Date()
-            wrapapps(respsub.apps)
+            // wrapapps(respsub.apps)
             usercfgs.appsubCaches[suburl] = respsub
             console.log(`更新订阅, 成功! ${suburl}`)
           }

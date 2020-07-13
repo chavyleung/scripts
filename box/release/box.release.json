@@ -1,6 +1,19 @@
 {
   "releases": [
     {
+      "version": "0.4.7",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "icon": "https://avatars3.githubusercontent.com/u/29748519",
+      "repo": "https://github.com/chavyleung",
+      "notes": [
+        {
+          "name": "修复",
+          "descs": ["部分情况下无法清空会话数值问题 (更新脚本后, 需要手动刷新下订阅)"]
+        }
+      ]
+    },
+    {
       "version": "0.4.6",
       "tags": ["beta"],
       "author": "@chavyleung",
