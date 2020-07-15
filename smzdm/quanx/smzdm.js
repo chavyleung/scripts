@@ -4,8 +4,8 @@ $.VAl_accounts = $.getdata('chavy_accounts_smzdm')
 $.CFG_tokens = 'chavy_tokens_smzdm'
 
 !(async () => {
-  await signweb()
   await signapp()
+  await signweb()
   await showmsg()
 })()
   .catch((e) => $.logErr(e))
@@ -37,7 +37,7 @@ async function signapp() {
     await loginapp(account)
     await $.wait(account.isCached ? 0 : 3000)
     await signinapp(account)
-    await $.wait(accIdx + 1 === accounts.length ? 0 : 3000)
+    await $.wait(3000)
   }
   $.accounts = accounts
 }
