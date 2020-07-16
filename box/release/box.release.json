@@ -1,6 +1,19 @@
 {
   "releases": [
     {
+      "version": "0.4.9",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "icon": "https://avatars3.githubusercontent.com/u/29748519",
+      "repo": "https://github.com/chavyleung",
+      "notes": [
+        {
+          "name": "新增 (面向开发者)",
+          "descs": ["单选组控件", "多选组控件"]
+        }
+      ]
+    },
+    {
       "version": "0.4.8",
       "tags": ["beta"],
       "author": "@chavyleung",
