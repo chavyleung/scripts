@@ -1,7 +1,7 @@
 const $ = new Env('BoxJs')
 $.domain = '8.8.8.8'
 
-$.version = '0.4.7'
+$.version = '0.4.8'
 $.versionType = 'beta'
 $.KEY_sessions = 'chavy_boxjs_sessions'
 $.KEY_versions = 'chavy_boxjs_versions'
@@ -260,38 +260,44 @@ function getGlobalBaks() {
   return globalBaksStr ? JSON.parse(globalBaksStr) : []
 }
 
+async function refreshAppSub(sub) {
+  const usercfgs = getUserCfgs()
+  const suburl = sub.url.replace(/[ ]|[\r\n]/g, '')
+  await new Promise((resolve) => {
+    $.get({ url: suburl }, (err, resp, data) => {
+      try {
+        const respsub = JSON.parse(data)
+        if (Array.isArray(respsub.apps)) {
+          respsub._raw = sub
+          respsub.updateTime = new Date()
+          usercfgs.appsubCaches[suburl] = respsub
+          console.log(`更新订阅, 成功! ${suburl}`)
+        }
+      } catch (e) {
+        $.logErr(e, resp)
+        sub.isErr = true
+        sub.apps = []
+        sub._raw = JSON.parse(JSON.stringify(sub))
+        sub.updateTime = new Date()
+        usercfgs.appsubCaches[suburl] = sub
+        console.log(`更新订阅, 失败! ${suburl}`)
+      } finally {
+        resolve()
+      }
+    })
+  })
+  $.setdata(JSON.stringify(usercfgs), $.KEY_userCfgs)
+}
+
 async function refreshAppSubs() {
+  $.msg($.name, '更新订阅: 开始!')
   const usercfgs = getUserCfgs()
   for (let subIdx = 0; subIdx < usercfgs.appsubs.length; subIdx++) {
-    const sub = usercfgs.appsubs[subIdx]
-    const suburl = sub.url.replace(/[ ]|[\r\n]/g, '')
-    await new Promise((resolve) => {
-      $.get({ url: suburl }, (err, resp, data) => {
-        try {
-          const respsub = JSON.parse(data)
-          if (Array.isArray(respsub.apps)) {
-            respsub._raw = sub
-            respsub.updateTime = new Date()
-            // wrapapps(respsub.apps)
-            usercfgs.appsubCaches[suburl] = respsub
-            console.log(`更新订阅, 成功! ${suburl}`)
-          }
-        } catch (e) {
-          $.logErr(e, resp)
-          sub.isErr = true
-          sub.apps = []
-          sub._raw = JSON.parse(JSON.stringify(sub))
-          sub.updateTime = new Date()
-          usercfgs.appsubCaches[suburl] = sub
-          console.log(`更新订阅, 失败! ${suburl}`)
-        } finally {
-          resolve()
-        }
-      })
-    })
+    await refreshAppSub(usercfgs.appsubs[subIdx])
   }
-  $.setdata(JSON.stringify(usercfgs), $.KEY_userCfgs)
-  console.log(`全部订阅, 完成!`)
+  const endTime = new Date().getTime()
+  const costTime = (endTime - $.startTime) / 1000
+  $.msg($.name, `更新订阅: 完成! 🕛 ${costTime} 秒`)
 }
 
 function getAppSubs() {
@@ -378,7 +384,6 @@ async function getVersions() {
       } catch (e) {
         $.logErr(e, resp)
       } finally {
-        console.log(`resolve`)
         resolve()
       }
     })
@@ -512,10 +517,15 @@ async function handleApi() {
   }
   // 添加应用订阅
   else if (data.cmd === 'addAppSub') {
+    $.msg($.name, '添加订阅: 开始!')
     const sub = data.val
     const usercfgs = getUserCfgs()
     usercfgs.appsubs.push(sub)
     $.setdata(JSON.stringify(usercfgs), $.KEY_userCfgs)
+    await refreshAppSub(data.val)
+    const endTime = new Date().getTime()
+    const costTime = (endTime - $.startTime) / 1000
+    $.msg($.name, `添加订阅: 完成! 🕛 ${costTime} 秒`)
   }
   // 删除应用订阅
   else if (data.cmd === 'delAppSub') {
@@ -738,7 +748,7 @@ function printHtml(data, curapp = null, curview = 'app') {
                 </v-list-item-content>
               </v-list-item>
               <v-divider></v-divider>
-              <v-list-item>
+              <v-list-item v-if="false">
                 <v-list-item-content>
                   <v-slider desen label="刷新等待" hide-details ticks="always" min="0" max="5" tick-size="1" v-model="box.usercfgs.refreshsecs" @change="onUserCfgsChange"></v-slider>
                 </v-list-item-content>
@@ -1610,6 +1620,7 @@ function printHtml(data, curapp = null, curview = 'app') {
               })
             },
             onModSession () {
+              this.ui.modSessionDialog.show = false
               this.ui.overlay.show = true
               axios.post('/api', JSON.stringify({ cmd: 'onModSession', val: this.ui.modSessionDialog.session })).finally(() => {
                 this.onReload()
@@ -1671,8 +1682,8 @@ function printHtml(data, curapp = null, curview = 'app') {
                 }
                 this.box.sessions.push(session)
                 this.ui.curappSessions.push(session)
+                this.ui.impSessionDialog.show = false
                 axios.post('/api', JSON.stringify({ cmd: 'saveSession', val: session })).finally(() => {
-                  this.ui.impSessionDialog.show = false
                   this.ui.overlay.show = false
                 })
               } else {
@@ -1681,37 +1692,37 @@ function printHtml(data, curapp = null, curview = 'app') {
               }
             },
             onAddAppSub() {
+              this.ui.addAppSubDialog.show = false
+              this.ui.overlay.show = true
               const sub = {
                 id: uuidv4(),
                 url: this.ui.addAppSubDialog.url,
                 enable: true
               }
-              this.ui.overlay.show = true
               axios.post('/api', JSON.stringify({ cmd: 'addAppSub', val: sub })).finally(() => {
-                this.ui.addAppSubDialog.show = false
                 this.onReload()
               })
             },
             onRefreshAppSubs(){
               this.ui.overlay.show = true
               axios.post('/api', JSON.stringify({ cmd: 'refreshAppSubs', val: null })).finally(() => {
-                this.box.usercfgs.refreshsecs = 3
+                this.onReload()
               })
-              this.onReload()
             },
             reload() {
               window.location.reload()
             },
             onReload() {
-              const refreshsecs = this.box.usercfgs.refreshsecs
-              const sec = [undefined, null, 'null', 'undefined', ''].includes(refreshsecs) ? 3 : refreshsecs * 1
-              if (sec === 0) {
-                this.reload()
-              } else {
-                this.ui.overlay.show = false
-                this.ui.reloadConfirmDialog.show = true
-                this.ui.reloadConfirmDialog.sec = sec
-              }
+              window.location.reload()
+              // const refreshsecs = this.box.usercfgs.refreshsecs
+              // const sec = [undefined, null, 'null', 'undefined', ''].includes(refreshsecs) ? 3 : refreshsecs * 1
+              // if (sec === 0) {
+              //   this.reload()
+              // } else {
+              //   this.ui.overlay.show = false
+              //   this.ui.reloadConfirmDialog.show = true
+              //   this.ui.reloadConfirmDialog.sec = sec
+              // }
             },
             onDelSession(session) {
               this.ui.overlay.show = true
@@ -1731,6 +1742,7 @@ function printHtml(data, curapp = null, curview = 'app') {
               })
             },
             onImpGlobalBak() {
+              this.ui.impGlobalBakDialog.show = false
               this.ui.overlay.show = true
               const env = this.box.syscfgs.env
               const version = this.box.syscfgs.version
@@ -1746,7 +1758,6 @@ function printHtml(data, curapp = null, curview = 'app') {
               }
               bakobj.tags = [env, version, versionType]
               this.box.globalbaks.push(bakobj)
-              this.ui.impGlobalBakDialog.show = false
               axios.post('/api', JSON.stringify({ cmd: 'globalBak', val: bakobj })).finally(() => {
                 this.onReload()
               })

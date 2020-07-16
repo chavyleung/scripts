@@ -1,6 +1,27 @@
 {
   "releases": [
     {
+      "version": "0.4.8",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "icon": "https://avatars3.githubusercontent.com/u/29748519",
+      "repo": "https://github.com/chavyleung",
+      "notes": [
+        {
+          "name": "新增",
+          "descs": ["添加&刷新订阅的消息通知"]
+        },
+        {
+          "name": "修复",
+          "descs": ["添加订阅时显示格式错误", "刷新订阅有时不生效"]
+        },
+        {
+          "name": "移除",
+          "descs": ["刷新等待秒数"]
+        }
+      ]
+    },
+    {
       "version": "0.4.7",
       "tags": ["beta"],
       "author": "@chavyleung",
