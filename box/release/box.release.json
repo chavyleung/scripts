@@ -1,6 +1,19 @@
 {
   "releases": [
     {
+      "version": "0.4.11",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "icon": "https://avatars3.githubusercontent.com/u/29748519",
+      "repo": "https://github.com/chavyleung",
+      "notes": [
+        {
+          "name": "修复",
+          "descs": ["收藏应用排序异常问题"]
+        }
+      ]
+    },
+    {
       "version": "0.4.10",
       "tags": ["beta"],
       "author": "@chavyleung",
