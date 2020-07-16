@@ -1,6 +1,19 @@
 {
   "releases": [
     {
+      "version": "0.4.10",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "icon": "https://avatars3.githubusercontent.com/u/29748519",
+      "repo": "https://github.com/chavyleung",
+      "notes": [
+        {
+          "name": "调整",
+          "descs": ["京东, 请使用野比大佬的订阅: https://raw.githubusercontent.com/NobyDa/Script/master/NobyDa_BoxJs.json"]
+        }
+      ]
+    },
+    {
       "version": "0.4.9",
       "tags": ["beta"],
       "author": "@chavyleung",
