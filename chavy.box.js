@@ -1,7 +1,7 @@
 const $ = new Env('BoxJs')
 $.domain = '8.8.8.8'
 
-$.version = '0.4.11'
+$.version = '0.4.12'
 $.versionType = 'beta'
 $.KEY_sessions = 'chavy_boxjs_sessions'
 $.KEY_versions = 'chavy_boxjs_versions'
@@ -252,10 +252,9 @@ function getGlobalBaks() {
   return globalBaksStr ? JSON.parse(globalBaksStr) : []
 }
 
-async function refreshAppSub(sub) {
-  const usercfgs = getUserCfgs()
-  const suburl = sub.url.replace(/[ ]|[\r\n]/g, '')
-  await new Promise((resolve) => {
+function refreshAppSub(sub, usercfgs) {
+  return new Promise((resolve) => {
+    const suburl = sub.url.replace(/[ ]|[\r\n]/g, '')
     $.get({ url: suburl }, (err, resp, data) => {
       try {
         const respsub = JSON.parse(data)
@@ -278,15 +277,17 @@ async function refreshAppSub(sub) {
       }
     })
   })
-  $.setdata(JSON.stringify(usercfgs), $.KEY_userCfgs)
 }
 
 async function refreshAppSubs() {
   $.msg($.name, '更新订阅: 开始!')
   const usercfgs = getUserCfgs()
   for (let subIdx = 0; subIdx < usercfgs.appsubs.length; subIdx++) {
-    await refreshAppSub(usercfgs.appsubs[subIdx])
+    const sub = usercfgs.appsubs[subIdx]
+    await refreshAppSub(sub, usercfgs)
   }
+  $.setdata(JSON.stringify(usercfgs), $.KEY_userCfgs)
+  console.log(`全部订阅, 完成!`)
   const endTime = new Date().getTime()
   const costTime = (endTime - $.startTime) / 1000
   $.msg($.name, `更新订阅: 完成! 🕛 ${costTime} 秒`)
@@ -515,8 +516,8 @@ async function handleApi() {
     const sub = data.val
     const usercfgs = getUserCfgs()
     usercfgs.appsubs.push(sub)
+    await refreshAppSub(sub, usercfgs)
     $.setdata(JSON.stringify(usercfgs), $.KEY_userCfgs)
-    await refreshAppSub(data.val)
     const endTime = new Date().getTime()
     const costTime = (endTime - $.startTime) / 1000
     $.msg($.name, `添加订阅: 完成! 🕛 ${costTime} 秒`)
