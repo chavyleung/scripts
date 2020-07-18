@@ -1,7 +1,7 @@
 const $ = new Env('BoxJs')
 $.domain = '8.8.8.8'
 
-$.version = '0.4.12'
+$.version = '0.4.14'
 $.versionType = 'beta'
 $.KEY_sessions = 'chavy_boxjs_sessions'
 $.KEY_versions = 'chavy_boxjs_versions'
@@ -131,9 +131,9 @@ function getSystemApps() {
       keys: ['chavy_cookie_tieba'],
       settings: [
         { id: 'CFG_tieba_isOrderBars', name: '按连签排序', val: false, type: 'boolean', desc: '默认按经验排序' },
-        { id: 'CFG_tieba_maxShowBars', name: '每页显示数', val: 15, type: 'text', desc: '每页最显示多少个吧信息' },
-        { id: 'CFG_tieba_maxSignBars', name: '每次并发', val: 5, type: 'text', desc: '每次并发签到多少个吧' },
-        { id: 'CFG_tieba_signWaitTime', name: '并发间隔 (毫秒)', val: 2000, type: 'text', desc: '每次并发间隔时间' }
+        { id: 'CFG_tieba_maxShowBars', name: '每页显示数', val: 15, type: 'number', desc: '每页最显示多少个吧信息' },
+        { id: 'CFG_tieba_maxSignBars', name: '每次并发', val: 5, type: 'number', desc: '每次并发签到多少个吧' },
+        { id: 'CFG_tieba_signWaitTime', name: '并发间隔 (毫秒)', val: 2000, type: 'number', desc: '每次并发间隔时间' }
       ],
       author: '@chavyleung',
       repo: 'https://github.com/chavyleung/scripts/tree/master/tieba',
@@ -929,6 +929,7 @@ function printHtml(data, curapp = null, curview = 'app') {
                         <label>{{ setting.name }}</label>
                         <v-checkbox class="mt-0" :hide-details="itemIdx + 1 !== setting.items.length" v-model="setting.val" :label="item.label" :value="item.key" v-for="(item, itemIdx) in setting.items" :key="item.key" multiple></v-checkbox>
                       </template>
+                      <v-text-field :label="setting.name" v-model="setting.val" :hint="setting.desc" :placeholder="setting.placeholder" type="number" v-else-if="setting.type === 'number'"></v-text-field>
                       <v-text-field :label="setting.name" v-model="setting.val" :hint="setting.desc" :placeholder="setting.placeholder" v-else="setting.type === 'text'"></v-text-field>
                     </template>
                   </v-form>
