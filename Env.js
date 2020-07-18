@@ -28,7 +28,7 @@ function Env(name, opts) {
     }
 
     loaddata() {
-      if (this.isNode) {
+      if (this.isNode()) {
         this.fs = this.fs ? this.fs : require('fs')
         this.path = this.path ? this.path : require('path')
         const curDirDataFilePath = this.path.resolve(this.dataFile)
@@ -47,7 +47,7 @@ function Env(name, opts) {
     }
 
     writedata() {
-      if (this.isNode) {
+      if (this.isNode()) {
         this.fs = this.fs ? this.fs : require('fs')
         this.path = this.path ? this.path : require('path')
         const curDirDataFilePath = this.path.resolve(this.dataFile)
