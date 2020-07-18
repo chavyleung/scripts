@@ -1,7 +1,7 @@
 const $ = new Env('BoxJs')
 $.domain = '8.8.8.8'
 
-$.version = '0.4.14'
+$.version = '0.4.15'
 $.versionType = 'beta'
 $.KEY_sessions = 'chavy_boxjs_sessions'
 $.KEY_versions = 'chavy_boxjs_versions'
@@ -339,7 +339,10 @@ function wrapapps(apps) {
         } else if (setting.type === 'int') {
           setting.val = val * 1 || setting.val
         } else if (setting.type === 'checkboxes') {
-          setting.val = val ? val.split(',') : null || setting.val
+          if (![null, undefined].includes(valdat)) {
+            setting.val = valdat ? valdat.split(',') : []
+          }
+          console.log(setting.val)
         } else {
           setting.val = val || setting.val
         }
