@@ -1,6 +1,23 @@
 {
   "releases": [
     {
+      "version": "0.4.16",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "icon": "https://avatars3.githubusercontent.com/u/29748519",
+      "repo": "https://github.com/chavyleung",
+      "notes": [
+        {
+          "name": "优化",
+          "descs": ["iPhone X 底栏样式优化 (避免 bar 遮挡)"]
+        },
+        {
+          "name": "修复",
+          "descs": ["多行文本控件 rows 属性无效问题"]
+        }
+      ]
+    },
+    {
       "version": "0.4.15",
       "tags": ["beta"],
       "author": "@chavyleung",
