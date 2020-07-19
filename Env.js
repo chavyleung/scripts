@@ -220,8 +220,8 @@ function Env(name, opts) {
           if (!err && resp) {
             resp.body = body
             resp.statusCode = resp.status
-            callback(err, resp, body)
           }
+          callback(err, resp, body)
         })
       } else if (this.isQuanX()) {
         opts.method = 'POST'
@@ -308,7 +308,7 @@ function Env(name, opts) {
       return new Promise((resolve) => setTimeout(resolve, time))
     }
 
-    done(val = null) {
+    done(val = {}) {
       const endTime = new Date().getTime()
       const costTime = (endTime - this.startTime) / 1000
       this.log('', `🔔${this.name}, 结束! 🕛 ${costTime} 秒`)
