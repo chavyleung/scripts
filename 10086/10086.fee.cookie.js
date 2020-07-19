@@ -15,7 +15,7 @@
  * # Loon
  * http-response ^https:\/\/clientaccess.10086.cn\/biz-orange\/LN\/uamrandcodelogin\/autoLogin script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/10086/10086.fee.cookie.js, requires-body=true
  * http-response ^https:\/\/clientaccess.10086.cn\/biz-orange\/BN\/realFeeQuery\/getRealFee script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/10086/10086.fee.cookie.js, requires-body=true
- * cron "10 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/10086/10086.fee.cookie.js
+ * cron "10 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/10086/10086.fee.js
  *
  */
 
