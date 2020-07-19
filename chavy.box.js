@@ -1,7 +1,7 @@
 const $ = new Env('BoxJs')
 $.domain = '8.8.8.8'
 
-$.version = '0.4.16'
+$.version = '0.4.17'
 $.versionType = 'beta'
 $.KEY_sessions = 'chavy_boxjs_sessions'
 $.KEY_versions = 'chavy_boxjs_versions'
@@ -1397,7 +1397,7 @@ function printHtml(data, curapp = null, curview = 'app') {
                 <v-card-text>
                   <p class="subtitle-1">【远程订阅】</p>
                   <p class="body-1">
-                    配置 (底栏) &gt; Rewrite &gt; 订阅Rewrite &gt; 添加 (右上角图标)
+                    配置 (底栏) &gt; 脚本 &gt; 订阅脚本 &gt; 添加 (右上角图标)
                     https://github.com/chavyleung/scripts/raw/master/loon.box.conf
                   </p>
                   <p class="body-2">最后重启 Loon 代理 (首页右上角的开关)</p>
@@ -1405,7 +1405,7 @@ function printHtml(data, curapp = null, curview = 'app') {
                 <v-divider></v-divider>
                 <v-card-text>
                   <p class="subtitle-1">【订阅更新】</p>
-                  <p class="body-1">配置 (底栏) &gt; Rewrite &gt; 订阅Rewrite &gt; 刷新 (右上角图标)</p>
+                  <p class="body-1">配置 (底栏) &gt; 脚本 &gt; 订阅脚本 &gt; 刷新 (右上角图标)</p>
                   <p class="body-2">最后重启 Loon 代理 (首页右上角的开关)</p>
                 </v-card-text>
               </v-card>
