@@ -665,6 +665,47 @@ function printHtml(data, curapp = null, curview = 'app') {
         [v-cloak]{
           display: none
         }
+
+        .v-bottom-navigation,
+        .v-bottom-sheet {
+            padding-bottom: constant(safe-area-inset-bottom);
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+
+        .v-bottom-navigation{
+            box-sizing: content-box;
+        }
+
+        .v-bottom-navigation button {
+            box-sizing: border-box;
+        }
+
+        .v-main.safe {
+            margin-bottom: 56px;
+            margin-bottom: calc(56px + constant(safe-area-inset-bottom));
+            margin-bottom: calc(56px + env(safe-area-inset-bottom));
+            
+        }
+
+        .v-main .v-main__wrap {
+            padding-bottom: 68px;
+            padding-bottom: calc(68px + constant(safe-area-inset-bottom));
+            padding-bottom: calc(68px + env(safe-area-inset-bottom));
+        }
+
+        .v-main.safe .v-main__wrap {
+            padding-bottom: 68px;
+        }
+
+        .v-speed-dial {
+            bottom: calc(12px + constant(safe-area-inset-bottom));
+            bottom: calc(12px + env(safe-area-inset-bottom));
+        }
+
+        .v-speed-dial.has-nav {
+            bottom: calc(68px + constant(safe-area-inset-bottom));
+            bottom: calc(68px + env(safe-area-inset-bottom));
+        }
       </style>
     </head>
     <body>
@@ -715,7 +756,7 @@ function printHtml(data, curapp = null, curview = 'app') {
             </v-btn>
           </v-app-bar>
           <v-fab-transition>
-            <v-speed-dial v-show="ui.box.show && !box.usercfgs.isHideBoxIcon" fixed fab bottom direction="top" :left="ui.drawer.show || box.usercfgs.isLeftBoxIcon" :right="!box.usercfgs.isLeftBoxIcon === true" class="mb-12">
+            <v-speed-dial v-show="ui.box.show && !box.usercfgs.isHideBoxIcon" fixed fab bottom direction="top" :left="ui.drawer.show || box.usercfgs.isLeftBoxIcon" :right="!box.usercfgs.isLeftBoxIcon === true" :class="box.usercfgs.isHideNavi ? '' : 'has-nav'">
               <template v-slot:activator>
                 <v-btn fab>
                   <v-avatar size="48">
@@ -822,7 +863,7 @@ function printHtml(data, curapp = null, curview = 'app') {
               </v-list-item>
             </v-list>
           </v-navigation-drawer>
-          <v-main :class="box.usercfgs.isHideNavi ? 'mb-0 pb-16' : 'mb-14 pb-16'">
+          <v-main :class="box.usercfgs.isHideNavi ? '' : 'safe'">
             <v-container fluid v-if="ui.curview === 'app'">
               <v-expansion-panels class="mx-auto" v-if="favapps.length > 0" multiple v-model="box.usercfgs.favapppanel">
                 <v-expansion-panel>
