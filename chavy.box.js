@@ -1,7 +1,7 @@
 const $ = new Env('BoxJs')
 $.domain = '8.8.8.8'
 
-$.version = '0.4.18'
+$.version = '0.4.19'
 $.versionType = 'beta'
 $.KEY_sessions = 'chavy_boxjs_sessions'
 $.KEY_versions = 'chavy_boxjs_versions'
@@ -737,7 +737,8 @@ function printHtml(data, curapp = null, curview = 'app') {
               <template v-slot:item="{ item }">
                 <v-list-item @click="goAppSessionView(item)">
                   <v-list-item-avatar>
-                    <img :src="item.icons[box.usercfgs.isTransparentIcons ? 0 : 1]">
+                    <img v-if="item.icons" :src="item.icons[box.usercfgs.isTransparentIcons ? 0 : 1]">
+                    <img v-else :src="ui.icons[box.usercfgs.isTransparentIcons ? 0 : 1]">
                   </v-list-item-avatar>
                   <v-list-item-content>
                     <v-list-item-title>{{ item.name }} ({{ item.id }})</v-list-item-title>
@@ -893,7 +894,8 @@ function printHtml(data, curapp = null, curview = 'app') {
                   <v-expansion-panel-content>
                     <v-list nav dense class="mx-n4">
                       <v-list-item three-line dense v-for="(app, appIdx) in favapps" :key="app.id" @click="goAppSessionView(app)">
-                        <v-list-item-avatar><v-img :src="app.icons[box.usercfgs.isTransparentIcons ? 0 : 1]"></v-img></v-list-item-avatar>
+                        <v-list-item-avatar v-if="app.icons"><v-img :src="app.icons[box.usercfgs.isTransparentIcons ? 0 : 1]"></v-img></v-list-item-avatar>
+                        <v-list-item-avatar v-else><v-img :src="ui.icons[box.usercfgs.isTransparentIcons ? 0 : 1]"></v-img></v-list-item-avatar>
                         <v-list-item-content>
                           <v-list-item-title>{{ app.name }} ({{ app.id }})</v-list-item-title>
                           <v-list-item-subtitle>{{ app.repo }}</v-list-item-subtitle>
@@ -931,7 +933,8 @@ function printHtml(data, curapp = null, curview = 'app') {
                   <v-expansion-panel-content>
                     <v-list nav dense class="mx-n4">
                       <v-list-item three-line dense v-for="(app, appIdx) in sub.apps" :key="app.id" @click="goAppSessionView(app)">
-                        <v-list-item-avatar><v-img :src="app.icons[box.usercfgs.isTransparentIcons ? 0 : 1]"></v-img></v-list-item-avatar>
+                        <v-list-item-avatar v-if="app.icons"><v-img :src="app.icons[box.usercfgs.isTransparentIcons ? 0 : 1]"></v-img></v-list-item-avatar>
+                        <v-list-item-avatar v-else><v-img :src="ui.icons[box.usercfgs.isTransparentIcons ? 0 : 1]"></v-img></v-list-item-avatar>
                         <v-list-item-content>
                           <v-list-item-title>{{ app.name }} ({{ app.id }})</v-list-item-title>
                           <v-list-item-subtitle>{{ app.repo }}</v-list-item-subtitle>
@@ -957,7 +960,8 @@ function printHtml(data, curapp = null, curview = 'app') {
                   <v-expansion-panel-content>
                   <v-list nav dense class="mx-n4">
                     <v-list-item three-line dense v-for="(app, appIdx) in box.sysapps" :key="app.id" @click="goAppSessionView(app)">
-                      <v-list-item-avatar><v-img :src="app.icons[box.usercfgs.isTransparentIcons ? 0 : 1]"></v-img></v-list-item-avatar>
+                      <v-list-item-avatar v-if="app.icons"><v-img :src="app.icons[box.usercfgs.isTransparentIcons ? 0 : 1]"></v-img></v-list-item-avatar>
+                      <v-list-item-avatar v-else="ui.icons"><v-img :src="app.icons[box.usercfgs.isTransparentIcons ? 0 : 1]"></v-img></v-list-item-avatar>
                       <v-list-item-content>
                         <v-list-item-title>{{ app.name }} ({{ app.id }})</v-list-item-title>
                         <v-list-item-subtitle>{{ app.repo }}</v-list-item-subtitle>
@@ -1471,7 +1475,8 @@ function printHtml(data, curapp = null, curview = 'app') {
                 appbar: { color: '' },
                 box: { show: false },
                 navi: { show: false },
-                drawer: { show: false }
+                drawer: { show: false },
+                icons: ['https://raw.githubusercontent.com/Orz-3/mini/master/appstore.png', 'https://raw.githubusercontent.com/Orz-3/task/master/appstore.png']
               },
               box: ${data}
             }
