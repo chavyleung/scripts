@@ -1,7 +1,7 @@
 const $ = new Env('BoxJs')
 $.domain = '8.8.8.8'
 
-$.version = '0.4.17'
+$.version = '0.4.18'
 $.versionType = 'beta'
 $.KEY_sessions = 'chavy_boxjs_sessions'
 $.KEY_versions = 'chavy_boxjs_versions'
@@ -73,11 +73,26 @@ function getSystemCfgs() {
       icon: 'https://avatars3.githubusercontent.com/u/29748519',
       repo: 'https://github.com/chavyleung/scripts'
     },
+    senku: {
+      id: 'GideonSenku',
+      icon: 'https://avatars1.githubusercontent.com/u/39037656',
+      repo: 'https://github.com/GideonSenku'
+    },
     orz3: {
       id: 'Orz-3',
       icon: 'https://raw.githubusercontent.com/Orz-3/task/master/Orz-3.png',
       repo: 'https://github.com/Orz-3/'
     },
+    contributors: [
+      { id: 'danchaw', icon: 'https://avatars1.githubusercontent.com/u/33873206?s=60&v=4', repo: 'https://github.com/danchaw' },
+      { id: '0x959', icon: 'https://avatars3.githubusercontent.com/u/42092849?s=60&v=4', repo: 'https://github.com/0x959' },
+      { id: 'lcandy2', icon: 'https://avatars1.githubusercontent.com/u/45784494?s=60&v=4', repo: 'https://github.com/lcandy2' },
+      { id: 'lowking', icon: 'https://avatars0.githubusercontent.com/u/33308659?s=60&v=4', repo: 'https://github.com/lowking' },
+      { id: 'chouchoui', icon: 'https://avatars1.githubusercontent.com/u/14866249?s=60&v=4', repo: 'https://github.com/chouchoui' },
+      { id: 'evilbutcher', icon: 'https://avatars1.githubusercontent.com/u/62224738?s=60&v=4', repo: 'https://github.com/evilbutcher' },
+      { id: 'eegod', icon: 'https://avatars0.githubusercontent.com/u/9635792?s=60&v=4', repo: 'https://github.com/eegod' },
+      { id: 'KaytZ', icon: 'https://avatars2.githubusercontent.com/u/17397324?s=60&v=4', repo: 'https://github.com/KaytZ' }
+    ],
     boxjs: {
       id: 'BoxJs',
       show: false,
@@ -342,7 +357,6 @@ function wrapapps(apps) {
           if (![null, undefined].includes(valdat)) {
             setting.val = valdat ? valdat.split(',') : []
           }
-          console.log(setting.val)
         } else {
           setting.val = val || setting.val
         }
@@ -665,46 +679,37 @@ function printHtml(data, curapp = null, curview = 'app') {
         [v-cloak]{
           display: none
         }
-
         .v-bottom-navigation,
         .v-bottom-sheet {
-            padding-bottom: constant(safe-area-inset-bottom);
-            padding-bottom: env(safe-area-inset-bottom);
+          padding-bottom: constant(safe-area-inset-bottom);
+          padding-bottom: env(safe-area-inset-bottom);
         }
-
         .v-bottom-navigation{
-            box-sizing: content-box;
+          box-sizing: content-box;
         }
-
         .v-bottom-navigation button {
-            box-sizing: border-box;
+          box-sizing: border-box;
         }
-
         .v-main.safe {
-            margin-bottom: 56px;
-            margin-bottom: calc(56px + constant(safe-area-inset-bottom));
-            margin-bottom: calc(56px + env(safe-area-inset-bottom));
-            
+          margin-bottom: 56px;
+          margin-bottom: calc(56px + constant(safe-area-inset-bottom));
+          margin-bottom: calc(56px + env(safe-area-inset-bottom));
         }
-
         .v-main .v-main__wrap {
-            padding-bottom: 68px;
-            padding-bottom: calc(68px + constant(safe-area-inset-bottom));
-            padding-bottom: calc(68px + env(safe-area-inset-bottom));
+          padding-bottom: 68px;
+          padding-bottom: calc(68px + constant(safe-area-inset-bottom));
+          padding-bottom: calc(68px + env(safe-area-inset-bottom));
         }
-
         .v-main.safe .v-main__wrap {
-            padding-bottom: 68px;
+          padding-bottom: 68px;
         }
-
         .v-speed-dial {
-            bottom: calc(12px + constant(safe-area-inset-bottom));
-            bottom: calc(12px + env(safe-area-inset-bottom));
+          bottom: calc(12px + constant(safe-area-inset-bottom));
+          bottom: calc(12px + env(safe-area-inset-bottom));
         }
-
         .v-speed-dial.has-nav {
-            bottom: calc(68px + constant(safe-area-inset-bottom));
-            bottom: calc(68px + env(safe-area-inset-bottom));
+          bottom: calc(68px + constant(safe-area-inset-bottom));
+          bottom: calc(68px + env(safe-area-inset-bottom));
         }
       </style>
     </head>
@@ -785,13 +790,28 @@ function printHtml(data, curapp = null, curview = 'app') {
           <v-navigation-drawer v-model="ui.drawer.show" app temporary right>
             <v-list dense nav>
               <v-list-item two-line dense @click="onLink(box.syscfgs.chavy.repo)">
-                <v-list-item-avatar>
-                  <img src="https://avatars3.githubusercontent.com/u/29748519?s=460&u=392a19e85465abbcb1791c9b8b32184a16e6795e&v=4" />
-                </v-list-item-avatar>
+                <v-list-item-avatar><img :src="box.syscfgs.chavy.icon" /></v-list-item-avatar>
                 <v-list-item-content>
                   <v-list-item-title>{{ box.syscfgs.chavy.id }}</v-list-item-title>
                   <v-list-item-subtitle>{{ box.syscfgs.chavy.repo }}</v-list-item-subtitle>
                 </v-list-item-content>
+              </v-list-item>
+              <v-list-item two-line dense @click="onLink(box.syscfgs.senku.repo)">
+                <v-list-item-avatar><img :src="box.syscfgs.senku.icon" /></v-list-item-avatar>
+                <v-list-item-content>
+                  <v-list-item-title>{{ box.syscfgs.senku.id }}</v-list-item-title>
+                  <v-list-item-subtitle>{{ box.syscfgs.senku.repo }}</v-list-item-subtitle>
+                </v-list-item-content>
+              </v-list-item>
+              <v-divider></v-divider>
+              <v-list-item class="pt-1">
+                <v-row align="center" justify="start" no-gutters>
+                  <v-col v-for="(c, cIdx) in box.syscfgs.contributors" cols="2">
+                    <v-avatar class="ma-1" size="26" @click="onGoToRepo(c.repo)">
+                      <img :src="c.icon" />
+                    </v-avatar>
+                  </v-col>
+                </v-row>
               </v-list-item>
               <v-divider></v-divider>
               <v-list-item v-if="false">
@@ -1115,7 +1135,7 @@ function printHtml(data, curapp = null, curview = 'app') {
                     </v-tooltip>
                     <v-btn icon @click="ui.addAppSubDialog.show = true"><v-icon color="green">mdi-plus-circle</v-icon></v-btn>
                   </v-subheader>
-                  <v-list-item two-line dense v-for="(sub, subIdx) in appsubs" :key="sub.id">
+                  <v-list-item two-line dense v-for="(sub, subIdx) in appsubs" :key="sub.id" @click="onGoToRepo(sub.repo)">
                     <v-list-item-avatar v-if="sub.icon"><v-img :src="sub.icon"></v-img></v-list-item-avatar>
                     <v-list-item-avatar v-else color="grey"><v-icon dark>mdi-account</v-icon></v-list-item-avatar>
                     <v-list-item-content>
@@ -1848,6 +1868,9 @@ function printHtml(data, curapp = null, curview = 'app') {
                 _v2 = v2.split('.'),
                 _r = _v1[0] - _v2[0]
               return _r == 0 && v1 != v2 ? compareVersion(_v1.splice(1).join('.'), _v2.splice(1).join('.')) : _r
+            },
+            onGoToRepo(url) {
+              window.open(url)
             }
           },
           mounted: function () {
