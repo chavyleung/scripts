@@ -154,6 +154,13 @@
       "author": "@wangfei021325, @chavyleung",
       "repo": "https://github.com/chavyleung/scripts/tree/master/smzdm",
       "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/smzdm.png", "https://raw.githubusercontent.com/Orz-3/task/master/smzdm.png"]
+    },
+    {
+      "id": "pagoda",
+      "name": "百果园",
+      "keys": ["chavy_sign_pagoda"],
+      "author": "@chavyleung",
+      "repo": "https://github.com/chavyleung/scripts/blob/master/pagoda"
     }
   ]
 }
