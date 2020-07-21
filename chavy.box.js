@@ -1,7 +1,7 @@
 const $ = new Env('BoxJs')
 $.domain = '8.8.8.8'
 
-$.version = '0.4.20'
+$.version = '0.4.21'
 $.versionType = 'beta'
 $.KEY_sessions = 'chavy_boxjs_sessions'
 $.KEY_versions = 'chavy_boxjs_versions'
@@ -718,13 +718,13 @@ function printHtml(data, curapp = null, curview = 'app') {
               <template v-slot:activator="{ on }">
                 <v-btn icon v-on="on">
                   <v-avatar size="26">
-                    <img :src="box.syscfgs.envs.find(e=>e.id===box.syscfgs.env).icons[box.usercfgs.isTransparentIcons ? 0 : 1]" alt="box.syscfgs.env" />
+                    <img :src="box.syscfgs.envs.find(e=>e.id===box.syscfgs.env).icons[iconIdx]" alt="box.syscfgs.env" />
                   </v-avatar>
                 </v-btn>
               </template>
               <v-list dense>
                 <v-list-item v-for="(env, envIdx) in box.syscfgs.envs" :key="env.id" @click="box.syscfgs.env=env.id">
-                  <v-list-item-avatar size="24"><v-img :src="env.icons[box.usercfgs.isTransparentIcons ? 0 : 1]"></v-img></v-list-item-avatar>
+                  <v-list-item-avatar size="24"><v-img :src="env.icons[iconIdx]"></v-img></v-list-item-avatar>
                   <v-list-item-title>{{ env.id }}</v-list-item-title>
                 </v-list-item>
               </v-list>
@@ -734,8 +734,8 @@ function printHtml(data, curapp = null, curview = 'app') {
               <template v-slot:item="{ item }">
                 <v-list-item @click="goAppSessionView(item)">
                   <v-list-item-avatar>
-                    <img v-if="item.icons" :src="item.icons[box.usercfgs.isTransparentIcons ? 0 : 1]">
-                    <img v-else :src="ui.icons[box.usercfgs.isTransparentIcons ? 0 : 1]">
+                    <img v-if="item.icons" :src="item.icons[iconIdx]">
+                    <img v-else :src="ui.icons[iconIdx]">
                   </v-list-item-avatar>
                   <v-list-item-content>
                     <v-list-item-title>{{ item.name }} ({{ item.id }})</v-list-item-title>
@@ -763,7 +763,7 @@ function printHtml(data, curapp = null, curview = 'app') {
               <template v-slot:activator>
                 <v-btn fab>
                   <v-avatar size="56">
-                    <img :src="box.syscfgs.boxjs.icons[box.usercfgs.isTransparentIcons ? 0 : 1]" :alt="box.syscfgs.boxjs.repo" />
+                    <img :src="box.syscfgs.boxjs.icons[iconIdx]" :alt="box.syscfgs.boxjs.repo" />
                   </v-avatar>
                 </v-btn>
               </template>
@@ -820,12 +820,17 @@ function printHtml(data, curapp = null, curview = 'app') {
               </v-list-item>
               <v-list-item>
                 <v-list-item-content>
-                  <v-switch label="明亮主题" v-model="box.usercfgs.isLight"></v-switch>
+                  <v-select 
+                    hide-details
+                    v-model="box.usercfgs.theme"
+                    :items="[{text: '跟随系统', value: 'auto'}, {text: '暗黑', value: 'dark'}, {text: '明亮', value: 'light'}]"
+                    label="颜色主题"
+                  >
                 </v-list-item-content>
               </v-list-item>
               <v-list-item>
                 <v-list-item-content>
-                  <v-switch label="透明图标" v-model="box.usercfgs.isTransparentIcons" @change="onUserCfgsChange"></v-switch>
+                  <v-switch label="透明图标" v-model="box.usercfgs.isTransparentIcons" @change="onUserCfgsChange" :disabled="!darkMode"></v-switch>
                 </v-list-item-content>
                 <v-list-item-action @click="onLink(box.syscfgs.orz3.repo)">
                   <v-btn fab small text>
@@ -839,7 +844,7 @@ function printHtml(data, curapp = null, curview = 'app') {
                 </v-list-item-content>
                 <v-list-item-action @click="onLink(box.syscfgs.boxjs.repo)">
                   <v-btn fab small text>
-                    <v-avatar size="32"><img :src="box.syscfgs.boxjs.icons[box.usercfgs.isTransparentIcons ? 0 : 1]" :alt="box.syscfgs.boxjs.repo" /></v-avatar>
+                    <v-avatar size="32"><img :src="box.syscfgs.boxjs.icons[iconIdx]" :alt="box.syscfgs.boxjs.repo" /></v-avatar>
                   </v-btn>
                 </v-list-item-action>
               </v-list-item>
@@ -1367,13 +1372,13 @@ function printHtml(data, curapp = null, curview = 'app') {
                   <template v-slot:activator="{ on }">
                     <v-btn icon v-on="on">
                       <v-avatar size="26">
-                        <img :src="box.syscfgs.envs.find(e=>e.id===box.syscfgs.env).icons[box.usercfgs.isTransparentIcons ? 0 : 1]" alt="box.syscfgs.env" />
+                        <img :src="box.syscfgs.envs.find(e=>e.id===box.syscfgs.env).icons[iconIdx]" alt="box.syscfgs.env" />
                       </v-avatar>
                     </v-btn>
                   </template>
                   <v-list dense>
                     <v-list-item v-for="(env, envIdx) in box.syscfgs.envs" :key="env.id" @click="box.syscfgs.env=env.id">
-                      <v-list-item-avatar size="24"><v-img :src="env.icons[box.usercfgs.isTransparentIcons ? 0 : 1]"></v-img></v-list-item-avatar>
+                      <v-list-item-avatar size="24"><v-img :src="env.icons[iconIdx]"></v-img></v-list-item-avatar>
                       <v-list-item-title>{{ env.id }}</v-list-item-title>
                     </v-list-item>
                   </v-list>
@@ -1481,6 +1486,29 @@ function printHtml(data, curapp = null, curview = 'app') {
             }
           },
           computed: {
+            darkMode: function() {
+              const isSysDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+              let isDark = !this.box.usercfgs.isLight
+              if (this.box.usercfgs.theme === 'auto') {
+                isDark = isSysDark ? true : false
+              } else if (this.box.usercfgs.theme === 'dark') {
+                isDark = true
+              } else if (this.box.usercfgs.theme === 'light') {
+                isDark = false
+              }
+              return isDark
+            },
+            iconIdx: function() {
+              let idx = 1
+              if (this.box.usercfgs.theme === 'auto') {
+                if (this.darkMode === true) {
+                  idx = this.box.usercfgs.isTransparentIcons ? 0 : 1
+                }
+              } else if (this.box.usercfgs.theme === 'dark') {
+                idx = this.box.usercfgs.isTransparentIcons ? 0 : 1
+              }
+              return idx
+            },
             apps: function () {
               const apps = []
               apps.push(...this.box.sysapps)
@@ -1624,9 +1652,9 @@ function printHtml(data, curapp = null, curview = 'app') {
                 this.onUserCfgsChange()
               }
             },
-            'box.usercfgs.isLight': {
+            'box.usercfgs.theme': {
               handler(newval, oldval) {
-                this.$vuetify.theme.dark = !this.box.usercfgs.isLight
+                this.$vuetify.theme.dark = this.darkMode
                 this.onUserCfgsChange()
               }
             }
@@ -1640,7 +1668,7 @@ function printHtml(data, curapp = null, curview = 'app') {
             },
             appicon(app) {
               const deficons = ['https://raw.githubusercontent.com/Orz-3/mini/master/appstore.png', 'https://raw.githubusercontent.com/Orz-3/task/master/appstore.png']
-              const iconIdx = this.box.usercfgs.isTransparentIcons ? 0 : 1
+              const iconIdx = this.iconIdx
               if (app.icons && Array.isArray(app.icons)) {
                 return app.icons[iconIdx] || deficons[iconIdx]
               } else {
@@ -1886,24 +1914,21 @@ function printHtml(data, curapp = null, curview = 'app') {
               var _v1 = v1.split('.'),
                 _v2 = v2.split('.'),
                 _r = _v1[0] - _v2[0]
-              return _r == 0 && v1 != v2 ? compareVersion(_v1.splice(1).join('.'), _v2.splice(1).join('.')) : _r
+              return _r == 0 && v1 != v2 ? this.compareVersion(_v1.splice(1).join('.'), _v2.splice(1).join('.')) : _r
             },
             onGoToRepo(url) {
               window.open(url)
             }
           },
           mounted: function () {
-            this.$vuetify.theme.dark = !this.box.usercfgs.isLight
+            this.$vuetify.theme.dark = this.darkMode
             if (this.ui.curapp) {
               this.goAppSessionView(this.ui.curapp)
             }
             setTimeout(() => {
               this.ui.navi.show = true
-            }, 500)
-            setTimeout(() => {
               this.ui.box.show = true
             }, 500)
-
             const curver = this.box.syscfgs.version
             const vers = this.box.versions
             if (this.ui.curview === 'sub') {
