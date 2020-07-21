@@ -1,6 +1,19 @@
 {
   "releases": [
     {
+      "version": "0.4.23",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "icon": "https://avatars3.githubusercontent.com/u/29748519",
+      "repo": "https://github.com/chavyleung",
+      "notes": [
+        {
+          "name": "优化",
+          "descs": ["侧栏样式 (紧凑化)"]
+        }
+      ]
+    },
+    {
       "version": "0.4.22",
       "tags": ["beta"],
       "author": "@chavyleung",

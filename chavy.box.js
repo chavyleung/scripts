@@ -1,7 +1,7 @@
 const $ = new Env('BoxJs')
 $.domain = '8.8.8.8'
 
-$.version = '0.4.22'
+$.version = '0.4.23'
 $.versionType = 'beta'
 $.KEY_sessions = 'chavy_boxjs_sessions'
 $.KEY_versions = 'chavy_boxjs_versions'
@@ -787,19 +787,19 @@ function printHtml(data, curapp = null, curview = 'app') {
           </v-fab-transition>
           <v-navigation-drawer v-model="ui.drawer.show" app temporary right>
             <v-list dense nav>
-              <v-list-item two-line dense @click="onLink(box.syscfgs.chavy.repo)">
+              <v-list-item dense @click="onLink(box.syscfgs.chavy.repo)">
                 <v-list-item-avatar><img :src="box.syscfgs.chavy.icon" /></v-list-item-avatar>
                 <v-list-item-content>
                   <v-list-item-title>{{ box.syscfgs.chavy.id }}</v-list-item-title>
                   <v-list-item-subtitle>{{ box.syscfgs.chavy.repo }}</v-list-item-subtitle>
                 </v-list-item-content>
               </v-list-item>
-              <v-list-item two-line dense @click="onLink(box.syscfgs.senku.repo)">
+              <v-list-item dense @click="onLink(box.syscfgs.senku.repo)">
                 <v-list-item-avatar><img :src="box.syscfgs.senku.icon" /></v-list-item-avatar>
                 <v-list-item-content>
                   <v-list-item-title>{{ box.syscfgs.senku.id }}</v-list-item-title>
                   <v-list-item-subtitle>{{ box.syscfgs.senku.repo }}</v-list-item-subtitle>
-                </v-list-item-content>
+                </v-ist-item-content>
               </v-list-item>
               <v-divider></v-divider>
               <v-list-item class="pt-1">
@@ -812,12 +812,6 @@ function printHtml(data, curapp = null, curview = 'app') {
                 </v-row>
               </v-list-item>
               <v-divider></v-divider>
-              <v-list-item v-if="false">
-                <v-list-item-content>
-                  <v-slider desen label="刷新等待" hide-details ticks="always" min="0" max="5" tick-size="1" v-model="box.usercfgs.refreshsecs" @change="onUserCfgsChange"></v-slider>
-                </v-list-item-content>
-                <v-list-item-action>{{ box.usercfgs.refreshsecs }} 秒</v-list-item-action>
-              </v-list-item>
               <v-list-item>
                 <v-list-item-content>
                   <v-select 
@@ -828,65 +822,51 @@ function printHtml(data, curapp = null, curview = 'app') {
                   >
                 </v-list-item-content>
               </v-list-item>
-              <v-list-item>
-                <v-list-item-content>
-                  <v-switch label="透明图标" v-model="box.usercfgs.isTransparentIcons" @change="onUserCfgsChange" :disabled="!darkMode"></v-switch>
-                </v-list-item-content>
-                <v-list-item-action @click="onLink(box.syscfgs.orz3.repo)">
-                  <v-btn fab small text>
-                    <v-avatar size="32"><img :src="box.syscfgs.orz3.icon" :alt="box.syscfgs.orz3.repo" /></v-avatar>
-                  </v-btn>
-                </v-list-item-action>
+              <v-list-item class="mt-4">
+                <v-switch dense class="mt-0" hide-details label="透明图标" v-model="box.usercfgs.isTransparentIcons" @change="onUserCfgsChange" :disabled="!darkMode"></v-switch>
+                <v-spacer></v-spacer>
+                <v-btn fab small text @click="onLink(box.syscfgs.orz3.repo)">
+                  <v-avatar size="32"><img :src="box.syscfgs.orz3.icon" :alt="box.syscfgs.orz3.repo" /></v-avatar>
+                </v-btn>
               </v-list-item>
-              <v-list-item>
-                <v-list-item-content>
-                  <v-switch label="隐藏悬浮图标" v-model="box.usercfgs.isHideBoxIcon" @change="onUserCfgsChange"></v-switch>
-                </v-list-item-content>
-                <v-list-item-action @click="onLink(box.syscfgs.boxjs.repo)">
-                  <v-btn fab small text>
-                    <v-avatar size="32"><img :src="box.syscfgs.boxjs.icons[iconIdx]" :alt="box.syscfgs.boxjs.repo" /></v-avatar>
-                  </v-btn>
-                </v-list-item-action>
+              <v-list-item class="mt-4">
+                <v-switch dense class="mt-0" hide-details label="隐藏悬浮图标" v-model="box.usercfgs.isHideBoxIcon" @change="onUserCfgsChange"></v-switch>
+                <v-spacer></v-spacer>
+                <v-btn fab small text @click="onLink(box.syscfgs.boxjs.repo)">
+                  <v-avatar size="32"><img :src="box.syscfgs.boxjs.icons[iconIdx]" :alt="box.syscfgs.boxjs.repo" /></v-avatar>
+                </v-btn>
               </v-list-item>
-              <v-list-item>
-                <v-list-item-content>
-                  <v-switch label="隐藏我的标题" v-model="box.usercfgs.isHideMyTitle" @change="onUserCfgsChange"></v-switch>
-                </v-list-item-content>
-                <v-list-item-action>
-                  <v-btn fab small text>
-                    <v-avatar v-if="box.usercfgs.icon" size="32"><img :src="box.usercfgs.icon" :alt="box.syscfgs.boxjs.repo" /></v-avatar>
-                    <v-icon v-else size="32">mdi-face-profile</v-icon>
-                  </v-btn>
-                </v-list-item-action>
+              <v-list-item class="mt-4">
+                <v-switch dense class="mt-0" hide-details label="隐藏我的标题" v-model="box.usercfgs.isHideMyTitle" @change="onUserCfgsChange"></v-switch>
+                <v-spacer></v-spacer>
+                <v-btn fab small text>
+                  <v-avatar v-if="box.usercfgs.icon" size="32"><img :src="box.usercfgs.icon" :alt="box.syscfgs.boxjs.repo" /></v-avatar>
+                  <v-icon v-else size="32">mdi-face-profile</v-icon>
+                </v-btn>
               </v-list-item>
-              <v-list-item>
-                <v-list-item-content>
-                  <v-switch label="隐藏帮助按钮" v-model="box.usercfgs.isHideHelp" @change="onUserCfgsChange"></v-switch>
-                </v-list-item-content>
-                <v-list-item-action @click="onLink(box.syscfgs.boxjs.repo)">
-                  <v-btn fab small text>
-                    <v-avatar size="32"><v-icon>mdi-help</v-icon></v-avatar>
-                  </v-btn>
-                </v-list-item-action>
+              <v-list-item class="mt-4">
+                <v-switch dense class="mt-0" hide-details label="隐藏帮助按钮" v-model="box.usercfgs.isHideHelp" @change="onUserCfgsChange"></v-switch>
+                <v-spacer></v-spacer>
+                <v-btn fab small text @click="onLink(box.syscfgs.boxjs.repo)">
+                  <v-avatar size="32"><v-icon>mdi-help</v-icon></v-avatar>
+                </v-btn>
               </v-list-item>
-              <v-list-item>
-                <v-list-item-content>
-                  <v-switch label="隐藏底部导航" v-model="box.usercfgs.isHideNavi" @change="onUserCfgsChange"></v-switch>
-                </v-list-item-content>
+              <v-list-item class="mt-4">
+                <v-switch dense class="mt-0" hide-details label="隐藏底部导航" v-model="box.usercfgs.isHideNavi" @change="onUserCfgsChange"></v-switch>
               </v-list-item>
-              <v-list-item>
-                <v-list-item-content>
-                  <v-switch label="隐藏更新订阅提示" v-model="box.usercfgs.isHideRefreshTip" @change="onUserCfgsChange"></v-switch>
-                </v-list-item-content>
+              <v-list-item class="mt-4">
+                <v-switch dense class="mt-0" hide-details label="隐藏更新订阅提示" v-model="box.usercfgs.isHideRefreshTip" @change="onUserCfgsChange"></v-switch>
               </v-list-item>
-              <v-list-item>
-                <v-list-item-content>
-                  <v-switch label="调试模式 (数据)" v-model="box.usercfgs.isDebugData" @change="onUserCfgsChange"></v-switch>
-                </v-list-item-content>
+              <v-list-item class="mt-4">
+                <v-switch dense class="mt-0" hide-details label="调试模式 (数据)" v-model="box.usercfgs.isDebugData" @change="onUserCfgsChange"></v-switch>
               </v-list-item>
-              <v-list-item>
+              <v-list-item class="mt-4">
+                <v-switch dense class="mt-0" hide-details label="调试模式 (格式)" v-model="box.usercfgs.isDebugFormat" @change="onUserCfgsChange"></v-switch>
+              </v-list-item>
+              <v-list-item two-line dense>
                 <v-list-item-content>
-                  <v-switch label="调试模式 (格式)" v-model="box.usercfgs.isDebugFormat" @change="onUserCfgsChange"></v-switch>
+                  <v-list-item-title></v-list-item-title>
+                  <v-list-item-subtitle></v-list-item-subtitle>
                 </v-list-item-content>
               </v-list-item>
             </v-list>
