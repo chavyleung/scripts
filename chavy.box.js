@@ -1,7 +1,7 @@
 const $ = new Env('BoxJs')
 $.domain = '8.8.8.8'
 
-$.version = '0.4.19'
+$.version = '0.4.20'
 $.versionType = 'beta'
 $.KEY_sessions = 'chavy_boxjs_sessions'
 $.KEY_versions = 'chavy_boxjs_versions'
@@ -42,9 +42,9 @@ $.html = $.name
   })
   .finally(() => {
     if ($.isapi) {
-      $.done({ body: $.json })
+      $done({ body: null })
     } else {
-      $.done({ body: $.html })
+      $.done({ status: 200, body: $.html })
     }
   })
 
@@ -359,9 +359,6 @@ function wrapapps(apps) {
           }
         } else {
           setting.val = val || setting.val
-        }
-        if (!Array.isArray(app.icons)) {
-          app.icons = ['https://raw.githubusercontent.com/Orz-3/mini/master/appstore.png', 'https://raw.githubusercontent.com/Orz-3/task/master/appstore.png']
         }
         app.author = app.author ? app.author : '@anonymous'
         app.repo = app.repo ? app.repo : '作者很神秘, 没有留下任何线索!'
@@ -765,25 +762,25 @@ function printHtml(data, curapp = null, curview = 'app') {
             <v-speed-dial v-show="ui.box.show && !box.usercfgs.isHideBoxIcon" fixed fab bottom direction="top" :left="ui.drawer.show || box.usercfgs.isLeftBoxIcon" :right="!box.usercfgs.isLeftBoxIcon === true" :class="box.usercfgs.isHideNavi ? '' : 'has-nav'">
               <template v-slot:activator>
                 <v-btn fab>
-                  <v-avatar size="48">
+                  <v-avatar size="56">
                     <img :src="box.syscfgs.boxjs.icons[box.usercfgs.isTransparentIcons ? 0 : 1]" :alt="box.syscfgs.boxjs.repo" />
                   </v-avatar>
                 </v-btn>
               </template>
-              <v-btn v-if="!box.usercfgs.isHideHelp" fab small color="grey" @click="ui.versheet.show = true">
+              <v-btn dark v-if="!box.usercfgs.isHideHelp" fab small color="grey" @click="ui.versheet.show = true">
                 <v-icon>mdi-help</v-icon>
               </v-btn>
-              <v-btn fab small color="pink" @click="box.usercfgs.isLeftBoxIcon = !box.usercfgs.isLeftBoxIcon, onUserCfgsChange()">
+              <v-btn dark fab small color="pink" @click="box.usercfgs.isLeftBoxIcon = !box.usercfgs.isLeftBoxIcon, onUserCfgsChange()">
                 <v-icon v-if="!box.usercfgs.isLeftBoxIcon">mdi-format-horizontal-align-left</v-icon>
                 <v-icon v-else>mdi-format-horizontal-align-right</v-icon>
               </v-btn>
-              <v-btn fab small color="indigo" @click="ui.impGlobalBakDialog.show = true">
+              <v-btn dark fab small color="indigo" @click="ui.impGlobalBakDialog.show = true">
                 <v-icon>mdi-database-import</v-icon>
               </v-btn>
-              <v-btn fab small color="green" v-clipboard:copy="JSON.stringify(boxdat)" v-clipboard:success="onCopy">
+              <v-btn dark fab small color="green" v-clipboard:copy="JSON.stringify(boxdat)" v-clipboard:success="onCopy">
                 <v-icon>mdi-export-variant</v-icon>
               </v-btn>
-              <v-btn fab small color="orange" @click="reload">
+              <v-btn dark fab small color="orange" @click="reload">
                 <v-icon>mdi-refresh</v-icon>
               </v-btn>
             </v-speed-dial>
@@ -807,7 +804,7 @@ function printHtml(data, curapp = null, curview = 'app') {
               <v-divider></v-divider>
               <v-list-item class="pt-1">
                 <v-row align="center" justify="start" no-gutters>
-                  <v-col v-for="(c, cIdx) in box.syscfgs.contributors" cols="2">
+                  <v-col v-for="(c, cIdx) in box.syscfgs.contributors" cols="2" :key="c.id">
                     <v-avatar class="ma-1" size="26" @click="onGoToRepo(c.repo)">
                       <img :src="c.icon" />
                     </v-avatar>
@@ -820,6 +817,11 @@ function printHtml(data, curapp = null, curview = 'app') {
                   <v-slider desen label="刷新等待" hide-details ticks="always" min="0" max="5" tick-size="1" v-model="box.usercfgs.refreshsecs" @change="onUserCfgsChange"></v-slider>
                 </v-list-item-content>
                 <v-list-item-action>{{ box.usercfgs.refreshsecs }} 秒</v-list-item-action>
+              </v-list-item>
+              <v-list-item>
+                <v-list-item-content>
+                  <v-switch label="明亮主题" v-model="box.usercfgs.isLight"></v-switch>
+                </v-list-item-content>
               </v-list-item>
               <v-list-item>
                 <v-list-item-content>
@@ -894,8 +896,7 @@ function printHtml(data, curapp = null, curview = 'app') {
                   <v-expansion-panel-content>
                     <v-list nav dense class="mx-n4">
                       <v-list-item three-line dense v-for="(app, appIdx) in favapps" :key="app.id" @click="goAppSessionView(app)">
-                        <v-list-item-avatar v-if="app.icons"><v-img :src="app.icons[box.usercfgs.isTransparentIcons ? 0 : 1]"></v-img></v-list-item-avatar>
-                        <v-list-item-avatar v-else><v-img :src="ui.icons[box.usercfgs.isTransparentIcons ? 0 : 1]"></v-img></v-list-item-avatar>
+                        <v-list-item-avatar><v-img :src="appicon(app)"></v-img></v-list-item-avatar>
                         <v-list-item-content>
                           <v-list-item-title>{{ app.name }} ({{ app.id }})</v-list-item-title>
                           <v-list-item-subtitle>{{ app.repo }}</v-list-item-subtitle>
@@ -933,8 +934,7 @@ function printHtml(data, curapp = null, curview = 'app') {
                   <v-expansion-panel-content>
                     <v-list nav dense class="mx-n4">
                       <v-list-item three-line dense v-for="(app, appIdx) in sub.apps" :key="app.id" @click="goAppSessionView(app)">
-                        <v-list-item-avatar v-if="app.icons"><v-img :src="app.icons[box.usercfgs.isTransparentIcons ? 0 : 1]"></v-img></v-list-item-avatar>
-                        <v-list-item-avatar v-else><v-img :src="ui.icons[box.usercfgs.isTransparentIcons ? 0 : 1]"></v-img></v-list-item-avatar>
+                        <v-list-item-avatar><v-img :src="appicon(app)"></v-img></v-list-item-avatar>
                         <v-list-item-content>
                           <v-list-item-title>{{ app.name }} ({{ app.id }})</v-list-item-title>
                           <v-list-item-subtitle>{{ app.repo }}</v-list-item-subtitle>
@@ -960,8 +960,7 @@ function printHtml(data, curapp = null, curview = 'app') {
                   <v-expansion-panel-content>
                   <v-list nav dense class="mx-n4">
                     <v-list-item three-line dense v-for="(app, appIdx) in box.sysapps" :key="app.id" @click="goAppSessionView(app)">
-                      <v-list-item-avatar v-if="app.icons"><v-img :src="app.icons[box.usercfgs.isTransparentIcons ? 0 : 1]"></v-img></v-list-item-avatar>
-                      <v-list-item-avatar v-else="ui.icons"><v-img :src="app.icons[box.usercfgs.isTransparentIcons ? 0 : 1]"></v-img></v-list-item-avatar>
+                      <v-list-item-avatar><v-img :src="appicon(app)"></v-img></v-list-item-avatar>
                       <v-list-item-content>
                         <v-list-item-title>{{ app.name }} ({{ app.id }})</v-list-item-title>
                         <v-list-item-subtitle>{{ app.repo }}</v-list-item-subtitle>
@@ -998,7 +997,7 @@ function printHtml(data, curapp = null, curview = 'app') {
                         <v-checkbox class="mt-0" :hide-details="itemIdx + 1 !== setting.items.length" v-model="setting.val" :label="item.label" :value="item.key" v-for="(item, itemIdx) in setting.items" :key="item.key" multiple></v-checkbox>
                       </template>
                       <v-text-field :label="setting.name" v-model="setting.val" :hint="setting.desc" :placeholder="setting.placeholder" type="number" v-else-if="setting.type === 'number'"></v-text-field>
-                      <v-text-field :label="setting.name" v-model="setting.val" :hint="setting.desc" :placeholder="setting.placeholder" v-else="setting.type === 'text'"></v-text-field>
+                      <v-text-field :label="setting.name" v-model="setting.val" :hint="setting.desc" :placeholder="setting.placeholder" v-else></v-text-field>
                     </template>
                   </v-form>
                   <v-divider></v-divider>
@@ -1440,8 +1439,8 @@ function printHtml(data, curapp = null, curview = 'app') {
           </v-overlay>
         </v-app>
       </div>
-      <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
-      <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.js"></script>
       <script src="https://cdn.jsdelivr.net/npm/axios@0.19.2/dist/axios.min.js"></script>
       <script src="https://cdn.jsdelivr.net/npm/moment@2.26.0/moment.min.js"></script>
       <script src="https://cdn.jsdelivr.net/npm/timeago.js@4.0.2/dist/timeago.full.min.js"></script>
@@ -1624,6 +1623,12 @@ function printHtml(data, curapp = null, curview = 'app') {
               handler(newval, oldval) {
                 this.onUserCfgsChange()
               }
+            },
+            'box.usercfgs.isLight': {
+              handler(newval, oldval) {
+                this.$vuetify.theme.dark = !this.box.usercfgs.isLight
+                this.onUserCfgsChange()
+              }
             }
           },
           methods: {
@@ -1632,6 +1637,15 @@ function printHtml(data, curapp = null, curview = 'app') {
             },
             appfilter(item, queryText, itemText) {
               return item.id.includes(queryText) || item.name.includes(queryText)
+            },
+            appicon(app) {
+              const deficons = ['https://raw.githubusercontent.com/Orz-3/mini/master/appstore.png', 'https://raw.githubusercontent.com/Orz-3/task/master/appstore.png']
+              const iconIdx = this.box.usercfgs.isTransparentIcons ? 0 : 1
+              if (app.icons && Array.isArray(app.icons)) {
+                return app.icons[iconIdx] || deficons[iconIdx]
+              } else {
+                return deficons[iconIdx]
+              }
             },
             onLink(link) {
               window.open(link)
@@ -1879,6 +1893,7 @@ function printHtml(data, curapp = null, curview = 'app') {
             }
           },
           mounted: function () {
+            this.$vuetify.theme.dark = !this.box.usercfgs.isLight
             if (this.ui.curapp) {
               this.goAppSessionView(this.ui.curapp)
             }

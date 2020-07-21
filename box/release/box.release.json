@@ -1,6 +1,23 @@
 {
   "releases": [
     {
+      "version": "0.4.20",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "icon": "https://avatars3.githubusercontent.com/u/29748519",
+      "repo": "https://github.com/chavyleung",
+      "notes": [
+        {
+          "name": "新增",
+          "descs": ["明暗主题切换"]
+        },
+        {
+          "name": "优化",
+          "descs": ["页面渲染资源"]
+        }
+      ]
+    },
+    {
       "version": "0.4.19",
       "tags": ["beta"],
       "author": "@chavyleung",
