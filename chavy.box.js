@@ -1,7 +1,7 @@
 const $ = new Env('BoxJs')
 $.domain = '8.8.8.8'
 
-$.version = '0.4.21'
+$.version = '0.4.22'
 $.versionType = 'beta'
 $.KEY_sessions = 'chavy_boxjs_sessions'
 $.KEY_versions = 'chavy_boxjs_versions'
@@ -42,7 +42,7 @@ $.html = $.name
   })
   .finally(() => {
     if ($.isapi) {
-      $done({ body: null })
+      $done({ body: $.JSON })
     } else {
       $.done({ status: 200, body: $.html })
     }
