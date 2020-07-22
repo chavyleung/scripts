@@ -1,7 +1,7 @@
 const $ = new Env('BoxJs')
 $.domain = '8.8.8.8'
 
-$.version = '0.5.1'
+$.version = '0.5.2'
 $.versionType = 'beta'
 $.KEY_sessions = 'chavy_boxjs_sessions'
 $.KEY_versions = 'chavy_boxjs_versions'
@@ -186,13 +186,18 @@ function refreshAppSub(sub, usercfgs) {
   })
 }
 
-async function refreshAppSubs() {
+async function refreshAppSubs(subId) {
   $.msg($.name, '更新订阅: 开始!')
   const usercfgs = getUserCfgs()
   const refreshActs = []
-  for (let subIdx = 0; subIdx < usercfgs.appsubs.length; subIdx++) {
-    const sub = usercfgs.appsubs[subIdx]
+  if (subId) {
+    const sub = usercfgs.appsubs.find((sub) => sub.id === subId)
     refreshActs.push(refreshAppSub(sub, usercfgs))
+  } else {
+    for (let subIdx = 0; subIdx < usercfgs.appsubs.length; subIdx++) {
+      const sub = usercfgs.appsubs[subIdx]
+      refreshActs.push(refreshAppSub(sub, usercfgs))
+    }
   }
   await Promise.all(refreshActs)
   $.setdata(JSON.stringify(usercfgs), $.KEY_userCfgs)
@@ -479,7 +484,7 @@ async function handleApi() {
   }
   // 刷新应用订阅
   else if (data.cmd === 'refreshAppSubs') {
-    await refreshAppSubs()
+    await refreshAppSubs(data && data.val)
   }
   // 抹掉订阅缓存
   else if (data.cmd === 'revertSubCaches') {
@@ -1210,6 +1215,9 @@ function printHtml(data, curapp = null, curview = 'app') {
                           <v-btn icon v-on="on"><v-icon>mdi-dots-vertical</v-icon></v-btn>
                         </template>
                         <v-list dense>
+                          <v-list-item @click="onRefreshAppSub(sub)">
+                            <v-list-item-title>更新</v-list-item-title>
+                          </v-list-item>
                           <v-list-item v-clipboard:copy="sub._raw.url" v-clipboard:success="onCopy">
                             <v-list-item-title>复制</v-list-item-title>
                           </v-list-item>
@@ -1871,6 +1879,11 @@ function printHtml(data, curapp = null, curview = 'app') {
                 enable: true
               }
               axios.post('/api', JSON.stringify({ cmd: 'addAppSub', val: sub })).finally(() => {
+                this.onReload()
+              })
+            },
+            onRefreshAppSub(sub) {
+              axios.post('/api', JSON.stringify({ cmd: 'refreshAppSubs', val: sub._raw.id })).finally(() => {
                 this.onReload()
               })
             },
