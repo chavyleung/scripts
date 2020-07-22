@@ -1,7 +1,7 @@
 const $ = new Env('BoxJs')
 $.domain = '8.8.8.8'
 
-$.version = '0.5.0'
+$.version = '0.5.1'
 $.versionType = 'beta'
 $.KEY_sessions = 'chavy_boxjs_sessions'
 $.KEY_versions = 'chavy_boxjs_versions'
@@ -279,7 +279,7 @@ async function getVersions() {
   // }
   await new Promise((resolve) => {
     setTimeout(resolve, 1000)
-    const verurl = 'https://raw.githubusercontent.com/chavyleung/scripts/master/box/release/box.release.json'
+    const verurl = 'https://cdn.jsdelivr.net/gh/chavyleung/scripts@master/box/release/box.release.json'
     $.get({ url: verurl }, (err, resp, data) => {
       try {
         const _data = JSON.parse(data)

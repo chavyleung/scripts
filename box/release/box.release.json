@@ -1,6 +1,19 @@
 {
   "releases": [
     {
+      "version": "0.5.1",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "icon": "https://avatars3.githubusercontent.com/u/29748519",
+      "repo": "https://github.com/chavyleung",
+      "notes": [
+        {
+          "name": "优化",
+          "descs": ["版本判断速度 (jsdelivr)"]
+        }
+      ]
+    },
+    {
       "version": "0.5.0",
       "tags": ["beta"],
       "author": "@chavyleung",
