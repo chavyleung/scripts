@@ -1,7 +1,7 @@
 const $ = new Env('BoxJs')
 $.domain = '8.8.8.8'
 
-$.version = '0.4.23'
+$.version = '0.5.0'
 $.versionType = 'beta'
 $.KEY_sessions = 'chavy_boxjs_sessions'
 $.KEY_versions = 'chavy_boxjs_versions'
@@ -36,13 +36,17 @@ $.html = $.name
   else if (/^\/my/.test(path)) {
     await handleMy()
   }
+  // 处理 revert 请求 => /revert
+  else if (/^\/revert/.test(path)) {
+    await handleRevert()
+  }
 })()
   .catch((e) => {
     $.logErr(e)
   })
   .finally(() => {
     if ($.isapi) {
-      $done({ body: $.JSON })
+      $done({ body: $.json })
     } else {
       $.done({ status: 200, body: $.html })
     }
@@ -106,14 +110,6 @@ function getSystemCfgs() {
 function getSystemApps() {
   const sysapps = [
     {
-      id: '10010',
-      name: '中国联通',
-      keys: ['chavy_tokenurl_10010', 'chavy_tokenheader_10010', 'chavy_signurl_10010', 'chavy_signheader_10010', 'chavy_loginlotteryurl_10010', 'chavy_loginlotteryheader_10010', 'chavy_findlotteryurl_10010', 'chavy_findlotteryheader_10010'],
-      author: '@chavyleung',
-      repo: 'https://github.com/chavyleung/scripts/tree/master/10010',
-      icons: ['https://raw.githubusercontent.com/Orz-3/mini/master/10010.png', 'https://raw.githubusercontent.com/Orz-3/task/master/10010.png']
-    },
-    {
       id: '52poje',
       name: '吾爱破解',
       keys: ['CookieWA'],
@@ -122,108 +118,12 @@ function getSystemApps() {
       icons: ['https://raw.githubusercontent.com/Orz-3/mini/master/52pj.png', 'https://raw.githubusercontent.com/Orz-3/task/master/52pj.png']
     },
     {
-      id: 'AcFun',
-      name: 'AcFun',
-      keys: ['chavy_cookie_acfun', 'chavy_token_acfun'],
-      author: '@chavyleung',
-      repo: 'https://github.com/chavyleung/scripts/tree/master/acfun',
-      icons: ['https://raw.githubusercontent.com/Orz-3/mini/master/acfun.png', 'https://raw.githubusercontent.com/Orz-3/task/master/acfun.png']
-    },
-    {
-      id: 'ApkTw',
-      name: 'ApkTw',
-      keys: ['chavy_cookie_apktw'],
-      author: '@chavyleung',
-      repo: 'https://github.com/chavyleung/scripts/tree/master/apktw',
-      url: 'https://apk.tw/',
-      icons: ['https://raw.githubusercontent.com/Orz-3/mini/master/apktw.png', 'https://raw.githubusercontent.com/Orz-3/task/master/apktw.png'],
-      tasks: [{ cron: '3 0 * * *', script: 'apktw.js' }],
-      rewrites: [{ type: 'request', pattern: '^https://apk.tw/member.php(.*?)action=login', script: 'apktw.cookie.js', body: true }]
-    },
-    {
-      id: 'BAIDU',
-      name: '百度签到',
-      keys: ['chavy_cookie_tieba'],
-      settings: [
-        { id: 'CFG_tieba_isOrderBars', name: '按连签排序', val: false, type: 'boolean', desc: '默认按经验排序' },
-        { id: 'CFG_tieba_maxShowBars', name: '每页显示数', val: 15, type: 'number', desc: '每页最显示多少个吧信息' },
-        { id: 'CFG_tieba_maxSignBars', name: '每次并发', val: 5, type: 'number', desc: '每次并发签到多少个吧' },
-        { id: 'CFG_tieba_signWaitTime', name: '并发间隔 (毫秒)', val: 2000, type: 'number', desc: '每次并发间隔时间' }
-      ],
-      author: '@chavyleung',
-      repo: 'https://github.com/chavyleung/scripts/tree/master/tieba',
-      icons: ['https://raw.githubusercontent.com/Orz-3/mini/master/baidu.png', 'https://raw.githubusercontent.com/Orz-3/task/master/baidu.png']
-    },
-    {
       id: 'iQIYI',
       name: '爱奇艺',
       keys: ['CookieQY'],
       author: '@NobyDa',
       repo: 'https://github.com/NobyDa/Script/blob/master/iQIYI-DailyBonus/iQIYI.js',
       icons: ['https://raw.githubusercontent.com/Orz-3/mini/master/iQIYI.png', 'https://raw.githubusercontent.com/Orz-3/task/master/iQIYI.png']
-    },
-    {
-      id: 'JD618',
-      name: '京东618',
-      keys: ['chavy_url_jd816', 'chavy_body_jd816', 'chavy_headers_jd816'],
-      settings: [
-        { id: 'CFG_618_radomms_min', name: '最小随机等待 (毫秒)', val: 2000, type: 'text', desc: '在任务默认的等待时间基础上，再增加的随机等待时间！' },
-        { id: 'CFG_618_radomms_max', name: '最大随机等待 (毫秒)', val: 5000, type: 'text', desc: '在任务默认的等待时间基础上，再增加的随机等待时间！' },
-        { id: 'CFG_618_isSignShop', name: '商店签到', val: true, type: 'boolean', desc: '71 家商店, 如果每天都签不上, 可以关掉了! 默认: true' },
-        { id: 'CFG_618_isJoinBrand', name: '品牌会员', val: false, type: 'boolean', desc: '25 个品牌, 会自动加入品牌会员! 默认: true' },
-        { id: 'CFG_BOOM_times_JD618', name: '炸弹次数', val: 1, type: 'text', desc: '总共发送多少次炸弹! 默认: 1' },
-        { id: 'CFG_BOOM_interval_JD618', name: '炸弹间隔 (毫秒)', val: 100, type: 'text', desc: '每次间隔多少毫秒! 默认: 100' }
-      ],
-      author: '@chavyleung',
-      repo: 'https://github.com/chavyleung/scripts/tree/master/jd',
-      icons: ['https://raw.githubusercontent.com/Orz-3/mini/master/jd.png', 'https://raw.githubusercontent.com/Orz-3/task/master/jd.png']
-    },
-    {
-      id: 'videoqq',
-      name: '腾讯视频',
-      keys: ['chavy_cookie_videoqq', 'chavy_auth_url_videoqq', 'chavy_auth_header_videoqq', 'chavy_msign_url_videoqq', 'chavy_msign_header_videoqq'],
-      author: '@chavyleung',
-      repo: 'https://github.com/chavyleung/scripts/tree/master/videoqq',
-      icons: ['https://raw.githubusercontent.com/Orz-3/mini/master/videoqq.png', 'https://raw.githubusercontent.com/Orz-3/task/master/videoqq.png']
-    },
-    {
-      id: 'V2EX',
-      name: 'V2EX',
-      keys: ['chavy_cookie_v2ex'],
-      author: '@chavyleung',
-      repo: 'https://github.com/chavyleung/scripts/tree/master/v2ex',
-      icons: ['https://raw.githubusercontent.com/Orz-3/mini/master/v2ex.png', 'https://raw.githubusercontent.com/Orz-3/task/master/v2ex.png']
-    },
-    {
-      id: 'NeteaseMusic',
-      name: '网易云音乐',
-      keys: ['chavy_cookie_neteasemusic'],
-      settings: [
-        { id: 'CFG_neteasemusic_retryCnt', name: '重试次数', val: 10, type: 'text', desc: '一直尝试签到直至出现“重复签到”标识!' },
-        { id: 'CFG_neteasemusic_retryInterval', name: '重试间隔 (毫秒)', val: 500, type: 'text', desc: '每次重试间隔时间 (毫秒)！' }
-      ],
-      author: '@chavyleung',
-      repo: 'https://github.com/chavyleung/scripts/tree/master/neteasemusic',
-      icons: ['https://raw.githubusercontent.com/Orz-3/mini/master/Netease.png', 'https://raw.githubusercontent.com/Orz-3/task/master/Netease.png']
-    },
-    {
-      id: 'WPS',
-      name: 'WPS',
-      keys: ['chavy_signhomeurl_wps', 'chavy_signhomeheader_wps'],
-      author: '@chavyleung',
-      repo: 'https://github.com/chavyleung/scripts/tree/master/wps',
-      icons: ['https://raw.githubusercontent.com/Orz-3/mini/master/wps.png', 'https://raw.githubusercontent.com/Orz-3/task/master/wps.png']
-    },
-    {
-      id: 'NoteYoudao',
-      name: '有道云笔记',
-      keys: ['chavy_signurl_noteyoudao', 'chavy_signbody_noteyoudao', 'chavy_signheaders_noteyoudao'],
-      author: '@chavyleung',
-      repo: 'https://github.com/chavyleung/scripts/tree/master/noteyoudao',
-      url: 'https://apps.apple.com/cn/app/有道云笔记-扫描王版/id450748070',
-      icons: ['https://raw.githubusercontent.com/Orz-3/mini/master/noteyoudao.png', 'https://raw.githubusercontent.com/Orz-3/task/master/noteyoudao.png'],
-      tasks: [{ cron: '3 0 * * *', script: 'noteyoudao.js' }],
-      rewrites: [{ type: 'request', pattern: '^https://note.youdao.com/yws/mapi/user?method=checkin', script: 'noteyoudao.cookie.js', body: true }]
     },
     {
       id: 'txnews',
@@ -241,14 +141,6 @@ function getSystemApps() {
       author: '@chavyleung',
       repo: 'https://github.com/chavyleung/scripts/blob/master/box/switcher/box.switcher.js',
       icons: ['https://raw.githubusercontent.com/Orz-3/mini/master/box.png', 'https://raw.githubusercontent.com/Orz-3/task/master/box.png']
-    },
-    {
-      id: 'sfexpress',
-      name: '顺丰速运',
-      keys: ['chavy_loginurl_sfexpress', 'chavy_loginheader_sfexpress'],
-      author: '@chavyleung',
-      repo: 'https://github.com/chavyleung/scripts/blob/master/sfexpress',
-      icons: ['https://raw.githubusercontent.com/Orz-3/mini/master/sfexpress.png', 'https://raw.githubusercontent.com/Orz-3/task/master/sfexpress.png']
     }
   ]
   sysapps.sort((a, b) => a.id.localeCompare(b.id))
@@ -589,6 +481,28 @@ async function handleApi() {
   else if (data.cmd === 'refreshAppSubs') {
     await refreshAppSubs()
   }
+  // 抹掉订阅缓存
+  else if (data.cmd === 'revertSubCaches') {
+    console.log(data.cmd)
+    const usercfgs = getUserCfgs()
+    usercfgs.appsubCaches = {}
+    const delsuc = $.setdata(JSON.stringify(usercfgs), $.KEY_userCfgs)
+    $.subt = `抹掉订阅缓存: ${delsuc ? '成功' : '失败'}`
+    $.msg($.name, $.subt)
+  }
+  // 抹掉备份
+  else if (data.cmd === 'revertBaks') {
+    const delsuc = $.setdata('', $.KEY_globalBaks) ? '成功' : '失败'
+    $.subt = `抹掉备份: ${delsuc ? '成功' : '失败'}`
+    $.msg($.name, $.subt)
+  }
+  // 抹掉会话
+  else if (data.cmd === 'revertSessions') {
+    const delsuc = $.setdata('', $.KEY_sessions) ? '成功' : '失败'
+    $.setdata('', $.KEY_curSessions)
+    $.subt = `抹掉会话: ${delsuc ? '成功' : '失败'}`
+    $.msg($.name, $.subt)
+  }
 }
 
 async function getBoxData() {
@@ -657,6 +571,161 @@ async function handleMy() {
   }
 }
 
+async function handleRevert() {
+  $.html = printRevertHtml()
+}
+
+function printRevertHtml() {
+  return `
+  <!DOCTYPE html>
+  <html lang="zh-CN">
+    <head>
+      <title>BoxJs</title>
+      <meta charset="utf-8" />
+      <meta name="apple-mobile-web-app-capable" content="yes">
+      <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+      <link rel="Bookmark" href="https://raw.githubusercontent.com/chavyleung/scripts/master/BOXJS.png" />
+      <link rel="shortcut icon" href="https://raw.githubusercontent.com/chavyleung/scripts/master/BOXJS.png" />
+      <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/chavyleung/scripts/master/BOXJS.png" />
+      <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet" />
+      <link href="https://cdn.jsdelivr.net/npm/@mdi/font@5.x/css/materialdesignicons.min.css" rel="stylesheet" />
+      <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet" />
+    </head>
+    <body>
+      <div id="app">
+        <v-app v-cloak>
+          <v-container>
+            <v-card class="mt-4">
+              <v-card-title>抹掉订阅缓存</v-card-title>
+              <v-card-text>
+                <p class="">该操作会抹掉: <font class="error--text">订阅缓存</font></p>
+                如果添加、更新了订阅后出现白屏现象, 可以尝试抹掉用户设置 <br />
+                注意: 该操作不会删掉订阅, 只会清空订阅缓存
+              </v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-dialog v-model="ui.revertSubCachesDialog.show" persistent max-width="290">
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn small text color="error" v-on="on">抹掉</v-btn>
+                  </template>
+                  <v-card>
+                    <v-card-title class="headline">确定抹掉订阅?</v-card-title>
+                    <v-card-text>该操作不可逆, 请注意备份!</v-card-text>
+                    <v-card-actions>
+                      <v-spacer></v-spacer>
+                      <v-btn color="grey darken-1" text @click="ui.revertSubCachesDialog.show = false">取消</v-btn>
+                      <v-btn color="green darken-1" text @click="revertSubCaches()">确定</v-btn>
+                    </v-card-actions>
+                  </v-card>
+                </v-dialog>
+              </v-card-actions>
+            </v-card>
+            <v-card class="mt-4">
+              <v-card-title>抹掉全局备份</v-card-title>
+              <v-card-text>
+                <p>该操作会抹掉: <font class="error--text">全局备份</font></p>
+                如果备份、导入备份后出现 VPN 断开重连现象, 可尝试抹掉所有备份
+              </v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-dialog v-model="ui.revertBaksDialog.show" persistent max-width="290">
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn small text color="error" v-on="on">抹掉</v-btn>
+                  </template>
+                  <v-card>
+                    <v-card-title class="headline">确定抹掉备份?</v-card-title>
+                    <v-card-text>该操作不可逆, 请注意备份!</v-card-text>
+                    <v-card-actions>
+                      <v-spacer></v-spacer>
+                      <v-btn color="grey darken-1" text @click="ui.revertBaksDialog.show = false">取消</v-btn>
+                      <v-btn color="green darken-1" text @click="revertBaks()">确定</v-btn>
+                    </v-card-actions>
+                  </v-card>
+                </v-dialog>
+              </v-card-actions>
+            </v-card>
+            <v-card class="mt-4">
+              <v-card-title>抹掉所有会话</v-card-title>
+              <v-card-text>
+                <p>该操作会抹掉: <font class="error--text">所有会话</font></p>
+                如果切换会话时出现不符预期现象, 可尝试抹掉所有会话
+              </v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-dialog v-model="ui.revertSessionsDialog.show" persistent max-width="290">
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn small text color="error" v-on="on">抹掉</v-btn>
+                  </template>
+                  <v-card>
+                    <v-card-title class="headline">确定抹掉会话?</v-card-title>
+                    <v-card-text>该操作不可逆, 请注意备份!</v-card-text>
+                    <v-card-actions>
+                      <v-spacer></v-spacer>
+                      <v-btn color="grey darken-1" text @click="ui.revertSessionsDialog.show = false">取消</v-btn>
+                      <v-btn color="green darken-1" text @click="revertSessions()">确定</v-btn>
+                    </v-card-actions>
+                  </v-card>
+                </v-dialog>
+              </v-card-actions>
+            </v-card>
+            <v-overlay v-model="ui.overlay.show" :opacity="0.7">
+              <v-progress-circular indeterminate size="64"></v-progress-circular>
+            </v-overlay>
+          </v-container>
+        </v-app>
+      </div>
+      <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/axios@0.19.2/dist/axios.min.js"></script>
+      <script>
+        new Vue({
+          el: '#app',
+          vuetify: new Vuetify({ theme: { dark: true } }),
+          data() {
+            return {
+              ui: {
+                overlay: { show: false },
+                revertSubCachesDialog: {show: false},
+                revertBaksDialog: {show: false},
+                revertSessionsDialog: {show: false}
+              }
+            }
+          },
+          computed: {
+          },
+          watch: {
+          },
+          methods: {
+            revertSubCaches: function() {
+              this.ui.revertSubCachesDialog.show = false
+              this.ui.overlay.show = true
+              axios.post('/api', JSON.stringify({ cmd: 'revertSubCaches', val: null })).finally(() => {
+                this.ui.overlay.show = false
+              })
+            },
+            revertBaks: function() {
+              this.ui.revertBaksDialog.show = false
+              this.ui.overlay.show = true
+              axios.post('/api', JSON.stringify({ cmd: 'revertBaks', val: null })).finally(() => {
+                this.ui.overlay.show = false
+              })
+            },
+            revertSessions: function() {
+              this.ui.revertSessionsDialog.show = false
+              this.ui.overlay.show = true
+              axios.post('/api', JSON.stringify({ cmd: 'revertSessions', val: null })).finally(() => {
+                this.ui.overlay.show = false
+              })
+            }
+          }
+        })
+      </script>
+    </body>
+  </html>
+  
+  `
+}
+
 function printHtml(data, curapp = null, curview = 'app') {
   return `
   <!DOCTYPE html>
@@ -713,7 +782,7 @@ function printHtml(data, curapp = null, curview = 'app') {
     <body>
       <div id="app">
         <v-app v-scroll="onScroll" v-cloak>
-          <v-app-bar :color="ui.appbar.color" app dense>
+          <v-app-bar app dense>
             <v-menu bottom left v-if="['app', 'home', 'log', 'sub'].includes(ui.curview) && box.syscfgs.env !== ''">
               <template v-slot:activator="{ on }">
                 <v-btn icon v-on="on">
@@ -1194,6 +1263,7 @@ function printHtml(data, curapp = null, curview = 'app') {
                   </v-chip-group>
                 </v-card-text>
                 <v-card-actions>
+                  <v-btn text dense color="red" @click="onGoToRevert">抹掉数据</v-btn>
                   <v-spacer></v-spacer>
                   <v-btn @click="ui.impGlobalBakDialog.show = true">导入</v-btn>
                   <v-btn @click="onGlobalBak">备份</v-btn>
@@ -1493,7 +1563,7 @@ function printHtml(data, curapp = null, curview = 'app') {
               const apps = []
               apps.push(...this.box.sysapps)
               this.box.appsubs.forEach((sub, subIdx) => apps.push(...sub.apps))
-              apps.sort((a, b) => a.id.localeCompare(b.id))
+              apps.sort((a, b) => a.name.localeCompare(b.name))
               return apps
             },
             appcnt: function () {
@@ -1853,6 +1923,9 @@ function printHtml(data, curapp = null, curview = 'app') {
               axios.post('/api', JSON.stringify({ cmd: 'globalBak', val: bakobj })).finally(() => {
                 this.onReload()
               })
+            },
+            onGoToRevert() {
+              window.open('/revert')
             },
             onGlobalBak() {
               const env = this.box.syscfgs.env

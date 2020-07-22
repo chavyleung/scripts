@@ -1,6 +1,23 @@
 {
   "releases": [
     {
+      "version": "0.5.0",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "icon": "https://avatars3.githubusercontent.com/u/29748519",
+      "repo": "https://github.com/chavyleung",
+      "notes": [
+        {
+          "name": "新增",
+          "descs": ["抹掉数据: https://8.8.8.8/revert (更新完需要重启代理)", "出现问题时可单独访问页面抹掉数据"]
+        },
+        {
+          "name": "调整",
+          "descs": ["迁移内置应用至订阅: https://raw.githubusercontent.com/chavyleung/scripts/master/box/chavy.boxjs.json (需要手动更新订阅)"]
+        }
+      ]
+    },
+    {
       "version": "0.4.23",
       "tags": ["beta"],
       "author": "@chavyleung",
