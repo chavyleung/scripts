@@ -1,7 +1,7 @@
 const $ = new Env('BoxJs')
 $.domain = '8.8.8.8'
 
-$.version = '0.5.3'
+$.version = '0.5.4'
 $.versionType = 'beta'
 $.KEY_sessions = 'chavy_boxjs_sessions'
 $.KEY_versions = 'chavy_boxjs_versions'
