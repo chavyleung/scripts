@@ -1,7 +1,7 @@
 const $ = new Env('BoxJs')
 $.domain = '8.8.8.8'
 
-$.version = '0.5.7'
+$.version = '0.5.8'
 $.versionType = 'beta'
 $.KEY_sessions = 'chavy_boxjs_sessions'
 $.KEY_versions = 'chavy_boxjs_versions'
@@ -742,7 +742,7 @@ function printHtml(data, curapp = null, curview = 'app') {
                   </v-list-item-content>
                   <v-list-item-action>
                     <v-btn icon v-if="item.isFav" @click.stop="onFav(item)">
-                      <v-icon v-if="box.usercfgs.isTransparentIcons" color="white">mdi-star</v-icon>
+                      <v-icon v-if="darkMode && box.usercfgs.isTransparentIcons" color="white">mdi-star</v-icon>
                       <v-icon v-else color="yellow darken-2">mdi-star</v-icon>
                     </v-btn>
                     <v-btn icon v-else @click.stop="onFav(item)"><v-icon color="grey">mdi-star-outline</v-icon></v-btn>
@@ -925,7 +925,7 @@ function printHtml(data, curapp = null, curview = 'app') {
                         </v-list-item-content>
                         <v-list-item-action>
                           <v-btn icon v-if="app.isFav" @click.stop="onFav(app, appIdx)">
-                            <v-icon v-if="box.usercfgs.isTransparentIcons" color="white">mdi-star</v-icon>
+                            <v-icon v-if="darkMode && box.usercfgs.isTransparentIcons" color="white">mdi-star</v-icon>
                             <v-icon v-else color="yellow darken-2">mdi-star</v-icon>
                           </v-btn>
                           <v-btn icon v-else @click.stop="onFav(app, appIdx)"><v-icon color="grey">mdi-star-outline</v-icon></v-btn>
@@ -951,7 +951,7 @@ function printHtml(data, curapp = null, curview = 'app') {
                       </v-list-item-content>
                       <v-list-item-action>
                         <v-btn icon v-if="app.isFav" @click.stop="onFav(app, appIdx)">
-                          <v-icon v-if="box.usercfgs.isTransparentIcons" color="white">mdi-star</v-icon>
+                          <v-icon v-if="darkMode && box.usercfgs.isTransparentIcons" color="white">mdi-star</v-icon>
                           <v-icon v-else color="yellow darken-2">mdi-star</v-icon>
                         </v-btn>
                         <v-btn icon v-else @click.stop="onFav(app, appIdx)"><v-icon color="grey">mdi-star-outline</v-icon></v-btn>
