@@ -1,7 +1,7 @@
 const $ = new Env('BoxJs')
 $.domain = '8.8.8.8'
 
-$.version = '0.5.4'
+$.version = '0.5.6'
 $.versionType = 'beta'
 $.KEY_sessions = 'chavy_boxjs_sessions'
 $.KEY_versions = 'chavy_boxjs_versions'
@@ -72,76 +72,20 @@ function getSystemCfgs() {
       { id: 'QuanX', icons: ['https://raw.githubusercontent.com/Orz-3/mini/none/quanX.png', 'https://raw.githubusercontent.com/Orz-3/task/master/quantumultx.png'] },
       { id: 'Loon', icons: ['https://raw.githubusercontent.com/Orz-3/mini/none/loon.png', 'https://raw.githubusercontent.com/Orz-3/task/master/loon.png'] }
     ],
-    chavy: {
-      id: 'Chavy Scripts',
-      icon: 'https://avatars3.githubusercontent.com/u/29748519',
-      repo: 'https://github.com/chavyleung/scripts'
-    },
-    senku: {
-      id: 'GideonSenku',
-      icon: 'https://avatars1.githubusercontent.com/u/39037656',
-      repo: 'https://github.com/GideonSenku'
-    },
-    orz3: {
-      id: 'Orz-3',
-      icon: 'https://raw.githubusercontent.com/Orz-3/task/master/Orz-3.png',
-      repo: 'https://github.com/Orz-3/'
-    },
-    contributors: [
-      { id: 'danchaw', icon: 'https://avatars1.githubusercontent.com/u/33873206?s=60&v=4', repo: 'https://github.com/danchaw' },
-      { id: '0x959', icon: 'https://avatars3.githubusercontent.com/u/42092849?s=60&v=4', repo: 'https://github.com/0x959' },
-      { id: 'lcandy2', icon: 'https://avatars1.githubusercontent.com/u/45784494?s=60&v=4', repo: 'https://github.com/lcandy2' },
-      { id: 'lowking', icon: 'https://avatars0.githubusercontent.com/u/33308659?s=60&v=4', repo: 'https://github.com/lowking' },
-      { id: 'chouchoui', icon: 'https://avatars1.githubusercontent.com/u/14866249?s=60&v=4', repo: 'https://github.com/chouchoui' },
-      { id: 'evilbutcher', icon: 'https://avatars1.githubusercontent.com/u/62224738?s=60&v=4', repo: 'https://github.com/evilbutcher' },
-      { id: 'eegod', icon: 'https://avatars0.githubusercontent.com/u/9635792?s=60&v=4', repo: 'https://github.com/eegod' },
-      { id: 'KaytZ', icon: 'https://avatars2.githubusercontent.com/u/17397324?s=60&v=4', repo: 'https://github.com/KaytZ' }
-    ],
-    boxjs: {
-      id: 'BoxJs',
-      show: false,
-      icon: 'https://raw.githubusercontent.com/Orz-3/task/master/box.png',
-      icons: ['https://raw.githubusercontent.com/Orz-3/mini/master/box.png', 'https://raw.githubusercontent.com/Orz-3/task/master/box.png'],
-      repo: 'https://github.com/chavyleung/scripts'
-    }
+    chavy: { id: 'Chavy Scripts', icon: 'https://avatars3.githubusercontent.com/u/29748519', repo: 'https://github.com/chavyleung/scripts' },
+    senku: { id: 'GideonSenku', icon: 'https://avatars1.githubusercontent.com/u/39037656', repo: 'https://github.com/GideonSenku' },
+    orz3: { id: 'Orz-3', icon: 'https://raw.githubusercontent.com/Orz-3/task/master/Orz-3.png', repo: 'https://github.com/Orz-3/' },
+    boxjs: { id: 'BoxJs', show: false, icon: 'https://raw.githubusercontent.com/Orz-3/task/master/box.png', icons: ['https://raw.githubusercontent.com/Orz-3/mini/master/box.png', 'https://raw.githubusercontent.com/Orz-3/task/master/box.png'], repo: 'https://github.com/chavyleung/scripts' },
+    contributors: []
   }
 }
 
 function getSystemApps() {
   const sysapps = [
-    {
-      id: '52poje',
-      name: '吾爱破解',
-      keys: ['CookieWA'],
-      author: '@NobyDa',
-      repo: 'https://github.com/NobyDa/Script/blob/master/52pojie-DailyBonus/52pojie.js',
-      icons: ['https://raw.githubusercontent.com/Orz-3/mini/master/52pj.png', 'https://raw.githubusercontent.com/Orz-3/task/master/52pj.png']
-    },
-    {
-      id: 'iQIYI',
-      name: '爱奇艺',
-      keys: ['CookieQY'],
-      author: '@NobyDa',
-      repo: 'https://github.com/NobyDa/Script/blob/master/iQIYI-DailyBonus/iQIYI.js',
-      icons: ['https://raw.githubusercontent.com/Orz-3/mini/master/iQIYI.png', 'https://raw.githubusercontent.com/Orz-3/task/master/iQIYI.png']
-    },
-    {
-      id: 'txnews',
-      name: '腾讯新闻',
-      keys: ['sy_signurl_txnews', 'sy_cookie_txnews', 'sy_signurl_txnews2', 'sy_cookie_txnews2'],
-      author: '@Sunert',
-      repo: 'https://github.com/Sunert/Scripts/blob/master/Task/txnews.js',
-      icons: ['https://raw.githubusercontent.com/Orz-3/mini/master/txnews.png', 'https://raw.githubusercontent.com/Orz-3/task/master/txnews.png']
-    },
-    {
-      id: 'BoxSwitcher',
-      name: '会话切换',
-      keys: [],
-      settings: [{ id: 'CFG_BoxSwitcher_isSilent', name: '静默运行', val: false, type: 'boolean', desc: '切换会话时不发出系统通知!' }],
-      author: '@chavyleung',
-      repo: 'https://github.com/chavyleung/scripts/blob/master/box/switcher/box.switcher.js',
-      icons: ['https://raw.githubusercontent.com/Orz-3/mini/master/box.png', 'https://raw.githubusercontent.com/Orz-3/task/master/box.png']
-    }
+    { id: '52poje', name: '吾爱破解', keys: ['CookieWA'], author: '@NobyDa', repo: 'https://github.com/NobyDa/Script/blob/master/52pojie-DailyBonus/52pojie.js', icons: ['https://raw.githubusercontent.com/Orz-3/mini/master/52pj.png', 'https://raw.githubusercontent.com/Orz-3/task/master/52pj.png'] },
+    { id: 'iQIYI', name: '爱奇艺', keys: ['CookieQY'], author: '@NobyDa', repo: 'https://github.com/NobyDa/Script/blob/master/iQIYI-DailyBonus/iQIYI.js', icons: ['https://raw.githubusercontent.com/Orz-3/mini/master/iQIYI.png', 'https://raw.githubusercontent.com/Orz-3/task/master/iQIYI.png'] },
+    { id: 'txnews', name: '腾讯新闻', keys: ['sy_signurl_txnews', 'sy_cookie_txnews', 'sy_signurl_txnews2', 'sy_cookie_txnews2'], author: '@Sunert', repo: 'https://github.com/Sunert/Scripts/blob/master/Task/txnews.js', icons: ['https://raw.githubusercontent.com/Orz-3/mini/master/txnews.png', 'https://raw.githubusercontent.com/Orz-3/task/master/txnews.png'] },
+    { id: 'BoxSwitcher', name: '会话切换', keys: [], settings: [{ id: 'CFG_BoxSwitcher_isSilent', name: '静默运行', val: false, type: 'boolean', desc: '切换会话时不发出系统通知!' }], author: '@chavyleung', epo: 'https://github.com/chavyleung/scripts/blob/master/box/switcher/box.switcher.js', icons: ['https://raw.githubusercontent.com/Orz-3/mini/master/box.png', 'https://raw.githubusercontent.com/Orz-3/task/master/box.png'] }
   ]
   sysapps.sort((a, b) => a.id.localeCompare(b.id))
   wrapapps(sysapps)
@@ -277,14 +221,9 @@ function getSessions() {
 
 async function getVersions() {
   let vers = []
-  // 如果启用了修复功能, 则直接返回, 不发送检查版本请求
-  // const usercfgs = getUserCfgs()
-  // if (['true', true].includes(usercfgs.isFixVPN)) {
-  //   return vers
-  // }
   await new Promise((resolve) => {
     setTimeout(resolve, 1000)
-    const verurl = `https://cdn.jsdelivr.net/gh/chavyleung/scripts@${$.version}/box/release/box.release.json`
+    const verurl = `https://gitee.com/chavyleung/scripts/raw/master/box/release/box.release.json`
     $.get({ url: verurl }, (err, resp, data) => {
       try {
         const _data = JSON.parse(data)
@@ -297,20 +236,6 @@ async function getVersions() {
     })
   })
   return vers
-}
-
-function getSystemThemes() {
-  return [
-    { id: '', name: '默认' },
-    { id: 'red', name: '红色' },
-    { id: 'pink', name: '粉红' },
-    { id: 'purple', name: '紫色' },
-    { id: 'blue', name: '蓝色' },
-    { id: 'light-blue', name: '浅蓝' },
-    { id: 'brown', name: '棕色' },
-    { id: 'grey', name: '灰色' },
-    { id: 'blue-grey', name: '蓝灰' }
-  ]
 }
 
 async function handleApi() {
@@ -519,8 +444,7 @@ async function getBoxData() {
     appsubs: getAppSubs(),
     syscfgs: getSystemCfgs(),
     usercfgs: getUserCfgs(),
-    globalbaks: getGlobalBaks(),
-    colors: getSystemThemes()
+    globalbaks: getGlobalBaks()
   }
   const apps = []
   apps.push(...box.sysapps)
@@ -1037,7 +961,7 @@ function printHtml(data, curapp = null, curview = 'app') {
                 </v-expansion-panel>
               </v-expansion-panels>
             </v-container>
-            <v-container fluid v-if="ui.curview === 'appsession'">
+            <v-container fluid v-else-if="ui.curview === 'appsession'">
               <v-card class="mx-auto mb-4">
                 <template v-if="Array.isArray(ui.curapp.settings)">
                   <v-subheader v-if="Array.isArray(ui.curapp.settings)">
@@ -1183,7 +1107,7 @@ function printHtml(data, curapp = null, curview = 'app') {
                 </v-card>
               </v-dialog>
             </v-container>
-            <v-container fluid v-if="ui.curview === 'sub'">
+            <v-container fluid v-else-if="ui.curview === 'sub'">
               <v-card class="mx-auto" v-if="appsubs.length > 0">
                 <v-list nav dense>
                   <v-subheader inset>
@@ -1254,7 +1178,7 @@ function printHtml(data, curapp = null, curview = 'app') {
                 </v-card>
               </v-dialog>
             </v-container>
-            <v-container fluid v-if="ui.curview === 'my'">
+            <v-container fluid v-else-if="ui.curview === 'my'">
               <v-card class="mx-auto">
                 <v-card-title class="headline">
                   {{ box.usercfgs.name ? box.usercfgs.name : '大侠, 留个名字吧!' }}
@@ -1544,6 +1468,9 @@ function printHtml(data, curapp = null, curview = 'app') {
             }
           },
           computed: {
+            fullscreen: function() {
+              return window.navigator.standalone
+            },
             darkMode: function() {
               const isSysDark = window.matchMedia('(prefers-color-scheme: dark)').matches
               let isDark = !this.box.usercfgs.isLight
@@ -1984,9 +1911,21 @@ function printHtml(data, curapp = null, curview = 'app') {
             },
             onGoToRepo(url) {
               window.open(url)
+            },
+            getContributors() {
+              const url = 'https://api.github.com/repos/chavyleung/scripts/contributors'
+              axios.get(url).then((resp) => {
+                this.box.syscfgs.contributors = []
+                resp.data.forEach((contributor) => {
+                  if ([29748519, 39037656].includes(contributor.id)) return
+                  const {login: id, html_url: repo, avatar_url: icon} = contributor
+                  this.box.syscfgs.contributors.push({id, repo, icon})
+                })
+              })
             }
           },
           mounted: function () {
+            this.getContributors()
             this.$vuetify.theme.dark = this.darkMode
             if (this.ui.curapp) {
               this.goAppSessionView(this.ui.curapp)
