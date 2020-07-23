@@ -1,6 +1,23 @@
 {
   "releases": [
     {
+      "version": "0.5.7",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "icon": "https://avatars3.githubusercontent.com/u/29748519",
+      "repo": "https://github.com/chavyleung",
+      "notes": [
+        {
+          "name": "优化",
+          "descs": ["Rewrite 地址换成 Gitee (更新 BoxJs 后注意重启)"]
+        },
+        {
+          "name": "教程",
+          "descs": ["QuanX 购买超 (90 > 30) 天即可一键更新"]
+        }
+      ]
+    },
+    {
       "version": "0.5.6",
       "tags": ["beta"],
       "author": "@chavyleung",

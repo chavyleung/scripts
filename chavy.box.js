@@ -1,7 +1,7 @@
 const $ = new Env('BoxJs')
 $.domain = '8.8.8.8'
 
-$.version = '0.5.6'
+$.version = '0.5.7'
 $.versionType = 'beta'
 $.KEY_sessions = 'chavy_boxjs_sessions'
 $.KEY_versions = 'chavy_boxjs_versions'
@@ -1385,7 +1385,7 @@ function printHtml(data, curapp = null, curview = 'app') {
                 </v-card-text>
               </v-card>
               <v-card flat v-else-if="box.syscfgs.env === 'QuanX'">
-                <v-card-title>QuanX TF 或 商店 (购买超 90 天)</v-card-title>
+                <v-card-title>QuanX TF 或 商店 (购买超 30 天)</v-card-title>
                 <v-card-text>
                   <p class="subtitle-1">【远程订阅】</p>
                   <p class="body-1">
@@ -1397,7 +1397,7 @@ function printHtml(data, curapp = null, curview = 'app') {
                   <p class="caption">注意: 不是能只更新订阅链接, 必须长按风车全部更新!</p>
                 </v-card-text>
                 <v-divider></v-divider>
-                <v-card-title>QuanX 商店 (购买少于 90 天)</v-card-title>
+                <v-card-title>QuanX 商店 (购买少于 30 天)</v-card-title>
                 <v-card-text>
                   <p class="subtitle-1">【本地更新】</p>
                   <p class="body-2">下载最新脚本 &gt; 重启代理 (主界面右上角的开关)</p>
