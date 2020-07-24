@@ -1,6 +1,23 @@
 {
   "releases": [
     {
+      "version": "0.6.0",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "icon": "https://avatars3.githubusercontent.com/u/29748519",
+      "repo": "https://github.com/chavyleung",
+      "notes": [
+        {
+          "name": "新增",
+          "descs": ["可在 BoxJs 下直接运行脚本 (Surge TF)"]
+        },
+        {
+          "name": "注意",
+          "descs": ["目前仅支持 Surge iOS TF & Surge mac 4.x", "需要在 Surge配置文件中指定 http-api", "然后在 BoxJs 侧栏中设置 http-api 路径", "目前内置应用和 chavy.boxjs.json 内的应用都可以手动运行, 其他订阅需订阅作者更新订阅", "资料: https://community.nssurge.com/d/327-http-api"]
+        }
+      ]
+    },
+    {
       "version": "0.5.8",
       "tags": ["beta"],
       "author": "@chavyleung",

@@ -1,7 +1,7 @@
 const $ = new Env('BoxJs')
 $.domain = '8.8.8.8'
 
-$.version = '0.5.8'
+$.version = '0.6.0'
 $.versionType = 'beta'
 $.KEY_sessions = 'chavy_boxjs_sessions'
 $.KEY_versions = 'chavy_boxjs_versions'
@@ -82,10 +82,43 @@ function getSystemCfgs() {
 
 function getSystemApps() {
   const sysapps = [
-    { id: '52poje', name: '吾爱破解', keys: ['CookieWA'], author: '@NobyDa', repo: 'https://github.com/NobyDa/Script/blob/master/52pojie-DailyBonus/52pojie.js', icons: ['https://raw.githubusercontent.com/Orz-3/mini/master/52pj.png', 'https://raw.githubusercontent.com/Orz-3/task/master/52pj.png'] },
-    { id: 'iQIYI', name: '爱奇艺', keys: ['CookieQY'], author: '@NobyDa', repo: 'https://github.com/NobyDa/Script/blob/master/iQIYI-DailyBonus/iQIYI.js', icons: ['https://raw.githubusercontent.com/Orz-3/mini/master/iQIYI.png', 'https://raw.githubusercontent.com/Orz-3/task/master/iQIYI.png'] },
-    { id: 'txnews', name: '腾讯新闻', keys: ['sy_signurl_txnews', 'sy_cookie_txnews', 'sy_signurl_txnews2', 'sy_cookie_txnews2'], author: '@Sunert', repo: 'https://github.com/Sunert/Scripts/blob/master/Task/txnews.js', icons: ['https://raw.githubusercontent.com/Orz-3/mini/master/txnews.png', 'https://raw.githubusercontent.com/Orz-3/task/master/txnews.png'] },
-    { id: 'BoxSwitcher', name: '会话切换', keys: [], settings: [{ id: 'CFG_BoxSwitcher_isSilent', name: '静默运行', val: false, type: 'boolean', desc: '切换会话时不发出系统通知!' }], author: '@chavyleung', epo: 'https://github.com/chavyleung/scripts/blob/master/box/switcher/box.switcher.js', icons: ['https://raw.githubusercontent.com/Orz-3/mini/master/box.png', 'https://raw.githubusercontent.com/Orz-3/task/master/box.png'] }
+    {
+      id: '52poje',
+      name: '吾爱破解',
+      keys: ['CookieWA'],
+      author: '@NobyDa',
+      repo: 'https://github.com/NobyDa/Script/blob/master/52pojie-DailyBonus/52pojie.js',
+      icons: ['https://raw.githubusercontent.com/Orz-3/mini/master/52pj.png', 'https://raw.githubusercontent.com/Orz-3/task/master/52pj.png'],
+      script: 'https://github.com/NobyDa/Script/blob/master/52pojie-DailyBonus/52pojie.js'
+    },
+    {
+      id: 'iQIYI',
+      name: '爱奇艺',
+      keys: ['CookieQY'],
+      author: '@NobyDa',
+      repo: 'https://github.com/NobyDa/Script/blob/master/iQIYI-DailyBonus/iQIYI.js',
+      icons: ['https://raw.githubusercontent.com/Orz-3/mini/master/iQIYI.png', 'https://raw.githubusercontent.com/Orz-3/task/master/iQIYI.png'],
+      script: 'https://raw.githubusercontent.com/NobyDa/Script/master/iQIYI-DailyBonus/iQIYI.js'
+    },
+    {
+      id: 'txnews',
+      name: '腾讯新闻',
+      keys: ['sy_signurl_txnews', 'sy_cookie_txnews', 'sy_signurl_txnews2', 'sy_cookie_txnews2'],
+      author: '@Sunert',
+      repo: 'https://github.com/Sunert/Scripts/blob/master/Task/txnews.js',
+      icons: ['https://raw.githubusercontent.com/Orz-3/mini/master/txnews.png', 'https://raw.githubusercontent.com/Orz-3/task/master/txnews.png'],
+      script: 'https://raw.githubusercontent.com/Sunert/Scripts/master/Task/txnews.js'
+    },
+    {
+      id: 'BoxSwitcher',
+      name: '会话切换',
+      keys: [],
+      settings: [{ id: 'CFG_BoxSwitcher_isSilent', name: '静默运行', val: false, type: 'boolean', desc: '切换会话时不发出系统通知!' }],
+      author: '@chavyleung',
+      repo: 'https://github.com/chavyleung/scripts/blob/master/box/switcher/box.switcher.js',
+      icons: ['https://raw.githubusercontent.com/Orz-3/mini/master/box.png', 'https://raw.githubusercontent.com/Orz-3/task/master/box.png'],
+      script: 'https://raw.githubusercontent.com/chavyleung/scripts/master/box/switcher/box.switcher.js'
+    }
   ]
   sysapps.sort((a, b) => a.id.localeCompare(b.id))
   wrapapps(sysapps)
@@ -93,7 +126,7 @@ function getSystemApps() {
 }
 
 function getUserCfgs() {
-  const defcfgs = { favapps: [], appsubs: [], appsubCaches: {}, refreshsecs: 3 }
+  const defcfgs = { favapps: [], appsubs: [], appsubCaches: {}, httpapi: 'examplekey@127.0.0.1:6166' }
   const userCfgsStr = $.getdata($.KEY_userCfgs)
   return userCfgsStr ? Object.assign(defcfgs, JSON.parse(userCfgsStr)) : defcfgs
 }
@@ -433,6 +466,15 @@ async function handleApi() {
     $.subt = `抹掉会话: ${delsuc ? '成功' : '失败'}`
     $.msg($.name, $.subt)
   }
+  // 运行脚本
+  else if (data.cmd === 'runScript') {
+    const httpapi = $.getdata('@chavy_boxjs_userCfgs.httpapi')
+    if (/.*?@.*?:[0-9]+/.test(httpapi)) {
+      await $.getScript(data.val.script).then((script) => $.runScript(script))
+    } else {
+      $.msg($.name, '请先设置 http-api !')
+    }
+  }
 }
 
 async function getBoxData() {
@@ -472,6 +514,9 @@ async function handleApp(appId) {
   }
   box.appsubs.filter((sub) => sub.enable !== false).forEach((sub) => apps.push(...sub.apps))
   const curapp = apps.find((app) => app.id === appId)
+  if (curapp.script && $.isSurge()) {
+    await $.getScript(curapp.script).then((script) => (curapp.script_text = script))
+  }
   $.html = printHtml(JSON.stringify(box), JSON.stringify(curapp), 'appsession')
   if (box.usercfgs.isDebugFormat) {
     console.log(printHtml(`'\${data}'`, `'\${curapp}'`, `\${curview}`))
@@ -810,6 +855,19 @@ function printHtml(data, curapp = null, curview = 'app') {
                 </v-row>
               </v-list-item>
               <v-divider></v-divider>
+              <v-list-item v-if="box.syscfgs.env === 'Surge'">
+                <v-list-item-content>
+                  <v-text-field 
+                    label="HTTP-API (Surge TF)" 
+                    v-model="box.usercfgs.httpapi" 
+                    hint="Surge http-api 地址." placeholder="examplekey@127.0.0.1:6166" 
+                    persistent-hint 
+                    @change="onUserCfgsChange"
+                    :rules="[(val)=> /.*?@.*?:[0-9]+/.test(val) || '格式错误: examplekey@127.0.0.1:6166']"
+                    >
+                  </v-text-field>
+                </v-list-item-content>
+              </v-list-item>
               <v-list-item>
                 <v-list-item-content>
                   <v-select 
@@ -966,6 +1024,8 @@ function printHtml(data, curapp = null, curview = 'app') {
                 <template v-if="Array.isArray(ui.curapp.settings)">
                   <v-subheader v-if="Array.isArray(ui.curapp.settings)">
                     应用设置 ({{ ui.curapp.settings.length }})
+                    <v-spacer></v-spacer>
+                    <v-btn v-if="ui.curapp.script" icon @click="onRunScript"><v-icon color="green">mdi-play-circle</v-icon></v-btn>
                   </v-subheader>
                   <v-form class="pl-4 pr-4">
                     <template v-for="(setting, settingIdx) in ui.curapp.settings">
@@ -994,6 +1054,7 @@ function printHtml(data, curapp = null, curview = 'app') {
                 <v-subheader>
                   当前会话 ({{ ui.curapp.datas.length }})
                   <v-spacer></v-spacer>
+                  <v-btn v-if="ui.curapp.script" icon @click="onRunScript"><v-icon color="green">mdi-play-circle</v-icon></v-btn>
                   <v-menu bottom left>
                     <template v-slot:activator="{ on }">
                       <v-btn icon v-on="on"><v-icon>mdi-dots-vertical</v-icon></v-btn>
@@ -1922,6 +1983,15 @@ function printHtml(data, curapp = null, curview = 'app') {
                   this.box.syscfgs.contributors.push({id, repo, icon})
                 })
               })
+            },
+            onRunScript() {
+              // const [key, addr] = this.box.usercfgs.httpapi.split('@')
+              // const url = 'http://' + addr + '/v1/scripting/evaluate'
+              // const body = { script_text: this.ui.curapp.script_text, mock_type: 'cron', timeout: 5 }
+              // const opts = {headers: { 'X-Key': key, 'Accept': '*/*' }}
+              // axios.post(url, body, opts)
+
+              axios.post('/api', JSON.stringify({ cmd: 'runScript', val: this.ui.curapp }))
             }
           },
           mounted: function () {
@@ -1959,4 +2029,4 @@ function printJson() {
 }
 
 // prettier-ignore
-function Env(t,s){return new class{constructor(t,s){this.name=t,this.data=null,this.dataFile="box.dat",this.logs=[],this.logSeparator="\n",this.startTime=(new Date).getTime(),Object.assign(this,s),this.log("",`\ud83d\udd14${this.name}, \u5f00\u59cb!`)}isNode(){return"undefined"!=typeof module&&!!module.exports}isQuanX(){return"undefined"!=typeof $task}isSurge(){return"undefined"!=typeof $httpClient}isLoon(){return"undefined"!=typeof $loon}loaddata(){if(!this.isNode())return{};{this.fs=this.fs?this.fs:require("fs"),this.path=this.path?this.path:require("path");const t=this.path.resolve(this.dataFile),s=this.path.resolve(process.cwd(),this.dataFile),e=this.fs.existsSync(t),i=!e&&this.fs.existsSync(s);if(!e&&!i)return{};{const i=e?t:s;try{return JSON.parse(this.fs.readFileSync(i))}catch(t){return{}}}}}writedata(){if(this.isNode()){this.fs=this.fs?this.fs:require("fs"),this.path=this.path?this.path:require("path");const t=this.path.resolve(this.dataFile),s=this.path.resolve(process.cwd(),this.dataFile),e=this.fs.existsSync(t),i=!e&&this.fs.existsSync(s),o=JSON.stringify(this.data);e?this.fs.writeFileSync(t,o):i?this.fs.writeFileSync(s,o):this.fs.writeFileSync(t,o)}}lodash_get(t,s,e){const i=s.replace(/\[(\d+)\]/g,".$1").split(".");let o=t;for(const t of i)if(o=Object(o)[t],void 0===o)return e;return o}lodash_set(t,s,e){return Object(t)!==t?t:(Array.isArray(s)||(s=s.toString().match(/[^.[\]]+/g)||[]),s.slice(0,-1).reduce((t,e,i)=>Object(t[e])===t[e]?t[e]:t[e]=Math.abs(s[i+1])>>0==+s[i+1]?[]:{},t)[s[s.length-1]]=e,t)}getdata(t){let s=this.getval(t);if(/^@/.test(t)){const[,e,i]=/^@(.*?)\.(.*?)$/.exec(t),o=e?this.getval(e):"";if(o)try{const t=JSON.parse(o);s=t?this.lodash_get(t,i,""):s}catch(t){s=""}}return s}setdata(t,s){let e=!1;if(/^@/.test(s)){const[,i,o]=/^@(.*?)\.(.*?)$/.exec(s),h=this.getval(i),a=i?"null"===h?null:h||"{}":"{}";try{const s=JSON.parse(a);this.lodash_set(s,o,t),e=this.setval(JSON.stringify(s),i),console.log(`${i}: ${JSON.stringify(s)}`)}catch(s){const h={};this.lodash_set(h,o,t),e=this.setval(JSON.stringify(h),i),console.log(`${i}: ${JSON.stringify(h)}`)}}else e=$.setval(t,s);return e}getval(t){return this.isSurge()||this.isLoon()?$persistentStore.read(t):this.isQuanX()?$prefs.valueForKey(t):this.isNode()?(this.data=this.loaddata(),this.data[t]):this.data&&this.data[t]||null}setval(t,s){return this.isSurge()||this.isLoon()?$persistentStore.write(t,s):this.isQuanX()?$prefs.setValueForKey(t,s):this.isNode()?(this.data=this.loaddata(),this.data[s]=t,this.writedata(),!0):this.data&&this.data[s]||null}initGotEnv(t){this.got=this.got?this.got:require("got"),this.cktough=this.cktough?this.cktough:require("tough-cookie"),this.ckjar=this.ckjar?this.ckjar:new this.cktough.CookieJar,t&&(t.headers=t.headers?t.headers:{},void 0===t.headers.Cookie&&void 0===t.cookieJar&&(t.cookieJar=this.ckjar))}get(t,s=(()=>{})){t.headers&&(delete t.headers["Content-Type"],delete t.headers["Content-Length"]),this.isSurge()||this.isLoon()?$httpClient.get(t,(t,e,i)=>{!t&&e&&(e.body=i,e.statusCode=e.status,s(t,e,i))}):this.isQuanX()?$task.fetch(t).then(t=>{const{statusCode:e,statusCode:i,headers:o,body:h}=t;s(null,{status:e,statusCode:i,headers:o,body:h},h)},t=>s(t)):this.isNode()&&(this.initGotEnv(t),this.got(t).on("redirect",(t,s)=>{try{const e=t.headers["set-cookie"].map(this.cktough.Cookie.parse).toString();this.ckjar.setCookieSync(e,null),s.cookieJar=this.ckjar}catch(t){this.logErr(t)}}).then(t=>{const{statusCode:e,statusCode:i,headers:o,body:h}=t;s(null,{status:e,statusCode:i,headers:o,body:h},h)},t=>s(t)))}post(t,s=(()=>{})){if(t.body&&t.headers&&!t.headers["Content-Type"]&&(t.headers["Content-Type"]="application/x-www-form-urlencoded"),delete t.headers["Content-Length"],this.isSurge()||this.isLoon())$httpClient.post(t,(t,e,i)=>{!t&&e&&(e.body=i,e.statusCode=e.status),s(t,e,i)});else if(this.isQuanX())t.method="POST",$task.fetch(t).then(t=>{const{statusCode:e,statusCode:i,headers:o,body:h}=t;s(null,{status:e,statusCode:i,headers:o,body:h},h)},t=>s(t));else if(this.isNode()){this.initGotEnv(t);const{url:e,...i}=t;this.got.post(e,i).then(t=>{const{statusCode:e,statusCode:i,headers:o,body:h}=t;s(null,{status:e,statusCode:i,headers:o,body:h},h)},t=>s(t))}}msg(s=t,e="",i="",o){const h=t=>!t||!this.isLoon()&&this.isSurge()?t:"string"==typeof t?this.isLoon()?t:this.isQuanX()?{"open-url":t}:void 0:"object"==typeof t&&(t["open-url"]||t["media-url"])?this.isLoon()?t["open-url"]:this.isQuanX()?t:void 0:void 0;this.isSurge()||this.isLoon()?$notification.post(s,e,i,h(o)):this.isQuanX()&&$notify(s,e,i,h(o)),this.logs.push("","==============\ud83d\udce3\u7cfb\u7edf\u901a\u77e5\ud83d\udce3=============="),this.logs.push(s),e&&this.logs.push(e),i&&this.logs.push(i)}log(...t){t.length>0?this.logs=[...this.logs,...t]:console.log(this.logs.join(this.logSeparator))}logErr(t,s){const e=!this.isSurge()&&!this.isQuanX()&&!this.isLoon();e?$.log("",`\u2757\ufe0f${this.name}, \u9519\u8bef!`,t.stack):$.log("",`\u2757\ufe0f${this.name}, \u9519\u8bef!`,t.message)}wait(t){return new Promise(s=>setTimeout(s,t))}done(t={}){const s=(new Date).getTime(),e=(s-this.startTime)/1e3;this.log("",`\ud83d\udd14${this.name}, \u7ed3\u675f! \ud83d\udd5b ${e} \u79d2`),this.log(),(this.isSurge()||this.isQuanX()||this.isLoon())&&$done(t)}}(t,s)}
+function Env(t,s){return new class{constructor(t,s){this.name=t,this.data=null,this.dataFile="box.dat",this.logs=[],this.logSeparator="\n",this.startTime=(new Date).getTime(),Object.assign(this,s),this.log("",`\ud83d\udd14${this.name}, \u5f00\u59cb!`)}isNode(){return"undefined"!=typeof module&&!!module.exports}isQuanX(){return"undefined"!=typeof $task}isSurge(){return"undefined"!=typeof $httpClient&&"undefined"==typeof $loon}isLoon(){return"undefined"!=typeof $loon}getScript(t){return new Promise(s=>{$.get({url:t},(t,e,i)=>s(i))})}runScript(t){return new Promise(s=>{const e=this.getdata("@chavy_boxjs_userCfgs.httpapi");console.log(e);const[i,o]=e.split("@"),h={url:`http://${o}/v1/scripting/evaluate`,body:{script_text:t,mock_type:"cron",timeout:5},headers:{"X-Key":i,Accept:"*/*"}};$.post(h,(t,e,i)=>s(i))})}loaddata(){if(!this.isNode())return{};{this.fs=this.fs?this.fs:require("fs"),this.path=this.path?this.path:require("path");const t=this.path.resolve(this.dataFile),s=this.path.resolve(process.cwd(),this.dataFile),e=this.fs.existsSync(t),i=!e&&this.fs.existsSync(s);if(!e&&!i)return{};{const i=e?t:s;try{return JSON.parse(this.fs.readFileSync(i))}catch(t){return{}}}}}writedata(){if(this.isNode()){this.fs=this.fs?this.fs:require("fs"),this.path=this.path?this.path:require("path");const t=this.path.resolve(this.dataFile),s=this.path.resolve(process.cwd(),this.dataFile),e=this.fs.existsSync(t),i=!e&&this.fs.existsSync(s),o=JSON.stringify(this.data);e?this.fs.writeFileSync(t,o):i?this.fs.writeFileSync(s,o):this.fs.writeFileSync(t,o)}}lodash_get(t,s,e){const i=s.replace(/\[(\d+)\]/g,".$1").split(".");let o=t;for(const t of i)if(o=Object(o)[t],void 0===o)return e;return o}lodash_set(t,s,e){return Object(t)!==t?t:(Array.isArray(s)||(s=s.toString().match(/[^.[\]]+/g)||[]),s.slice(0,-1).reduce((t,e,i)=>Object(t[e])===t[e]?t[e]:t[e]=Math.abs(s[i+1])>>0==+s[i+1]?[]:{},t)[s[s.length-1]]=e,t)}getdata(t){let s=this.getval(t);if(/^@/.test(t)){const[,e,i]=/^@(.*?)\.(.*?)$/.exec(t),o=e?this.getval(e):"";if(o)try{const t=JSON.parse(o);s=t?this.lodash_get(t,i,""):s}catch(t){s=""}}return s}setdata(t,s){let e=!1;if(/^@/.test(s)){const[,i,o]=/^@(.*?)\.(.*?)$/.exec(s),h=this.getval(i),a=i?"null"===h?null:h||"{}":"{}";try{const s=JSON.parse(a);this.lodash_set(s,o,t),e=this.setval(JSON.stringify(s),i),console.log(`${i}: ${JSON.stringify(s)}`)}catch(s){const h={};this.lodash_set(h,o,t),e=this.setval(JSON.stringify(h),i),console.log(`${i}: ${JSON.stringify(h)}`)}}else e=$.setval(t,s);return e}getval(t){return this.isSurge()||this.isLoon()?$persistentStore.read(t):this.isQuanX()?$prefs.valueForKey(t):this.isNode()?(this.data=this.loaddata(),this.data[t]):this.data&&this.data[t]||null}setval(t,s){return this.isSurge()||this.isLoon()?$persistentStore.write(t,s):this.isQuanX()?$prefs.setValueForKey(t,s):this.isNode()?(this.data=this.loaddata(),this.data[s]=t,this.writedata(),!0):this.data&&this.data[s]||null}initGotEnv(t){this.got=this.got?this.got:require("got"),this.cktough=this.cktough?this.cktough:require("tough-cookie"),this.ckjar=this.ckjar?this.ckjar:new this.cktough.CookieJar,t&&(t.headers=t.headers?t.headers:{},void 0===t.headers.Cookie&&void 0===t.cookieJar&&(t.cookieJar=this.ckjar))}get(t,s=(()=>{})){t.headers&&(delete t.headers["Content-Type"],delete t.headers["Content-Length"]),this.isSurge()||this.isLoon()?$httpClient.get(t,(t,e,i)=>{!t&&e&&(e.body=i,e.statusCode=e.status,s(t,e,i))}):this.isQuanX()?$task.fetch(t).then(t=>{const{statusCode:e,statusCode:i,headers:o,body:h}=t;s(null,{status:e,statusCode:i,headers:o,body:h},h)},t=>s(t)):this.isNode()&&(this.initGotEnv(t),this.got(t).on("redirect",(t,s)=>{try{const e=t.headers["set-cookie"].map(this.cktough.Cookie.parse).toString();this.ckjar.setCookieSync(e,null),s.cookieJar=this.ckjar}catch(t){this.logErr(t)}}).then(t=>{const{statusCode:e,statusCode:i,headers:o,body:h}=t;s(null,{status:e,statusCode:i,headers:o,body:h},h)},t=>s(t)))}post(t,s=(()=>{})){if(t.body&&t.headers&&!t.headers["Content-Type"]&&(t.headers["Content-Type"]="application/x-www-form-urlencoded"),delete t.headers["Content-Length"],this.isSurge()||this.isLoon())$httpClient.post(t,(t,e,i)=>{!t&&e&&(e.body=i,e.statusCode=e.status),s(t,e,i)});else if(this.isQuanX())t.method="POST",$task.fetch(t).then(t=>{const{statusCode:e,statusCode:i,headers:o,body:h}=t;s(null,{status:e,statusCode:i,headers:o,body:h},h)},t=>s(t));else if(this.isNode()){this.initGotEnv(t);const{url:e,...i}=t;this.got.post(e,i).then(t=>{const{statusCode:e,statusCode:i,headers:o,body:h}=t;s(null,{status:e,statusCode:i,headers:o,body:h},h)},t=>s(t))}}msg(s=t,e="",i="",o){const h=t=>!t||!this.isLoon()&&this.isSurge()?t:"string"==typeof t?this.isLoon()?t:this.isQuanX()?{"open-url":t}:void 0:"object"==typeof t&&(t["open-url"]||t["media-url"])?this.isLoon()?t["open-url"]:this.isQuanX()?t:void 0:void 0;this.isSurge()||this.isLoon()?$notification.post(s,e,i,h(o)):this.isQuanX()&&$notify(s,e,i,h(o)),this.logs.push("","==============\ud83d\udce3\u7cfb\u7edf\u901a\u77e5\ud83d\udce3=============="),this.logs.push(s),e&&this.logs.push(e),i&&this.logs.push(i)}log(...t){t.length>0?this.logs=[...this.logs,...t]:console.log(this.logs.join(this.logSeparator))}logErr(t,s){const e=!this.isSurge()&&!this.isQuanX()&&!this.isLoon();e?$.log("",`\u2757\ufe0f${this.name}, \u9519\u8bef!`,t.stack):$.log("",`\u2757\ufe0f${this.name}, \u9519\u8bef!`,t.message)}wait(t){return new Promise(s=>setTimeout(s,t))}done(t={}){const s=(new Date).getTime(),e=(s-this.startTime)/1e3;this.log("",`\ud83d\udd14${this.name}, \u7ed3\u675f! \ud83d\udd5b ${e} \u79d2`),this.log(),(this.isSurge()||this.isQuanX()||this.isLoon())&&$done(t)}}(t,s)}
