@@ -1,7 +1,7 @@
 const $ = new Env('BoxJs')
 $.domain = '8.8.8.8'
 
-$.version = '0.6.3'
+$.version = '0.6.4'
 $.versionType = 'beta'
 $.KEY_sessions = 'chavy_boxjs_sessions'
 $.KEY_versions = 'chavy_boxjs_versions'
@@ -1220,6 +1220,13 @@ function printHtml(data, curapp = null, curview = 'app') {
                             <v-list-item-title>复制</v-list-item-title>
                           </v-list-item>
                           <v-divider></v-divider>
+                          <v-list-item v-if="subIdx > 0" @click="onMoveSub(subIdx, -1)">
+                            <v-list-item-title>上移</v-list-item-title>
+                          </v-list-item>
+                          <v-list-item v-if="subIdx + 1 < appsubs.length" @click="onMoveSub(subIdx, 1)">
+                            <v-list-item-title>下移</v-list-item-title>
+                          </v-list-item>
+                          <v-divider></v-divider>
                           <v-list-item @click="onDelAppSub(sub)">
                             <v-list-item-title>删除</v-list-item-title>
                           </v-list-item>
@@ -1746,6 +1753,13 @@ function printHtml(data, curapp = null, curview = 'app') {
               const fromIdx = favIdx
               const toIdx = favIdx + moveCnt
               this.box.usercfgs.favapps.splice(fromIdx, 1, ...this.box.usercfgs.favapps.splice(toIdx, 1, this.box.usercfgs.favapps[fromIdx]))
+              this.onUserCfgsChange()
+            },
+            onMoveSub(subIdx, moveCnt) {
+              const fromIdx = subIdx
+              const toIdx = subIdx + moveCnt
+              this.box.appsubs.splice(fromIdx, 1, ...this.box.appsubs.splice(toIdx, 1, this.box.appsubs[fromIdx]))
+              this.box.usercfgs.appsubs.splice(fromIdx, 1, ...this.box.usercfgs.appsubs.splice(toIdx, 1, this.box.usercfgs.appsubs[fromIdx]))
               this.onUserCfgsChange()
             },
             onFav(app) {
