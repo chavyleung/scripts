@@ -1,6 +1,27 @@
 {
   "releases": [
     {
+      "version": "0.6.2",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "icon": "https://avatars3.githubusercontent.com/u/29748519",
+      "repo": "https://github.com/chavyleung",
+      "notes": [
+        {
+          "name": "主题",
+          "descs": ["浅色主题下使用黄色头部", "全屏状态下使用透明头部"]
+        },
+        {
+          "name": "注意",
+          "descs": ["需要重新添加到桌面才能生效"]
+        },
+        {
+          "name": "感谢",
+          "descs": ["感谢 @chouchoui 的 PR"]
+        }
+      ]
+    },
+    {
       "version": "0.6.0",
       "tags": ["beta"],
       "author": "@chavyleung",
