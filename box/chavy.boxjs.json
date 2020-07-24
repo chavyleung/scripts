@@ -12,6 +12,7 @@
       "settings": [{ "id": "chavy_mobile_10000", "name": "手机号码", "val": "", "type": "textarea", "placeholder": "18918920000,\n18918920000", "autoGrow": true, "rows": 5, "desc": "以英文逗号分隔多个号码, 可加回车" }],
       "author": "@wangfei021325, @chavyleung",
       "repo": "https://github.com/chavyleung/scripts/blob/master/10000/10000.js",
+      "script": "https://raw.githubusercontent.com/chavyleung/scripts/master/10000/10000.js",
       "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/10000.png", "https://raw.githubusercontent.com/Orz-3/task/master/10000.png"]
     },
     {
@@ -20,6 +21,7 @@
       "keys": ["chavy_tokenurl_10010", "chavy_tokenheader_10010", "chavy_signurl_10010", "chavy_signheader_10010", "chavy_loginlotteryurl_10010", "chavy_loginlotteryheader_10010", "chavy_findlotteryurl_10010", "chavy_findlotteryheader_10010"],
       "author": "@chavyleung",
       "repo": "https://github.com/chavyleung/scripts/tree/master/10010",
+      "script": "https://raw.githubusercontent.com/chavyleung/scripts/master/10010/10010.js",
       "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/10010.png", "https://raw.githubusercontent.com/Orz-3/task/master/10010.png"]
     },
     {
@@ -28,6 +30,7 @@
       "keys": ["chavy_autologin_cmcc", "chavy_getfee_cmcc", "chavy_tokenurl_10086", "chavy_tokenheader_10086", "chavy_signurl_10086", "chavy_signheader_10086"],
       "author": "@wangfei021325, @chavyleung",
       "repo": "https://github.com/chavyleung/scripts/blob/master/10086/10086.js",
+      "script": "https://raw.githubusercontent.com/chavyleung/scripts/master/10086/10086.js",
       "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/10086.png", "https://raw.githubusercontent.com/Orz-3/task/master/10086.png"]
     },
     {
@@ -36,6 +39,7 @@
       "keys": ["senku_cookie_bcz", "senku_key_bcz"],
       "author": "@GideonSenku",
       "repo": "https://github.com/chavyleung/scripts/tree/master/bcz",
+      "script": "https://raw.githubusercontent.com/chavyleung/scripts/master/bcz/bcz.js",
       "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/bcz.png", "https://raw.githubusercontent.com/Orz-3/task/master/bcz.png"]
     },
     {
@@ -50,6 +54,7 @@
       ],
       "author": "@chavyleung",
       "repo": "https://github.com/chavyleung/scripts/tree/master/tieba",
+      "script": "https://raw.githubusercontent.com/chavyleung/scripts/master/tieba/tieba.js",
       "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/baidu.png", "https://raw.githubusercontent.com/Orz-3/task/master/baidu.png"]
     },
     {
@@ -57,6 +62,7 @@
       "name": "百果园",
       "keys": ["chavy_sign_pagoda"],
       "author": "@chavyleung",
+      "script": "https://raw.githubusercontent.com/chavyleung/scripts/master/pagoda/pagoda.js",
       "repo": "https://github.com/chavyleung/scripts/blob/master/pagoda"
     },
     {
@@ -65,6 +71,7 @@
       "keys": ["senku_signurl_dbsj", "senku_signheader_dbsj", "senku_signbody_dbsj"],
       "author": "@GideonSenku",
       "repo": "https://github.com/chavyleung/scripts/tree/master/dbsj",
+      "script": "https://raw.githubusercontent.com/chavyleung/scripts/master/dbsj/dbsj.js",
       "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/dbsj.png", "https://raw.githubusercontent.com/Orz-3/task/master/dbsj.png"]
     },
     {
@@ -73,6 +80,7 @@
       "keys": ["senku_signurl_pandeng", "senku_signheader_pandeng", "senku_signbody_pandeng"],
       "author": "@GideonSenku",
       "repo": "https://github.com/chavyleung/scripts/tree/master/fandeng",
+      "script": "https://raw.githubusercontent.com/chavyleung/scripts/master/fandeng/fandeng.js",
       "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/fandeng.png", "https://raw.githubusercontent.com/Orz-3/task/master/fandeng.png"]
     },
     {
@@ -81,6 +89,7 @@
       "keys": ["senku_signurl_fenqile", "senku_signheader_fenqile", "senku_signbody_fenqile", "senku_signDailyKey_fenqile", "senku_signDailyUrlKey_fenqile"],
       "author": "@GideonSenku",
       "repo": "https://github.com/chavyleung/scripts/tree/master/fenqile",
+      "script": "https://raw.githubusercontent.com/chavyleung/scripts/master/fenqile/fenqile.js",
       "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/fenqile.png", "https://raw.githubusercontent.com/Orz-3/task/master/fenqile.png"]
     },
     {
@@ -89,6 +98,7 @@
       "keys": ["chavy_signurl_gdoil", "chavy_signheader_gdoil"],
       "author": "@chavyleung",
       "repo": "https://github.com/chavyleung/scripts/tree/master/gdoil",
+      "script": "https://raw.githubusercontent.com/chavyleung/scripts/master/gdoil/gdoil.js",
       "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/gdoil.png", "https://raw.githubusercontent.com/Orz-3/task/master/gdoil.png"]
     },
     {
@@ -105,6 +115,7 @@
       ],
       "author": "@chavyleung",
       "repo": "https://github.com/chavyleung/scripts/tree/master/jd",
+      "script": "https://raw.githubusercontent.com/chavyleung/scripts/master/jd/jd.618.js",
       "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/jd.png", "https://raw.githubusercontent.com/Orz-3/task/master/jd.png"]
     },
     {
@@ -113,6 +124,7 @@
       "keys": ["chavy_signurl_mgtv", "chavy_signheader_mgtv"],
       "author": "@chavyleung",
       "repo": "https://github.com/chavyleung/scripts/blob/master/mgtv/mgtv.js",
+      "script": "https://raw.githubusercontent.com/chavyleung/scripts/master/mgtv/mgtv.js",
       "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/mgtv.png", "https://raw.githubusercontent.com/Orz-3/task/master/mgtv.png"]
     },
     {
@@ -121,6 +133,7 @@
       "keys": ["chavy_tokenurl_meituan", "chavy_tokenheader_meituan", "chavy_signurl_meituan", "chavy_signheader_meituan", "chavy_signbody_meituan"],
       "author": "@chavyleung",
       "repo": "https://github.com/chavyleung/scripts/blob/master/meituan/meituan.js",
+      "script": "https://raw.githubusercontent.com/chavyleung/scripts/master/meituan/meituan.js",
       "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/meituan.png", "https://raw.githubusercontent.com/Orz-3/task/master/meituan.png"]
     },
     {
@@ -129,6 +142,7 @@
       "keys": ["senku_signKey_qtt", "senku_signXTK_qtt", "senku_readKey_qtt", "senku_navCoinKey_qtt"],
       "author": "@GideonSenku",
       "repo": "https://github.com/chavyleung/scripts/tree/master/qtt",
+      "script": "https://raw.githubusercontent.com/chavyleung/scripts/master/qtt/qtt.js",
       "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/qtt.png", "https://raw.githubusercontent.com/Orz-3/task/master/qtt.png"]
     },
     {
@@ -137,6 +151,7 @@
       "keys": ["senku_signurl_qmkg", "senku_signheader_qmkg", "senku_signbody_qmkg"],
       "author": "@GideonSenku",
       "repo": "https://github.com/chavyleung/scripts/tree/master/qmkg",
+      "script": "https://raw.githubusercontent.com/chavyleung/scripts/master/qmkg/qmkg.js",
       "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/qmkg.png", "https://raw.githubusercontent.com/Orz-3/task/master/qmkg.png"]
     },
     {
@@ -149,6 +164,7 @@
       ],
       "author": "@wangfei021325, @chavyleung",
       "repo": "https://github.com/chavyleung/scripts/tree/master/smzdm",
+      "script": "https://raw.githubusercontent.com/chavyleung/scripts/master/smzdm/smzdm.js",
       "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/smzdm.png", "https://raw.githubusercontent.com/Orz-3/task/master/smzdm.png"]
     },
     {
@@ -157,6 +173,7 @@
       "keys": ["chavy_loginurl_sfexpress", "chavy_loginheader_sfexpress"],
       "author": "@chavyleung",
       "repo": "https://github.com/chavyleung/scripts/blob/master/sfexpress",
+      "script": "https://raw.githubusercontent.com/chavyleung/scripts/master/sfexpress/sfexpress.js",
       "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/sfexpress.png", "https://raw.githubusercontent.com/Orz-3/task/master/sfexpress.png"]
     },
     {
@@ -165,6 +182,7 @@
       "keys": ["chavy_login_url_suning", "chavy_login_body_suning", "chavy_login_header_suning", "chavy_sign_url_suning", "chavy_sign_header_suning", "chavy_signweb_url_suning", "snyg_userTokenKey", "chavy_signweb_header_suning", "chavy_signgame_url_suning", "chavy_signgame_header_suning", "chavy_signgetgame_url_suning", "chavy_signgetgame_header_suning"],
       "author": "@chavyleung",
       "repo": "https://github.com/chavyleung/scripts/blob/master/suning/suning.js",
+      "script": "https://raw.githubusercontent.com/chavyleung/scripts/master/suning/suning.js",
       "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/suning.png", "https://raw.githubusercontent.com/Orz-3/task/master/suning.png"]
     },
     {
@@ -173,6 +191,7 @@
       "keys": ["chavy_cookie_videoqq", "chavy_auth_url_videoqq", "chavy_auth_header_videoqq", "chavy_msign_url_videoqq", "chavy_msign_header_videoqq"],
       "author": "@chavyleung",
       "repo": "https://github.com/chavyleung/scripts/tree/master/videoqq",
+      "script": "https://raw.githubusercontent.com/chavyleung/scripts/master/videoqq/videoqq.js",
       "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/videoqq.png", "https://raw.githubusercontent.com/Orz-3/task/master/videoqq.png"]
     },
     {
@@ -181,6 +200,7 @@
       "keys": ["senku_wanda_mi_"],
       "author": "@GideonSenku",
       "repo": "https://github.com/chavyleung/scripts/tree/master/wanda",
+      "script": "https://raw.githubusercontent.com/chavyleung/scripts/master/wanda/wanda.js",
       "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/wanda.png", "https://raw.githubusercontent.com/Orz-3/task/master/wanda.png"]
     },
     {
@@ -189,6 +209,7 @@
       "keys": ["chavy_cookie_neteasenews", "chavy_body_neteasenews"],
       "author": "@chavyleung",
       "repo": "https://github.com/chavyleung/scripts/tree/master/neteasenews",
+      "script": "https://raw.githubusercontent.com/chavyleung/scripts/master/neteasenews/neteasenews.js",
       "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/neteasenews.png", "https://raw.githubusercontent.com/Orz-3/task/master/neteasenews.png"]
     },
     {
@@ -201,6 +222,7 @@
       ],
       "author": "@chavyleung",
       "repo": "https://github.com/chavyleung/scripts/tree/master/neteasemusic",
+      "script": "https://raw.githubusercontent.com/chavyleung/scripts/master/neteasemusic/neteasemusic.js",
       "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/Netease.png", "https://raw.githubusercontent.com/Orz-3/task/master/Netease.png"]
     },
     {
@@ -210,6 +232,7 @@
       "keys": [],
       "author": "@chavyleung",
       "repo": "https://github.com/chavyleung/scripts/tree/master/feng",
+      "script": "https://raw.githubusercontent.com/chavyleung/scripts/master/feng/feng.js",
       "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/feng.png", "https://raw.githubusercontent.com/Orz-3/task/master/feng.png"]
     },
     {
@@ -219,6 +242,7 @@
       "author": "@chavyleung",
       "repo": "https://github.com/chavyleung/scripts/tree/master/noteyoudao",
       "url": "https://apps.apple.com/cn/app/有道云笔记-扫描王版/id450748070",
+      "script": "https://raw.githubusercontent.com/chavyleung/scripts/master/noteyoudao/noteyoudao.js",
       "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/noteyoudao.png", "https://raw.githubusercontent.com/Orz-3/task/master/noteyoudao.png"],
       "tasks": [{ "cron": "3 0 * * *", "script": "noteyoudao.js" }],
       "rewrites": [{ "type": "request", "pattern": "^https://note.youdao.com/yws/mapi/user?method=checkin", "script": "noteyoudao.cookie.js", "body": true }]
@@ -229,6 +253,7 @@
       "keys": ["senku_signurl_zxhc", "senku_signheader_zxhc", "senku_signbody_zxhc"],
       "author": "@GideonSenku",
       "repo": "https://github.com/chavyleung/scripts/tree/master/zxhc",
+      "script": "https://raw.githubusercontent.com/chavyleung/scripts/master/zxhc/zxhc.js",
       "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/zxhc.png", "https://raw.githubusercontent.com/Orz-3/task/master/zxhc.png"]
     },
     {
@@ -237,6 +262,7 @@
       "keys": ["chavy_cookie_zimuzu", "chavy_auth_url_zimuzu_app"],
       "author": "@chavyleung",
       "repo": "https://github.com/chavyleung/scripts/tree/master/zimuzu",
+      "script": "https://raw.githubusercontent.com/chavyleung/scripts/master/zimuzu/zimuzu.js",
       "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/zimuzu.png", "https://raw.githubusercontent.com/Orz-3/task/master/zimuzu.png"]
     },
     {
@@ -245,6 +271,7 @@
       "keys": ["chavy_cookie_acfun", "chavy_token_acfun"],
       "author": "@chavyleung",
       "repo": "https://github.com/chavyleung/scripts/tree/master/acfun",
+      "script": "https://raw.githubusercontent.com/chavyleung/scripts/master/acfun/acfun.js",
       "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/acfun.png", "https://raw.githubusercontent.com/Orz-3/task/master/acfun.png"]
     },
     {
@@ -254,6 +281,7 @@
       "author": "@chavyleung",
       "repo": "https://github.com/chavyleung/scripts/tree/master/apktw",
       "url": "https://apk.tw/",
+      "script": "https://raw.githubusercontent.com/chavyleung/scripts/master/apktw/apktw.js",
       "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/apktw.png", "https://raw.githubusercontent.com/Orz-3/task/master/apktw.png"],
       "tasks": [{ "cron": "3 0 * * *", "script": "apktw.js" }],
       "rewrites": [{ "type": "request", "pattern": "^https://apk.tw/member.php(.*?)action=login", "script": "apktw.cookie.js", "body": true }]
@@ -264,6 +292,7 @@
       "keys": ["chavy_cookie_bilibili"],
       "author": "@chavyleung",
       "repo": "https://github.com/chavyleung/scripts/blob/master/bilibili/bilibili.js",
+      "script": "https://raw.githubusercontent.com/chavyleung/scripts/master/bilibili/bilibili.js",
       "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/bilibili.png", "https://raw.githubusercontent.com/Orz-3/task/master/bilibili.png"]
     },
     {
@@ -272,6 +301,7 @@
       "keys": ["chavy_cookie_v2ex"],
       "author": "@chavyleung",
       "repo": "https://github.com/chavyleung/scripts/tree/master/v2ex",
+      "script": "https://raw.githubusercontent.com/chavyleung/scripts/master/v2ex/v2ex.js",
       "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/v2ex.png", "https://raw.githubusercontent.com/Orz-3/task/master/v2ex.png"]
     },
     {
@@ -280,6 +310,7 @@
       "keys": ["chavy_signhomeurl_wps", "chavy_signhomeheader_wps"],
       "author": "@chavyleung",
       "repo": "https://github.com/chavyleung/scripts/tree/master/wps",
+      "script": "https://raw.githubusercontent.com/chavyleung/scripts/master/wps/wps.js",
       "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/wps.png", "https://raw.githubusercontent.com/Orz-3/task/master/wps.png"]
     }
   ]
