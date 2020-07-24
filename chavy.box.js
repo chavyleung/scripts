@@ -1,7 +1,7 @@
 const $ = new Env('BoxJs')
 $.domain = '8.8.8.8'
 
-$.version = '0.6.2'
+$.version = '0.6.3'
 $.versionType = 'beta'
 $.KEY_sessions = 'chavy_boxjs_sessions'
 $.KEY_versions = 'chavy_boxjs_versions'
@@ -769,7 +769,7 @@ function printHtml(data, curapp = null, curview = 'app') {
     <body>
       <div id="app">
         <v-app v-scroll="onScroll" v-cloak>
-          <v-app-bar app dense :color="darkMode ? undefined : '#F7BB0E'">
+          <v-app-bar app dense :color="darkMode || !window.navigator.standalone ? undefined : '#F7BB0E'">
             <v-menu bottom left v-if="['app', 'home', 'log', 'sub'].includes(ui.curview) && box.syscfgs.env !== ''">
               <template v-slot:activator="{ on }">
                 <v-btn icon v-on="on">
