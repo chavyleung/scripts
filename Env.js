@@ -20,11 +20,31 @@ function Env(name, opts) {
     }
 
     isSurge() {
-      return 'undefined' !== typeof $httpClient
+      return 'undefined' !== typeof $httpClient && 'undefined' === typeof $loon
     }
 
     isLoon() {
       return 'undefined' !== typeof $loon
+    }
+
+    getScript(url) {
+      return new Promise((resolve) => {
+        $.get({ url }, (err, resp, body) => resolve(body))
+      })
+    }
+
+    runScript(script) {
+      return new Promise((resolve) => {
+        const httpapi = this.getdata('@chavy_boxjs_userCfgs.httpapi')
+        console.log(httpapi)
+        const [key, addr] = httpapi.split('@')
+        const opts = {
+          url: `http://${addr}/v1/scripting/evaluate`,
+          body: { script_text: script, mock_type: 'cron', timeout: 5 },
+          headers: { 'X-Key': key, 'Accept': '*/*' }
+        }
+        $.post(opts, (err, resp, body) => resolve(body))
+      })
     }
 
     loaddata() {
