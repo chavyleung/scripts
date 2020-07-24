@@ -1,7 +1,7 @@
 const $ = new Env('BoxJs')
 $.domain = '8.8.8.8'
 
-$.version = '0.6.0'
+$.version = '0.6.1'
 $.versionType = 'beta'
 $.KEY_sessions = 'chavy_boxjs_sessions'
 $.KEY_versions = 'chavy_boxjs_versions'
@@ -1025,7 +1025,7 @@ function printHtml(data, curapp = null, curview = 'app') {
                   <v-subheader v-if="Array.isArray(ui.curapp.settings)">
                     应用设置 ({{ ui.curapp.settings.length }})
                     <v-spacer></v-spacer>
-                    <v-btn v-if="ui.curapp.script" icon @click="onRunScript"><v-icon color="green">mdi-play-circle</v-icon></v-btn>
+                    <v-btn v-if="box.syscfgs.env === 'Surge' && ui.curapp.script" icon @click="onRunScript"><v-icon color="green">mdi-play-circle</v-icon></v-btn>
                   </v-subheader>
                   <v-form class="pl-4 pr-4">
                     <template v-for="(setting, settingIdx) in ui.curapp.settings">
@@ -1054,7 +1054,7 @@ function printHtml(data, curapp = null, curview = 'app') {
                 <v-subheader>
                   当前会话 ({{ ui.curapp.datas.length }})
                   <v-spacer></v-spacer>
-                  <v-btn v-if="ui.curapp.script" icon @click="onRunScript"><v-icon color="green">mdi-play-circle</v-icon></v-btn>
+                  <v-btn v-if="box.syscfgs.env === 'Surge' && ui.curapp.script" icon @click="onRunScript"><v-icon color="green">mdi-play-circle</v-icon></v-btn>
                   <v-menu bottom left>
                     <template v-slot:activator="{ on }">
                       <v-btn icon v-on="on"><v-icon>mdi-dots-vertical</v-icon></v-btn>
