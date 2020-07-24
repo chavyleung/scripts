@@ -708,6 +708,7 @@ function printHtml(data, curapp = null, curview = 'app') {
       <title>BoxJs</title>
       <meta charset="utf-8" />
       <meta name="apple-mobile-web-app-capable" content="yes">
+      <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
       <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
       <link rel="Bookmark" href="https://raw.githubusercontent.com/chavyleung/scripts/master/BOXJS.png" />
       <link rel="shortcut icon" href="https://raw.githubusercontent.com/chavyleung/scripts/master/BOXJS.png" />
@@ -718,6 +719,18 @@ function printHtml(data, curapp = null, curview = 'app') {
       <style>
         [v-cloak]{
           display: none
+        }
+        body{
+          padding-top: constant(safe-area-inset-top) !important;
+          padding-top: env(safe-area-inset-top);
+        }
+        .v-app-bar, .v-navigation-drawer__content{
+          box-sizing: content-box;
+          padding-top: constant(safe-area-inset-top);
+          padding-top: env(safe-area-inset-top);
+        }
+        .v-app-bar .v-autocomplete{
+          box-sizing: border-box;
         }
         .v-bottom-navigation,
         .v-bottom-sheet {
@@ -756,7 +769,7 @@ function printHtml(data, curapp = null, curview = 'app') {
     <body>
       <div id="app">
         <v-app v-scroll="onScroll" v-cloak>
-          <v-app-bar app dense>
+          <v-app-bar app dense :color="darkMode ? undefined : '#F7BB0E'">
             <v-menu bottom left v-if="['app', 'home', 'log', 'sub'].includes(ui.curview) && box.syscfgs.env !== ''">
               <template v-slot:activator="{ on }">
                 <v-btn icon v-on="on">
