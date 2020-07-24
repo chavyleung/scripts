@@ -769,7 +769,7 @@ function printHtml(data, curapp = null, curview = 'app') {
     <body>
       <div id="app">
         <v-app v-scroll="onScroll" v-cloak>
-          <v-app-bar app dense :color="darkMode ? undefined : '#F7BB0E'">
+          <v-app-bar app dense :color="darkMode || !window.navigator.standalone ? undefined : '#F7BB0E'">
             <v-menu bottom left v-if="['app', 'home', 'log', 'sub'].includes(ui.curview) && box.syscfgs.env !== ''">
               <template v-slot:activator="{ on }">
                 <v-btn icon v-on="on">
