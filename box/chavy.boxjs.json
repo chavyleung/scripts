@@ -63,7 +63,8 @@
       "keys": ["chavy_sign_pagoda"],
       "author": "@chavyleung",
       "script": "https://raw.githubusercontent.com/chavyleung/scripts/master/pagoda/pagoda.js",
-      "repo": "https://github.com/chavyleung/scripts/blob/master/pagoda"
+      "repo": "https://github.com/chavyleung/scripts/blob/master/pagoda",
+      "icons": ["https://raw.githubusercontent.com/58xinian/icon/master/pagoda_mini.png", "https://raw.githubusercontent.com/58xinian/icon/master/pagoda.png"]
     },
     {
       "id": "dbsj",
