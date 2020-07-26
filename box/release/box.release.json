@@ -1,6 +1,27 @@
 {
   "releases": [
     {
+      "version": "0.6.5",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "icon": "https://avatars3.githubusercontent.com/u/29748519",
+      "repo": "https://github.com/chavyleung",
+      "notes": [
+        {
+          "name": "新增",
+          "descs": ["Surge、QuanX、Loon 都可以在 BoxJs 中手动运行脚本"]
+        },
+        {
+          "name": "说明",
+          "descs": ["手动运行脚本采用 eval() 方案", "Surge 在配置了 http-api 参数下会使用 http-api 方案运行脚本", "因为手法有点特殊, 不保证所有脚本都能良好"]
+        },
+        {
+          "name": "感谢",
+          "descs": ["感谢 @NobyDa 野比大佬提醒可以使用 eval() 方案"]
+        }
+      ]
+    },
+    {
       "version": "0.6.4",
       "tags": ["beta"],
       "author": "@chavyleung",
