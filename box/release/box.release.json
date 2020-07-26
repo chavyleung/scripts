@@ -1,6 +1,19 @@
 {
   "releases": [
     {
+      "version": "0.6.6",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "icon": "https://avatars3.githubusercontent.com/u/29748519",
+      "repo": "https://github.com/chavyleung",
+      "notes": [
+        {
+          "name": "调整",
+          "descs": ["迁移 腾讯新闻 至原作者订阅: @Sunert", "https://raw.githubusercontent.com/Sunert/Scripts/master/Task/sunert.boxjs.json"]
+        }
+      ]
+    },
+    {
       "version": "0.6.5",
       "tags": ["beta"],
       "author": "@chavyleung",

@@ -1,7 +1,7 @@
 const $ = new Env('BoxJs')
 $.domain = '8.8.8.8'
 
-$.version = '0.6.5'
+$.version = '0.6.6'
 $.versionType = 'beta'
 $.KEY_sessions = 'chavy_boxjs_sessions'
 $.KEY_versions = 'chavy_boxjs_versions'
@@ -99,15 +99,6 @@ function getSystemApps() {
       repo: 'https://github.com/NobyDa/Script/blob/master/iQIYI-DailyBonus/iQIYI.js',
       icons: ['https://raw.githubusercontent.com/Orz-3/mini/master/iQIYI.png', 'https://raw.githubusercontent.com/Orz-3/task/master/iQIYI.png'],
       script: 'https://raw.githubusercontent.com/NobyDa/Script/master/iQIYI-DailyBonus/iQIYI.js'
-    },
-    {
-      id: 'txnews',
-      name: '腾讯新闻',
-      keys: ['sy_signurl_txnews', 'sy_cookie_txnews', 'sy_signurl_txnews2', 'sy_cookie_txnews2'],
-      author: '@Sunert',
-      repo: 'https://github.com/Sunert/Scripts/blob/master/Task/txnews.js',
-      icons: ['https://raw.githubusercontent.com/Orz-3/mini/master/txnews.png', 'https://raw.githubusercontent.com/Orz-3/task/master/txnews.png'],
-      script: 'https://raw.githubusercontent.com/Sunert/Scripts/master/Task/txnews.js'
     },
     {
       id: 'BoxSwitcher',
