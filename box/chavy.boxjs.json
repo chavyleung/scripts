@@ -205,6 +205,15 @@
       "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/wanda.png", "https://raw.githubusercontent.com/Orz-3/task/master/wanda.png"]
     },
     {
+      "id": "ithome",
+      "name": "IT之家",
+      "keys": ["senku_ithome_userHash"],
+      "author": "@GideonSenku",
+      "repo": "https://github.com/chavyleung/scripts/tree/master/ithome",
+      "script": "https://raw.githubusercontent.com/chavyleung/scripts/master/ithome/ithome.js",
+      "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/ithome.png", "https://raw.githubusercontent.com/Orz-3/task/master/ithome.png"]
+    },
+    {
       "id": "NeteaseNews",
       "name": "网易新闻",
       "keys": ["chavy_cookie_neteasenews", "chavy_body_neteasenews"],
