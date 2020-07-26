@@ -1,6 +1,23 @@
 {
   "releases": [
     {
+      "version": "0.6.7",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "icon": "https://avatars3.githubusercontent.com/u/29748519",
+      "repo": "https://github.com/chavyleung",
+      "notes": [
+        {
+          "name": "重写",
+          "descs": ["BoxJs Surge 的重写超时改为 120 秒 (避免手动运行脚本容易超时)"]
+        },
+        {
+          "name": "调整",
+          "descs": ["迁移 吾爱破解、爱奇艺 至原作者订阅: @NobyDa (野比)", "https://raw.githubusercontent.com/NobyDa/Script/master/NobyDa_BoxJs.json"]
+        }
+      ]
+    },
+    {
       "version": "0.6.6",
       "tags": ["beta"],
       "author": "@chavyleung",

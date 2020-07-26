@@ -1,7 +1,7 @@
 const $ = new Env('BoxJs')
 $.domain = '8.8.8.8'
 
-$.version = '0.6.6'
+$.version = '0.6.7'
 $.versionType = 'beta'
 $.KEY_sessions = 'chavy_boxjs_sessions'
 $.KEY_versions = 'chavy_boxjs_versions'
@@ -82,24 +82,6 @@ function getSystemCfgs() {
 
 function getSystemApps() {
   const sysapps = [
-    {
-      id: '52poje',
-      name: '吾爱破解',
-      keys: ['CookieWA'],
-      author: '@NobyDa',
-      repo: 'https://github.com/NobyDa/Script/blob/master/52pojie-DailyBonus/52pojie.js',
-      icons: ['https://raw.githubusercontent.com/Orz-3/mini/master/52pj.png', 'https://raw.githubusercontent.com/Orz-3/task/master/52pj.png'],
-      script: 'https://github.com/NobyDa/Script/blob/master/52pojie-DailyBonus/52pojie.js'
-    },
-    {
-      id: 'iQIYI',
-      name: '爱奇艺',
-      keys: ['CookieQY'],
-      author: '@NobyDa',
-      repo: 'https://github.com/NobyDa/Script/blob/master/iQIYI-DailyBonus/iQIYI.js',
-      icons: ['https://raw.githubusercontent.com/Orz-3/mini/master/iQIYI.png', 'https://raw.githubusercontent.com/Orz-3/task/master/iQIYI.png'],
-      script: 'https://raw.githubusercontent.com/NobyDa/Script/master/iQIYI-DailyBonus/iQIYI.js'
-    },
     {
       id: 'BoxSwitcher',
       name: '会话切换',
