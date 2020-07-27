@@ -1,7 +1,7 @@
 const $ = new Env('BoxJs')
 $.domain = '8.8.8.8'
 
-$.version = '0.6.9'
+$.version = '0.6.10'
 $.versionType = 'beta'
 $.KEY_sessions = 'chavy_boxjs_sessions'
 $.KEY_versions = 'chavy_boxjs_versions'
@@ -93,7 +93,7 @@ function getSystemApps() {
       ],
       author: '@chavyleung',
       repo: 'https://github.com/chavyleung/scripts/blob/master/box/switcher/box.switcher.js',
-      icons: ['https://raw.githubusercontent.com/Orz-3/mini/master/box.png', 'https://raw.githubusercontent.com/Orz-3/task/master/box.png']
+      icons: ['https://raw.githubusercontent.com/chavyleung/scripts/master/box/icons/BoxSetting.mini.png', 'https://raw.githubusercontent.com/chavyleung/scripts/master/box/icons/BoxSetting.png']
     },
     {
       id: 'BoxSwitcher',
@@ -102,7 +102,7 @@ function getSystemApps() {
       settings: [{ id: 'CFG_BoxSwitcher_isSilent', name: '静默运行', val: false, type: 'boolean', desc: '切换会话时不发出系统通知!' }],
       author: '@chavyleung',
       repo: 'https://github.com/chavyleung/scripts/blob/master/box/switcher/box.switcher.js',
-      icons: ['https://raw.githubusercontent.com/Orz-3/mini/master/box.png', 'https://raw.githubusercontent.com/Orz-3/task/master/box.png'],
+      icons: ['https://raw.githubusercontent.com/chavyleung/scripts/master/box/icons/BoxSwitcher.mini.png', 'https://raw.githubusercontent.com/chavyleung/scripts/master/box/icons/BoxSwitcher.png'],
       script: 'https://raw.githubusercontent.com/chavyleung/scripts/master/box/switcher/box.switcher.js'
     }
   ]

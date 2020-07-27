@@ -1,6 +1,23 @@
 {
   "releases": [
     {
+      "version": "0.6.10",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "icon": "https://avatars3.githubusercontent.com/u/29748519",
+      "repo": "https://github.com/chavyleung",
+      "notes": [
+        {
+          "name": "调整",
+          "descs": ["内置应用 偏好设置、切换会话 图标"]
+        },
+        {
+          "name": "感谢",
+          "descs": ["感谢 @Orz-3 制作图标"]
+        }
+      ]
+    },
+    {
       "version": "0.6.9",
       "tags": ["beta"],
       "author": "@chavyleung",
