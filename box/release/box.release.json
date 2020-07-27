@@ -1,6 +1,27 @@
 {
   "releases": [
     {
+      "version": "0.6.9",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "icon": "https://avatars3.githubusercontent.com/u/29748519",
+      "repo": "https://github.com/chavyleung",
+      "notes": [
+        {
+          "name": "新增",
+          "descs": ["内置应用: 偏好设置", "可以设置多个 http-api (设置完后在侧栏选择)", "可以分别设置暗黑、明亮主题下的主色调"]
+        },
+        {
+          "name": "控件",
+          "descs": ["拾色器: colorpicker"]
+        },
+        {
+          "name": "注意",
+          "descs": ["设置多个 http-api 时, 建议以逗号开头, 侧栏中选择空白的那个就是走 eval() 方案"]
+        }
+      ]
+    },
+    {
       "version": "0.6.8",
       "tags": ["beta"],
       "author": "@chavyleung",

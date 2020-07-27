@@ -35,8 +35,8 @@ function Env(name, opts) {
 
     runScript(script) {
       return new Promise((resolve) => {
-        const httpapi = this.getdata('@chavy_boxjs_userCfgs.httpapi')
-        console.log(httpapi)
+        let httpapi = this.getdata('@chavy_boxjs_userCfgs.httpapi')
+        httpapi = httpapi ? httpapi.replace(/\n/g, '').trim() : httpapi
         const [key, addr] = httpapi.split('@')
         const opts = {
           url: `http://${addr}/v1/scripting/evaluate`,
@@ -264,29 +264,28 @@ function Env(name, opts) {
       }
     }
     /**
-     * 
+     *
      * 示例:$.time('yyyy-MM-dd qq HH:mm:ss.S')
      *    :$.time('yyyyMMddHHmmssS')
-     *    y:年 M:月 d:日 q:季 H:时 m:分 s:秒 S:毫秒 
+     *    y:年 M:月 d:日 q:季 H:时 m:分 s:秒 S:毫秒
      *    其中y可选0-4位占位符、S可选0-1位占位符，其余可选0-2位占位符
      * @param {*} fmt 格式化参数
-     * 
+     *
      */
     time(fmt) {
       let o = {
-          "M+": new Date().getMonth() + 1,
-          "d+": new Date().getDate(),
-          "H+": new Date().getHours(),
-          "m+": new Date().getMinutes(),
-          "s+": new Date().getSeconds(),
-          "q+": Math.floor((new Date().getMonth() + 3) / 3),
-          "S": new Date().getMilliseconds()
+        'M+': new Date().getMonth() + 1,
+        'd+': new Date().getDate(),
+        'H+': new Date().getHours(),
+        'm+': new Date().getMinutes(),
+        's+': new Date().getSeconds(),
+        'q+': Math.floor((new Date().getMonth() + 3) / 3),
+        'S': new Date().getMilliseconds()
       }
-      if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (new Date().getFullYear() + "").substr(4 - RegExp.$1.length))
-      for (let k in o)
-      if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)))
+      if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (new Date().getFullYear() + '').substr(4 - RegExp.$1.length))
+      for (let k in o) if (new RegExp('(' + k + ')').test(fmt)) fmt = fmt.replace(RegExp.$1, RegExp.$1.length == 1 ? o[k] : ('00' + o[k]).substr(('' + o[k]).length))
       return fmt
-  }  
+    }
 
     /**
      * 系统通知
