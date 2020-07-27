@@ -13,7 +13,7 @@
         },
         {
           "name": "新增",
-          "descs": ["应用可以设定多个运行脚本 scripts: {name: '', script: ''}", "示例: https://gist.githubusercontent.com/chavyleung/9d53fc4809eb41dca5f5923790ec5554/raw/4d8b140ba149c33aa1fc622e93c4035ae74a73bb/chavy.app.sub.simple.json"]
+          "descs": ["可以显示当前切换至哪个会话", "应用可以设定多个运行脚本 scripts: {name: '', script: ''}", "示例: https://gist.githubusercontent.com/chavyleung/9d53fc4809eb41dca5f5923790ec5554/raw/4d8b140ba149c33aa1fc622e93c4035ae74a73bb/chavy.app.sub.simple.json"]
         }
       ]
     },
