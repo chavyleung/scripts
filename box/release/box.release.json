@@ -1,6 +1,23 @@
 {
   "releases": [
     {
+      "version": "0.6.8",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "icon": "https://avatars3.githubusercontent.com/u/29748519",
+      "repo": "https://github.com/chavyleung",
+      "notes": [
+        {
+          "name": "调整",
+          "descs": ["运行按钮位置"]
+        },
+        {
+          "name": "新增",
+          "descs": ["应用可以设定多个运行脚本 scripts: {name: '', script: ''}", "示例: https://gist.githubusercontent.com/chavyleung/9d53fc4809eb41dca5f5923790ec5554/raw/4d8b140ba149c33aa1fc622e93c4035ae74a73bb/chavy.app.sub.simple.json"]
+        }
+      ]
+    },
+    {
       "version": "0.6.7",
       "tags": ["beta"],
       "author": "@chavyleung",

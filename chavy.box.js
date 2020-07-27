@@ -1,7 +1,7 @@
 const $ = new Env('BoxJs')
 $.domain = '8.8.8.8'
 
-$.version = '0.6.7'
+$.version = '0.6.8'
 $.versionType = 'beta'
 $.KEY_sessions = 'chavy_boxjs_sessions'
 $.KEY_versions = 'chavy_boxjs_versions'
@@ -225,6 +225,11 @@ function getSessions() {
   return Array.isArray(sessions) ? sessions : []
 }
 
+function getCurSessions(appId) {
+  const curSessionsstr = $.getdata($.KEY_curSessions)
+  return ![undefined, null, 'null', ''].includes(curSessionsstr) ? JSON.parse(curSessionsstr) : {}
+}
+
 async function getVersions() {
   let vers = []
   await new Promise((resolve) => {
@@ -315,8 +320,7 @@ async function handleApi() {
   // 应用会话
   else if (data.cmd === 'useSession') {
     $.log(`❕ ${$.name}, 应用会话!`)
-    const curSessionsstr = $.getdata($.KEY_curSessions)
-    const curSessions = ![undefined, null, 'null', ''].includes(curSessionsstr) ? JSON.parse(curSessionsstr) : {}
+    const curSessions = getCurSessions()
     const session = data.val
     const sessions = getSessions()
     const sessionIdx = sessions.findIndex((s) => session.id === s.id)
@@ -445,9 +449,9 @@ async function handleApi() {
     const ishttpapi = /.*?@.*?:[0-9]+/.test(httpapi)
     console.log(ishttpapi)
     if ($.isSurge() && ishttpapi) {
-      await $.getScript(data.val.script).then((script) => $.runScript(script))
+      await $.getScript(data.val).then((script) => $.runScript(script))
     } else {
-      await $.getScript(data.val.script).then((script) => {
+      await $.getScript(data.val).then((script) => {
         // 避免被执行脚本误认为是 rewrite 环境
         // 所以需要 `$request = undefined`
         $request = undefined
@@ -460,6 +464,7 @@ async function handleApi() {
 async function getBoxData() {
   const box = {
     sessions: getSessions(),
+    curSessions: getCurSessions(),
     versions: await getVersions(),
     sysapps: getSystemApps(),
     userapps: getUserApps(),
@@ -766,7 +771,7 @@ function printHtml(data, curapp = null, curview = 'app') {
               </v-list>
             </v-menu>
             <v-btn icon @click="ui.curview = ui.bfview" v-else><v-icon>mdi-chevron-left</v-icon></v-btn>
-            <v-autocomplete v-model="ui.autocomplete.curapp" :items="apps" :filter="appfilter" :menu-props="{ closeOnContentClick: true, overflowY: true }" :label="ui.curapp ? ui.curapp.name + ' ' + ui.curapp.author : 'BoxJs - v' + box.syscfgs.version" no-data-text="未实现" dense hide-details solo>
+            <v-autocomplete v-model="ui.autocomplete.curapp" :items="apps" :filter="appfilter" :menu-props="{ closeOnContentClick: true, overflowY: true }" :label="'BoxJs - v' + box.syscfgs.version" no-data-text="未实现" dense hide-details solo>
               <template v-slot:item="{ item }">
                 <v-list-item @click="goAppSessionView(item)">
                   <v-list-item-avatar>
@@ -1013,12 +1018,26 @@ function printHtml(data, curapp = null, curview = 'app') {
               </v-expansion-panels>
             </v-container>
             <v-container fluid v-else-if="ui.curview === 'appsession'">
+              <v-subheader>
+                <h2 >{{ui.curapp.name}}</h2>
+                <v-spacer></v-spacer>
+                <v-btn v-if="ui.curapp.script" icon @click="onRunScript(ui.curapp.script)"><v-icon color="green">mdi-play-circle</v-icon></v-btn>
+              </v-subheader>
+              <v-card class="mx-auto mb-4">
+                <template v-if="Array.isArray(ui.curapp.scripts)">
+                  <v-subheader> 应用脚本 ({{ ui.curapp.scripts.length }}) </v-subheader>
+                  <v-list dense>
+                    <v-list-item v-for="(script, scriptIdx) in ui.curapp.scripts" :key="scriptIdx">
+                      <v-list-item-title> {{ scriptIdx + 1 }}. {{ script.name }} </v-list-item-title>
+                      <v-btn icon @click.stop="onRunScript(script.script)"><v-icon>mdi-play-circle</v-icon></v-btn>
+                    </v-list-item>
+                  </v-list>
+                </template>
+              </v-card>
               <v-card class="mx-auto mb-4">
                 <template v-if="Array.isArray(ui.curapp.settings)">
                   <v-subheader v-if="Array.isArray(ui.curapp.settings)">
                     应用设置 ({{ ui.curapp.settings.length }})
-                    <v-spacer></v-spacer>
-                    <v-btn v-if="ui.curapp.script" icon @click="onRunScript"><v-icon color="green">mdi-play-circle</v-icon></v-btn>
                   </v-subheader>
                   <v-form class="pl-4 pr-4">
                     <template v-for="(setting, settingIdx) in ui.curapp.settings">
@@ -1045,9 +1064,8 @@ function printHtml(data, curapp = null, curview = 'app') {
               </v-card>
               <v-card class="mx-auto" v-if="ui.curapp.datas && ui.curapp.datas.length > 0">
                 <v-subheader>
-                  当前会话 ({{ ui.curapp.datas.length }})
+                  当前会话<a class="ml-2">{{ cursession ? cursession.name : '' }}</a>
                   <v-spacer></v-spacer>
-                  <v-btn v-if="ui.curapp.script" icon @click="onRunScript"><v-icon color="green">mdi-play-circle</v-icon></v-btn>
                   <v-menu bottom left>
                     <template v-slot:activator="{ on }">
                       <v-btn icon v-on="on"><v-icon>mdi-dots-vertical</v-icon></v-btn>
@@ -1091,7 +1109,8 @@ function printHtml(data, curapp = null, curview = 'app') {
               </v-card>
               <v-card class="ml-10 mt-4" v-for="(session, sessionIdx) in ui.curappSessions" :key="session.id">
                 <v-subheader>
-                  #{{ sessionIdx + 1 }} {{ session.name }}
+                  <a v-if="cursession.id === session.id">#{{ sessionIdx + 1 }} {{ session.name }}</a>
+                  <template v-else>#{{ sessionIdx + 1 }} {{ session.name }}</template>
                   <v-spacer></v-spacer>
                   <v-menu bottom left>
                     <template v-slot:activator="{ on }">
@@ -1578,6 +1597,13 @@ function printHtml(data, curapp = null, curview = 'app') {
             sessioncnt: function () {
               return Array.isArray(this.box.sessions) ? this.box.sessions.length : 0
             },
+            cursession: function() {
+              if (this.ui.curapp) {
+                const curSessionId = this.box.curSessions[this.ui.curapp.id]
+                return this.box.sessions.find(s => s.id === curSessionId) || {}
+              }
+              return {}
+            },
             boxdat: function () {
               const KEY_sessions = 'chavy_boxjs_sessions'
               const KEY_sysCfgs = 'chavy_boxjs_sysCfgs'
@@ -1644,23 +1670,21 @@ function printHtml(data, curapp = null, curview = 'app') {
             'ui.curview': {
               handler(newval, oldval) {
                 this.ui.bfview = oldval
-                const isFullScreen = window.navigator.standalone
                 if (newval === 'app') {
                   this.ui.curapp = null
                   this.ui.curappSessions = null
                   var state = { title: 'BoxJs' }
                   document.title = state.title
-                  if (!isFullScreen) {
+                  if (!this.fullscreen) {
                     history.pushState(state, '', '/home')
                   }
-                  this.$vuetify.goTo(this.ui.scrollY, { duration: 0, offset: 0 })
                 } else if (newval === 'sub') {
                   this.ui.curapp = null
                   this.ui.curappSessions = null
                   this.showRefreshTip()
                   var state = { title: 'BoxJs' }
                   document.title = state.title
-                  if (!isFullScreen) {
+                  if (!this.fullscreen) {
                     history.pushState(state, '', '/sub')
                   }
                 } else if (newval === 'my') {
@@ -1668,10 +1692,11 @@ function printHtml(data, curapp = null, curview = 'app') {
                   this.ui.curappSessions = null
                   var state = { title: 'BoxJs' }
                   document.title = state.title
-                  if (!isFullScreen) {
+                  if (!this.fullscreen) {
                     history.pushState(state, '', '/my')
                   }
                 }
+                this.$vuetify.goTo(newval === 'app' ? this.ui.scrollY : 0, { duration: 0, offset: 0 })
               }
             },
             'ui.reloadConfirmDialog.sec': {
@@ -1770,8 +1795,7 @@ function printHtml(data, curapp = null, curview = 'app') {
               this.ui.curappSessions = this.box.sessions.filter((s) => s.appId === this.ui.curapp.id)
               this.ui.curview = 'appsession'
               var state = { title: 'BoxJs - ' + this.ui.curapp.name, url: window.location.href }
-              const isFullScreen = window.navigator.standalone
-              if (!isFullScreen) {
+              if (!this.fullscreen) {
                 history.pushState(state, '', '/app/' + this.ui.curapp.id)
               }
               document.title = state.title
@@ -1991,7 +2015,7 @@ function printHtml(data, curapp = null, curview = 'app') {
                 })
               })
             },
-            onRunScript() {
+            onRunScript(url) {
               this.ui.overlay.show = true
 
               // const [key, addr] = this.box.usercfgs.httpapi.split('@')
@@ -2000,7 +2024,7 @@ function printHtml(data, curapp = null, curview = 'app') {
               // const opts = {headers: { 'X-Key': key, 'Accept': '*/*' }}
               // axios.post(url, body, opts)
 
-              axios.post('/api', JSON.stringify({ cmd: 'runScript', val: this.ui.curapp })).finally(() => {
+              axios.post('/api', JSON.stringify({ cmd: 'runScript', val: url })).finally(() => {
                 this.ui.overlay.show = false
               })
             }
