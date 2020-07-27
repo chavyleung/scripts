@@ -1,6 +1,19 @@
 {
   "releases": [
     {
+      "version": "0.6.11",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "icon": "https://avatars3.githubusercontent.com/u/29748519",
+      "repo": "https://github.com/chavyleung",
+      "notes": [
+        {
+          "name": "优化",
+          "descs": ["底栏颜色会跟随主题色调"]
+        }
+      ]
+    },
+    {
       "version": "0.6.10",
       "tags": ["beta"],
       "author": "@chavyleung",

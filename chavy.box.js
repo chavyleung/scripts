@@ -1,7 +1,7 @@
 const $ = new Env('BoxJs')
 $.domain = '8.8.8.8'
 
-$.version = '0.6.10'
+$.version = '0.6.11'
 $.versionType = 'beta'
 $.KEY_sessions = 'chavy_boxjs_sessions'
 $.KEY_versions = 'chavy_boxjs_versions'
@@ -1226,7 +1226,7 @@ function printHtml(data, curapp = null, curview = 'app') {
                     <v-list-item-content>
                       <v-list-item-title>
                         {{ sub.name ? sub.name : '匿名订阅' }} ({{ sub.apps.length }})
-                        <v-chip v-if="sub.isErr === true" color="pink" x-small class="ml-4">格式错误</v-chip>
+                        <v-chip v-if="sub.isErr === true" color="pink" dark x-small class="ml-4">格式错误</v-chip>
                       </v-list-item-title>
                       <v-list-item-subtitle>{{ sub.repo ? sub.repo : sub._raw.url }}</v-list-item-subtitle>
                       <v-list-item-subtitle color="blue">{{ sub.author ? sub.author : '@anonymous' }}</v-list-item-subtitle>
@@ -1397,7 +1397,7 @@ function printHtml(data, curapp = null, curview = 'app') {
             </v-dialog>
           </v-main>
           <v-expand-transition>
-            <v-bottom-navigation v-model="ui.curview" app v-show="ui.navi.show && !box.usercfgs.isHideNavi">
+            <v-bottom-navigation app v-model="ui.curview" v-show="ui.navi.show && !box.usercfgs.isHideNavi" :color="color">
               <v-btn value="home">
                 <span>首页</span>
                 <v-icon>mdi-home</v-icon>
@@ -1576,6 +1576,9 @@ function printHtml(data, curapp = null, curview = 'app') {
           computed: {
             fullscreen: function() {
               return window.navigator.standalone
+            },
+            color: function() {
+              return this.$vuetify.theme.themes[this.darkMode ? 'dark' : 'light'].primary
             },
             darkMode: function() {
               const isSysDark = window.matchMedia('(prefers-color-scheme: dark)').matches
