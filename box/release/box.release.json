@@ -1,6 +1,27 @@
 {
   "releases": [
     {
+      "version": "0.6.12",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "icon": "https://avatars3.githubusercontent.com/u/29748519",
+      "repo": "https://github.com/chavyleung",
+      "notes": [
+        {
+          "name": "优化",
+          "descs": ["双击底栏'应用'可以收缩面板并回到顶部", "双击底栏'订阅'可以刷新订阅并回到顶部", "双击'BoxJs'按钮可以刷新页面", "保存应用设置、清存会话数据能马上生效 (不用刷新页面)", "可以隐藏刷新按钮"]
+        },
+        {
+          "name": "主题",
+          "descs": ["页面更多元素会跟随主题色调"]
+        },
+        {
+          "name": "重写",
+          "descs": ["BoxJs 的重写已经去除代码级依赖", "意味着仅通过修改正则和主机名即可替换 BoxJs 的访问地址", "同时征集一个比较理想的国内域名作为 BoxJs 的免翻墙访问地址", "iOS14 Surge TF 下提示私密连接的问题, 可以找一个 http 的域名来试试"]
+        }
+      ]
+    },
+    {
       "version": "0.6.11",
       "tags": ["beta"],
       "author": "@chavyleung",
