@@ -47,7 +47,13 @@ $.html = $.name
     if ($.isapi) {
       $done({ body: $.json })
     } else {
-      $.done({ status: 200, body: $.html })
+      if ($.isSurge() || $.isLoon()) {
+        $.done({ response: { status: 200, body: $.html } })
+      } else if ($.isQuanX()) {
+        $.done({ status: 'HTTP/1.1 200', headers: { 'Content-Type': 'text/html; charset=utf-8' }, body: $.html })
+      } else {
+        $.done()
+      }
     }
   })
 
