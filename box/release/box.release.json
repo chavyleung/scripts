@@ -21,7 +21,7 @@
         },
         {
           "name": "注意",
-          "descs": ["新的重写订阅只有 boxjs.com", "旧的重写订阅仍然保留 8888 1111 和新增的 boxjs.com"]
+          "descs": ["新的重写订阅只有 boxjs.com", "旧的重写订阅仍然保留 8888 1111 和新增的 boxjs.com", "可以直接访问 http://boxjs.com 不加/home"]
         }
       ]
     },
