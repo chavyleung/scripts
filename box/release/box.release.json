@@ -1,6 +1,31 @@
 {
   "releases": [
     {
+      "version": "0.6.13",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "icon": "https://avatars3.githubusercontent.com/u/29748519",
+      "repo": "https://github.com/chavyleung",
+      "notes": [
+        {
+          "name": "新增",
+          "descs": ["开关控件可以显示详情信息"]
+        },
+        {
+          "name": "域名",
+          "descs": ["新增: http://boxjs.com"]
+        },
+        {
+          "name": "新的重写订阅",
+          "descs": ["Surge: https://raw.githubusercontent.com/chavyleung/scripts/master/box/rewrite/boxjs.rewrite.surge.sgmodule", "QuanX: https://raw.githubusercontent.com/chavyleung/scripts/master/box/rewrite/boxjs.rewrite.quanx.conf", "Loon: https://raw.githubusercontent.com/chavyleung/scripts/master/box/rewrite/boxjs.rewrite.loon.conf"]
+        },
+        {
+          "name": "注意",
+          "descs": ["新的重写订阅只有 boxjs.com", "旧的重写订阅仍然保留 8888 1111 和新增的 boxjs.com"]
+        }
+      ]
+    },
+    {
       "version": "0.6.12",
       "tags": ["beta"],
       "author": "@chavyleung",
