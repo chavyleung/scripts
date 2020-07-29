@@ -1611,7 +1611,7 @@ function printHtml(data, curapp = null, curview = 'app') {
             newVersion: function () {
               const curver = this.box.syscfgs.version
               const vers = this.box.versions
-              if (curver && Array.isArray(vers)) {
+              if (curver && vers && vers.length > 0) {
                 const lastestVer = vers[0].version
                 return this.compareVersion(lastestVer, curver) > 0
               }
