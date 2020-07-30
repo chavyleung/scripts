@@ -1,6 +1,6 @@
 const $ = new Env('BoxJs')
 
-$.version = '0.6.15'
+$.version = '0.6.16'
 $.versionType = 'beta'
 $.KEY_sessions = 'chavy_boxjs_sessions'
 $.KEY_versions = 'chavy_boxjs_versions'
@@ -95,6 +95,7 @@ function getSystemApps() {
     {
       id: 'BoxSetting',
       name: '偏好设置',
+      descs: ['可设置 http-api 地址 & 超时时间 (Surge TF)', '可设置明暗两种主题下的主色调'],
       keys: ['@chavy_boxjs_userCfgs.httpapi', '@chavy_boxjs_userCfgs.color_dark_primary', '@chavy_boxjs_userCfgs.color_light_primary'],
       settings: [
         { id: '@chavy_boxjs_userCfgs.httpapis', name: 'HTTP-API (Surge TF)', val: '', type: 'textarea', placeholder: ',examplekey@127.0.0.1:6166', autoGrow: true, rows: 2, desc: '示例: ,examplekey@127.0.0.1:6166! 注意: 以逗号开头, 逗号分隔多个地址, 可加回车' },
@@ -109,6 +110,7 @@ function getSystemApps() {
     {
       id: 'BoxSwitcher',
       name: '会话切换',
+      desc: '打开静默运行后, 切换会话将不再发出系统通知 \n注: 不影响日志记录',
       keys: [],
       settings: [{ id: 'CFG_BoxSwitcher_isSilent', name: '静默运行', val: false, type: 'boolean', desc: '切换会话时不发出系统通知!' }],
       author: '@chavyleung',
@@ -510,7 +512,7 @@ async function handleHome() {
   const box = await getBoxData()
   $.html = printHtml(JSON.stringify(box))
   if (box.usercfgs.isDebugFormat) {
-    console.log(printHtml(`'\${data}'`, `'\${curapp}'`, `\${curview}`))
+    console.log(printHtml(`'\${data}'`, `'\${appId}'`, `\${curview}`))
   } else if (box.usercfgs.isDebugData) {
     console.log($.html)
   }
@@ -528,9 +530,9 @@ async function handleApp(appId) {
   if (curapp.script && $.isSurge()) {
     await $.getScript(curapp.script).then((script) => (curapp.script_text = script))
   }
-  $.html = printHtml(JSON.stringify(box), JSON.stringify(curapp), 'appsession')
+  $.html = printHtml(JSON.stringify(box), appId)
   if (box.usercfgs.isDebugFormat) {
-    console.log(printHtml(`'\${data}'`, `'\${curapp}'`, `\${curview}`))
+    console.log(printHtml(`'\${data}'`, `'\${appId}'`, `\${curview}`))
   } else if (box.usercfgs.isDebugData) {
     console.log($.html)
   }
@@ -540,7 +542,7 @@ async function handleSub() {
   const box = await getBoxData()
   $.html = printHtml(JSON.stringify(box), null, 'sub')
   if (box.usercfgs.isDebugFormat) {
-    console.log(printHtml(`'\${data}'`, `'\${curapp}'`, `\${curview}`))
+    console.log(printHtml(`'\${data}'`, `'\${appId}'`, `\${curview}`))
   } else if (box.usercfgs.isDebugData) {
     console.log($.html)
   }
@@ -550,7 +552,7 @@ async function handleMy() {
   const box = await getBoxData()
   $.html = printHtml(JSON.stringify(box), null, 'my')
   if (box.usercfgs.isDebugFormat) {
-    console.log(printHtml(`'\${data}'`, `'\${curapp}'`, `\${curview}`))
+    console.log(printHtml(`'\${data}'`, `'\${appId}'`, `\${curview}`))
   } else if (box.usercfgs.isDebugData) {
     console.log($.html)
   }
@@ -711,7 +713,7 @@ function printRevertHtml() {
   `
 }
 
-function printHtml(data, curapp = null, curview = 'app') {
+function printHtml(data, appId = '', curview = 'app') {
   return `
   <!DOCTYPE html>
   <html lang="zh-CN">
@@ -734,6 +736,9 @@ function printHtml(data, curapp = null, curview = 'app') {
         body {
           padding-top: constant(safe-area-inset-top) !important;
           padding-top: env(safe-area-inset-top);
+        }
+        .text-pre-wrap {
+          white-space: pre-wrap !important;
         }
         .v-app-bar,
         .v-navigation-drawer__content {
@@ -1044,6 +1049,14 @@ function printHtml(data, curapp = null, curview = 'app') {
                 <v-spacer></v-spacer>
                 <v-btn v-if="ui.curapp.script" icon @click="onRunScript(ui.curapp.script, ui.curapp.script_timeout)"><v-icon color="primary">mdi-play-circle</v-icon></v-btn>
               </v-subheader>
+              <v-card flat class="mx-auto mb-4" color="transparent" v-if="ui.curapp.desc || ui.curapp.descs || ui.curapp.desc_html || ui.curapp.descs_html">
+                <v-card-text class="py-2">
+                  <p v-if="ui.curapp.desc" v-text="ui.curapp.desc" class="body-2 text-pre-wrap"></p>
+                  <p v-for="(desc, descIdx) in ui.curapp.descs" v-text="desc" :class="ui.curapp.descs.length === descIdx + 1 ? 'body-2 text-pre-wrap' : 'mb-0 body-2 text-pre-wrap'"></p>
+                  <p v-if="ui.curapp.desc_html" v-html="ui.curapp.desc_html"></p>
+                  <div v-for="(desc_html, desc_htmlIdx) in ui.curapp.descs_html" v-html="desc_html"></div>
+                </v-card-text>
+              </v-card>
               <v-card class="mx-auto mb-4">
                 <template v-if="Array.isArray(ui.curapp.scripts)">
                   <v-subheader>
@@ -1554,6 +1567,7 @@ function printHtml(data, curapp = null, curview = 'app') {
       <script src="https://cdn.jsdelivr.net/npm/uuid@latest/dist/umd/uuidv4.min.js"></script>
       <script src="https://cdn.jsdelivr.net/npm/vue-clipboard2@0.3.1/dist/vue-clipboard.min.js"></script>
       <script>
+        const boxdat = ${data}
         new Vue({
           el: '#app',
           vuetify: new Vuetify({ theme: { dark: true } }),
@@ -1563,7 +1577,8 @@ function printHtml(data, curapp = null, curview = 'app') {
                 scrollY: 0,
                 bfview: 'app',
                 curview: '${curview}',
-                curapp: ${curapp},
+                appId: '${appId}',
+                curapp: null,
                 curappTabs: { curtab: 'sessions' },
                 curappSessions: null,
                 overlay: { show: false, val: 60 },
@@ -1589,7 +1604,7 @@ function printHtml(data, curapp = null, curview = 'app') {
                 drawer: { show: false },
                 icons: ['https://raw.githubusercontent.com/Orz-3/mini/master/appstore.png', 'https://raw.githubusercontent.com/Orz-3/task/master/appstore.png']
               },
-              box: ${data}
+              box: boxdat
             }
           },
           computed: {
@@ -2144,7 +2159,8 @@ function printHtml(data, curapp = null, curview = 'app') {
             this.getContributors()
             this.ui.navi.show = true
             this.ui.box.show = true
-            if (this.ui.curapp) {
+            if (this.ui.appId) {
+              this.ui.curapp = this.apps.find(app => app.id === this.ui.appId)
               this.goAppSessionView(this.ui.curapp)
             }
             if (this.ui.curview === 'sub') {

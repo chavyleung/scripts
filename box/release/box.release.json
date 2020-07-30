@@ -1,6 +1,27 @@
 {
   "releases": [
     {
+      "version": "0.6.16",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "icon": "https://avatars3.githubusercontent.com/u/29748519",
+      "repo": "https://github.com/chavyleung",
+      "notes": [
+        {
+          "name": "订阅配置",
+          "descs": ["新增: desc、descs、desc_html、descs_html 属性", "与 id、name 同级"]
+        },
+        {
+          "name": "示例",
+          "descs": ["https://gist.githubusercontent.com/chavyleung/9d53fc4809eb41dca5f5923790ec5554/raw/09742d3473420d8e0bd7b02a910849f65af879fa/chavy.app.sub.simple.json"]
+        },
+        {
+          "name": "注意",
+          "descs": ["本次更新主要面向开发者"]
+        }
+      ]
+    },
+    {
       "version": "0.6.15",
       "tags": ["beta"],
       "author": "@chavyleung",
