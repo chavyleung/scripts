@@ -1,6 +1,23 @@
 {
   "releases": [
     {
+      "version": "0.6.15",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "icon": "https://avatars3.githubusercontent.com/u/29748519",
+      "repo": "https://github.com/chavyleung",
+      "notes": [
+        {
+          "name": "偏好设置",
+          "descs": ["新增: http-api 超时时间, 默认 20 秒"]
+        },
+        {
+          "name": "订阅配置",
+          "descs": ["增加 script_timeout 属性, 与 script 同级, 可指定 http-api 超时时间, 单位: 秒"]
+        }
+      ]
+    },
+    {
       "version": "0.6.14",
       "tags": ["beta"],
       "author": "@chavyleung",

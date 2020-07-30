@@ -33,18 +33,21 @@ function Env(name, opts) {
       })
     }
 
-    runScript(script) {
+    runScript(script, runOpts) {
       return new Promise((resolve) => {
         let httpapi = this.getdata('@chavy_boxjs_userCfgs.httpapi')
         httpapi = httpapi ? httpapi.replace(/\n/g, '').trim() : httpapi
+        let httpapi_timeout = this.getdata('@chavy_boxjs_userCfgs.httpapi_timeout')
+        httpapi_timeout = httpapi_timeout ? httpapi_timeout * 1 : 20
+        httpapi_timeout = runOpts && runOpts.timeout ? runOpts.timeout : httpapi_timeout
         const [key, addr] = httpapi.split('@')
         const opts = {
           url: `http://${addr}/v1/scripting/evaluate`,
-          body: { script_text: script, mock_type: 'cron', timeout: 5 },
+          body: { script_text: script, mock_type: 'cron', timeout: httpapi_timeout },
           headers: { 'X-Key': key, 'Accept': '*/*' }
         }
         $.post(opts, (err, resp, body) => resolve(body))
-      })
+      }).catch((e) => this.logErr(e))
     }
     loaddata() {
       if (this.isNode()) {
@@ -131,12 +134,10 @@ function Env(name, opts) {
           const objedval = JSON.parse(objval)
           this.lodash_set(objedval, paths, val)
           issuc = this.setval(JSON.stringify(objedval), objkey)
-          console.log(`${objkey}: ${JSON.stringify(objedval)}`)
         } catch (e) {
           const objedval = {}
           this.lodash_set(objedval, paths, val)
           issuc = this.setval(JSON.stringify(objedval), objkey)
-          console.log(`${objkey}: ${JSON.stringify(objedval)}`)
         }
       } else {
         issuc = $.setval(val, key)
