@@ -1,6 +1,19 @@
 {
   "releases": [
     {
+      "version": "0.6.18",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "icon": "https://avatars3.githubusercontent.com/u/29748519",
+      "repo": "https://github.com/chavyleung",
+      "notes": [
+        {
+          "name": "修复",
+          "descs": ["清空设置时一直转圈问题"]
+        }
+      ]
+    },
+    {
       "version": "0.6.17",
       "tags": ["beta"],
       "author": "@chavyleung",

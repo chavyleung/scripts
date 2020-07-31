@@ -1,6 +1,6 @@
 const $ = new Env('BoxJs')
 
-$.version = '0.6.17'
+$.version = '0.6.18'
 $.versionType = 'beta'
 $.KEY_sessions = 'chavy_boxjs_sessions'
 $.KEY_versions = 'chavy_boxjs_versions'
@@ -1891,7 +1891,7 @@ function printHtml(data, appId = '', curview = 'app') {
             },
             onClearCurAppSessionData(app, datas, data) {
               this.ui.overlay.show = true
-              const setting = app.settings.find((setting) => setting.id === data.key)
+              const setting = app.settings && app.settings.find((setting) => setting.id === data.key)
               if (setting) {
                 data.val = setting.defval ? setting.defval : ''
                 setting.val = data.val
@@ -1943,23 +1943,15 @@ function printHtml(data, appId = '', curview = 'app') {
             },
             onSaveSettings() {
               this.ui.overlay.show = true
-              axios
-                .post(
-                  '/api',
-                  JSON.stringify({
-                    cmd: 'saveSettings',
-                    val: this.ui.curapp.settings
-                  })
-                )
-                .finally(() => {
-                  this.ui.curapp.settings.forEach((setting) => {
-                    const data = this.ui.curapp.datas.find((dat) => dat.key === setting.id)
-                    if (data) {
-                      data.val = setting.val
-                    }
-                  })
-                  this.ui.overlay.show = false
+              axios.post('/api', JSON.stringify({ cmd: 'saveSettings', val: this.ui.curapp.settings })).finally(() => {
+                this.ui.curapp.settings.forEach((setting) => {
+                  const data = this.ui.curapp.datas.find((dat) => dat.key === setting.id)
+                  if (data) {
+                    data.val = setting.val
+                  }
                 })
+                this.ui.overlay.show = false
+              })
             },
             onImpSessionPaste() {
               navigator.clipboard.readText().then((text) => {
@@ -2168,7 +2160,7 @@ function printHtml(data, appId = '', curview = 'app') {
             this.ui.navi.show = true
             this.ui.box.show = true
             if (this.ui.appId) {
-              this.ui.curapp = this.apps.find(app => app.id === this.ui.appId)
+              this.ui.curapp = this.apps.find((app) => app.id === this.ui.appId)
               this.goAppSessionView(this.ui.curapp)
             }
             if (this.ui.curview === 'sub') {
@@ -2182,7 +2174,7 @@ function printHtml(data, appId = '', curview = 'app') {
       </script>
     </body>
   </html>
-  
+
   `
 }
 
