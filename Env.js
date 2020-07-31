@@ -319,10 +319,12 @@ function Env(name, opts) {
           return undefined
         }
       }
-      if (this.isSurge() || this.isLoon()) {
-        $notification.post(title, subt, desc, toEnvOpts(opts))
-      } else if (this.isQuanX()) {
-        $notify(title, subt, desc, toEnvOpts(opts))
+      if (!$.isMute) {
+        if (this.isSurge() || this.isLoon()) {
+          $notification.post(title, subt, desc, toEnvOpts(opts))
+        } else if (this.isQuanX()) {
+          $notify(title, subt, desc, toEnvOpts(opts))
+        }
       }
       this.logs.push('', '==============📣系统通知📣==============')
       this.logs.push(title)

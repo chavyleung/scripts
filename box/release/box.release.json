@@ -1,6 +1,23 @@
 {
   "releases": [
     {
+      "version": "0.6.17",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "icon": "https://avatars3.githubusercontent.com/u/29748519",
+      "repo": "https://github.com/chavyleung",
+      "notes": [
+        {
+          "name": "新增",
+          "descs": ["勿扰模式", "应用界面双击底栏能返回应用列表"]
+        },
+        {
+          "name": "注意",
+          "descs": ["勿扰模式下仍然可以通过日志查看通过内容"]
+        }
+      ]
+    },
+    {
       "version": "0.6.16",
       "tags": ["beta"],
       "author": "@chavyleung",
