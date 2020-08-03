@@ -199,7 +199,7 @@ function showmsg() {
       detail += myinfo.showLabel
     }
     if (signinfo.signapp.data.prizeLists) {
-      detail += `, 说明: 还有${signinfo.signapp.data.remainingPoint}云钻待领取`
+      detail += typeof(signinfo.signapp.data.remainingPoint) == "undefined" ? '' : `, 说明: 还有${signinfo.signapp.data.remainingPoint}云钻待领取`
       const prizeLists = signinfo.signapp.data.prizeLists
       const customerDays = signinfo.signapp.data.customerDays
       const prize = prizeLists[customerDays - 1]
