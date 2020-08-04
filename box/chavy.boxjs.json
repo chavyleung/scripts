@@ -214,6 +214,15 @@
       "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/ithome.png", "https://raw.githubusercontent.com/Orz-3/task/master/ithome.png"]
     },
     {
+      "id": "nfzm",
+      "name": "南方周末",
+      "keys": ["senku_nfzm_url"],
+      "author": "@GideonSenku",
+      "repo": "https://github.com/chavyleung/scripts/tree/master/nfzm",
+      "script": "https://raw.githubusercontent.com/chavyleung/scripts/master/nfzm/nfzm.js",
+      "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/nfzm.png", "https://raw.githubusercontent.com/Orz-3/task/master/nfzm.png"]
+    },
+    {
       "id": "NeteaseNews",
       "name": "网易新闻",
       "keys": ["chavy_cookie_neteasenews", "chavy_body_neteasenews"],
