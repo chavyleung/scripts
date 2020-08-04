@@ -262,8 +262,7 @@ function showmsg() {
       moreDetail += moreDetail == '' ? '' : '\n'
       moreDetail += '\n💰 天天低价: '
       for (d of signinfo.gameinfo.data.result.datas)
-        if (d.obj) moreDetail += `\n${d.obj.couponRuleName} (${d.obj.remainValue}元)`
-        else moreDetail += `\n${d.basePrizeEntity.prizeName} (${d.basePrizeEntity.prizeRules})`
+        if (d.obj) moreDetail += d.obj.couponStatus === "2" ? `\n${d.obj.couponRuleName} (${d.obj.remainValue}元)\n过期时间：${d.obj.endTime}` : ''
     } else {
       chavy.log(`❌ ${cookieName} showmsg - 天天低价 - gameinfo: ${JSON.stringify(signinfo.gameinfo)}`)
     }
