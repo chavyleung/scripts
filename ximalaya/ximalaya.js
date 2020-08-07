@@ -118,14 +118,22 @@ function showmsg() {
   if (signinfo.info.isTickedToday == false) {
     if (signinfo.signapp == 'true') {
       subTitle = '签到: 成功'
-      detail = `共签: ${signinfo.info.totalCheckedCounts + 1}天, 积分: ${signinfo.acc.data.score}(+${signinfo.info.awardAmount})`
+      if (signinfo.info.totalCheckedCounts == undefined || signinfo.info.totalCheckedCounts == null){
+        detail = `积分: ${signinfo.acc.data.score}(+${signinfo.info.awardAmount})`
+      } else{
+        detail = `共签: ${signinfo.info.totalCheckedCounts + 1}天, 积分: ${signinfo.acc.data.score}(+${signinfo.info.awardAmount})`
+      }
     } else {
       subTitle = '签到: 失败'
       detail = `说明: ${signinfo.signapp}`
     }
   } else {
     subTitle = `签到: 重复`
-    detail = `共签: ${signinfo.info.totalCheckedCounts}天, 积分: ${signinfo.acc.data.score}(+${signinfo.info.awardAmount})`
+    if (signinfo.info.totalCheckedCounts == undefined || signinfo.info.totalCheckedCounts == null){
+        detail = `积分: ${signinfo.acc.data.score}(+${signinfo.info.awardAmount})`
+      } else{
+        detail = `共签: ${signinfo.info.totalCheckedCounts + 1}天, 积分: ${signinfo.acc.data.score}(+${signinfo.info.awardAmount})`
+      }
   }
 
   if (signinfo.browseapp) {
