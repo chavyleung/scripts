@@ -1,6 +1,7 @@
 # 电信营业厅
 
 > 2020.5.6 更新签到脚本 (正则和 rewrite 类型都有变化, 需要重取 Cookie)
+> 2020.8.7 更新获取金币body
 
 ## 配置 (Surge)
 
@@ -9,7 +10,7 @@
 wapside.189.cn:9001
 
 [Script]
-http-request ^https:\/\/wapside.189.cn:9001\/api\/home\/sign script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/10000/10000.cookie.js, requires-body=true
+http-request ^https:\/\/wapside.189.cn:9001\/api\/home\/homeInfo script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/10000/10000.cookie.js, requires-body=true
 cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/10000/10000.js
 ```
 
@@ -21,7 +22,7 @@ wapside.189.cn
 
 [rewrite_local]
 # 190及以后版本
-^https:\/\/wapside.189.cn:9001\/api\/home\/sign url script-request-body 10000.cookie.js
+^https:\/\/wapside.189.cn:9001\/api\/home\/homeInfo url script-request-body https://raw.githubusercontent.com/chavyleung/scripts/master/10000/10000.cookie.js
 
 [task_local]
 1 0 * * * 10000.js

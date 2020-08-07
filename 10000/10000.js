@@ -9,10 +9,12 @@
 
 const $ = new Env('中国电信')
 $.KEY_mobile = 'chavy_mobile_10000'
+$.KEY_signbody = 'chavy_signbody_10000'
 
 !(async () => {
   $.CryptoJS = $.isNode() ? require('crypto-js') : CryptoJS
   await signapp()
+  await gethomeinfo()
   await showmsg()
 })()
   .catch((e) => $.logErr(e))
@@ -74,6 +76,31 @@ async function signapp() {
   return await Promise.all(signacts)
 }
 
+function gethomeinfo() {
+	return new Promise((resolve) => {
+  const homebody = $.getdata($.KEY_signbody)
+	const url = { url: 'https://wapside.189.cn:9001/api/home/homeInfo', body : homebody, headers: {} }
+  url.headers['Content-Type'] = 'application/json;charset=UTF-8'
+	if (!homebody) return
+	$.post(url, (err, resp, data) => {
+		   try {
+		       const _data = JSON.parse(data);
+			   if  (_data.resoultCode == "0") 
+			   {
+				  $.info.signs[0].homeinfo = `金币总数：${_data.data.userInfo.totalCoin}，${_data.data.tipInfo.tipInfoLeft}`  
+			   } else
+			   {
+				  $.info.signs[0].homeinfo = `获取金币信息失败：${_data.resoultMsg}`;  
+			   }
+		   } catch (e) {
+		       $.info.signs[0].homeinfo = `获取金币信息失败：${e.message}`;
+		   } finally {
+           resolve()
+       }
+	   })
+	})
+}
+
 function showmsg() {
   return new Promise((resolve) => {
     if ($.info.signs.length === 0) {
@@ -87,6 +114,7 @@ function showmsg() {
         const sign = $.info.signs[signIdx]
         $.desc.push('', `${sign.idx}. ${sign.phone}`)
         $.desc.push(`   ${sign.msg}`)
+        $.desc.push(`${typeof(sign.homeinfo) == "undefined" ? '' : sign.homeinfo}`)
       }
       $.desc = $.desc.join('\n')
     }
