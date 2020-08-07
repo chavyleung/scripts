@@ -23,7 +23,7 @@ let VAL_findlotteryheader = chavy.getdata(KEY_findlotteryheader)
     chavy.log(`🔔 ${cookieName}`)
     await loginapp()
     await signapp()
-    if (VAL_loginlotteryurl && VAL_findlotteryurl) await loginlottery()
+    /*if (VAL_loginlotteryurl && VAL_findlotteryurl) await loginlottery()
     if (signinfo.encryptmobile) {
         await findlottery()
         if (signinfo.findlottery && signinfo.findlottery.acFrequency && signinfo.findlottery.acFrequency.usableAcFreq) {
@@ -31,7 +31,7 @@ let VAL_findlotteryheader = chavy.getdata(KEY_findlotteryheader)
                 await lottery()
             }
         }
-    }
+    }*/
     await getinfo()
     showmsg()
     chavy.done()
@@ -168,7 +168,7 @@ function showmsg() {
     if (signinfo.signapp.signinMedal) {
         subTitle = `签到: 成功`
         detail = `积分: +${signinfo.signapp.prizeCount}, 成长值: +${signinfo.signapp.growthV}, 鲜花: +${signinfo.signapp.flowerCount}`
-    } else if (JSON.stringify(signinfo.signapp) == '{}') {
+    } else if (signinfo.signapp.msg == '用户今日已签到！') {
         subTitle = `签到: 重复`
     } else {
         subTitle = `签到: 失败`
@@ -186,7 +186,7 @@ function showmsg() {
         chavy.log(`❌ ${cookieName} signapp - response: ${JSON.stringify(signinfo.info)}`)
     }
 
-    if (signinfo.findlottery && signinfo.findlottery.acFrequency && signinfo.lotterylist) {
+    /*if (signinfo.findlottery && signinfo.findlottery.acFrequency && signinfo.lotterylist) {
         subTitle += `; 抽奖: ${signinfo.findlottery.acFrequency.usableAcFreq}次`
         detail += '\n查看详情\n'
 
@@ -195,7 +195,7 @@ function showmsg() {
         }
     } else {
         chavy.log(`❌ ${cookieName} signapp - response: ${JSON.stringify(signinfo.findlottery)}`)
-    }
+    }*/
 
     chavy.msg(cookieName, subTitle, detail)
 }
