@@ -68,7 +68,7 @@ async function signbars(bars) {
           bar.iscurSign = true
           bar.issignSuc = false
           bar.signNo = null
-          bar.signMsg = error !== null ? error : e
+          bar.signMsg = err !== null ? error : e
           $.logErr(e, resp)
         } finally {
           $.log(`❕ 贴吧:【${bar.name}】签到完成!`)
