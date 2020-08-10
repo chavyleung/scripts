@@ -165,7 +165,7 @@ function showmsg() {
     let detail = ''
 
     // 签到结果
-    if (signinfo.signapp.signinMedal) {
+    if (signinfo.signapp.signinMedal == 0) {
         subTitle = `签到: 成功`
         detail = `积分: +${signinfo.signapp.prizeCount}, 成长值: +${signinfo.signapp.growthV}, 鲜花: +${signinfo.signapp.flowerCount}`
     } else if (signinfo.signapp.msg == '用户今日已签到！') {

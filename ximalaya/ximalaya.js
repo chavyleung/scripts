@@ -4,11 +4,12 @@ const KEY_signcookie = 'chavy_cookie_ximalaya'
 
 const signinfo = {}
 let VAL_signcookie = chavy.getdata(KEY_signcookie)
+let time = new Date().getTime();
 
 ;(exec = async () => {
   chavy.log(`🔔 ${cookieName} 开始签到`)
   await getinfo()
-  if (signinfo.info.isTickedToday == false) await signapp()
+  if (signinfo.info.isTickedToday == 0) await signapp()
   // await browseapp()
   await getacc()
   showmsg()
@@ -17,16 +18,16 @@ let VAL_signcookie = chavy.getdata(KEY_signcookie)
 
 function signapp() {
   return new Promise((resolve, reject) => {
-    const url = { url: `https://m.ximalaya.com/starwar/lottery/check-in/check/action`, headers: { Cookie: VAL_signcookie } }
-    url.headers['Accept'] = `application/json, text/plain, */*`
-    url.headers['Accept-Encoding'] = `gzip, deflate, br`
-    url.headers['Accept-Language'] = `zh-cn`
-    url.headers['Connection'] = `keep-alive`
-    url.headers['Host'] = `m.ximalaya.com`
+    const url = { url: `https://hybrid.ximalaya.com/web-activity/signIn/action?aid=8&ts=${time}&_sonic=0&impl=com.gemd.iting&_sonic=0`, headers: { Cookie: VAL_signcookie } }
+    url.headers['Accept'] = 'application/json, text/plain, */*'
+    url.headers['Accept-Encoding'] = 'gzip, deflate, br'
+    url.headers['Accept-Language'] = 'zh-cn'
+    url.headers['Connection'] = 'keep-alive'
+    url.headers['Host'] = 'hybrid.ximalaya.com'
     url.headers['User-Agent'] = 'Mozilla/5.0 (iPhone; CPU iPhone OS 13_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 iting/6.6.45 kdtunion_iting/1.0 iting(main)/6.6.45/ios_1'
     chavy.post(url, (error, response, data) => {
       try {
-        signinfo.signapp = data
+        signinfo.sign = JSON.parse(response.body)
         resolve()
       } catch (e) {
         chavy.msg(cookieName, `签到结果: 失败`, `说明: ${e}`)
@@ -115,13 +116,14 @@ function getacc() {
 function showmsg() {
   let subTitle = ''
   let detail = ''
+  
   if (signinfo.info.isTickedToday == false) {
-    if (signinfo.signapp == 'true') {
+    if (signinfo.sign.data.status == 0) {
       subTitle = '签到: 成功'
       detail = `当前连签: ${signinfo.info.continuousDays}天, 积分: ${signinfo.acc.data.score}(+${signinfo.info.awardAmount})`
     } else {
       subTitle = '签到: 失败'
-      detail = `说明: ${signinfo.signapp}`
+      detail = `说明: ${signinfo.sign.data.msg}`
     }
   } else {
     subTitle = `签到: 重复`
