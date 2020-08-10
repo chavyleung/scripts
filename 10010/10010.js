@@ -143,9 +143,10 @@ function gettel() {
     return tel
 }
 
+
 function getinfo() {
     return new Promise((resolve, reject) => {
-        const url = { url: `https://mina.10010.com/wxapplet/bind/getIndexData/alipay/alipaymini?user_id=${gettel()}` }
+        const url = { url: `https://m.client.10010.com/mobileService/home/queryUserInfoSeven.htm?version=iphone_c@7.0403&desmobiel=${gettel()}&showType=3`, headers: {"Cookie": JSON.parse(VAL_loginheader)["Cookie"]}}
         chavy.get(url, (error, response, data) => {
             try {
                 signinfo.info = JSON.parse(data)
@@ -163,7 +164,6 @@ function getinfo() {
 function showmsg() {
     let subTitle = ''
     let detail = ''
-
     // 签到结果
     if (signinfo.signapp.signinMedal == 0) {
         subTitle = `签到: 成功`
@@ -175,13 +175,16 @@ function showmsg() {
         chavy.log(`❌ ${cookieName} signapp - response: ${JSON.stringify(signinfo.signapp)}`)
     }
 
-    if (signinfo.info.code == '0000') {
+    if (signinfo.info.code == 'Y') {
         // 基本信息
         detail = detail ? `${detail}\n` : ``
-        const free = signinfo.info.dataList[0]
-        const flow = signinfo.info.dataList[1]
-        const voice = signinfo.info.dataList[2]
-        detail = `话费: ${free.number}${free.unit}, 已用: ${flow.number}${flow.unit}, 剩余: ${voice.number}${voice.unit}`
+        const traffic = signinfo.info.data.dataList[0]
+        const flow = signinfo.info.data.dataList[1]
+        const voice = signinfo.info.data.dataList[2]
+        const credit = signinfo.info.data.dataList[3]
+        const back = signinfo.info.data.dataList[4]
+        const money = signinfo.info.data.dataList[5]
+        detail = `${traffic.remainTitle}: ${traffic.number}${traffic.unit}, ${flow.remainTitle}: ${flow.number}${flow.unit}, ${voice.remainTitle}: ${voice.number}${voice.unit}, ${credit.remainTitle}: ${credit.number}${credit.unit}, ${back.remainTitle}: ${back.number}${back.unit}, ${money.remainTitle}: ${money.number}${money.unit}`
     } else {
         chavy.log(`❌ ${cookieName} signapp - response: ${JSON.stringify(signinfo.info)}`)
     }
