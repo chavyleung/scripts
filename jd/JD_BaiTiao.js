@@ -52,7 +52,6 @@ function takePrize(body,PrizeName,Desc) {
 	  'Content-Type' : `application/x-www-form-urlencoded;charset=UTF-8`,
 	  'Host' : `jrmkt.jd.com`,
 	  'Connection' : `keep-alive`,
-	  'User-Agent' : `Mozilla/5.0 (iPhone; CPU iPhone OS 13_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148/application=JDJR-App&deviceId=CF7EBC50-5E68-466E-9456-9BC30C2DC027&clientType=ios&iosType=iphone&clientVersion=5.4.40&HiClVersion=5.4.40&isUpdate=0&osVersion=13.6&osName=iOS&platform=iPhone 8 Plus (A1864/A1898/A1899)&screen=736*414&src=App Store&ip=240e:ba:d812:f8f1:1859:ae66:5c5e:7b1d&mac=02:00:00:00:00:00&netWork=2&netWorkType=4&CpayJS=UnionPay/1.0 JDJR&stockSDK=stocksdk-iphone_3.2.0&sPoint=MTUwMDMjIzcxOTUzX3sicG9zaWQiOiIqMjU4ODcqIiwic3lzQ29kZSI6Im1jLW1rdC1jbXMiLCJtYXRpZCI6Iirmr4%2Fml6Xnrb7liLAqIiwicGFnaWQiOiIxIiwicmVzZGF0YSI6eyJjcmVfaWQiOiIiLCJyc19pZCI6Im1jLW1rdC1jbXMqbnVsbCIsInJlc19pZCI6IjE4MzQwKjI5NTcxIiwiaW50X2lkIjoiMCIsInN0cl9pZCI6IntcImVpZFwiOlwiMTAwXCIsXCJ1aWRcIjpcIjBjOGFiZDRmNzQxNTQwMWZhNDRmNmQ3ZDgyYzZkYzAyXCIsXCJwaWRcIjpcIjEwMTAxOVwifSJ9LCJhYnRpZCI6Ijg3NisxNjU0KzM0ODcqMyxudWxsLCIsIm9yZGlkIjoiKjEqNC0wIn0%3D&jdPay=(*#@jdPaySDK*#@jdPayChannel=jdfinance&jdPayChannelVersion=5.4.40&jdPaySdkVersion=2.25.57.00&jdPayClientName=iOS*#@jdPaySDK*#@)`,
 	  'Referer' : `https://jrmkt.jd.com/ptp/wl/vouchers.html?activityId=${Prize[PrizeName].Id}`,
 	  'Accept-Language' : `zh-cn`
     }
