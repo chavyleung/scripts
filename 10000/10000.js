@@ -81,7 +81,11 @@ function gethomeinfo() {
   const homebody = $.getdata($.KEY_signbody)
 	const url = { url: 'https://wapside.189.cn:9001/api/home/homeInfo', body : homebody, headers: {} }
   url.headers['Content-Type'] = 'application/json;charset=UTF-8'
-	if (!homebody) return
+	if (!homebody)
+        {
+            resolve()
+            return;
+        }
 	$.post(url, (err, resp, data) => {
 		   try {
 		       const _data = JSON.parse(data);
