@@ -8,6 +8,7 @@ const KEY_loginlotteryurl = 'chavy_loginlotteryurl_10010'
 const KEY_loginlotteryheader = 'chavy_loginlotteryheader_10010'
 const KEY_findlotteryurl = 'chavy_findlotteryurl_10010'
 const KEY_findlotteryheader = 'chavy_findlotteryheader_10010'
+const chavygolottery = true
 
 const signinfo = {}
 let VAL_loginurl = chavy.getdata(KEY_loginurl)
@@ -18,20 +19,23 @@ let VAL_loginlotteryurl = chavy.getdata(KEY_loginlotteryurl)
 let VAL_loginlotteryheader = chavy.getdata(KEY_loginlotteryheader)
 let VAL_findlotteryurl = chavy.getdata(KEY_findlotteryurl)
 let VAL_findlotteryheader = chavy.getdata(KEY_findlotteryheader)
+let golottery = JSON.parse(chavy.getdata("chavy_golottery_10010")||chavygolottery)
 
 ;(sign = async () => {
     chavy.log(`🔔 ${cookieName}`)
     await loginapp()
     await signapp()
-    /*if (VAL_loginlotteryurl && VAL_findlotteryurl) await loginlottery()
-    if (signinfo.encryptmobile) {
+    if (golottery == true) {
+      if (VAL_loginlotteryurl && VAL_findlotteryurl) await loginlottery()
+      if (signinfo.encryptmobile) {
         await findlottery()
         if (signinfo.findlottery && signinfo.findlottery.acFrequency && signinfo.findlottery.acFrequency.usableAcFreq) {
             for (let i = 0; i < signinfo.findlottery.acFrequency.usableAcFreq; i++) {
                 await lottery()
             }
         }
-    }*/
+      }
+    }
     await getinfo()
     showmsg()
     chavy.done()
@@ -188,17 +192,19 @@ function showmsg() {
     } else {
         chavy.log(`❌ ${cookieName} signapp - response: ${JSON.stringify(signinfo.info)}`)
     }
-
-    /*if (signinfo.findlottery && signinfo.findlottery.acFrequency && signinfo.lotterylist) {
+    
+    if (golottery == true) {
+      if (signinfo.findlottery && signinfo.findlottery.acFrequency && signinfo.lotterylist) {
         subTitle += `; 抽奖: ${signinfo.findlottery.acFrequency.usableAcFreq}次`
         detail += '\n查看详情\n'
 
         for (let i = 0; i < signinfo.findlottery.acFrequency.usableAcFreq; i++) {
             detail += `\n抽奖 (${i + 1}): ${signinfo.lotterylist[i].RspMsg}`
         }
-    } else {
+      } else {
         chavy.log(`❌ ${cookieName} signapp - response: ${JSON.stringify(signinfo.findlottery)}`)
-    }*/
+      }
+    }
 
     chavy.msg(cookieName, subTitle, detail)
 }
