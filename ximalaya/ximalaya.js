@@ -19,10 +19,10 @@ let time = new Date().getTime();
 function signapp() {
   return new Promise((resolve, reject) => {
     const url = { url: `https://hybrid.ximalaya.com/web-activity/signIn/action?aid=8&ts=${time}&_sonic=0&impl=com.gemd.iting&_sonic=0`, headers: { Cookie: VAL_signcookie } }
-    url.headers['Accept'] = '*/*'
-    url.headers['Accept-Encoding'] = 'gzip, deflate'
-    url.headers['Accept-Language'] = 'zh-Hans-CN;q=1, en-US;q=0.9'
-    url.headers['Connection'] = 'close'
+    url.headers['Accept'] = 'application/json, text/plain, */*'
+    url.headers['Accept-Encoding'] = 'gzip, deflate, br'
+    url.headers['Accept-Language'] = 'zh-cn'
+    url.headers['Connection'] = 'keep-alive'
     url.headers['Host'] = 'hybrid.ximalaya.com'
     url.headers['User-Agent'] = 'Mozilla/5.0 (iPhone; CPU iPhone OS 13_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 iting/6.6.45 kdtunion_iting/1.0 iting(main)/6.6.45/ios_1'
     chavy.post(url, (error, response, data) => {
