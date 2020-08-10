@@ -23,7 +23,7 @@ let VAL_findlotteryheader = chavy.getdata(KEY_findlotteryheader)
     chavy.log(`🔔 ${cookieName}`)
     await loginapp()
     await signapp()
-    /*if (VAL_loginlotteryurl && VAL_findlotteryurl) await loginlottery()
+    if (VAL_loginlotteryurl && VAL_findlotteryurl) await loginlottery()
     if (signinfo.encryptmobile) {
         await findlottery()
         if (signinfo.findlottery && signinfo.findlottery.acFrequency && signinfo.findlottery.acFrequency.usableAcFreq) {
@@ -31,7 +31,7 @@ let VAL_findlotteryheader = chavy.getdata(KEY_findlotteryheader)
                 await lottery()
             }
         }
-    }*/
+    }
     await getinfo()
     showmsg()
     chavy.done()
@@ -189,7 +189,7 @@ function showmsg() {
         chavy.log(`❌ ${cookieName} signapp - response: ${JSON.stringify(signinfo.info)}`)
     }
 
-    /*if (signinfo.findlottery && signinfo.findlottery.acFrequency && signinfo.lotterylist) {
+    if (signinfo.findlottery && signinfo.findlottery.acFrequency && signinfo.lotterylist) {
         subTitle += `; 抽奖: ${signinfo.findlottery.acFrequency.usableAcFreq}次`
         detail += '\n查看详情\n'
 
@@ -198,7 +198,7 @@ function showmsg() {
         }
     } else {
         chavy.log(`❌ ${cookieName} signapp - response: ${JSON.stringify(signinfo.findlottery)}`)
-    }*/
+    }
 
     chavy.msg(cookieName, subTitle, detail)
 }
