@@ -1,7 +1,36 @@
 function Env(name, opts) {
+  class Http {
+    constructor(env) {
+      this.env = env
+    }
+
+    send(opts, method = 'GET') {
+      opts = typeof opts === 'string' ? { url: opts } : opts
+      let sender = this.get
+      if (method === 'POST') {
+        sender = this.post
+      }
+      return new Promise((resolve, reject) => {
+        sender.call(this, opts, (err, resp, body) => {
+          if (err) reject(err)
+          else resolve(resp)
+        })
+      })
+    }
+
+    get(opts) {
+      return this.send.call(this.env, opts)
+    }
+
+    post(opts) {
+      return this.send.call(this.env, opts, 'POST')
+    }
+  }
+
   return new (class {
     constructor(name, opts) {
       this.name = name
+      this.http = new Http(this)
       this.data = null
       this.dataFile = 'box.dat'
       this.logs = []
@@ -28,6 +57,41 @@ function Env(name, opts) {
       return 'undefined' !== typeof $loon
     }
 
+    toObj(str, defaultValue = null) {
+      try {
+        return JSON.parse(str)
+      } catch {
+        return defaultValue
+      }
+    }
+
+    toStr(obj, defaultValue = null) {
+      try {
+        return JSON.stringify(obj)
+      } catch {
+        return defaultValue
+      }
+    }
+
+    getjson(key, defaultValue) {
+      let json = defaultValue
+      const val = this.getdata(key)
+      if (val) {
+        try {
+          json = JSON.parse(this.getdata(key))
+        } catch {}
+      }
+      return json
+    }
+
+    setjson(val, key) {
+      try {
+        return this.setdata(JSON.stringify(val), key)
+      } catch {
+        return false
+      }
+    }
+
     getScript(url) {
       return new Promise((resolve) => {
         this.get({ url }, (err, resp, body) => resolve(body))
@@ -50,6 +114,7 @@ function Env(name, opts) {
         this.post(opts, (err, resp, body) => resolve(body))
       }).catch((e) => this.logErr(e))
     }
+
     loaddata() {
       if (this.isNode()) {
         this.fs = this.fs ? this.fs : require('fs')
@@ -103,7 +168,11 @@ function Env(name, opts) {
     lodash_set(obj, path, value) {
       if (Object(obj) !== obj) return obj
       if (!Array.isArray(path)) path = path.toString().match(/[^.[\]]+/g) || []
-      path.slice(0, -1).reduce((a, c, i) => (Object(a[c]) === a[c] ? a[c] : (a[c] = Math.abs(path[i + 1]) >> 0 === +path[i + 1] ? [] : {})), obj)[path[path.length - 1]] = value
+      path
+        .slice(0, -1)
+        .reduce((a, c, i) => (Object(a[c]) === a[c] ? a[c] : (a[c] = Math.abs(path[i + 1]) >> 0 === +path[i + 1] ? [] : {})), obj)[
+        path[path.length - 1]
+      ] = value
       return obj
     }
 
@@ -285,7 +354,9 @@ function Env(name, opts) {
         'S': new Date().getMilliseconds()
       }
       if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (new Date().getFullYear() + '').substr(4 - RegExp.$1.length))
-      for (let k in o) if (new RegExp('(' + k + ')').test(fmt)) fmt = fmt.replace(RegExp.$1, RegExp.$1.length == 1 ? o[k] : ('00' + o[k]).substr(('' + o[k]).length))
+      for (let k in o)
+        if (new RegExp('(' + k + ')').test(fmt))
+          fmt = fmt.replace(RegExp.$1, RegExp.$1.length == 1 ? o[k] : ('00' + o[k]).substr(('' + o[k]).length))
       return fmt
     }
 
