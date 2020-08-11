@@ -428,11 +428,11 @@
             </v-subheader>
             <v-card flat class="mb-4" color="transparent" v-if="curapp.desc || curapp.descs || curapp.desc_html || curapp.descs_html">
               <v-card-subtitle>
-                <p v-if="curapp.desc" v-text="curapp.desc" class="curapptext-pre-wrap"></p>
+                <p v-if="curapp.desc" v-text="curapp.desc" class="text-pre-wrap"></p>
                 <p
                   v-for="(desc, descIdx) in curapp.descs"
                   v-text="desc"
-                  :class="curapp.descs.length === descIdx + 1 ? 'curapptext-pre-wrap' : 'mb-0 curapptext-pre-wrap'"
+                  :class="curapp.descs.length === descIdx + 1 ? 'curapptext-pre-wrap' : 'mb-0 text-pre-wrap'"
                 ></p>
                 <p v-if="curapp.desc_html" v-html="curapp.desc_html"></p>
                 <div v-for="(desc_html, desc_htmlIdx) in curapp.descs_html" v-html="desc_html"></div>
