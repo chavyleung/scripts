@@ -169,9 +169,9 @@ function showmsg() {
     let subTitle = ''
     let detail = ''
     // 签到结果
-    if (signinfo.signapp.signinMedal == 0) {
+    if (signinfo.signapp.msg == 'ok!') {
         subTitle = `签到: 成功`
-        detail = `积分: +${signinfo.signapp.prizeCount}, 成长值: +${signinfo.signapp.growthV}, 鲜花: +${signinfo.signapp.flowerCount}`
+        detail = `积分: +${signinfo.signapp.data.prizeCount}, 成长值: +${signinfo.signapp.data.growthV}, 鲜花: +${signinfo.signapp.data.flowerCount}`
     } else if (signinfo.signapp.msg == '用户今日已签到！') {
         subTitle = `签到: 重复`
     } else {

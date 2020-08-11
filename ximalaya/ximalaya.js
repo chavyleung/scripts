@@ -120,7 +120,7 @@ function showmsg() {
   if (signinfo.info.isTickedToday == false) {
     if (signinfo.sign.data.status == 0) {
       subTitle = '签到: 成功'
-      detail = `当前连签: ${signinfo.info.continuousDays}天, 积分: ${signinfo.acc.data.score}(+${signinfo.info.awardAmount})`
+      detail = `当前连签: ${signinfo.info.continuousDays + 1}天, 积分: ${signinfo.acc.data.score}(+${signinfo.info.awardAmount})`
     } else {
       subTitle = '签到: 失败'
       detail = `说明: ${signinfo.sign.data.msg}`
