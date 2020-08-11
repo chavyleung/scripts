@@ -1,6 +1,6 @@
 const $ = new Env('BoxJs')
 
-$.version = '0.7.2'
+$.version = '0.7.3'
 $.versionType = 'beta'
 
 // 存储`用户偏好`
@@ -98,7 +98,7 @@ function getDomain(url) {
  */
 async function handlePage() {
   const cache = $.getjson($.KEY_web_cache, null)
-  if (cache && cache.version !== $.version) {
+  if (cache && cache.version === $.version) {
     $.html = cache.cache
   } else {
     await $.http.get($.web).then(
