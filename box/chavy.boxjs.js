@@ -1,6 +1,6 @@
 const $ = new Env('BoxJs')
 
-$.version = '0.7.0'
+$.version = '0.7.1'
 $.versionType = 'beta'
 
 // 存储`用户偏好`
@@ -21,7 +21,7 @@ $.json = $.name // `接口`类请求的响应体
 $.html = $.name // `页面`类请求的响应体
 
 $.web = `https://cdn.jsdelivr.net/gh/chavyleung/scripts@${$.version}/box/chavy.boxjs.html`
-// $.web = `http://192.168.50.109:8080/box/chavy.boxjs.html?_=${new Date().getTime()}`
+$.web = `http://192.168.50.109:8080/box/chavy.boxjs.html?_=${new Date().getTime()}`
 // $.web = `http://192.168.8.112:8080/box/chavy.boxjs.html?_=${new Date().getTime()}`
 
 !(async () => {
@@ -430,10 +430,10 @@ async function apiRunScript() {
   const httpapi = $.getdata('@chavy_boxjs_userCfgs.httpapi')
   const ishttpapi = /.*?@.*?:[0-9]+/.test(httpapi)
   if ($.isSurge() && ishttpapi) {
-    const runOpts = { timeout: opts.script_timeout }
-    await $.getScript(opts.script_url).then((script) => $.runScript(script, runOpts))
+    const runOpts = { timeout: opts.timeout }
+    await $.getScript(opts.url).then((script) => $.runScript(script, runOpts))
   } else {
-    await $.getScript(opts.script_url).then((script) => {
+    await $.getScript(opts.url).then((script) => {
       // 避免被执行脚本误认为是 rewrite 环境
       // 所以需要 `$request = undefined`
       $request = undefined
