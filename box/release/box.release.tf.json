@@ -1,6 +1,19 @@
 {
   "releases": [
     {
+      "version": "0.7.8",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "icon": "https://avatars3.githubusercontent.com/u/29748519",
+      "repo": "https://github.com/chavyleung",
+      "notes": [
+        {
+          "name": "修复",
+          "descs": ["boolean 控件偶尔触发键盘问题"]
+        }
+      ]
+    },
+    {
       "version": "0.7.7",
       "tags": ["beta"],
       "author": "@chavyleung",
