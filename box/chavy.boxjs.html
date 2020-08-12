@@ -68,7 +68,7 @@
           <v-menu bottom left v-if="isMainView">
             <template #activator="{ on }">
               <v-btn icon v-on="on">
-                <v-avatar size="26"><img :src="env.icon" /></v-avatar>
+                <v-avatar size="26"><img :src="env.icons[iconEnvThemeIdx]" /></v-avatar>
               </v-btn>
             </template>
             <v-list>
@@ -189,7 +189,6 @@
                 label="透明图标"
                 v-model="box.usercfgs.isTransparentIcons"
                 @change="saveUserCfgs"
-                :disabled="!isDarkMode"
                 :hide-details="isDarkMode"
                 :persistent-hint="true"
                 hint="明亮主题下强制使用彩色图标"
@@ -204,8 +203,39 @@
               <v-switch
                 dense
                 class="mt-0"
-                hide-details
-                label="隐藏悬浮图标"
+                label="勿扰模式"
+                hint="不再发出系统通知 (仍记日志)"
+                persistent-hint
+                v-model="box.usercfgs.isMute"
+                @change="saveUserCfgs"
+              ></v-switch>
+              <v-spacer></v-spacer>
+              <v-btn fab small text>
+                <v-avatar size="32"><v-icon>mdi-volume-off</v-icon></v-avatar>
+              </v-btn>
+            </v-list-item>
+            <v-list-item class="mt-4">
+              <v-switch
+                dense
+                class="mt-0"
+                label="隐藏帮助按钮"
+                hint="隐藏悬浮按钮中的帮忙"
+                persistent-hint
+                v-model="box.usercfgs.isHideHelp"
+                @change="saveUserCfgs"
+              ></v-switch>
+              <v-spacer></v-spacer>
+              <v-btn fab small text @click="window.open(box.syscfgs.boxjs.repo)">
+                <v-avatar size="32"><v-icon>mdi-help</v-icon></v-avatar>
+              </v-btn>
+            </v-list-item>
+            <v-list-item class="mt-4">
+              <v-switch
+                dense
+                class="mt-0"
+                label="隐藏悬浮按钮"
+                hint="右下角悬浮按钮"
+                persistent-hint
                 v-model="box.usercfgs.isHideBoxIcon"
                 @change="saveUserCfgs"
               ></v-switch>
@@ -220,8 +250,9 @@
               <v-switch
                 dense
                 class="mt-0"
-                hide-details
                 label="隐藏我的标题"
+                hint="底栏`我的`二字 (只显示图标)"
+                persistent-hint
                 v-model="box.usercfgs.isHideMyTitle"
                 @change="saveUserCfgs"
               ></v-switch>
@@ -234,38 +265,33 @@
               </v-btn>
             </v-list-item>
             <v-list-item class="mt-4">
-              <v-switch dense class="mt-0" hide-details label="勿扰模式" v-model="box.usercfgs.isMute" @change="saveUserCfgs"></v-switch>
-              <v-spacer></v-spacer>
-              <v-btn fab small text>
-                <v-avatar size="32"><v-icon>mdi-volume-off</v-icon></v-avatar>
-              </v-btn>
-            </v-list-item>
-            <v-list-item class="mt-4">
               <v-switch
                 dense
                 class="mt-0"
-                hide-details
-                label="隐藏帮助按钮"
-                v-model="box.usercfgs.isHideHelp"
-                @change="saveUserCfgs"
-              ></v-switch>
-              <v-spacer></v-spacer>
-              <v-btn fab small text @click="window.open(box.syscfgs.boxjs.repo)">
-                <v-avatar size="32"><v-icon>mdi-help</v-icon></v-avatar>
-              </v-btn>
-            </v-list-item>
-            <v-list-item class="mt-4">
-              <v-switch
-                dense
-                class="mt-0"
-                hide-details
                 label="隐藏刷新按钮"
+                hint="双击悬浮按钮也可刷新页面"
+                persistent-hint
                 v-model="box.usercfgs.isHideRefresh"
                 @change="saveUserCfgs"
               ></v-switch>
               <v-spacer></v-spacer>
               <v-btn fab small text>
                 <v-avatar size="32"><v-icon>mdi-refresh</v-icon></v-avatar>
+              </v-btn>
+            </v-list-item>
+            <v-list-item class="mt-4">
+              <v-switch
+                dense
+                class="mt-0"
+                label="调试模式 (页面)"
+                hint="每次访问都获取最新的页面"
+                persistent-hint
+                v-model="box.usercfgs.isDebugWeb"
+                @change="saveUserCfgs"
+              ></v-switch>
+              <v-spacer></v-spacer>
+              <v-btn fab small text>
+                <v-avatar size="32"><v-icon>mdi-language-html5</v-icon></v-avatar>
               </v-btn>
             </v-list-item>
             <!-- <v-list-item class="mt-4">
@@ -675,7 +701,7 @@
                   </v-btn>
                 </v-subheader>
                 <template v-for="(sub, subIdx) in appSubs" :key="sub.id">
-                  <v-list-item dense two-line @click="">
+                  <v-list-item dense two-line @click="reloadAppSub(sub)">
                     <v-list-item-avatar v-if="sub.icon"><v-img :src="sub.icon" /></v-list-item-avatar>
                     <v-list-item-avatar v-else color="primary"><v-icon dark>mdi-account</v-icon></v-list-item-avatar>
                     <v-list-item-content>
@@ -910,7 +936,7 @@
             <v-btn dark fab small color="success" @click="">
               <v-icon>mdi-export-variant</v-icon>
             </v-btn>
-            <v-btn dark v-if="!box.usercfgs.isHideRefresh" fab small color="orange" @click="">
+            <v-btn dark v-if="!box.usercfgs.isHideRefresh" fab small color="orange" @dblclick="window.location.reload()">
               <v-icon>mdi-refresh</v-icon>
             </v-btn>
           </v-speed-dial>
@@ -935,6 +961,7 @@
         data() {
           return {
             ui: {
+              isCors: false,
               path: null,
               bfpath: null,
               view: null,
@@ -965,6 +992,10 @@
           // 获取当前版本
           version() {
             return this.box.syscfgs.version
+          },
+          // 判断是否需要跨域请求
+          isCors() {
+            return this.ui.isCors
           },
           // 判断当前是否`WebApp`
           isWebApp() {
@@ -1037,6 +1068,13 @@
               return this.isTransparentIcons ? 0 : 1
             }
             return 1
+          },
+          // 获取环境图标下标, 透明: 0, 彩色: 1 (默认)
+          iconEnvThemeIdx() {
+            if (this.isWebApp) {
+              return this.isTransparentIcons ? 0 : 1
+            }
+            return this.iconThemeIdx
           },
           isSaveUserCfgs: {
             set(val) {
@@ -1161,7 +1199,7 @@
         watch: {
           'ui.path': {
             handler(newval, oldval) {
-              if (!this.isWebApp) {
+              if (!this.isWebApp && !this.isCors) {
                 history.pushState({ title: 'BoxJs' }, '', newval)
               }
               const [, view, subview] = newval.split('/')
@@ -1200,10 +1238,21 @@
           }
         },
         async created() {
+          // 如果 url 参数中指定的 baseURL, 则后续的请求都请求到指定的域
+          if (window.location.search) {
+            const [, baseURL] = /baseURL=(.*?)(&|$)/.exec(window.location.search)
+            axios.defaults.baseURL = baseURL || ''
+            this.ui.isCors = true
+          }
           // 根据路径跳转视图
-          this.path = location.pathname
+          if (!this.isCors) {
+            const path = location.pathname
+            this.path = path === '/' ? '/app' : path
+          } else {
+            this.path = '/app'
+          }
           // 监听浏览器后退事件
-          window.addEventListener('popstate', () => (this.path = location.pathname), false)
+          window.addEventListener('popstate', () => (this.path = path), false)
           // 获取 BoxJs 数据, 取到数据再渲染页面
           await axios.get('/query/boxdata').then((resp) => (this.box = resp.data))
           // 获取全局备份
@@ -1223,6 +1272,8 @@
           back() {
             if (this.view === 'bak' && !this.bfpath) {
               this.path = '/my'
+            } else if (this.view === 'app' && !this.bfpath) {
+              this.path = '/app'
             } else {
               this.path = this.bfpath
             }
@@ -1449,7 +1500,7 @@
             const curSessions = [{ key, val }]
             const datas = [...session.datas, ...curSessions]
             axios
-              .post('/api/save', [{ key, val }])
+              .post('/api/save', datas)
               .then((resp) => {
                 delete resp.data.usercfgs
                 Object.assign(this.box, resp.data)
@@ -1461,7 +1512,7 @@
             this.ui.overlay.show = true
             const datas = this.curapp.datas
             const data = datas.find((data) => data.key === key)
-            data.val = null
+            data.val = ''
             axios
               .post('/api/save', datas)
               .then((resp) => {
