@@ -173,7 +173,7 @@ function getgameinfo() {
 function getinfo() {
   return new Promise((resolve, reject) => {
     const timestamp = Math.round(new Date().getTime()).toString()
-    const url = { url: `https://sign.suning.com/sign-web/m/promotion/sign/receiveSignDrip?_=${timestamp}`, headers: JSON.parse(VAL_signheader) }
+    const url = { url: `https://sign.suning.com/sign-web/m/promotion/sign/receiveSignDrip.do?_=${timestamp}`, headers: JSON.parse(VAL_signheader) }
     delete url.headers['Cookie']
     chavy.get(url, (error, response, data) => {
       try {
