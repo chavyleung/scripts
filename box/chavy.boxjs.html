@@ -1433,8 +1433,9 @@
             this.ui.overlay.show = true
             const datas = []
             this.curapp.settings.forEach((setting) => {
+              const isNilVal = _.isNil(setting.val)
               const key = setting.id
-              const val = setting.val ? _.toString(setting.val) : ''
+              const val = !isNilVal ? _.toString(setting.val) : ''
               datas.push({ key, val })
             })
             axios
