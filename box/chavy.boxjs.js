@@ -1,6 +1,6 @@
 const $ = new Env('BoxJs')
 
-$.version = '0.7.6'
+$.version = '0.7.7'
 $.versionType = 'beta'
 
 // 存储`用户偏好`
