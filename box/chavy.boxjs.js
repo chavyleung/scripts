@@ -77,19 +77,11 @@ $.ver = 'https://gitee.com/chavyleung/scripts/raw/master/box/release/box.release
  * http://boxjs.com/api/getdata => `/api/getdata`
  */
 function getPath(url) {
-  // 如果以`/`结尾, 先去掉最后一个`/`
-  const fullpath = /\/$/.test(url) ? url.replace(/\/$/, '') : url
-  const domain = getDomain(url)
-  return new RegExp(domain).test(url) ? fullpath.split(domain)[1] : undefined
-}
-
-/**
- * http://boxjs.com/ => `boxjs.com`
- * http://127.0.0.1:9999/ => `127.0.0.1:9999`
- */
-function getDomain(url) {
-  const [, domain] = /https?:\/\/(.*?)\/.*/.exec(url)
-  return domain
+  // 如果以`/`结尾, 去掉最后一个`/`
+  let end = url.lastIndexOf("/") === url.length - 1 ? -1 : undefined
+  // slice第二个参数传 undefined 会直接截到最后
+  // indexOf第二个参数用来跳过前面的 "https://"
+  return url.slice(url.indexOf("/", 8), end)
 }
 
 /**

@@ -69,10 +69,11 @@ $.html = $.name
  * https://dns.google/api => `/api`
  */
 function getPath(url) {
-  // 如果以`/`结尾, 先去掉最后一个`/`
-  const fullpath = /\/$/.test(url) ? url.replace(/\/$/, '') : url
-  const [, domain] = /https?:\/\/(.*?)\/.*/.exec($request.url)
-  return new RegExp(domain).test(url) ? fullpath.split(domain)[1] : undefined
+  // 如果以`/`结尾, 去掉最后一个`/`
+  let end = url.lastIndexOf("/") === url.length - 1 ? -1 : undefined
+  // slice第二个参数传 undefined 会直接截到最后
+  // indexOf第二个参数用来跳过前面的 "https://"
+  return url.slice(url.indexOf("/", 8), end)
 }
 
 function getSystemCfgs() {
