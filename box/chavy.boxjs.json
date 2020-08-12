@@ -181,6 +181,7 @@
     {
       "id": "chavyleung.suning",
       "name": "苏宁易购",
+      "settings": [{ "id": "chavy_logflag_suning", "name": "响应日志", "val": false, "type": "boolean", "desc": "是否输出响应返回体" }],
       "keys": ["chavy_login_url_suning", "chavy_login_body_suning", "chavy_login_header_suning", "chavy_sign_url_suning", "chavy_sign_header_suning", "chavy_signweb_url_suning", "snyg_userTokenKey", "chavy_signweb_header_suning", "chavy_signgame_url_suning", "chavy_signgame_header_suning", "chavy_signgetgame_url_suning", "chavy_signgetgame_header_suning"],
       "author": "@chavyleung",
       "repo": "https://github.com/chavyleung/scripts/blob/master/suning/suning.js",
