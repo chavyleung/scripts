@@ -13,6 +13,7 @@ const KEY_signgameheader = 'chavy_signgame_header_suning'
 const KEY_signgetgameurl = 'chavy_signgetgame_url_suning'
 const KEY_signgetgameheader = 'chavy_signgetgame_header_suning'
 const KEY_runflag = 'chavy_runflag_suning'
+const KEY_logflag = 'chavy_logflag_suning'
 
 const signinfo = {}
 let VAL_loginurl = chavy.getdata(KEY_loginurl)
@@ -28,15 +29,17 @@ let VAL_signgameheader = chavy.getdata(KEY_signgameheader)
 let VAL_signgetgameurl = chavy.getdata(KEY_signgetgameurl)
 let VAL_signgetgameheader = chavy.getdata(KEY_signgetgameheader)
 let VAL_runflag = chavy.getdata(KEY_runflag)
+let VAl_logflag = chavy.getdata(KEY_logflag) === "true" ? true : false
 
 ;(sign = async () => {
-  chavy.log(`🔔 ${cookieName}`)
+  chavy.log(`🔔 ${cookieName} 开始`)
   await loginapp()
-  if (VAL_signurl) await signapp()
+  //if (VAL_signurl) await signapp()
   await getinfo()
   if (VAL_signweburl || VAL_signweburlBarry) await signweb(), await getwebinfo()
   if (VAL_signgameurl && VAL_signgetgameurl) await signgame(), await getgameinfo()
   showmsg()
+  chavy.log(`🔔 ${cookieName} 结束`)
   chavy.done()
 })().catch((e) => chavy.log(`❌ ${cookieName} 签到失败: ${e}`), chavy.done())
 
@@ -51,7 +54,7 @@ function loginapp() {
     })
   })
 }
-
+/*
 function signapp() {
   return new Promise((resolve, reject) => {
     const url = { url: VAL_signurl, headers: JSON.parse(VAL_signheader) }
@@ -69,7 +72,7 @@ function signapp() {
       }
     })
   })
-}
+}*/
 
 function signgame() {
   return new Promise((resolve, reject) => {
@@ -77,7 +80,7 @@ function signgame() {
     delete url.headers['Cookie']
     chavy.get(url, (error, response, data) => {
       try {
-        chavy.log(`❕ ${cookieName} signgame - response: ${JSON.stringify(response)}`)
+        VAl_logflag ? chavy.log(`❕ ${cookieName} signgame - response: ${JSON.stringify(response)}`) : ""
         signinfo.signgame = JSON.parse(data)
         resolve()
       } catch (e) {
@@ -113,7 +116,7 @@ function signweb() {
     }
     chavy.get(url, (error, response, data) => {
       try {
-        chavy.log(`❕ ${cookieName} signweb - response: ${JSON.stringify(response)}`)
+        VAl_logflag ? chavy.log(`❕ ${cookieName} signweb - response: ${JSON.stringify(response)}`) : ""
         signinfo.signweb = JSON.parse(data)
         resolve()
       } catch (e) {
@@ -135,7 +138,7 @@ function getwebinfo() {
     url.headers['Host'] = 'luckman.suning.com'
     chavy.get(url, (error, response, data) => {
       try {
-        chavy.log(`❕ ${cookieName} getwebinfo - response: ${JSON.stringify(response)}`)
+        VAl_logflag ? chavy.log(`❕ ${cookieName} getwebinfo - response: ${JSON.stringify(response)}`) : ""
         signinfo.webinfo = JSON.parse(data)
         resolve()
       } catch (e) {
@@ -154,7 +157,7 @@ function getgameinfo() {
     delete url.headers['Cookie']
     chavy.get(url, (error, response, data) => {
       try {
-        chavy.log(`❕ ${cookieName} getgameinfo - response: ${JSON.stringify(response)}`)
+        VAl_logflag ? chavy.log(`❕ ${cookieName} getgameinfo - response: ${JSON.stringify(response)}`) : ""
         signinfo.gameinfo = JSON.parse(data.match(/\((.*)\)/)[1])
         resolve()
       } catch (e) {
@@ -170,11 +173,11 @@ function getgameinfo() {
 function getinfo() {
   return new Promise((resolve, reject) => {
     const timestamp = Math.round(new Date().getTime()).toString()
-    const url = { url: `https://sign.suning.com/sign-web/m/newsign/getDiamondInfo.do?_=${timestamp}`, headers: JSON.parse(VAL_signheader) }
+    const url = { url: `https://sign.suning.com/sign-web/m/promotion/sign/receiveSignDrip?_=${timestamp}`, headers: JSON.parse(VAL_signheader) }
     delete url.headers['Cookie']
     chavy.get(url, (error, response, data) => {
       try {
-        chavy.log(`❕ ${cookieName} getinfo - info: ${JSON.stringify(response)}`)
+        VAl_logflag ? chavy.log(`❕ ${cookieName} getinfo - info: ${JSON.stringify(response)}`) : ""
         signinfo.info = JSON.parse(data)
         resolve()
       } catch (e) {
@@ -191,17 +194,17 @@ function showmsg() {
   let subTitle = ''
   let detail = ''
   let moreDetail = ''
-  if (signinfo.signapp && signinfo.signapp.code == '1') {
-    if (signinfo.signapp.data.todayFirstSignFlag == true) subTitle = '签到: 成功'
+  if (signinfo.info && signinfo.info.code == '1') {
+    if (signinfo.info.data.todayFirstSignFlag == true) subTitle = '签到: 成功'
     else subTitle = '签到: 重复'
-    for (myinfo of signinfo.info.data) {
-      detail += detail == '' ? '总共: ' : ', '
-      detail += myinfo.showLabel
-    }
-    if (signinfo.signapp.data.prizeLists) {
-      detail += typeof(signinfo.signapp.data.remainingPoint) == "undefined" ? '' : `, 说明: 还有${signinfo.signapp.data.remainingPoint}云钻待领取`
-      const prizeLists = signinfo.signapp.data.prizeLists
-      const customerDays = signinfo.signapp.data.customerDays
+    //for (myinfo of signinfo.info.data) {
+    //  detail += detail == '' ? '总共: ' : ', '
+    //  detail += myinfo.showLabel
+    //}
+    if (signinfo.info.data.prizeLists) {
+      detail += typeof(signinfo.info.data.remainingPoint) == "undefined" ? '' : `, 说明: 还有${signinfo.info.data.remainingPoint}云钻待领取`
+      const prizeLists = signinfo.info.data.prizeLists
+      const customerDays = signinfo.info.data.customerDays
       const prize = prizeLists[customerDays - 1]
       moreDetail += moreDetail == '' ? '' : '\n'
       moreDetail += '\n💎 每日签到: '
@@ -209,7 +212,7 @@ function showmsg() {
     }
   } else {
     subTitle = '签到: 失败'
-    chavy.log(`❌ ${cookieName} showmsg - 每日签到: ${JSON.stringify(signinfo.signapp)}`)
+    chavy.log(`❌ ${cookieName} showmsg - 每日签到: ${JSON.stringify(signinfo.info)}`)
   }
 
   subTitle += subTitle == '' ? '' : ', '
@@ -272,6 +275,7 @@ function showmsg() {
 
   if (moreDetail) detail += `\n查看签到详情\n${moreDetail}`
   chavy.msg(cookieName, subTitle, detail)
+  chavy.log(detail)
 }
 
 function init() {
