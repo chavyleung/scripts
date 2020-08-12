@@ -922,7 +922,7 @@
                 <v-avatar><img :src="box.syscfgs.boxjs.icons[iconThemeIdx]" /></v-avatar>
               </v-btn>
             </template>
-            <v-btn dark v-if="!box.usercfgs.isHideHelp" fab small color="grey" @click="">
+            <v-btn dark v-if="!box.usercfgs.isHideHelp" fab small color="grey" @click="ui.versionsheet.show = true">
               <v-icon>mdi-help</v-icon>
             </v-btn>
             <v-btn dark fab small color="pink" @click="box.usercfgs.isLeftBoxIcon = !box.usercfgs.isLeftBoxIcon">
@@ -930,17 +930,44 @@
                 {{box.usercfgs.isLeftBoxIcon ? 'mdi-format-horizontal-align-right' : 'mdi-format-horizontal-align-left'}}
               </v-icon>
             </v-btn>
-            <v-btn dark fab small color="indigo" @click="">
+            <!-- <v-btn dark fab small color="indigo" @click="">
               <v-icon>mdi-database-import</v-icon>
             </v-btn>
             <v-btn dark fab small color="success" @click="">
               <v-icon>mdi-export-variant</v-icon>
-            </v-btn>
+            </v-btn> -->
             <v-btn dark v-if="!box.usercfgs.isHideRefresh" fab small color="orange" @dblclick="window.location.reload()">
               <v-icon>mdi-refresh</v-icon>
             </v-btn>
           </v-speed-dial>
         </v-fab-transition>
+        <v-bottom-sheet v-model="ui.versionsheet.show" scrollable>
+          <v-card v-if="box.versions">
+            <v-subheader>
+              <v-btn icon small @click="ui.versionsheet.show = false">
+                <v-icon>mdi-help-circle</v-icon>
+              </v-btn>
+              <v-spacer></v-spacer>
+              <v-btn text small v-if="hasNewVersion">新版本</v-btn>
+              <v-spacer></v-spacer>
+              <v-btn icon small @click="ui.versionsheet.show = false">
+                <v-icon>mdi-close</v-icon>
+              </v-btn>
+            </v-subheader>
+            <v-divider></v-divider>
+            <v-card-text style="height: 80%;">
+              <div class="mt-6" v-for="(ver, verIdx) in box.versions">
+                <h2 :class="version === ver.version ? 'primary--text' : undefined">v{{ver.version}}</h2>
+                <div class="pl-4 pt-2" v-for="(note, noteIdx) in ver.notes">
+                  <strong>{{note.name}}</strong>
+                  <ul>
+                    <li v-for="(desc, descIdx) in note.descs">{{desc}}</li>
+                  </ul>
+                </div>
+              </div>
+            </v-card-text>
+          </v-card>
+        </v-bottom-sheet>
         <v-overlay v-model="ui.overlay.show" :opacity="0.8">
           <v-progress-circular indeterminate :value="ui.overlay.val" :size="64" color="primary"></v-progress-circular>
         </v-overlay>
@@ -974,6 +1001,8 @@
               overlay: { show: false, val: 60 },
               snackbar: { show: false, color: 'primary', msg: '' },
               searchBar: { menuProps: { closeOnContentClick: true } },
+              versionsheet: { show: false },
+              updatesheet: { show: false },
               naviDrawer: { show: false },
               baksSkeleton: { show: true },
               editProfileDialog: { show: false },
@@ -992,6 +1021,15 @@
           // 获取当前版本
           version() {
             return this.box.syscfgs.version
+          },
+          // 判断是否有新版本
+          hasNewVersion() {
+            const curver = this.box.syscfgs.version
+            const vers = this.box.versions
+            if (curver && vers && vers.length > 0) {
+              const lastestVer = vers[0].version
+              return this.compareVersion(lastestVer, curver) > 0
+            }
           },
           // 判断是否需要跨域请求
           isCors() {
@@ -1261,6 +1299,7 @@
           }
           // 获取贡献者列表
           this.getContributors()
+          this.getVersions()
           this.loadTheme()
         },
         methods: {
@@ -1681,6 +1720,24 @@
                 this.ui.contributors.push({ id, login, repo, icon })
               })
             })
+          },
+          // 获取版本清单
+          getVersions() {
+            axios.get('/query/versions').then((resp) => {
+              if (resp.data && resp.data.releases) {
+                Object.assign(this.box, { versions: resp.data.releases })
+                if (this.hasNewVersion) {
+                  this.ui.versionsheet.show = true
+                }
+              }
+            })
+          },
+          // 对比版本号
+          compareVersion(v1, v2) {
+            var _v1 = v1.split('.'),
+              _v2 = v2.split('.'),
+              _r = _v1[0] - _v2[0]
+            return _r == 0 && v1 != v2 ? this.compareVersion(_v1.splice(1).join('.'), _v2.splice(1).join('.')) : _r
           }
         }
       })

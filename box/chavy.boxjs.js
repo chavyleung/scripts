@@ -21,6 +21,7 @@ $.json = $.name // `接口`类请求的响应体
 $.html = $.name // `页面`类请求的响应体
 
 $.web = `https://cdn.jsdelivr.net/gh/chavyleung/scripts@${$.version}/box/chavy.boxjs.html`
+$.ver = 'https://gitee.com/chavyleung/scripts/raw/master/box/release/box.release.tf.json'
 
 !(async () => {
   // 勿扰模式
@@ -132,6 +133,8 @@ async function handleQuery() {
   } else if (/^\/baks/.test(query)) {
     const globalbaks = getGlobalBaks(true)
     $.json = { globalbaks }
+  } else if (/^\/versions$/.test(query)) {
+    await getVersions(true)
   }
 }
 
@@ -279,6 +282,21 @@ function getGlobalBaks(isComplete = false) {
     globalbaks.forEach((bak) => delete bak.bak)
     return globalbaks
   }
+}
+/**
+ * 获取版本清单
+ */
+function getVersions() {
+  return $.http.get($.ver).then(
+    (resp) => {
+      try {
+        $.json = $.toObj(resp.body)
+      } catch {
+        $.json = {}
+      }
+    },
+    () => ($.json = {})
+  )
 }
 
 /**
