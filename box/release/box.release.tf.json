@@ -1,6 +1,23 @@
 {
   "releases": [
     {
+      "version": "0.7.9",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "icon": "https://avatars3.githubusercontent.com/u/29748519",
+      "repo": "https://github.com/chavyleung",
+      "notes": [
+        {
+          "name": "新增",
+          "descs": ["可以修改会话", "增加帮忙手册入口", "推荐订阅入口"]
+        },
+        {
+          "name": "调整",
+          "descs": ["调整加载动态效果"]
+        }
+      ]
+    },
+    {
       "version": "0.7.8",
       "tags": ["beta"],
       "author": "@chavyleung",
