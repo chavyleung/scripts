@@ -712,8 +712,8 @@
                           <v-btn icon v-on="on"><v-icon>mdi-dots-vertical</v-icon></v-btn>
                         </template>
                         <v-list dense>
-                          <v-list-item @click="reloadAppSub(sub)">
-                            <v-list-item-title>更新</v-list-item-title>
+                          <v-list-item @click="window.open(sub.repo)">
+                            <v-list-item-title>仓库</v-list-item-title>
                           </v-list-item>
                           <v-list-item @click="copy(sub.url)">
                             <v-list-item-title>复制</v-list-item-title>
