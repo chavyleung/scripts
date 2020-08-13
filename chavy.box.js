@@ -8,6 +8,15 @@ $.KEY_userCfgs = 'chavy_boxjs_userCfgs'
 $.KEY_globalBaks = 'chavy_boxjs_globalBaks'
 $.KEY_curSessions = 'chavy_boxjs_cur_sessions'
 
+/**
+ * ===================================
+ * 持久化属性: BoxJs 公开的数据结构
+ * ===================================
+ */
+
+// 存储用户访问`BoxJs`时使用的域名
+$.KEY_boxjs_host = 'boxjs_host'
+
 $.json = $.name
 $.html = $.name
 
@@ -51,6 +60,8 @@ $.html = $.name
     $.logErr(e)
   })
   .finally(() => {
+    // 记录当前使用哪个域名访问
+    $.setdata(getHost($request.url), $.KEY_boxjs_host)
     if ($.isapi) {
       $.done({ body: $.json })
     } else {
@@ -65,15 +76,23 @@ $.html = $.name
   })
 
 /**
+ * http://boxjs.com/ => `http://boxjs.com`
+ * http://boxjs.com/app/jd => `http://boxjs.com`
+ */
+function getHost(url) {
+  return url.slice(0, url.indexOf('/', 8))
+}
+
+/**
  * https://dns.google/ => ``
  * https://dns.google/api => `/api`
  */
 function getPath(url) {
   // 如果以`/`结尾, 去掉最后一个`/`
-  let end = url.lastIndexOf("/") === url.length - 1 ? -1 : undefined
+  const end = url.lastIndexOf('/') === url.length - 1 ? -1 : undefined
   // slice第二个参数传 undefined 会直接截到最后
   // indexOf第二个参数用来跳过前面的 "https://"
-  return url.slice(url.indexOf("/", 8), end)
+  return url.slice(url.indexOf('/', 8), end)
 }
 
 function getSystemCfgs() {
@@ -82,14 +101,42 @@ function getSystemCfgs() {
     version: $.version,
     versionType: $.versionType,
     envs: [
-      { id: 'Surge', icons: ['https://raw.githubusercontent.com/Orz-3/mini/none/surge.png', 'https://raw.githubusercontent.com/Orz-3/task/master/surge.png'] },
-      { id: 'QuanX', icons: ['https://raw.githubusercontent.com/Orz-3/mini/none/quanX.png', 'https://raw.githubusercontent.com/Orz-3/task/master/quantumultx.png'] },
-      { id: 'Loon', icons: ['https://raw.githubusercontent.com/Orz-3/mini/none/loon.png', 'https://raw.githubusercontent.com/Orz-3/task/master/loon.png'] }
+      {
+        id: 'Surge',
+        icons: [
+          'https://raw.githubusercontent.com/Orz-3/mini/none/surge.png',
+          'https://raw.githubusercontent.com/Orz-3/task/master/surge.png'
+        ]
+      },
+      {
+        id: 'QuanX',
+        icons: [
+          'https://raw.githubusercontent.com/Orz-3/mini/none/quanX.png',
+          'https://raw.githubusercontent.com/Orz-3/task/master/quantumultx.png'
+        ]
+      },
+      {
+        id: 'Loon',
+        icons: [
+          'https://raw.githubusercontent.com/Orz-3/mini/none/loon.png',
+          'https://raw.githubusercontent.com/Orz-3/task/master/loon.png'
+        ]
+      }
     ],
-    chavy: { id: 'Chavy Scripts', icon: 'https://avatars3.githubusercontent.com/u/29748519', repo: 'https://github.com/chavyleung/scripts' },
+    chavy: {
+      id: 'Chavy Scripts',
+      icon: 'https://avatars3.githubusercontent.com/u/29748519',
+      repo: 'https://github.com/chavyleung/scripts'
+    },
     senku: { id: 'GideonSenku', icon: 'https://avatars1.githubusercontent.com/u/39037656', repo: 'https://github.com/GideonSenku' },
     orz3: { id: 'Orz-3', icon: 'https://raw.githubusercontent.com/Orz-3/task/master/Orz-3.png', repo: 'https://github.com/Orz-3/' },
-    boxjs: { id: 'BoxJs', show: false, icon: 'https://raw.githubusercontent.com/Orz-3/task/master/box.png', icons: ['https://raw.githubusercontent.com/Orz-3/mini/master/box.png', 'https://raw.githubusercontent.com/Orz-3/task/master/box.png'], repo: 'https://github.com/chavyleung/scripts' },
+    boxjs: {
+      id: 'BoxJs',
+      show: false,
+      icon: 'https://raw.githubusercontent.com/Orz-3/task/master/box.png',
+      icons: ['https://raw.githubusercontent.com/Orz-3/mini/master/box.png', 'https://raw.githubusercontent.com/Orz-3/task/master/box.png'],
+      repo: 'https://github.com/chavyleung/scripts'
+    },
     contributors: []
   }
 }
@@ -102,14 +149,32 @@ function getSystemApps() {
       descs: ['可设置 http-api 地址 & 超时时间 (Surge TF)', '可设置明暗两种主题下的主色调'],
       keys: ['@chavy_boxjs_userCfgs.httpapi', '@chavy_boxjs_userCfgs.color_dark_primary', '@chavy_boxjs_userCfgs.color_light_primary'],
       settings: [
-        { id: '@chavy_boxjs_userCfgs.httpapis', name: 'HTTP-API (Surge TF)', val: '', type: 'textarea', placeholder: ',examplekey@127.0.0.1:6166', autoGrow: true, rows: 2, desc: '示例: ,examplekey@127.0.0.1:6166! 注意: 以逗号开头, 逗号分隔多个地址, 可加回车' },
-        { id: '@chavy_boxjs_userCfgs.httpapi_timeout', name: 'HTTP-API Timeout (Surge TF)', val: 20, type: 'number', desc: '如果脚本作者指定了超时时间, 会优先使用脚本指定的超时时间.' },
+        {
+          id: '@chavy_boxjs_userCfgs.httpapis',
+          name: 'HTTP-API (Surge TF)',
+          val: '',
+          type: 'textarea',
+          placeholder: ',examplekey@127.0.0.1:6166',
+          autoGrow: true,
+          rows: 2,
+          desc: '示例: ,examplekey@127.0.0.1:6166! 注意: 以逗号开头, 逗号分隔多个地址, 可加回车'
+        },
+        {
+          id: '@chavy_boxjs_userCfgs.httpapi_timeout',
+          name: 'HTTP-API Timeout (Surge TF)',
+          val: 20,
+          type: 'number',
+          desc: '如果脚本作者指定了超时时间, 会优先使用脚本指定的超时时间.'
+        },
         { id: '@chavy_boxjs_userCfgs.color_light_primary', name: '明亮色调', canvas: true, val: '#F7BB0E', type: 'colorpicker', desc: '' },
         { id: '@chavy_boxjs_userCfgs.color_dark_primary', name: '暗黑色调', canvas: true, val: '#2196F3', type: 'colorpicker', desc: '' }
       ],
       author: '@chavyleung',
       repo: 'https://github.com/chavyleung/scripts/blob/master/box/switcher/box.switcher.js',
-      icons: ['https://raw.githubusercontent.com/chavyleung/scripts/master/box/icons/BoxSetting.mini.png', 'https://raw.githubusercontent.com/chavyleung/scripts/master/box/icons/BoxSetting.png']
+      icons: [
+        'https://raw.githubusercontent.com/chavyleung/scripts/master/box/icons/BoxSetting.mini.png',
+        'https://raw.githubusercontent.com/chavyleung/scripts/master/box/icons/BoxSetting.png'
+      ]
     },
     {
       id: 'BoxSwitcher',
@@ -119,7 +184,10 @@ function getSystemApps() {
       settings: [{ id: 'CFG_BoxSwitcher_isSilent', name: '静默运行', val: false, type: 'boolean', desc: '切换会话时不发出系统通知!' }],
       author: '@chavyleung',
       repo: 'https://github.com/chavyleung/scripts/blob/master/box/switcher/box.switcher.js',
-      icons: ['https://raw.githubusercontent.com/chavyleung/scripts/master/box/icons/BoxSwitcher.mini.png', 'https://raw.githubusercontent.com/chavyleung/scripts/master/box/icons/BoxSwitcher.png'],
+      icons: [
+        'https://raw.githubusercontent.com/chavyleung/scripts/master/box/icons/BoxSwitcher.mini.png',
+        'https://raw.githubusercontent.com/chavyleung/scripts/master/box/icons/BoxSwitcher.png'
+      ],
       script: 'https://raw.githubusercontent.com/chavyleung/scripts/master/box/switcher/box.switcher.js'
     }
   ]
@@ -290,7 +358,13 @@ async function handleApi() {
     const savesuc = $.setdata(JSON.stringify(sessions), $.KEY_sessions)
     $.subt = `保存会话: ${savesuc ? '成功' : '失败'} (${session.appName})`
     $.desc = []
-    $.desc.push(`会话名称: ${session.name}`, `应用名称: ${session.appName}`, `会话编号: ${session.id}`, `应用编号: ${session.appId}`, `数据: ${JSON.stringify(session)}`)
+    $.desc.push(
+      `会话名称: ${session.name}`,
+      `应用名称: ${session.appName}`,
+      `会话编号: ${session.id}`,
+      `应用编号: ${session.appId}`,
+      `数据: ${JSON.stringify(session)}`
+    )
     $.msg($.name, $.subt, $.desc.join('\n'))
   }
   // 保存至指定会话
@@ -302,7 +376,13 @@ async function handleApi() {
     const savesuc = $.setdata(JSON.stringify(sessions), $.KEY_sessions)
     $.subt = `保存会话: ${savesuc ? '成功' : '失败'} (${session.appName})`
     $.desc = []
-    $.desc.push(`会话名称: ${session.name}`, `应用名称: ${session.appName}`, `会话编号: ${session.id}`, `应用编号: ${session.appId}`, `数据: ${JSON.stringify(session)}`)
+    $.desc.push(
+      `会话名称: ${session.name}`,
+      `应用名称: ${session.appName}`,
+      `会话编号: ${session.id}`,
+      `应用编号: ${session.appId}`,
+      `数据: ${JSON.stringify(session)}`
+    )
     $.msg($.name, $.subt, $.desc.join('\n'))
   }
   // 修改指定会话
@@ -315,7 +395,13 @@ async function handleApi() {
     const savesuc = $.setdata(JSON.stringify(sessions), $.KEY_sessions)
     $.subt = `保存会话: ${savesuc ? '成功' : '失败'} (${session.appName})`
     $.desc = []
-    $.desc.push(`会话名称: ${session.name}`, `应用名称: ${session.appName}`, `会话编号: ${session.id}`, `应用编号: ${session.appId}`, `数据: ${JSON.stringify(session)}`)
+    $.desc.push(
+      `会话名称: ${session.name}`,
+      `应用名称: ${session.appName}`,
+      `会话编号: ${session.id}`,
+      `应用编号: ${session.appId}`,
+      `数据: ${JSON.stringify(session)}`
+    )
     $.msg($.name, $.subt, $.desc.join('\n'))
   }
   // 保存当前会话
@@ -367,7 +453,13 @@ async function handleApi() {
       $.setdata(JSON.stringify(curSessions), $.KEY_curSessions)
       $.subt = `应用会话: 成功 (${session.appName})`
       $.desc = []
-      $.desc.push(`会话名称: ${session.name}`, `应用名称: ${session.appName}`, `会话编号: ${session.id}`, `应用编号: ${session.appId}`, `数据: ${JSON.stringify(session)}`)
+      $.desc.push(
+        `会话名称: ${session.name}`,
+        `应用名称: ${session.appName}`,
+        `会话编号: ${session.id}`,
+        `应用编号: ${session.appId}`,
+        `数据: ${JSON.stringify(session)}`
+      )
       $.msg($.name, $.subt, $.desc.join('\n'))
     }
   }
@@ -380,7 +472,13 @@ async function handleApi() {
       const delsuc = $.setdata(JSON.stringify(sessions), $.KEY_sessions) ? '成功' : '失败'
       $.subt = `删除会话: ${delsuc ? '成功' : '失败'} (${session.appName})`
       $.desc = []
-      $.desc.push(`会话名称: ${session.name}`, `会话编号: ${session.id}`, `应用名称: ${session.appName}`, `应用编号: ${session.appId}`, `数据: ${JSON.stringify(session)}`)
+      $.desc.push(
+        `会话名称: ${session.name}`,
+        `会话编号: ${session.id}`,
+        `应用名称: ${session.appName}`,
+        `应用编号: ${session.appId}`,
+        `数据: ${JSON.stringify(session)}`
+      )
       $.msg($.name, $.subt, $.desc.join('\n'))
     }
   }
