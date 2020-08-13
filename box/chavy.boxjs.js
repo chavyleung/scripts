@@ -1,7 +1,13 @@
 const $ = new Env('BoxJs')
 
-$.version = '0.7.8'
+$.version = '0.7.9'
 $.versionType = 'beta'
+
+/**
+ * ===================================
+ * 持久化属性: BoxJs 自有的数据结构
+ * ===================================
+ */
 
 // 存储`用户偏好`
 $.KEY_usercfgs = 'chavy_boxjs_userCfgs'
@@ -16,11 +22,22 @@ $.KEY_globalBaks = 'chavy_boxjs_globalBaks'
 // 存储`当前会话` (配合切换会话, 记录当前切换到哪个会话)
 $.KEY_cursessions = 'chavy_boxjs_cur_sessions'
 
+/**
+ * ===================================
+ * 持久化属性: BoxJs 公开的数据结构
+ * ===================================
+ */
+
+// 存储用户访问`BoxJs`时使用的域名
+$.KEY_boxjs_host = 'boxjs_host'
+
 // 请求响应体 (返回至页面的结果)
 $.json = $.name // `接口`类请求的响应体
 $.html = $.name // `页面`类请求的响应体
 
-$.web = `https://cdn.jsdelivr.net/gh/chavyleung/scripts@${$.version}/box/chavy.boxjs.html`
+// 页面源码地址
+$.web = `https://cdn.jsdelivr.net/gh/chavyleung/scripts@${$.version}/box/chavy.boxjs.html?_=${new Date().getTime()}`
+// 版本说明地址 (Release Note)
 $.ver = 'https://gitee.com/chavyleung/scripts/raw/master/box/release/box.release.tf.json'
 
 !(async () => {
@@ -51,6 +68,7 @@ $.ver = 'https://gitee.com/chavyleung/scripts/raw/master/box/release/box.release
 
   // 处理预检请求
   if ($.isOptions) {
+    $.type = 'options'
     await handleOptions()
   }
   // 处理`页面`请求
@@ -73,15 +91,23 @@ $.ver = 'https://gitee.com/chavyleung/scripts/raw/master/box/release/box.release
   .finally(() => doneBox())
 
 /**
+ * http://boxjs.com/ => `http://boxjs.com`
+ * http://boxjs.com/app/jd => `http://boxjs.com`
+ */
+function getHost(url) {
+  return url.slice(0, url.indexOf('/', 8))
+}
+
+/**
  * http://boxjs.com/ => ``
  * http://boxjs.com/api/getdata => `/api/getdata`
  */
 function getPath(url) {
   // 如果以`/`结尾, 去掉最后一个`/`
-  let end = url.lastIndexOf("/") === url.length - 1 ? -1 : undefined
+  const end = url.lastIndexOf('/') === url.length - 1 ? -1 : undefined
   // slice第二个参数传 undefined 会直接截到最后
   // indexOf第二个参数用来跳过前面的 "https://"
-  return url.slice(url.indexOf("/", 8), end)
+  return url.slice(url.indexOf('/', 8), end)
 }
 
 /**
@@ -221,7 +247,11 @@ function getSystemApps() {
       id: 'BoxSetting',
       name: '偏好设置',
       descs: ['可设置 http-api 地址 & 超时时间 (Surge TF)', '可设置明暗两种主题下的主色调'],
-      keys: ['@chavy_boxjs_userCfgs.httpapi', '@chavy_boxjs_userCfgs.color_dark_primary', '@chavy_boxjs_userCfgs.color_light_primary'],
+      keys: [
+        '@chavy_boxjs_userCfgs.httpapi', 
+        '@chavy_boxjs_userCfgs.color_dark_primary', 
+        '@chavy_boxjs_userCfgs.color_light_primary'
+      ],
       settings: [
         { id: '@chavy_boxjs_userCfgs.httpapis', name: 'HTTP-API (Surge TF)', val: '', type: 'textarea', placeholder: ',examplekey@127.0.0.1:6166', autoGrow: true, rows: 2, desc: '示例: ,examplekey@127.0.0.1:6166! 注意: 以逗号开头, 逗号分隔多个地址, 可加回车' },
         { id: '@chavy_boxjs_userCfgs.httpapi_timeout', name: 'HTTP-API Timeout (Surge TF)', val: 20, type: 'number', desc: '如果脚本作者指定了超时时间, 会优先使用脚本指定的超时时间.' },
@@ -230,7 +260,10 @@ function getSystemApps() {
       ],
       author: '@chavyleung',
       repo: 'https://github.com/chavyleung/scripts/blob/master/box/switcher/box.switcher.js',
-      icons: ['https://raw.githubusercontent.com/chavyleung/scripts/master/box/icons/BoxSetting.mini.png', 'https://raw.githubusercontent.com/chavyleung/scripts/master/box/icons/BoxSetting.png']
+      icons: [
+        'https://raw.githubusercontent.com/chavyleung/scripts/master/box/icons/BoxSetting.mini.png', 
+        'https://raw.githubusercontent.com/chavyleung/scripts/master/box/icons/BoxSetting.png'
+      ]
     },
     {
       id: 'BoxSwitcher',
@@ -240,7 +273,10 @@ function getSystemApps() {
       settings: [{ id: 'CFG_BoxSwitcher_isSilent', name: '静默运行', val: false, type: 'boolean', desc: '切换会话时不发出系统通知!' }],
       author: '@chavyleung',
       repo: 'https://github.com/chavyleung/scripts/blob/master/box/switcher/box.switcher.js',
-      icons: ['https://raw.githubusercontent.com/chavyleung/scripts/master/box/icons/BoxSwitcher.mini.png', 'https://raw.githubusercontent.com/chavyleung/scripts/master/box/icons/BoxSwitcher.png'],
+      icons: [
+        'https://raw.githubusercontent.com/chavyleung/scripts/master/box/icons/BoxSwitcher.mini.png', 
+        'https://raw.githubusercontent.com/chavyleung/scripts/master/box/icons/BoxSwitcher.png'
+      ],
       script: 'https://raw.githubusercontent.com/chavyleung/scripts/master/box/switcher/box.switcher.js'
     }
   ]
@@ -265,12 +301,16 @@ function getAppSubCaches() {
 
 /**
  * 获取全局备份
+ * 默认只获取备份的基础信息, 如: id, name……
+ *
+ * @param {boolean} isComplete 是否获取完整的备份数据
  */
 function getGlobalBaks(isComplete = false) {
   const globalbaks = $.getjson($.KEY_globalBaks, [])
   if (isComplete) {
     return globalbaks
   } else {
+    // isComplete === false: 不返回备份体
     globalbaks.forEach((bak) => delete bak.bak)
     return globalbaks
   }
@@ -451,7 +491,7 @@ async function apiRunScript() {
     const runOpts = { timeout: opts.timeout }
     await $.getScript(opts.url).then((script) => $.runScript(script, runOpts))
   } else {
-    await $.getScript(opts.url).then((script) => {
+    $.getScript(opts.url).then((script) => {
       // 避免被执行脚本误认为是 rewrite 环境
       // 所以需要 `$request = undefined`
       $request = undefined
@@ -522,6 +562,8 @@ function upgradeUserData() {
  * ===================================
  */
 function doneBox() {
+  // 记录当前使用哪个域名访问
+  $.setdata(getHost($request.url), $.KEY_boxjs_host)
   if ($.isOptions) doneOptions()
   else if ($.isPage) donePage()
   else if ($.isQuery) doneQuery()
