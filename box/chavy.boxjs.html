@@ -308,16 +308,23 @@
           <!-- 主页 -->
           <v-container fluid v-show="view === ''" v-scroll="onScroll">
             <v-row no-gutters>
-              <v-col
-                cols="3"
-                md="2"
-                v-for="(app, appIdx) in favApps"
-                :key="app.id"
-                class="pa-4 py-1 py-md-4 py-lg-8 d-flex justify-space-around"
-              >
-                <div>
-                  <v-img v-ripple style="border-radius: 12px; max-width: 58px;" :src="app.icon" @click="switchAppView(app.id)"></v-img>
-                  <p class="text-center ma-0" @click="switchAppView(app.id)">
+              <v-col cols="3" md="2" v-for="(app, appIdx) in favApps" :key="app.id" class="d-flex justify-space-around">
+                <div class="ma-2" @click="switchAppView(app.id)">
+                  <v-card v-if="isDarkMode" style="border-radius: 12px;">
+                    <v-img style="border-radius: 12px;" :aspect-ratio="1" width="58" height="58" contain v-ripple :src="app.icon"></v-img>
+                  </v-card>
+                  <v-img
+                    v-else
+                    style="border-radius: 12px;"
+                    :aspect-ratio="1"
+                    width="58"
+                    height="58"
+                    contain
+                    v-ripple
+                    class="elevation-3"
+                    :src="app.icon"
+                  ></v-img>
+                  <p class="text-center ma-0">
                     <span class="d-inline-block text-truncate" style="font-size: 10px; max-width: 58px;">{{app.name}}</span>
                   </p>
                 </div>
