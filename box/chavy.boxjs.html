@@ -316,7 +316,7 @@
                 class="pa-4 py-1 py-md-4 py-lg-8 d-flex justify-space-around"
               >
                 <div>
-                  <v-img style="border-radius: 12px; max-width: 58px;" :src="app.icon"></v-img>
+                  <v-img v-ripple style="border-radius: 12px; max-width: 58px;" :src="app.icon" @click="switchAppView(app.id)"></v-img>
                   <p class="text-center ma-0" @click="switchAppView(app.id)">
                     <span class="d-inline-block text-truncate" style="font-size: 10px; max-width: 58px;">{{app.name}}</span>
                   </p>
