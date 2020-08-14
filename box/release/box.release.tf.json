@@ -1,6 +1,19 @@
 {
   "releases": [
     {
+      "version": "0.7.13",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "icon": "https://avatars3.githubusercontent.com/u/29748519",
+      "repo": "https://github.com/chavyleung",
+      "notes": [
+        {
+          "name": "修复",
+          "descs": ["首页图标有轻微位移问题"]
+        }
+      ]
+    },
+    {
       "version": "0.7.12",
       "tags": ["beta"],
       "author": "@chavyleung",
