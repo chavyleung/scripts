@@ -12,11 +12,11 @@ const cookie = Key ? Key : $.getdata('CookieJD');
 const JR_API_HOST = 'https://jrmkt.jd.com/activity/newPageTake/takePrize';
 
 const Prize = {
-	//每周五领55-5券 每月两次
-	PrizeFriday :{ Id : `Q96200731141823255924Qy`, Body : `activityId=Q96200731141823255924Qy&eid=4NCPNCJW746YAZQW6X7FBOXQW5XSZU2QLEKSFJARZS7ZP2ZDYWDRC2NG3WCBI6UZKQ54W5VKU7QAPA2IX7K4BZ24LE&fp=1be74839b572280deb0550b5f46d4a3b`},	
-	//每日领随机白条券
-	PrizeDaily : {Id : `Q229326314441137002k96C`, Body :`activityId=Q229326314441137002k96C&eid=4NCPNCJW746YAZQW6X7FBOXQW5XSZU2QLEKSFJARZS7ZP2ZDYWDRC2NG3WCBI6UZKQ54W5VKU7QAPA2IX7K4BZ24LE&fp=68dcc2c6d938eab6c4aac7418be1aaba`}
-    }
+    //每周五领55-5券 每月两次
+    PrizeFriday :{ Id : `Q96200731141823255924Qy`, Body : `activityId=Q96200731141823255924Qy&eid=${randomWord(false,90).toUpperCase()}&fp=${randomWord(false,32).toLowerCase()}`},
+    //每日领随机白条券
+    PrizeDaily : { Id : `Q229326314441137002k96C`, Body : `activityId=Q229326314441137002k96C&eid=${randomWord(false,90).toUpperCase()}&fp=${randomWord(false,32).toLowerCase()}`}
+}
 	
 !(async () => {
   if (!cookie) {
@@ -24,9 +24,9 @@ const Prize = {
     return;
   }
   $.Prize = {};
-  var date=new Date();
+  let date=new Date();
   await takePrize(Prize.PrizeDaily.Body,"PrizeDaily","天天领");
-  if (date.getDay() == 5 ) await takePrize(Prize.PrizeFriday.Body,"PrizeFriday","周五领");
+  if (date.getDay() == 5 ) await takePrize(Prize.PrizeFriday.Body,"PrizeFriday","周五领",800);
   //await takePrize(Prize.PrizeFriday.Body,"PrizeFriday","周五领");
   await msgShow();
 })()
@@ -38,9 +38,10 @@ const Prize = {
     })
 
 
-function takePrize(body,PrizeName,Desc) {
+function takePrize(body,PrizeName,Desc,timeout = 0) {
     return new Promise((resolve) => {
-	let url = {	
+    setTimeout( ()=>{
+	let url = {
 	url: JR_API_HOST,
     body : body,
 	headers: {
@@ -55,14 +56,14 @@ function takePrize(body,PrizeName,Desc) {
 	  'Referer' : `https://jrmkt.jd.com/ptp/wl/vouchers.html?activityId=${Prize[PrizeName].Id}`,
 	  'Accept-Language' : `zh-cn`
     }
-  }		
+  }
     $.post(url, (err, resp, data) => {
       try {
         data = JSON.parse(data);
 		if (data.respCode == "00001" )
 		{
-		    $.msg($.name, '【提示】请先获取cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/', {"open-url": "https://bean.m.jd.com/"});	
-            return;			
+		    $.msg($.name, '【提示】请先获取cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/', {"open-url": "https://bean.m.jd.com/"});
+            return;
 		}
         $.Prize[PrizeName] = data;
 		$.Prize[PrizeName].Desc = Desc;
@@ -72,7 +73,23 @@ function takePrize(body,PrizeName,Desc) {
         resolve()
       }
     })
+    },timeout)
   })
+}
+
+function randomWord(randomFlag, min, max){
+    let str = "",
+        range = min,
+        arr = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+    // 随机产生
+    if(randomFlag){
+        range = Math.round(Math.random() * (max-min)) + min;
+    }
+    for(let i=0; i<range; i++){
+        pos = Math.round(Math.random() * (arr.length-1));
+        str += arr[pos];
+    }
+    return str;
 }
 
 function msgShow() {
