@@ -315,14 +315,12 @@
                 :key="app.id"
                 class="pa-4 py-1 py-md-4 py-lg-8 d-flex justify-space-around"
               >
-                <v-card flat color="transparent">
-                  <v-card raised style="border-radius: 12px;" @click="switchAppView(app.id)">
-                    <v-img style="border-radius: inherit; max-width: 58px;" :src="app.icon"></v-img>
-                  </v-card>
+                <div>
+                  <v-img style="border-radius: 12px; max-width: 58px;" :src="app.icon"></v-img>
                   <p class="text-center ma-0" @click="switchAppView(app.id)">
                     <span class="d-inline-block text-truncate" style="font-size: 10px; max-width: 58px;">{{app.name}}</span>
                   </p>
-                </v-card>
+                </div>
               </v-col>
             </v-row>
           </v-container>
