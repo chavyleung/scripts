@@ -308,18 +308,20 @@
           <!-- 主页 -->
           <v-container fluid v-show="view === ''" v-scroll="onScroll">
             <v-row no-gutters>
-              <v-col cols="3" md="2" lg="1" v-for="(app, appIdx) in favApps" :key="app.id" class="pa-4 d-flex justify-space-around">
-                <v-card flat color="transparent" @click="switchAppView(app.id)" :ripple="false">
-                  <v-card raised ripple rounded="lg" color="transparent" max-width="68">
-                    <v-img contain gradient :src="app.icon"></v-img>
+              <v-col
+                cols="3"
+                md="2"
+                v-for="(app, appIdx) in favApps"
+                :key="app.id"
+                class="pa-4 py-1 py-md-4 py-lg-8 d-flex justify-space-around"
+              >
+                <v-card flat color="transparent">
+                  <v-card raised style="border-radius: 12px;" @click="switchAppView(app.id)">
+                    <v-img style="border-radius: inherit; max-width: 58px;" :src="app.icon"></v-img>
                   </v-card>
-                  <v-card flat color="transparent" :ripple="false">
-                    <v-btn text block x-small :ripple="false" class="pa-0" :max-width="68">
-                      <span style="max-width: 68px;" class="d-inline-block text-truncate">
-                        {{app.name}}
-                      </span>
-                    </v-btn>
-                  </v-card>
+                  <p class="text-center ma-0" @click="switchAppView(app.id)">
+                    <span class="d-inline-block text-truncate" style="font-size: 10px; max-width: 58px;">{{app.name}}</span>
+                  </p>
                 </v-card>
               </v-col>
             </v-row>
@@ -689,15 +691,18 @@
           </v-container>
           <!-- 订阅列表 -->
           <v-container fluid v-else-if="view === 'sub'" v-scroll="onScroll">
-            <v-btn v-if="appSubs.length === 0" block class="primary" @click="addAppSubDialog = true">
-              添加订阅
-            </v-btn>
+            <template v-if="appSubs.length === 0">
+              <v-btn block class="primary" @click="addAppSubDialog = true">添加订阅</v-btn>
+              <v-btn block class="primary" @click="window.open('https://chavyleung.gitbook.io/boxjs/awesome/subscriptions')">
+                <v-icon class="mr-2">mdi-cloud</v-icon>进来看看
+              </v-btn>
+            </template>
             <v-card v-else>
               <v-list dense nav>
                 <v-subheader inset dense>
                   应用订阅 ({{appSubs.length}})
                   <v-spacer></v-spacer>
-                  <v-btn icon @click="window.open('https://app.gitbook.com/@chavyleung/s/boxjs/awesome/subscriptions')">
+                  <v-btn icon @click="window.open('https://chavyleung.gitbook.io/boxjs/awesome/subscriptions')">
                     <v-icon>mdi-cloud-circle</v-icon>
                   </v-btn>
                   <v-btn icon @click="reloadAppSub()">
@@ -949,7 +954,7 @@
         <v-bottom-sheet v-model="ui.versionsheet.show" scrollable>
           <v-card v-if="box.versions">
             <v-subheader>
-              <v-btn icon small @click="window.open('https://app.gitbook.com/@chavyleung/s/boxjs/base/upgrade')">
+              <v-btn icon small @click="window.open('https://chavyleung.gitbook.io/boxjs/base/upgrade')">
                 <v-icon>mdi-help-circle</v-icon>
               </v-btn>
               <v-spacer></v-spacer>
