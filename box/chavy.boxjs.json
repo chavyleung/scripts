@@ -19,7 +19,7 @@
       "id": "10010",
       "name": "10010",
       "keys": ["chavy_tokenurl_10010", "chavy_tokenheader_10010", "chavy_signurl_10010", "chavy_signheader_10010", "chavy_loginlotteryurl_10010", "chavy_loginlotteryheader_10010", "chavy_findlotteryurl_10010", "chavy_findlotteryheader_10010"],
-      "settings": [{ "id": "chavy_golottery_10010", "name": "天天抽奖", "val": true, "type": "boolean", "desc": "天天抽奖开关" }],
+      "settings": [{ "id": "chavy_golottery_10010", "name": "天天抽奖", "val": true, "type": "boolean", "desc": "天天抽奖开关" },{ "id": "chavy_gosign_10010", "name": "签到", "val": true, "type": "boolean", "desc": "签到开关" }],
       "author": "@chavyleung",
       "repo": "https://github.com/chavyleung/scripts/tree/master/10010",
       "script": "https://raw.githubusercontent.com/chavyleung/scripts/master/10010/10010.js",
