@@ -44,6 +44,7 @@
         box-sizing: border-box;
       }
       .v-main.safe {
+        background: none;
         margin-bottom: 56px;
         padding-bottom: constant(safe-area-inset-bottom);
         padding-bottom: env(safe-area-inset-bottom);
@@ -60,7 +61,7 @@
   </head>
   <body>
     <div id="app" v-cloak>
-      <v-app v-if="box">
+      <v-app v-if="box" style="height: 100%;">
         <v-snackbar top app v-model="ui.snackbar.show" v-bind="ui.snackbar">{{ui.snackbar.msg}}</v-snackbar>
         <!-- 头部 -->
         <v-app-bar app dense :color="isDarkMode || !isWebApp ? undefined : 'primary'">
@@ -305,11 +306,26 @@
         <!-- 主页 -->
         <v-main class="safe">
           <!-- 主页 -->
-          <v-container fluid v-if="view === ''" v-scroll="onScroll">
-            <!-- TODO -->
+          <v-container fluid v-show="view === ''" v-scroll="onScroll">
+            <v-row no-gutters>
+              <v-col cols="3" md="2" lg="1" v-for="(app, appIdx) in favApps" :key="app.id" class="pa-4 d-flex justify-space-around">
+                <v-card flat color="transparent" @click="switchAppView(app.id)" :ripple="false">
+                  <v-card raised ripple rounded="lg" color="transparent" max-width="68">
+                    <v-img contain gradient :src="app.icon"></v-img>
+                  </v-card>
+                  <v-card flat color="transparent" :ripple="false">
+                    <v-btn text block x-small :ripple="false" class="pa-0" :max-width="68">
+                      <span style="max-width: 68px;" class="d-inline-block text-truncate">
+                        {{app.name}}
+                      </span>
+                    </v-btn>
+                  </v-card>
+                </v-card>
+              </v-col>
+            </v-row>
           </v-container>
           <!-- 应用列表 -->
-          <v-container fluid v-else-if="view === 'app' && !curapp" v-scroll="onScroll">
+          <v-container fluid v-if="view === 'app' && !curapp" v-scroll="onScroll">
             <!-- 收藏应用 -->
             <v-expansion-panels multiple class="mb-4" v-if="favApps.length > 0" v-model="box.usercfgs.favapppanel">
               <v-expansion-panel>
@@ -847,6 +863,7 @@
               </template>
             </v-card>
           </v-container>
+          <!-- 备份详情 -->
           <v-container fluid v-else-if="view === 'bak' && !!curbak" v-scroll="onScroll">
             <v-subheader>
               <h2>{{curbak.name}}</h2>
@@ -924,12 +941,6 @@
                 {{box.usercfgs.isLeftBoxIcon ? 'mdi-format-horizontal-align-right' : 'mdi-format-horizontal-align-left'}}
               </v-icon>
             </v-btn>
-            <!-- <v-btn dark fab small color="indigo" @click="">
-              <v-icon>mdi-database-import</v-icon>
-            </v-btn>
-            <v-btn dark fab small color="success" @click="">
-              <v-icon>mdi-export-variant</v-icon>
-            </v-btn> -->
             <v-btn dark v-if="!box.usercfgs.isHideRefresh" fab small color="orange" @click="window.location.reload()">
               <v-icon>mdi-refresh</v-icon>
             </v-btn>
@@ -962,9 +973,6 @@
             </v-card-text>
           </v-card>
         </v-bottom-sheet>
-        <!-- <v-overlay v-model="ui.overlay.show" :opacity="0.8">
-          <v-progress-circular indeterminate :value="ui.overlay.val" :size="64" color="primary"></v-progress-circular>
-        </v-overlay> -->
       </v-app>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.min.js"></script>
@@ -1301,11 +1309,12 @@
             this.ui.isCors = true
           }
           // 根据路径跳转视图
+          const defview = '/'
           if (!this.isCors) {
             const path = location.pathname
-            this.path = path === '/' ? '/app' : path
+            this.path = path === '/' ? defview : path
           } else {
-            this.path = '/app'
+            this.path = defview
           }
           // 监听浏览器后退事件
           window.addEventListener('popstate', () => (this.path = path), false)
@@ -1375,7 +1384,7 @@
             this.$vuetify.theme.themes.light.primary = this.box.usercfgs.color_light_primary || '#F7BB0E'
             this.$vuetify.theme.themes.dark.primary = this.box.usercfgs.color_dark_primary || '#2196F3'
           },
-          // 复制文件
+          // 复制文本
           copy(str) {
             this.$copyText(str).then(
               (e) => {
