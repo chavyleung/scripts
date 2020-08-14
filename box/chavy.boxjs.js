@@ -1,6 +1,6 @@
 const $ = new Env('BoxJs')
 
-$.version = '0.7.14'
+$.version = '0.7.16'
 $.versionType = 'beta'
 
 /**
@@ -37,7 +37,6 @@ $.html = $.name // `页面`类请求的响应体
 
 // 页面源码地址
 $.web = `https://cdn.jsdelivr.net/gh/chavyleung/scripts@${$.version}/box/chavy.boxjs.html?_=${new Date().getTime()}`
-$.web = `http://192.168.50.109:8080/box/chavy.boxjs.html?_=${new Date().getTime()}`
 // 版本说明地址 (Release Note)
 $.ver = 'https://gitee.com/chavyleung/scripts/raw/master/box/release/box.release.tf.json'
 
