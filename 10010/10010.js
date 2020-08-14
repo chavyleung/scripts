@@ -9,6 +9,7 @@ const KEY_loginlotteryheader = 'chavy_loginlotteryheader_10010'
 const KEY_findlotteryurl = 'chavy_findlotteryurl_10010'
 const KEY_findlotteryheader = 'chavy_findlotteryheader_10010'
 const chavygolottery = true
+const chavygosign = true
 
 const signinfo = {}
 let VAL_loginurl = chavy.getdata(KEY_loginurl)
@@ -20,11 +21,12 @@ let VAL_loginlotteryheader = chavy.getdata(KEY_loginlotteryheader)
 let VAL_findlotteryurl = chavy.getdata(KEY_findlotteryurl)
 let VAL_findlotteryheader = chavy.getdata(KEY_findlotteryheader)
 let golottery = JSON.parse(chavy.getdata("chavy_golottery_10010")||chavygolottery)
+let gosign = JSON.parse(chavy.getdata("chavy_gosign_10010")||chavygosign)
 
 ;(sign = async () => {
     chavy.log(`🔔 ${cookieName}`)
     await loginapp()
-    await signapp()
+    if (gosign == true) await signapp()
     if (golottery == true) {
       if (VAL_loginlotteryurl && VAL_findlotteryurl) await loginlottery()
       if (signinfo.encryptmobile) {
@@ -168,11 +170,12 @@ function getinfo() {
 function showmsg() {
     let subTitle = ''
     let detail = ''
+    console.log(signinfo)
     // 签到结果
-    if (signinfo.signapp.msg == 'ok!') {
+    if (signinfo.signapp.status == '0000') {
         subTitle = `签到: 成功`
         detail = `积分: +${signinfo.signapp.data.prizeCount}, 成长值: +${signinfo.signapp.data.growthV}, 鲜花: +${signinfo.signapp.data.flowerCount}`
-    } else if (signinfo.signapp.msg == '用户今日已签到！') {
+    } else if (signinfo.signapp.status == '0002') {
         subTitle = `签到: 重复`
     } else {
         subTitle = `签到: 失败`
