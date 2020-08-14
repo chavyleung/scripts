@@ -172,14 +172,16 @@ function showmsg() {
     let detail = ''
     console.log(signinfo)
     // 签到结果
-    if (signinfo.signapp.status == '0000') {
-        subTitle = `签到: 成功`
+    if (gosign == true) {
+      if (signinfo.signapp.status == '0000') {
+        subTitle = `签到: 成功 `
         detail = `积分: +${signinfo.signapp.data.prizeCount}, 成长值: +${signinfo.signapp.data.growthV}, 鲜花: +${signinfo.signapp.data.flowerCount}`
-    } else if (signinfo.signapp.status == '0002') {
-        subTitle = `签到: 重复`
-    } else {
-        subTitle = `签到: 失败`
+      } else if (signinfo.signapp.status == '0002') {
+        subTitle = `签到: 重复 `
+      } else {
+        subTitle = `签到: 失败 `
         chavy.log(`❌ ${cookieName} signapp - response: ${JSON.stringify(signinfo.signapp)}`)
+      }
     }
 
     if (signinfo.info.code == 'Y') {
@@ -198,7 +200,7 @@ function showmsg() {
     
     if (golottery == true) {
       if (signinfo.findlottery && signinfo.findlottery.acFrequency && signinfo.lotterylist) {
-        subTitle += `; 抽奖: ${signinfo.findlottery.acFrequency.usableAcFreq}次`
+        subTitle += `抽奖: ${signinfo.findlottery.acFrequency.usableAcFreq}次`
         detail += '\n查看详情\n'
 
         for (let i = 0; i < signinfo.findlottery.acFrequency.usableAcFreq; i++) {
