@@ -1,46 +1,20 @@
 {
   "releases": [
     {
+      "version": "0.7.17",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "icon": "https://avatars3.githubusercontent.com/u/29748519",
+      "repo": "https://github.com/chavyleung",
+      "notes": [
+        {
+          "name": "新增",
+          "descs": ["首页壁纸 (偏好设置)"]
+        }
+      ]
+    },
+    {
       "version": "0.7.16",
-      "tags": ["beta"],
-      "author": "@chavyleung",
-      "icon": "https://avatars3.githubusercontent.com/u/29748519",
-      "repo": "https://github.com/chavyleung",
-      "notes": [
-        {
-          "name": "优化",
-          "descs": ["首页图标样式"]
-        }
-      ]
-    },
-    {
-      "version": "0.7.14",
-      "tags": ["beta"],
-      "author": "@chavyleung",
-      "icon": "https://avatars3.githubusercontent.com/u/29748519",
-      "repo": "https://github.com/chavyleung",
-      "notes": [
-        {
-          "name": "修复",
-          "descs": ["首页图标点击无效问题"]
-        }
-      ]
-    },
-    {
-      "version": "0.7.13",
-      "tags": ["beta"],
-      "author": "@chavyleung",
-      "icon": "https://avatars3.githubusercontent.com/u/29748519",
-      "repo": "https://github.com/chavyleung",
-      "notes": [
-        {
-          "name": "修复",
-          "descs": ["首页图标有轻微位移问题"]
-        }
-      ]
-    },
-    {
-      "version": "0.7.12",
       "tags": ["beta"],
       "author": "@chavyleung",
       "icon": "https://avatars3.githubusercontent.com/u/29748519",
@@ -52,7 +26,7 @@
         },
         {
           "name": "修复",
-          "descs": ["帮助页面打开空白"]
+          "descs": ["首页图标点击无效问题", "首页图标有轻微位移问题", "帮助页面打开空白"]
         }
       ]
     },
@@ -65,20 +39,7 @@
       "notes": [
         {
           "name": "新增",
-          "descs": ["首页显示收藏应用"]
-        }
-      ]
-    },
-    {
-      "version": "0.7.10",
-      "tags": ["beta"],
-      "author": "@chavyleung",
-      "icon": "https://avatars3.githubusercontent.com/u/29748519",
-      "repo": "https://github.com/chavyleung",
-      "notes": [
-        {
-          "name": "新增",
-          "descs": ["订阅中的更多按钮可以链接到作者仓库"]
+          "descs": ["首页显示收藏应用", "订阅中的更多按钮可以链接到作者仓库"]
         }
       ]
     },
@@ -96,16 +57,7 @@
         {
           "name": "调整",
           "descs": ["调整加载动态效果"]
-        }
-      ]
-    },
-    {
-      "version": "0.7.8",
-      "tags": ["beta"],
-      "author": "@chavyleung",
-      "icon": "https://avatars3.githubusercontent.com/u/29748519",
-      "repo": "https://github.com/chavyleung",
-      "notes": [
+        },
         {
           "name": "修复",
           "descs": ["boolean 控件偶尔触发键盘问题"]

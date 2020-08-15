@@ -28,6 +28,8 @@
         box-sizing: content-box;
         padding-top: constant(safe-area-inset-top);
         padding-top: env(safe-area-inset-top);
+        margin-bottom: calc(48px + constant(safe-area-inset-bottom));
+        margin-bottom: calc(48px + env(safe-area-inset-bottom));
       }
       .v-app-bar .v-autocomplete {
         box-sizing: border-box;
@@ -61,7 +63,7 @@
   </head>
   <body>
     <div id="app" v-cloak>
-      <v-app v-if="box" style="height: 100%;">
+      <v-app v-if="box" :style="appStyle">
         <v-snackbar top app v-model="ui.snackbar.show" v-bind="ui.snackbar">{{ui.snackbar.msg}}</v-snackbar>
         <!-- 头部 -->
         <v-app-bar app dense :color="isDarkMode || !isWebApp ? undefined : 'primary'">
@@ -90,7 +92,7 @@
             :label="`BoxJs - v${version}`"
             :filter="(item, queryText, itemText) => { return item.id.includes(queryText) || item.name.includes(queryText) }"
             color="primary"
-            no-data-text="无数据!"
+            hide-no-data
             hide-details
             solo
             dense
@@ -325,14 +327,20 @@
                     :src="app.icon"
                   ></v-img>
                   <p class="text-center ma-0">
-                    <span class="d-inline-block text-truncate" style="font-size: 10px; max-width: 58px;">{{app.name}}</span>
+                    <span
+                      :color="isWallpaper ? '#fff' : ''"
+                      class="d-inline-block text-truncate font-weight-bold"
+                      style="font-size: 10px; max-width: 58px;"
+                    >
+                      {{app.name}}
+                    </span>
                   </p>
                 </div>
               </v-col>
             </v-row>
           </v-container>
           <!-- 应用列表 -->
-          <v-container fluid v-if="view === 'app' && !curapp" v-scroll="onScroll">
+          <v-container fluid v-show="view === 'app' && !curapp" v-scroll="onScroll">
             <!-- 收藏应用 -->
             <v-expansion-panels multiple class="mb-4" v-if="favApps.length > 0" v-model="box.usercfgs.favapppanel">
               <v-expansion-panel>
@@ -433,7 +441,7 @@
             </v-expansion-panels>
           </v-container>
           <!-- 应用详情 -->
-          <v-container fluid v-else-if="view === 'app' && !!curapp" v-scroll="onScroll">
+          <v-container fluid v-if="view === 'app' && !!curapp" v-scroll="onScroll">
             <v-subheader>
               <h2>{{curapp.name}}</h2>
               <v-spacer></v-spacer>
@@ -910,7 +918,7 @@
           </v-container>
         </v-main>
         <!-- 底部 -->
-        <v-bottom-navigation app color="primary" :value="view">
+        <v-bottom-navigation app grow color="primary" :value="view">
           <v-btn @click="switchView('/')" value="">首页<v-icon>mdi-home</v-icon></v-btn>
           <v-btn @click="switchView('/app')" value="app">应用<v-icon>mdi-application</v-icon></v-btn>
           <v-btn @click="switchView('/sub')" value="sub">订阅<v-icon>mdi-database</v-icon></v-btn>
@@ -1139,6 +1147,25 @@
             }
             return this.iconThemeIdx
           },
+          // 判断是否有壁纸
+          isWallpaper() {
+            return !!this.box.usercfgs.bgimg
+          },
+          // 样式
+          appStyle() {
+            if (this.path !== '/') {
+              return null
+            }
+            const bgImg = this.box.usercfgs.bgimg
+            const style = {
+              'background-image': `url(${bgImg})`,
+              'background-position': 'center',
+              'background-size': 'cover',
+              'background-repeat': 'no-repeat'
+            }
+            return style
+          },
+          // 是否保存用户偏好
           isSaveUserCfgs: {
             set(val) {
               this.ui.isSaveUserCfgs = val
