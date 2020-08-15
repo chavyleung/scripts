@@ -116,14 +116,17 @@ function getacc() {
 function showmsg() {
   let subTitle = ''
   let detail = ''
-  
+  console.log(signinfo)
   if (signinfo.info.isTickedToday == false) {
     if (signinfo.sign.data.status == 0) {
       subTitle = '签到: 成功'
       detail = `当前连签: ${signinfo.info.continuousDays + 1}天, 积分: ${signinfo.acc.data.score}(+${signinfo.info.awardAmount})`
-    } else {
+    } else if (signinfo.sign.data.msg != undefined) {
       subTitle = '签到: 失败'
       detail = `说明: ${signinfo.sign.data.msg}`
+    } else {
+      subTitle = '签到: 失败'
+      detail = `说明: Cookie失效`
     }
   } else {
     subTitle = `签到: 重复`
