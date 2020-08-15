@@ -9,6 +9,23 @@
       "notes": [
         {
           "name": "新增",
+          "descs": ["代码编辑器 (入口: 悬浮按钮)"]
+        },
+        {
+          "name": "说明",
+          "descs": ["除了本机运行外", "可以使用 PC 连上 QuanX 的 HTTP Backend", "实现在 PC 上写代码然后发送到 QuanX 执行", "Surge、Loon 同理"]
+        }
+      ]
+    },
+    {
+      "version": "0.7.17",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "icon": "https://avatars3.githubusercontent.com/u/29748519",
+      "repo": "https://github.com/chavyleung",
+      "notes": [
+        {
+          "name": "新增",
           "descs": ["首页壁纸 (偏好设置)"]
         }
       ]

@@ -37,6 +37,7 @@ $.html = $.name // `页面`类请求的响应体
 
 // 页面源码地址
 $.web = `https://cdn.jsdelivr.net/gh/chavyleung/scripts@${$.version}/box/chavy.boxjs.html?_=${new Date().getTime()}`
+$.web = `http://192.168.50.109:8080/box/chavy.boxjs.html?_=${new Date().getTime()}`
 // 版本说明地址 (Release Note)
 $.ver = 'https://gitee.com/chavyleung/scripts/raw/master/box/release/box.release.tf.json'
 
@@ -488,16 +489,23 @@ async function apiRunScript() {
   const opts = $.toObj($request.body)
   const httpapi = $.getdata('@chavy_boxjs_userCfgs.httpapi')
   const ishttpapi = /.*?@.*?:[0-9]+/.test(httpapi)
-  if ($.isSurge() && ishttpapi) {
-    const runOpts = { timeout: opts.timeout }
-    await $.getScript(opts.url).then((script) => $.runScript(script, runOpts))
+  if (opts.isRemote) {
+    if ($.isSurge() && ishttpapi) {
+      const runOpts = { timeout: opts.timeout }
+      await $.getScript(opts.url).then((script) => $.runScript(script, runOpts))
+    } else {
+      $.getScript(opts.url).then((script) => {
+        // 避免被执行脚本误认为是 rewrite 环境
+        // 所以需要 `$request = undefined`
+        $request = undefined
+        eval(script)
+      })
+    }
   } else {
-    $.getScript(opts.url).then((script) => {
-      // 避免被执行脚本误认为是 rewrite 环境
-      // 所以需要 `$request = undefined`
-      $request = undefined
-      eval(script)
-    })
+    // 对于手动执行的脚本, 把 $done 的时机交给脚本自主控制
+    $.isSkipDone = false
+    $request = undefined
+    eval(opts.script)
   }
 }
 
@@ -563,6 +571,9 @@ function upgradeUserData() {
  * ===================================
  */
 function doneBox() {
+  if ($.isSkipDone) {
+    return
+  }
   // 记录当前使用哪个域名访问
   $.setdata(getHost($request.url), $.KEY_boxjs_host)
   if ($.isOptions) doneOptions()

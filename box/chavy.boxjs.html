@@ -277,6 +277,21 @@
               <v-switch
                 dense
                 class="mt-0"
+                label="隐藏编码按钮"
+                hint="脚本编辑器的入口"
+                persistent-hint
+                v-model="box.usercfgs.isHideCoding"
+                @change="saveUserCfgs"
+              ></v-switch>
+              <v-spacer></v-spacer>
+              <v-btn fab small text>
+                <v-avatar size="32"><v-icon>mdi-code-tags</v-icon></v-avatar>
+              </v-btn>
+            </v-list-item>
+            <v-list-item class="mt-4">
+              <v-switch
+                dense
+                class="mt-0"
                 label="隐藏刷新按钮"
                 hint="双击悬浮按钮也可刷新页面"
                 persistent-hint
@@ -439,6 +454,19 @@
                 </v-expansion-panel-content>
               </v-expansion-panel>
             </v-expansion-panels>
+          </v-container>
+          <!-- 代码编辑 -->
+          <v-container fluid class="fill-height" v-show="view === 'coding'" v-scroll="onScroll">
+            <v-card flat style="width: 100%;">
+              <v-subheader>
+                <h2>脚本编辑器</h2>
+                <v-spacer></v-spacer>
+                <v-btn icon @click="exeScript">
+                  <v-icon color="primary">mdi-play-circle</v-icon>
+                </v-btn>
+              </v-subheader>
+            </v-card>
+            <div class="pa-0" id="container" style="width: 100%; height: 100%;"></div>
           </v-container>
           <!-- 应用详情 -->
           <v-container fluid v-if="view === 'app' && !!curapp" v-scroll="onScroll">
@@ -962,6 +990,9 @@
             <v-btn dark v-if="!box.usercfgs.isHideRefresh" fab small color="orange" @click="window.location.reload()">
               <v-icon>mdi-refresh</v-icon>
             </v-btn>
+            <v-btn dark v-if="!box.usercfgs.isHideCoding" fab small @click="path = '/coding'">
+              <v-icon>mdi-code-tags</v-icon>
+            </v-btn>
           </v-speed-dial>
         </v-fab-transition>
         <v-bottom-sheet v-model="ui.versionsheet.show" scrollable>
@@ -1001,6 +1032,7 @@
     <script src="https://cdn.jsdelivr.net/npm/timeago.js@4.x/dist/timeago.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/uuid@8.x/dist/umd/uuidv4.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue-clipboard2@0.x/dist/vue-clipboard.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.20.0/min/vs/loader.js"></script>
     <script>
       new Vue({
         el: '#app',
@@ -1301,6 +1333,46 @@
                 this.ui.bfview = bfview
                 this.ui.bfsubview = bfsubview
               }
+              if (newval === '/coding') {
+                require.config({ paths: { vs: 'https://cdn.jsdelivr.net/npm/monaco-editor@0.20.0/min/vs' } })
+                require(['vs/editor/editor.main'], () => {
+                  this.ui.editor = monaco.editor.create(document.getElementById('container'), {
+                    fontSize: 12,
+                    tabSize: 2,
+                    value: [
+                      '/** ',
+                      ' * 注意: ',
+                      ' * 在这里你可以使用完整的 EnvJs 环境',
+                      ' * ',
+                      ' * 同时: ',
+                      ' * 你`必须`手动调用 $done()',
+                      ' * ',
+                      ' * 因为: ',
+                      ' * BoxJs 不为主动执行的脚本调用 $done()',
+                      ' * 而把 $done 的时机完全交由脚本控制',
+                      ' * ',
+                      ' * 最后: ',
+                      ' * 这段脚本是可以直接运行的!',
+                      ' */ ',
+                      'const host = $.getdata("boxjs_host")',
+                      '$.json = {',
+                      '  msg: "这段 json 是返回给浏览器的!"',
+                      '}',
+                      '$.msg($.name, host)',
+                      '$.done()',
+                      '// $done() 或 $.done() 都可以'
+                    ].join('\n'),
+                    language: 'javascript',
+                    minimap: { enabled: false },
+                    theme: this.isDarkMode ? 'vs-dark' : 'vs'
+                  })
+                })
+              }
+              window.onresize = () => {
+                if (this.ui.editor) {
+                  this.ui.editor.layout()
+                }
+              }
               // 还原视图当时的滚动值
               const scrollY = this.ui.scrollY[this.path] || 0
               const offsetTop = -this.$vuetify.application.top
@@ -1314,6 +1386,13 @@
                 this.saveUserCfgs()
               }
               this.isSaveUserCfgs = true
+            }
+          },
+          'box.usercfgs.theme': {
+            handler() {
+              if (this.ui.editor) {
+                this.ui.editor._themeService.setTheme(this.isDarkMode ? 'vs-dark' : 'vs')
+              }
             }
           },
           'box.usercfgs.color_dark_primary': {
@@ -1333,10 +1412,13 @@
             this.isLoading = true
             return cfg
           })
-          axios.interceptors.response.use((resp) => {
-            this.isLoading = false
-            return resp
-          })
+          axios.interceptors.response.use(
+            (resp) => {
+              this.isLoading = false
+              return resp
+            },
+            (error) => (this.isLoading = false)
+          )
         },
         async created() {
           // 如果 url 参数中指定的 baseURL, 则后续的请求都请求到指定的域
@@ -1514,9 +1596,15 @@
             }
             app.isLoaded = true
           },
-          // 运行脚本
+          // 运行远程脚本
           runScript(url, timeout) {
             const opts = { url, timeout }
+            axios.post('/api/runScript', opts)
+          },
+          // 运行文本脚本
+          exeScript() {
+            const script = this.ui.editor.getValue()
+            const opts = { script }
             axios.post('/api/runScript', opts)
           },
           // 保存用户偏好
