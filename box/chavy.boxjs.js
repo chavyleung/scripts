@@ -1,6 +1,6 @@
 const $ = new Env('BoxJs')
 
-$.version = '0.7.19'
+$.version = '0.7.20'
 $.versionType = 'beta'
 
 /**
@@ -487,6 +487,8 @@ async function apiImpGlobalBak() {
 }
 
 async function apiRunScript() {
+  // 取消勿扰模式
+  $.isMute = false
   const opts = $.toObj($request.body)
   const httpapi = $.getdata('@chavy_boxjs_userCfgs.httpapi')
   const ishttpapi = /.*?@.*?:[0-9]+/.test(httpapi)

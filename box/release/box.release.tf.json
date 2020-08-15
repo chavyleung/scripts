@@ -1,6 +1,19 @@
 {
   "releases": [
     {
+      "version": "0.7.20",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "icon": "https://avatars3.githubusercontent.com/u/29748519",
+      "repo": "https://github.com/chavyleung",
+      "notes": [
+        {
+          "name": "优化",
+          "descs": ["勿扰模式下, 不再忽略手动执行脚本时发出的系统通知"]
+        }
+      ]
+    },
+    {
       "version": "0.7.19",
       "tags": ["beta"],
       "author": "@chavyleung",
