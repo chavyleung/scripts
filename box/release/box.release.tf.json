@@ -1,6 +1,23 @@
 {
   "releases": [
     {
+      "version": "0.7.19",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "icon": "https://avatars3.githubusercontent.com/u/29748519",
+      "repo": "https://github.com/chavyleung",
+      "notes": [
+        {
+          "name": "新增",
+          "descs": ["可以设置多张壁纸 (偏好设置)"]
+        },
+        {
+          "name": "注意",
+          "descs": ["设置多张壁纸后，在侧栏切换"]
+        }
+      ]
+    },
+    {
       "version": "0.7.18",
       "tags": ["beta"],
       "author": "@chavyleung",

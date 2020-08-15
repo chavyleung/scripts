@@ -191,6 +191,20 @@
                 </v-select>
               </v-list-item-content>
             </v-list-item>
+            <v-list-item class="mt-4" v-show="box.usercfgs.bgimgs">
+              <v-list-item-content>
+                <v-select
+                  hide-details
+                  v-model="box.usercfgs.bgimg"
+                  :items="bgimgs"
+                  item-text="name"
+                  item-value="url"
+                  @change="saveUserCfgs"
+                  label="背景图片"
+                >
+                </v-select>
+              </v-list-item-content>
+            </v-list-item>
             <v-list-item class="mt-4">
               <v-switch
                 dense
@@ -1183,6 +1197,22 @@
           isWallpaper() {
             return !!this.box.usercfgs.bgimg
           },
+          // 是否存在多张壁纸
+          isMutiWallpaper() {
+            return this.bgimgs && this.bgimgs.length > 2
+          },
+          // 背景图片列表
+          bgimgs() {
+            const items = []
+            const bgimgs = this.box.usercfgs.bgimgs
+            if (bgimgs) {
+              bgimgs.split('\n').forEach((img) => {
+                const [name, url] = img.split(',')
+                items.push({ name, url })
+              })
+            }
+            return items
+          },
           // 样式
           appStyle() {
             if (this.path !== '/') {
@@ -1598,7 +1628,7 @@
           },
           // 运行远程脚本
           runScript(url, timeout) {
-            const opts = { url, timeout }
+            const opts = { url, timeout, isRemote: true }
             axios.post('/api/runScript', opts)
           },
           // 运行文本脚本
