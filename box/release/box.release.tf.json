@@ -1,7 +1,7 @@
 {
   "releases": [
     {
-      "version": "0.7.23",
+      "version": "0.7.24",
       "tags": ["beta"],
       "author": "@chavyleung",
       "icon": "https://avatars3.githubusercontent.com/u/29748519",
@@ -9,7 +9,7 @@
       "notes": [
         {
           "name": "修复",
-          "descs": ["解决首屏闪屏问题", "解决图标白边问题"]
+          "descs": ["解决首屏闪屏问题", "解决图标白边问题", "导入会话报错"]
         },
         {
           "name": "感谢",

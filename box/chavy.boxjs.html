@@ -1769,7 +1769,8 @@
             const impval = this.ui.impAppDatasDialog.impval
             const impapp = JSON.parse(impval)
             const datas = impapp.datas || []
-            impapp.settings.forEach((setting) => {
+            const settings = impapp.settings || []
+            settings.forEach((setting) => {
               const { id: key, val } = setting
               datas.push({ key, val })
             })
@@ -1779,7 +1780,10 @@
                 delete resp.data.usercfgs
                 Object.assign(this.box, resp.data)
               })
-              .finally(() => (this.ui.impAppDatasDialog = false))
+              .finally(() => {
+                this.ui.impAppDatasDialog.show = false
+                this.ui.impAppDatasDialog.impval = ''
+              })
           },
           // 添加应用订阅
           addAppSub(url) {
