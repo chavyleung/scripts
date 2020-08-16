@@ -23,6 +23,16 @@
         padding-top: constant(safe-area-inset-top) !important;
         padding-top: env(safe-area-inset-top);
       }
+      @media (prefers-color-scheme: light) {
+        body {
+          background-color: #fff;
+        }
+      }
+      @media (prefers-color-scheme: dark) {
+        body {
+          background-color: #121212;
+        }
+      }
       .v-app-bar,
       .v-navigation-drawer__content {
         box-sizing: content-box;
@@ -466,7 +476,7 @@
           </v-container>
           <!-- 代码编辑 -->
           <v-container fluid class="fill-height" v-show="view === 'coding'" v-scroll="onScroll">
-            <v-card flat style="width: 100%;">
+            <v-card flat style="width: inherit;">
               <v-subheader>
                 <h2>脚本编辑器</h2>
                 <v-spacer></v-spacer>
@@ -475,7 +485,7 @@
                 </v-btn>
               </v-subheader>
             </v-card>
-            <div class="pa-0" id="container" style="width: 100%; height: 100%;"></div>
+            <div class="pa-0" id="container" style="width: inherit; height: inherit;"></div>
           </v-container>
           <!-- 应用详情 -->
           <v-container fluid v-if="view === 'app' && !!curapp" v-scroll="onScroll">
@@ -1224,6 +1234,8 @@
               'background-size': 'cover',
               'background-repeat': 'no-repeat'
             }
+            // 主题发生变化时给 <body> 设置背景色
+            document.querySelector('body').setAttribute('style', `background-color: ${this.isDarkMode ? '#121212' : '#fff'};`)
             return style
           },
           appIconFontStyle() {
