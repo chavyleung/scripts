@@ -344,7 +344,7 @@
       "author": "@chavyleung",
       "repo": "https://github.com/chavyleung/scripts/tree/master/ximalaya",
       "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/ximalaya.png", "https://raw.githubusercontent.com/Orz-3/task/master/ximalaya.png"],
-      "script": "https://github.com/chavyleung/scripts/blob/master/ximalaya/ximalaya.js"
+      "script": "https://raw.githubusercontent.com/chavyleung/scripts/master/ximalaya/ximalaya.js"
     }
   ]
 }
