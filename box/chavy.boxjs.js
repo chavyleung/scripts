@@ -1,6 +1,6 @@
 const $ = new Env('BoxJs')
 
-$.version = '0.7.22'
+$.version = '0.7.23'
 $.versionType = 'beta'
 
 /**
@@ -138,6 +138,13 @@ async function handlePage() {
       },
       () => ($.html = $.getjson($.KEY_web_cache).cache)
     )
+  }
+  // 根据偏好设置, 替换首屏颜色 (如果是`auto`则交由页面自适应)
+  const theme = $.getdata('@chavy_boxjs_userCfgs.theme')
+  if (theme === 'light') {
+    $.html = $.html.replace('#121212', '#fff')
+  } else if (theme === 'dark') {
+    $.html = $.html.replace('#fff', '#121212')
   }
 }
 

@@ -351,14 +351,14 @@
               <v-col cols="3" md="2" v-for="(app, appIdx) in favApps" :key="app.id" class="d-flex justify-space-around">
                 <div class="ma-2" @click="switchAppView(app.id)">
                   <v-card v-if="isDarkMode" style="border-radius: 12px;">
-                    <v-img style="border-radius: 12px;" :aspect-ratio="1" width="58" height="58" contain v-ripple :src="app.icon"></v-img>
+                    <v-img style="border-radius: 12px;" :aspect-ratio="1" width="54" height="54" contain v-ripple :src="app.icon"></v-img>
                   </v-card>
                   <v-img
                     v-else
                     style="border-radius: 12px;"
                     :aspect-ratio="1"
-                    width="58"
-                    height="58"
+                    width="54"
+                    height="54"
                     contain
                     v-ripple
                     class="elevation-3"
@@ -1234,14 +1234,12 @@
               'background-size': 'cover',
               'background-repeat': 'no-repeat'
             }
-            // 主题发生变化时给 <body> 设置背景色
-            document.querySelector('body').setAttribute('style', `background-color: ${this.isDarkMode ? '#121212' : '#fff'};`)
             return style
           },
           appIconFontStyle() {
             const style = {
               'font-size': '10px',
-              'max-width': '58px'
+              'max-width': '54px'
             }
             if (this.isWallpaper) {
               style['color'] = '#fff'
@@ -1444,6 +1442,8 @@
               if (this.ui.editor) {
                 this.ui.editor._themeService.setTheme(this.isDarkMode ? 'vs-dark' : 'vs')
               }
+              // 主题发生变化时给 <body> 设置背景色
+              document.querySelector('body').setAttribute('style', `background-color: ${this.isDarkMode ? '#121212' : '#fff'};`)
             }
           },
           'box.usercfgs.color_dark_primary': {

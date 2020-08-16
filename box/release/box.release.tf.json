@@ -1,19 +1,15 @@
 {
   "releases": [
     {
-      "version": "0.7.22",
+      "version": "0.7.23",
       "tags": ["beta"],
       "author": "@chavyleung",
       "icon": "https://avatars3.githubusercontent.com/u/29748519",
       "repo": "https://github.com/chavyleung",
       "notes": [
         {
-          "name": "优化",
-          "descs": ["首屏加载闪屏问题"]
-        },
-        {
-          "name": "说明",
-          "descs": ["首屏背景颜色会跟随 iOS 的主题颜色", "如果系统主题是黑色, 但 BoxJs 的主题是白色, 仍然会有一个黑到白的过程", "反之亦然"]
+          "name": "修复",
+          "descs": ["尝试解决首屏闪屏问题", "尝试解决图标白边问题"]
         }
       ]
     },
