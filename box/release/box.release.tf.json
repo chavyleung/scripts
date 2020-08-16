@@ -1,6 +1,19 @@
 {
   "releases": [
     {
+      "version": "0.7.25",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "icon": "https://avatars3.githubusercontent.com/u/29748519",
+      "repo": "https://github.com/chavyleung",
+      "notes": [
+        {
+          "name": "调整",
+          "descs": ["搜索条样式", "搜索操作界面"]
+        }
+      ]
+    },
+    {
       "version": "0.7.24",
       "tags": ["beta"],
       "author": "@chavyleung",
