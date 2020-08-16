@@ -1,6 +1,23 @@
 {
   "releases": [
     {
+      "version": "0.7.21",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "icon": "https://avatars3.githubusercontent.com/u/29748519",
+      "repo": "https://github.com/chavyleung",
+      "notes": [
+        {
+          "name": "新增",
+          "descs": ["一键清空会话数据"]
+        },
+        {
+          "name": "优化",
+          "descs": ["壁纸状态下图标字体颜色为白色", "其他样式优化"]
+        }
+      ]
+    },
+    {
       "version": "0.7.20",
       "tags": ["beta"],
       "author": "@chavyleung",
@@ -10,16 +27,7 @@
         {
           "name": "优化",
           "descs": ["勿扰模式下, 不再忽略手动执行脚本时发出的系统通知"]
-        }
-      ]
-    },
-    {
-      "version": "0.7.19",
-      "tags": ["beta"],
-      "author": "@chavyleung",
-      "icon": "https://avatars3.githubusercontent.com/u/29748519",
-      "repo": "https://github.com/chavyleung",
-      "notes": [
+        },
         {
           "name": "新增",
           "descs": ["可以设置多张壁纸 (偏好设置)"]

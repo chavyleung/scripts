@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
     <link rel="Bookmark" href="https://raw.githubusercontent.com/chavyleung/scripts/master/BOXJS.png" />
     <link rel="shortcut icon" href="https://raw.githubusercontent.com/chavyleung/scripts/master/BOXJS.png" />
     <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/chavyleung/scripts/master/BOXJS.png" />
@@ -28,8 +28,6 @@
         box-sizing: content-box;
         padding-top: constant(safe-area-inset-top);
         padding-top: env(safe-area-inset-top);
-        margin-bottom: calc(48px + constant(safe-area-inset-bottom));
-        margin-bottom: calc(48px + env(safe-area-inset-bottom));
       }
       .v-app-bar .v-autocomplete {
         box-sizing: border-box;
@@ -63,7 +61,7 @@
   </head>
   <body>
     <div id="app" v-cloak>
-      <v-app v-if="box" :style="appStyle">
+      <v-app v-if="box" :style="appViewStyle">
         <v-snackbar top app v-model="ui.snackbar.show" v-bind="ui.snackbar">{{ui.snackbar.msg}}</v-snackbar>
         <!-- 头部 -->
         <v-app-bar app dense :color="isDarkMode || !isWebApp ? undefined : 'primary'">
@@ -332,6 +330,7 @@
                 <v-avatar size="32"><v-icon>mdi-language-html5</v-icon></v-avatar>
               </v-btn>
             </v-list-item>
+            <v-list-item class="mt-4"></v-list-item>
           </v-list>
         </v-navigation-drawer>
         <!-- 主页 -->
@@ -356,11 +355,7 @@
                     :src="app.icon"
                   ></v-img>
                   <p class="text-center ma-0">
-                    <span
-                      :color="isWallpaper ? '#fff' : ''"
-                      class="d-inline-block text-truncate font-weight-bold"
-                      style="font-size: 10px; max-width: 58px;"
-                    >
+                    <span class="d-inline-block text-truncate font-weight-bold" :style="appIconFontStyle">
                       {{app.name}}
                     </span>
                   </p>
@@ -525,7 +520,7 @@
                 <v-subheader>
                   应用设置 ({{curapp.settings.length}})
                 </v-subheader>
-                <v-form class="pl-4 pr-4">
+                <v-form class="pl-4 pr-4 pb-4">
                   <template v-for="(setting, settingIdx) in curapp.settings">
                     <v-slider
                       v-model="setting.val"
@@ -667,6 +662,10 @@
                         </v-card-actions>
                       </v-card>
                     </v-dialog>
+                    <v-divider></v-divider>
+                    <v-list-item @click="clearAppDatas()">
+                      <v-list-item-title>清空数据</v-list-item-title>
+                    </v-list-item>
                   </v-list>
                 </v-menu>
               </v-subheader>
@@ -1214,7 +1213,7 @@
             return items
           },
           // 样式
-          appStyle() {
+          appViewStyle() {
             if (this.path !== '/') {
               return null
             }
@@ -1224,6 +1223,16 @@
               'background-position': 'center',
               'background-size': 'cover',
               'background-repeat': 'no-repeat'
+            }
+            return style
+          },
+          appIconFontStyle() {
+            const style = {
+              'font-size': '10px',
+              'max-width': '58px'
+            }
+            if (this.isWallpaper) {
+              style['color'] = '#fff'
             }
             return style
           },
@@ -1728,8 +1737,12 @@
           // 保存应用数据
           clearAppDatas(key) {
             const datas = this.curapp.datas
-            const data = datas.find((data) => data.key === key)
-            data.val = ''
+            if (key) {
+              const data = datas.find((data) => data.key === key)
+              data.val = ''
+            } else {
+              datas.forEach((data) => (data.val = ''))
+            }
             axios.post('/api/save', datas).then((resp) => {
               if (this.curapp.id === 'BoxSetting') {
                 this.isSaveUserCfgs = false
