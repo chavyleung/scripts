@@ -1347,7 +1347,10 @@
                 `background-image: linear-gradient(rgba(0,0,0,.2) 1%, rgba(255,255,255,0) 10%), url(${this.box.usercfgs.bgimg})`,
                 'background-position: center',
                 'background-size: cover',
-                'background-repeat: no-repeat'
+                'background-repeat: no-repeat',
+                'background-attachment: scroll',
+                'height: 100vh',
+                'overflow-y: scroll'
               ]
               // document.querySelector('body').removeAttribute('style')
               document.querySelector('body').setAttribute('style', bodyStyle.join('; '))
