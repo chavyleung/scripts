@@ -1,6 +1,23 @@
 {
   "releases": [
     {
+      "version": "0.7.30",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "icon": "https://avatars3.githubusercontent.com/u/29748519",
+      "repo": "https://github.com/chavyleung",
+      "notes": [
+        {
+          "name": "优化",
+          "descs": ["首页背景可以一直固定住"]
+        },
+        {
+          "name": "感谢",
+          "descs": ["感谢 @id77 大佬 PR"]
+        }
+      ]
+    },
+    {
       "version": "0.7.29",
       "tags": ["beta"],
       "author": "@chavyleung",
