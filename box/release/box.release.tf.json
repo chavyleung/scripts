@@ -1,6 +1,19 @@
 {
   "releases": [
     {
+      "version": "0.7.29",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "icon": "https://avatars3.githubusercontent.com/u/29748519",
+      "repo": "https://github.com/chavyleung",
+      "notes": [
+        {
+          "name": "代码编辑器",
+          "descs": ["Surge HTTP-API 环境下执行的代码能显示响应内容"]
+        }
+      ]
+    },
+    {
       "version": "0.7.28",
       "tags": ["beta"],
       "author": "@chavyleung",

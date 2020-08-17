@@ -1,6 +1,6 @@
 const $ = new Env('BoxJs')
 
-$.version = '0.7.28'
+$.version = '0.7.29'
 $.versionType = 'beta'
 
 /**
@@ -37,7 +37,6 @@ $.html = $.name // `页面`类请求的响应体
 
 // 页面源码地址
 $.web = `https://cdn.jsdelivr.net/gh/chavyleung/scripts@${$.version}/box/chavy.boxjs.html?_=${new Date().getTime()}`
-
 // 版本说明地址 (Release Note)
 $.ver = 'https://gitee.com/chavyleung/scripts/raw/master/box/release/box.release.tf.json'
 
@@ -524,9 +523,14 @@ async function apiRunScript() {
     }
   } else {
     // 对于手动执行的脚本, 把 $done 的时机交给脚本自主控制
-    $.isSkipDone = true
-    $request = undefined
-    eval(opts.script)
+    if ($.isSurge() && ishttpapi) {
+      const runOpts = { timeout: opts.timeout }
+      await $.runScript(opts.script, runOpts).then((resp) => ($.json = resp))
+    } else {
+      $.isSkipDone = true
+      $request = undefined
+      eval(opts.script)
+    }
   }
 }
 

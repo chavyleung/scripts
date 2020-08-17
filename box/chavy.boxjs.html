@@ -555,9 +555,35 @@
               <v-subheader>
                 <h2>脚本编辑器</h2>
                 <v-spacer></v-spacer>
-                <v-btn icon @click="exeScript">
+                <v-btn icon @click="exeScript" :loading="isLoading">
                   <v-icon color="primary">mdi-play-circle</v-icon>
                 </v-btn>
+                <v-bottom-sheet v-model="ui.exeScriptSheet.show" scrollable>
+                  <v-card>
+                    <v-card-title>
+                      执行结果
+                      <v-spacer></v-spacer>
+                      <v-btn icon @click="ui.exeScriptSheet.show = false">
+                        <v-icon>mdi-close</v-icon>
+                      </v-btn>
+                    </v-card-title>
+                    <v-divider></v-divider>
+                    <v-card-text style="height: 80%;">
+                      <div class="mt-4">
+                        <p
+                          class="text-pre-wrap"
+                          v-if="ui.exeScriptSheet.resp && ui.exeScriptSheet.resp.exception"
+                          v-text="ui.exeScriptSheet.resp.exception"
+                        ></p>
+                        <p
+                          class="text-pre-wrap"
+                          v-else-if="ui.exeScriptSheet.resp && ui.exeScriptSheet.resp.output"
+                          v-text="ui.exeScriptSheet.resp.output"
+                        ></p>
+                      </div>
+                    </v-card-text>
+                  </v-card>
+                </v-bottom-sheet>
               </v-subheader>
             </v-card>
             <div class="pa-0" id="container" style="width: inherit; height: inherit;"></div>
@@ -1166,6 +1192,7 @@
               searchDialog: { show: false },
               versionsheet: { show: false },
               updatesheet: { show: false },
+              exeScriptSheet: { show: false, resp: null },
               naviDrawer: { show: false },
               modSessionDialog: { show: false },
               editProfileDialog: { show: false },
@@ -1506,32 +1533,53 @@
               if (newval === '/coding') {
                 require.config({ paths: { vs: 'https://cdn.jsdelivr.net/npm/monaco-editor@0.20.0/min/vs' } })
                 require(['vs/editor/editor.main'], () => {
+                  const envjs_demo = [
+                    '/** ',
+                    ' * 注意: ',
+                    ' * 在这里你可以使用完整的 EnvJs 环境',
+                    ' * ',
+                    ' * 同时: ',
+                    ' * 你`必须`手动调用 $done()',
+                    ' * ',
+                    ' * 因为: ',
+                    ' * BoxJs 不为主动执行的脚本调用 $done()',
+                    ' * 而把 $done 的时机完全交由脚本控制',
+                    ' * ',
+                    ' * 最后: ',
+                    ' * 这段脚本是可以直接运行的!',
+                    ' */ ',
+                    'const host = $.getdata("boxjs_host")',
+                    '$.json = {',
+                    '  msg: "这段 json 是返回给浏览器的!"',
+                    '}',
+                    '$.msg($.name, host)',
+                    '$.done()',
+                    '// $done() 或 $.done() 都可以'
+                  ]
+                  const surgejs_demo = [
+                    '/** ',
+                    ' * 注意: ',
+                    ' * 你正在使用 Surge HTTP-API 环境',
+                    ' * ',
+                    ' * 在这里：你不可以使用 EnvJs',
+                    ' * 请确保：你的脚本能被 Surge 独立运行',
+                    ' * ',
+                    ' * 最后: ',
+                    ' * 这段脚本是可以直接运行的!',
+                    ' */ ',
+                    'const host = $persistentStore.read("boxjs_host")',
+                    'const msgs = [""]',
+                    '',
+                    'msgs.push("这是日志的内容")',
+                    'msgs.push("BoxJs host: " + host)',
+                    '',
+                    'console.log(msgs.join("\\n"))',
+                    '$done()'
+                  ]
                   this.ui.editor = monaco.editor.create(document.getElementById('container'), {
                     fontSize: 12,
                     tabSize: 2,
-                    value: [
-                      '/** ',
-                      ' * 注意: ',
-                      ' * 在这里你可以使用完整的 EnvJs 环境',
-                      ' * ',
-                      ' * 同时: ',
-                      ' * 你`必须`手动调用 $done()',
-                      ' * ',
-                      ' * 因为: ',
-                      ' * BoxJs 不为主动执行的脚本调用 $done()',
-                      ' * 而把 $done 的时机完全交由脚本控制',
-                      ' * ',
-                      ' * 最后: ',
-                      ' * 这段脚本是可以直接运行的!',
-                      ' */ ',
-                      'const host = $.getdata("boxjs_host")',
-                      '$.json = {',
-                      '  msg: "这段 json 是返回给浏览器的!"',
-                      '}',
-                      '$.msg($.name, host)',
-                      '$.done()',
-                      '// $done() 或 $.done() 都可以'
-                    ].join('\n'),
+                    value: this.box.usercfgs.httpapi ? surgejs_demo.join('\n') : envjs_demo.join('\n'),
                     language: 'javascript',
                     minimap: { enabled: false },
                     theme: this.isDarkMode ? 'vs-dark' : 'vs'
@@ -1792,7 +1840,12 @@
           exeScript() {
             const script = this.ui.editor.getValue()
             const opts = { script }
-            axios.post('/api/runScript', opts)
+            axios.post('/api/runScript', opts).then((resp) => {
+              if (this.box.usercfgs.httpapi) {
+                this.ui.exeScriptSheet.resp = JSON.parse(resp.data)
+                this.ui.exeScriptSheet.show = true
+              }
+            })
           },
           // 保存用户偏好
           saveUserCfgs() {
