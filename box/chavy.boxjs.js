@@ -1,6 +1,6 @@
 const $ = new Env('BoxJs')
 
-$.version = '0.7.26'
+$.version = '0.7.27'
 $.versionType = 'beta'
 
 /**
@@ -37,6 +37,7 @@ $.html = $.name // `页面`类请求的响应体
 
 // 页面源码地址
 $.web = `https://cdn.jsdelivr.net/gh/chavyleung/scripts@${$.version}/box/chavy.boxjs.html?_=${new Date().getTime()}`
+
 // 版本说明地址 (Release Note)
 $.ver = 'https://gitee.com/chavyleung/scripts/raw/master/box/release/box.release.tf.json'
 
@@ -297,7 +298,7 @@ function getSystemApps() {
  * 获取用户配置
  */
 function getUserCfgs() {
-  const defcfgs = { favapps: [], appsubs: [], httpapi: 'examplekey@127.0.0.1:6166' }
+  const defcfgs = { favapps: [], appsubs: [], isPinedSearchBar: true, httpapi: 'examplekey@127.0.0.1:6166' }
   const usercfgs = Object.assign(defcfgs, $.getjson($.KEY_usercfgs, {}))
   return usercfgs
 }

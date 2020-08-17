@@ -1,6 +1,27 @@
 {
   "releases": [
     {
+      "version": "0.7.27",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "icon": "https://avatars3.githubusercontent.com/u/29748519",
+      "repo": "https://github.com/chavyleung",
+      "notes": [
+        {
+          "name": "优化",
+          "descs": ["首页样式", "操作体验"]
+        },
+        {
+          "name": "首页",
+          "descs": ["顶栏透明", "可以隐藏顶栏", "顶栏可以固定或跟随滚动"]
+        },
+        {
+          "name": "悬浮按钮",
+          "descs": ["增加搜索入口"]
+        }
+      ]
+    },
+    {
       "version": "0.7.26",
       "tags": ["beta"],
       "author": "@chavyleung",

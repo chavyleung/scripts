@@ -33,7 +33,14 @@
           background-color: #121212;
         }
       }
+      .v-app-bar .v-toolbar__content {
+        padding: 4px 12px;
+      }
+      .v-app-bar .v-input__slot {
+        padding: 0 !important;
+      }
       .v-app-bar,
+      .v-toolbar,
       .v-navigation-drawer__content {
         box-sizing: content-box;
         padding-top: constant(safe-area-inset-top);
@@ -75,98 +82,80 @@
       <v-app v-if="box" :style="appViewStyle">
         <v-snackbar top app v-model="ui.snackbar.show" v-bind="ui.snackbar">{{ui.snackbar.msg}}</v-snackbar>
         <!-- 头部 -->
-        <v-app-bar app dense :color="isDarkMode || !isWebApp ? undefined : 'primary'">
-          <v-dialog v-model="ui.searchDialog.show" fullscreen scrollable>
-            <template #activator="{ on }">
-              <!-- 搜索条 -->
-              <v-autocomplete
-                v-bind="ui.searchBar"
-                :label="`BoxJs - v${version}`"
-                v-on="on"
-                color="primary"
-                hide-no-data
-                hide-details
-                solo
-                dense
-              >
-                <template #prepend-inner>
-                  <!-- 容器切换 Surge、QuanX、Loon -->
-                  <v-menu bottom left v-if="!isLoading && isMainView">
-                    <template #activator="{ on }">
-                      <v-avatar v-on="on" size="26" class="mr-2"><img :src="env.icons[iconEnvThemeIdx]" /></v-avatar>
-                    </template>
-                    <v-list>
-                      <v-list-item dense v-for="(env, envIdx) in envs" :key="env.id" @click="switchEnv(env.id)">
-                        <v-list-item-avatar size="26"><v-img :src="env.icon" /></v-list-item-avatar>
-                        <v-list-item-title>{{env.id}}</v-list-item-title>
-                      </v-list-item>
-                    </v-list>
-                  </v-menu>
-                  <!-- 返回按钮 -->
-                  <v-icon
-                    :dark="isDarkMode || !isWebApp ? undefined : 'primary'"
-                    @click="back"
-                    size="26"
-                    :dark="isWebApp"
-                    class="mr-2"
-                    v-else-if="!isLoading && !isMainView"
-                  >
-                    mdi-chevron-left
-                  </v-icon>
-                  <v-progress-circular
-                    v-show="isLoading"
-                    indeterminate
-                    :width="2"
-                    size="26"
-                    class="mr-2"
-                    color="primary"
-                  ></v-progress-circular>
-                </template>
-                <template #append>
-                  <v-icon @click="ui.naviDrawer.show = true">mdi-menu</v-icon>
-                </template>
-              </v-autocomplete>
-            </template>
-            <v-card>
-              <v-card-subtitle class="px-0">
-                <v-app-bar :color="isDarkMode || !isWebApp ? undefined : 'primary'" dense>
-                  <v-btn icon dense :dark="isWebApp" @click="ui.searchDialog.show = false">
-                    <v-icon>mdi-chevron-left</v-icon>
+        <!-- 只有有隐藏搜索栏时才出现，该控件完全隐藏，点击屏幕顶部恢复显示搜索栏 -->
+        <v-system-bar
+          color="transparent"
+          @click="box.usercfgs.isHidedSearchBar = false"
+          v-if="box.usercfgs.isHidedSearchBar"
+        ></v-system-bar>
+        <v-app-bar v-bind="appBarBind" v-if="!box.usercfgs.isHidedSearchBar">
+          <!-- 搜索条 -->
+          <v-autocomplete
+            v-bind="ui.searchBar"
+            :label="`BoxJs - v${version}`"
+            @click="ui.searchDialog.show = true"
+            hide-no-data
+            hide-details
+            solo
+          >
+            <template #prepend-inner>
+              <!-- 容器切换 Surge、QuanX、Loon -->
+              <v-menu bottom left v-if="!isLoading && isMainView">
+                <template #activator="{ on }">
+                  <v-btn v-on="on" icon>
+                    <v-avatar size="26"><img :src="env.icons[iconEnvThemeIdx]" /></v-avatar>
                   </v-btn>
-                  <v-text-field
-                    ref="search"
-                    v-model="ui.searchBar.input"
-                    :label="`BoxJs - v${version}`"
-                    autofocus
-                    dense
-                    hide-details
-                    solo
-                  ></v-text-field>
-                  <v-btn icon @click="window.open(box.syscfgs.orz3.repo)">
-                    <v-avatar size="26"><img :src="box.syscfgs.orz3.icon" /></v-avatar>
-                  </v-btn>
-                </v-app-bar>
-              </v-card-subtitle>
-              <v-card-text class="px-0">
-                <v-list nav>
-                  <v-list-item v-for="(app, appIdx) in searchApps" @click="ui.searchDialog.show = false, switchAppView(app.id)" dense>
-                    <v-list-item-avatar><img :src="app.icon" /></v-list-item-avatar>
-                    <v-list-item-content>
-                      <v-list-item-title>{{`${app.name} (${app.id})`}}</v-list-item-title>
-                      <v-list-item-subtitle>{{app.repo}}</v-list-item-subtitle>
-                      <v-list-item-subtitle>{{app.author}}</v-list-item-subtitle>
-                    </v-list-item-content>
-                    <v-list-item-action>
-                      <v-btn icon @click.stop="ui.searchDialog.show = false, favApp(app.id)">
-                        <v-icon :color="app.favIconColor" v-text="app.favIcon" />
-                      </v-btn>
-                    </v-list-item-action>
+                </template>
+                <v-list>
+                  <v-list-item dense v-for="(env, envIdx) in envs" :key="env.id" @click="switchEnv(env.id)">
+                    <v-list-item-avatar size="26"><v-img :src="env.icon" /></v-list-item-avatar>
+                    <v-list-item-title>{{env.id}}</v-list-item-title>
                   </v-list-item>
                 </v-list>
-              </v-card-text>
-            </v-card>
-          </v-dialog>
+              </v-menu>
+              <!-- 返回按钮 -->
+              <v-btn icon @click="back" v-else-if="!isLoading && !isMainView">
+                <v-icon>mdi-chevron-left</v-icon>
+              </v-btn>
+              <v-btn icon v-show="isLoading" :loading="isLoading" color="primary"></v-btn>
+            </template>
+            <template #append>
+              <v-btn icon @click="ui.naviDrawer.show = true">
+                <v-avatar size="26"><v-icon>mdi-menu</v-icon></v-avatar>
+              </v-btn>
+            </template>
+          </v-autocomplete>
         </v-app-bar>
+        <v-dialog v-model="ui.searchDialog.show" fullscreen scrollable>
+          <v-card>
+            <v-toolbar v-bind="searchBarBind">
+              <v-btn icon dark @click="ui.searchDialog.show = false">
+                <v-icon>mdi-chevron-left</v-icon>
+              </v-btn>
+              <v-text-field v-model="ui.searchBar.input" :label="`BoxJs - v${version}`" autofocus hide-details solo></v-text-field>
+              <v-btn icon @click="window.open(box.syscfgs.orz3.repo)">
+                <v-avatar size="26"><img :src="box.syscfgs.orz3.icon" /></v-avatar>
+              </v-btn>
+            </v-toolbar>
+            <v-card-text class="px-0">
+              <v-list nav>
+                <v-list-item v-for="(app, appIdx) in searchApps" @click="ui.searchDialog.show = false, switchAppView(app.id)" dense>
+                  <v-list-item-avatar class="elevation-3"><img :src="app.icon" /></v-list-item-avatar>
+                  <v-list-item-content>
+                    <v-list-item-title>{{`${app.name} (${app.id})`}}</v-list-item-title>
+                    <v-list-item-subtitle>{{app.repo}}</v-list-item-subtitle>
+                    <v-list-item-subtitle>{{app.author}}</v-list-item-subtitle>
+                  </v-list-item-content>
+                  <v-list-item-action>
+                    <v-btn icon @click.stop="ui.searchDialog.show = false, favApp(app.id)">
+                      <v-icon :color="app.favIconColor" v-text="app.favIcon" />
+                    </v-btn>
+                  </v-list-item-action>
+                </v-list-item>
+              </v-list>
+            </v-card-text>
+          </v-card>
+        </v-dialog>
         <!-- 侧栏 -->
         <v-navigation-drawer app v-model="ui.naviDrawer.show" temporary right>
           <v-list dense nav>
@@ -268,6 +257,54 @@
                 <v-avatar size="32"><img :src="box.syscfgs.orz3.icon" /></v-avatar>
               </v-btn>
             </v-list-item>
+            <v-list-item class="mt-4">
+              <v-switch
+                dense
+                class="mt-0"
+                label="固定搜索栏"
+                v-model="box.usercfgs.isPinedSearchBar"
+                @change="saveUserCfgs"
+                :persistent-hint="true"
+                hint="搜索栏是否跟随滚动"
+              >
+              </v-switch>
+              <v-spacer></v-spacer>
+              <v-btn fab small text>
+                <v-avatar size="32"><v-icon>mdi-pin</v-icon></v-avatar>
+              </v-btn>
+            </v-list-item>
+            <v-list-item class="mt-4">
+              <v-switch
+                dense
+                class="mt-0"
+                label="隐藏搜索栏"
+                v-model="box.usercfgs.isHidedSearchBar"
+                @change="saveUserCfgs"
+                :persistent-hint="true"
+                hint="仍可右侧向左滑呼出侧栏"
+              >
+              </v-switch>
+              <v-spacer></v-spacer>
+              <v-btn fab small text>
+                <v-avatar size="32"><v-icon>mdi-text-search</v-icon></v-avatar>
+              </v-btn>
+            </v-list-item>
+            <!-- <v-list-item class="mt-4">
+              <v-switch
+                dense
+                class="mt-0"
+                label="透明主题"
+                v-model="box.usercfgs.isTransparent"
+                @change="saveUserCfgs"
+                :persistent-hint="true"
+                hint="使界面更多元素透明 (beta)"
+              >
+              </v-switch>
+              <v-spacer></v-spacer>
+              <v-btn fab small text>
+                <v-avatar size="32"><v-icon>mdi-invert-colors</v-icon></v-avatar>
+              </v-btn>
+            </v-list-item> -->
             <v-list-item class="mt-4">
               <v-switch
                 dense
@@ -423,7 +460,7 @@
                   <v-list dense nav class="ma-n4">
                     <template v-for="(app, appIdx) in favApps" :key="app.id">
                       <v-list-item dense @click="switchAppView(app.id)">
-                        <v-list-item-avatar><v-img :src="app.icon" /></v-list-item-avatar>
+                        <v-list-item-avatar class="elevation-3"><v-img :src="app.icon" /></v-list-item-avatar>
                         <v-list-item-content>
                           <v-list-item-title>{{app.name}} ({{app.id}})</v-list-item-title>
                           <v-list-item-subtitle>{{app.repo}}</v-list-item-subtitle>
@@ -465,7 +502,7 @@
                   <v-list dense nav class="ma-n4">
                     <template v-for="(app, appIdx) in sub.apps" :key="app.id">
                       <v-list-item dense @click="switchAppView(app.id)">
-                        <v-list-item-avatar><v-img :src="app.icon" /></v-list-item-avatar>
+                        <v-list-item-avatar class="elevation-3"><v-img :src="app.icon" /></v-list-item-avatar>
                         <v-list-item-content>
                           <v-list-item-title>{{app.name}} ({{app.id}})</v-list-item-title>
                           <v-list-item-subtitle>{{app.repo}}</v-list-item-subtitle>
@@ -493,7 +530,7 @@
                   <v-list dense nav class="ma-n4">
                     <template v-for="(app, appIdx) in sysApps" :key="app.id">
                       <v-list-item dense @click="switchAppView(app.id)">
-                        <v-list-item-avatar><v-img :src="app.icon" /></v-list-item-avatar>
+                        <v-list-item-avatar class="elevation-3"><v-img :src="app.icon" /></v-list-item-avatar>
                         <v-list-item-content>
                           <v-list-item-title>{{app.name}} ({{app.id}})</v-list-item-title>
                           <v-list-item-subtitle>{{app.repo}}</v-list-item-subtitle>
@@ -534,7 +571,12 @@
                 <v-icon color="primary">mdi-play-circle</v-icon>
               </v-btn>
             </v-subheader>
-            <v-card flat class="mb-4" color="transparent" v-if="curapp.desc || curapp.descs || curapp.desc_html || curapp.descs_html">
+            <v-card
+              flat
+              class="mb-4"
+              :color="isWallpaper ? null : 'transparent'"
+              v-if="curapp.desc || curapp.descs || curapp.desc_html || curapp.descs_html"
+            >
               <v-card-subtitle>
                 <p v-if="curapp.desc" v-text="curapp.desc" class="text-pre-wrap"></p>
                 <p
@@ -1054,6 +1096,9 @@
             <v-btn dark v-if="!box.usercfgs.isHideCoding" fab small @click="path = '/coding'">
               <v-icon>mdi-code-tags</v-icon>
             </v-btn>
+            <v-btn dark v-if="!box.usercfgs.isHidedSearch" fab small color="green" @click="ui.searchDialog.show = true">
+              <v-icon>mdi-magnify</v-icon>
+            </v-btn>
           </v-speed-dial>
         </v-fab-transition>
         <v-bottom-sheet v-model="ui.versionsheet.show" scrollable>
@@ -1117,7 +1162,7 @@
               scrollY: {}, //记录每个界面的滚动值
               overlay: { show: false, val: 60 },
               snackbar: { show: false, color: 'primary', msg: '' },
-              searchBar: { readonly: true, input: '' },
+              searchBar: { color: 'primary', readonly: true, input: '' },
               searchDialog: { show: false },
               versionsheet: { show: false },
               updatesheet: { show: false },
@@ -1223,6 +1268,10 @@
           isSystemDarkMode() {
             return window.matchMedia('(prefers-color-scheme: dark)').matches
           },
+          // 是否透明主题
+          // isTransparent() {
+          //   return this.box.usercfgs.isTransparent
+          // },
           // 是否透明图标
           isTransparentIcons() {
             return this.box.usercfgs.isTransparentIcons
@@ -1260,25 +1309,58 @@
           },
           // 样式
           appViewStyle() {
-            if (this.path !== '/') {
-              return null
+            // if (this.path !== '/') {
+            //   return null
+            // }
+            // 主题发生变化时给 <body> 设置背景色
+            if (this.isWallpaper) {
+              const bodyStyle = [
+                `background-color: ${this.isDarkMode ? '#121212' : '#fff'}`,
+                `background-image: linear-gradient(rgba(0,0,0,.2) 1%, rgba(255,255,255,0) 10%), url(${this.box.usercfgs.bgimg})`,
+                'background-position: center',
+                'background-size: cover',
+                'background-repeat: no-repeat'
+              ]
+              // document.querySelector('body').removeAttribute('style')
+              document.querySelector('body').setAttribute('style', bodyStyle.join('; '))
+            } else {
+              const darkBg = 'background-color: #121212'
+              const lightBg = 'background: linear-gradient(rgba(0,0,0,.3) 1%, rgba(255,255,255,0) 10%)'
+              document.querySelector('body').setAttribute('style', this.isDarkMode ? darkBg : lightBg)
             }
-            const bgImg = this.box.usercfgs.bgimg
-            const style = {
-              'background-image': `url(${bgImg})`,
-              'background-position': 'center',
-              'background-size': 'cover',
-              'background-repeat': 'no-repeat'
+            if (this.isWebApp) {
+              return { background: 'none' }
+            } else if (this.isWallpaper && !this.isTransparent) {
+              return { background: 'transparent' }
+            } else if (!this.isWallpaper && this.isTransparent) {
+              return { background: 'none' }
+            } else {
+              return
             }
-            return style
+          },
+          appBarBind() {
+            let app = !!this.box.usercfgs.isPinedSearchBar
+            let color = 'transparent'
+            const isEmptyLight = this.isWebApp && !this.isDarkMode && !this.isWallpaper
+            if (isEmptyLight) {
+              color = 'primary'
+            }
+            let flat = color === 'transparent'
+            return { app, color, flat, height: '68' }
+          },
+          searchBarBind() {
+            const color = this.isDarkMode ? null : 'primary'
+            return { color, height: '68' }
           },
           appIconFontStyle() {
             const style = {
               'font-size': '10px',
               'max-width': '54px'
             }
+
             if (this.isWallpaper) {
               style['color'] = '#fff'
+              style['text-shadow'] = 'black 0.1em 0.1em 0.2em'
             }
             return style
           },
@@ -1473,6 +1555,14 @@
               }
             }
           },
+          'ui.naviDrawer.show': {
+            handler(newval, oldval) {
+              // 获取贡献者列表
+              if (newval === true && !this.box.syscfgs.contributors) {
+                this.getContributors()
+              }
+            }
+          },
           'box.usercfgs': {
             deep: true,
             handler(newval, oldval) {
@@ -1487,8 +1577,6 @@
               if (this.ui.editor) {
                 this.ui.editor._themeService.setTheme(this.isDarkMode ? 'vs-dark' : 'vs')
               }
-              // 主题发生变化时给 <body> 设置背景色
-              document.querySelector('body').setAttribute('style', `background-color: ${this.isDarkMode ? '#121212' : '#fff'};`)
             }
           },
           'box.usercfgs.color_dark_primary': {
@@ -1539,8 +1627,6 @@
           if (this.view === 'bak') {
             await this.loadGlobalBak()
           }
-          // 获取贡献者列表
-          this.getContributors()
           this.getVersions()
           this.loadTheme()
         },
@@ -1926,8 +2012,9 @@
           // 获取仓库贡献者
           getContributors() {
             const url = 'https://api.github.com/repos/chavyleung/scripts/contributors'
+            this.box.syscfgs.contributors = []
             axios.get(url).then((resp) => {
-              this.box.syscfgs.contributors = []
+              if (!resp) return
               resp.data.forEach((contributor) => {
                 if ([29748519, 39037656].includes(contributor.id)) return
                 const { login: id, login, html_url: repo, avatar_url: icon } = contributor
