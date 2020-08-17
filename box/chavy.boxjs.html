@@ -1177,6 +1177,7 @@
                 'https://raw.githubusercontent.com/Orz-3/task/master/appstore.png'
               ]
             },
+            boxServerData: null,
             box: null
           }
         },
@@ -1621,8 +1622,12 @@
           }
           // 监听浏览器后退事件
           window.addEventListener('popstate', () => (this.path = path), false)
-          // 获取 BoxJs 数据, 取到数据再渲染页面
-          await axios.get('/query/boxdata').then((resp) => (this.box = resp.data))
+          // 如果后端没有渲染数据, 则发出请求获取数据
+          if (this.boxServerData) {
+            this.box = this.boxServerData
+          } else {
+            await axios.get('/query/boxdata').then((resp) => (this.box = resp.data))
+          }
           // 获取全局备份
           if (this.view === 'bak') {
             await this.loadGlobalBak()

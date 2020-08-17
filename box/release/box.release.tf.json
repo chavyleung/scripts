@@ -1,6 +1,23 @@
 {
   "releases": [
     {
+      "version": "0.7.28",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "icon": "https://avatars3.githubusercontent.com/u/29748519",
+      "repo": "https://github.com/chavyleung",
+      "notes": [
+        {
+          "name": "优化",
+          "descs": ["数据后端渲染", "更快更平顺的首页加载", "不闪屏了"]
+        },
+        {
+          "name": "感谢",
+          "descs": ["感谢 @eslint 大佬提供帮助"]
+        }
+      ]
+    },
+    {
       "version": "0.7.27",
       "tags": ["beta"],
       "author": "@chavyleung",

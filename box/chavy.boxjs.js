@@ -1,6 +1,6 @@
 const $ = new Env('BoxJs')
 
-$.version = '0.7.27'
+$.version = '0.7.28'
 $.versionType = 'beta'
 
 /**
@@ -130,13 +130,16 @@ async function handlePage() {
     await $.http.get($.web).then(
       (resp) => {
         if (/<title>BoxJs<\/title>/.test(resp.body)) {
+          // 返回页面源码, 并马上存储到持久化仓库
           $.html = resp.body
           const cache = { version: $.version, cache: $.html }
           $.setjson(cache, $.KEY_web_cache)
         } else {
+          // 如果返回的页面源码不是预期的, 则从持久化仓库中获取
           $.html = $.getjson($.KEY_web_cache).cache
         }
       },
+      // 如果获取页面源码失败, 则从持久化仓库中获取
       () => ($.html = $.getjson($.KEY_web_cache).cache)
     )
   }
@@ -147,6 +150,13 @@ async function handlePage() {
   } else if (theme === 'dark') {
     $.html = $.html.replace('#fff', '#121212')
   }
+  /**
+   * 后端渲染数据, 感谢 https://t.me/eslint 提供帮助
+   *
+   * 如果直接渲染到 box: null 会出现双向绑定问题
+   * 所以先渲染到 `boxServerData: null` 再由前端 `this.box = this.boxServerData` 实现双向绑定
+   */
+  $.html = $.html.replace('boxServerData: null', 'boxServerData:' + JSON.stringify(getBoxData()))
 }
 
 /**
