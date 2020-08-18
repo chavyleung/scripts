@@ -1,12 +1,16 @@
 {
   "releases": [
     {
-      "version": "0.7.32",
+      "version": "0.7.33",
       "tags": ["beta"],
       "author": "@chavyleung",
       "icon": "https://avatars3.githubusercontent.com/u/29748519",
       "repo": "https://github.com/chavyleung",
       "notes": [
+        {
+          "name": "优化",
+          "descs": ["支持前进、后退", "WebApp 状态下刷新能留在当前页面"]
+        },
         {
           "name": "修复",
           "descs": ["侧栏拉不到底缺陷"]

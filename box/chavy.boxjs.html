@@ -1671,7 +1671,7 @@
           // 根据路径跳转视图
           const defview = '/'
           if (!this.isCors) {
-            const path = location.pathname
+            let path = location.pathname + location.hash
             this.path = path === '/' ? defview : path
           } else {
             this.path = defview
@@ -1697,9 +1697,6 @@
             this.ui.scrollY[this.path] = event.currentTarget.scrollY
           },
           handleHistory(path) {
-            // if (this.isWebApp == true) {
-            //   return
-            // }
             const state = { title: 'BoxJs', url: path }
             if (!history.state) {
               history.replaceState(state, '')
