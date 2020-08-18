@@ -1,6 +1,6 @@
 const $ = new Env('BoxJs')
 
-$.version = '0.7.34'
+$.version = '0.7.35'
 $.versionType = 'beta'
 
 /**
@@ -126,6 +126,7 @@ async function handlePage() {
 
   // 调试模式: 是否每次都获取新的页面
   const isDebugWeb = [true, 'true'].includes($.getdata('@chavy_boxjs_userCfgs.isDebugWeb'))
+  const debugger_web = $.getjson('chavy_boxjs_userCfgs').debugger_web
   const cache = $.getjson($.KEY_web_cache, null)
 
   // 如果没有开启调试模式，且当前版本与缓存版本一致，且直接取缓存
@@ -134,9 +135,10 @@ async function handlePage() {
   }
   // 如果开启了调试模式，并指定了 `debugger_web` 则从指定的地址获取页面
   else {
-    const debugger_web = $.getjson('chavy_boxjs_userCfgs').debugger_web
     if (isDebugWeb && debugger_web) {
-      $.web = debugger_web
+      // 调试地址后面拼时间缀, 避免 GET 缓存
+      const isQueryUrl = debugger_web.includes('?')
+      $.web = `${debugger_web}${isQueryUrl ? '&' : '?'}_=${new Date().getTime()}`
       boxdata.syscfgs.isDebugMode = true
       console.log(`[WARN] 调试模式: $.web = : ${$.web}`)
     }
@@ -177,8 +179,9 @@ async function handlePage() {
    */
   $.html = $.html.replace('boxServerData: null', 'boxServerData:' + JSON.stringify(boxdata))
 
-  // 调试模式支持 vue Devtools
-  if (isDebugWeb) {
+  // 调试模式支持 vue Devtools (只有在同时开启调试模式和指定了调试地址才生效)
+  // vue.min.js 生效时, 会导致 @click="window.open()" 报 "window" is not defined 错误
+  if (isDebugWeb && debugger_web) {
     $.html = $.html.replace('vue.min.js', 'vue.js')
   }
 }

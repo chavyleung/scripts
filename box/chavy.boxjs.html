@@ -1543,7 +1543,6 @@
         watch: {
           'ui.path': {
             handler(newval, oldval) {
-              this.handleHistory(newval)
               if (/^\/#/.test(newval)) {
                 newval = newval.replace('/#', '')
               }
@@ -1680,7 +1679,7 @@
             (error) => (this.isLoading = false)
           )
         },
-        async created() {
+        created() {
           // 如果 url 参数中指定的 baseURL, 则后续的请求都请求到指定的域
           if (window.location.search) {
             const [, baseURL] = /baseURL=(.*?)(&|$)/.exec(window.location.search)
@@ -1695,17 +1694,18 @@
           } else {
             this.path = defview
           }
+          this.handleHistory(this.path)
           // 监听浏览器后退事件
           window.addEventListener('popstate', (e) => (this.path = e.state.url), false)
           // 如果后端没有渲染数据, 则发出请求获取数据
           if (this.boxServerData) {
             this.box = this.boxServerData
           } else {
-            await axios.get('/query/boxdata').then((resp) => (this.box = resp.data))
+            axios.get('/query/boxdata').then((resp) => (this.box = resp.data))
           }
           // 获取全局备份
           if (this.view === 'bak') {
-            await this.loadGlobalBak()
+            this.loadGlobalBak()
           }
           this.getVersions()
           this.loadTheme()
@@ -1726,8 +1726,10 @@
           back() {
             if (this.view === 'bak' && !this.bfpath) {
               this.path = '/#/my'
+              this.handleHistory(this.path)
             } else if (this.view === 'app' && !this.bfpath) {
               this.path = '/#/app'
+              this.handleHistory(this.path)
             } else {
               history.back()
             }
@@ -1741,6 +1743,7 @@
             path = `/#/${path}`
             if (this.path !== path) {
               this.path = path
+              this.handleHistory(this.path)
             } else {
               const scrollY = this.ui.scrollY[this.path]
               const isTopY = _.isNil(scrollY) || scrollY === 0
@@ -1758,6 +1761,7 @@
           switchAppView(appId) {
             const path = `/#/app/${appId}`
             this.path = path
+            this.handleHistory(this.path)
           },
           // 切换备份视图
           switchBakView(bakId) {
@@ -1767,6 +1771,7 @@
               this.loadGlobalBak().then((resp) => (this.path = path))
             } else {
               this.path = path
+              this.handleHistory(this.path)
             }
           },
           // 重载主题

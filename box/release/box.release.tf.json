@@ -1,7 +1,7 @@
 {
   "releases": [
     {
-      "version": "0.7.34",
+      "version": "0.7.35",
       "tags": ["beta"],
       "author": "@chavyleung",
       "icon": "https://avatars3.githubusercontent.com/u/29748519",
@@ -13,7 +13,7 @@
         },
         {
           "name": "修复",
-          "descs": ["底栏事件无效问题", "部分情况下贡献者重复加载问题"]
+          "descs": ["底栏事件无效问题", "部分情况下贡献者重复加载问题", "手势前进后退会白屏&卡屏问题"]
         }
       ]
     },
