@@ -157,7 +157,7 @@
           </v-card>
         </v-dialog>
         <!-- 侧栏 -->
-        <v-navigation-drawer app v-model="ui.naviDrawer.show" temporary right>
+        <v-navigation-drawer app v-model="ui.naviDrawer.show" height="100%" temporary right>
           <v-list dense nav>
             <v-list-item dense @click="window.open(box.syscfgs.chavy.repo)">
               <v-list-item-avatar><img :src="box.syscfgs.chavy.icon" /></v-list-item-avatar>
