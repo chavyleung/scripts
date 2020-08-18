@@ -1,12 +1,16 @@
 {
   "releases": [
     {
-      "version": "0.7.31",
+      "version": "0.7.32",
       "tags": ["beta"],
       "author": "@chavyleung",
       "icon": "https://avatars3.githubusercontent.com/u/29748519",
       "repo": "https://github.com/chavyleung",
       "notes": [
+        {
+          "name": "修复",
+          "descs": ["侧栏拉不到底缺陷"]
+        },
         {
           "name": "调试",
           "descs": ["支持 vue devtool (侧栏开启调试模式)"]
