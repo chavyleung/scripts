@@ -124,7 +124,7 @@ async function handlePage() {
   const isDebugWeb = [true, 'true'].includes($.getdata('@chavy_boxjs_userCfgs.isDebugWeb'))
   const cache = $.getjson($.KEY_web_cache, null)
   if (!isDebugWeb && cache && cache.version === $.version) {
-    $.html = cache.cache.replace('vue.min.js', 'vue.js')
+    $.html = cache.cache
   } else {
     await $.http.get($.web).then(
       (resp) => {
@@ -156,6 +156,11 @@ async function handlePage() {
    * 所以先渲染到 `boxServerData: null` 再由前端 `this.box = this.boxServerData` 实现双向绑定
    */
   $.html = $.html.replace('boxServerData: null', 'boxServerData:' + JSON.stringify(getBoxData()))
+  
+  // 调试模式支持 vue Devtools
+  if(isDebugWeb) {
+    $.html = $.html.replace('vue.min.js', 'vue.js');
+  }
 }
 
 /**
