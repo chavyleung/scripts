@@ -1735,16 +1735,20 @@
           },
           // 切换应用视图
           switchAppView(appId) {
-            this.path = `/app/${appId}`
+            const path = `/app/${appId}`
+            this.path = path
+            this.handleHistory(path)
           },
           // 切换备份视图
           switchBakView(bakId) {
             const bak = this.baks.find((bak) => bak.id === bakId)
+            const path = `/bak/${bakId}`
             if (!bak.bak) {
-              this.loadGlobalBak().then((resp) => (this.path = `/bak/${bakId}`))
+              this.loadGlobalBak().then((resp) => (this.path = path))
             } else {
-              this.path = `/bak/${bakId}`
+              this.path = path
             }
+            this.handleHistory(path)
           },
           // 重载主题
           loadTheme() {
