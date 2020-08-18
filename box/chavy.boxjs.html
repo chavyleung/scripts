@@ -1697,6 +1697,9 @@
             this.ui.scrollY[this.path] = event.currentTarget.scrollY
           },
           handleHistory(path) {
+            // if (this.isWebApp == true) {
+            //   return
+            // }
             const state = { title: 'BoxJs', url: path }
             if (!history.state) {
               history.replaceState(state, '')
