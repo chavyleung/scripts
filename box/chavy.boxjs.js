@@ -124,7 +124,7 @@ async function handlePage() {
   const isDebugWeb = [true, 'true'].includes($.getdata('@chavy_boxjs_userCfgs.isDebugWeb'))
   const cache = $.getjson($.KEY_web_cache, null)
   if (!isDebugWeb && cache && cache.version === $.version) {
-    $.html = cache.cache
+    $.html = cache.cache.replace('vue.min.js', 'vue.js')
   } else {
     await $.http.get($.web).then(
       (resp) => {
