@@ -1076,10 +1076,10 @@
         </v-main>
         <!-- 底部 -->
         <v-bottom-navigation app grow color="primary" :value="view">
-          <v-btn @click="switchView('/')" value="">首页<v-icon>mdi-home</v-icon></v-btn>
-          <v-btn @click="switchView('/app')" value="app">应用<v-icon>mdi-application</v-icon></v-btn>
-          <v-btn @click="switchView('/sub')" value="sub">订阅<v-icon>mdi-database</v-icon></v-btn>
-          <v-btn @click="switchView('/my')" value="my">
+          <v-btn @click="switchView('')" value="">首页<v-icon>mdi-home</v-icon></v-btn>
+          <v-btn @click="switchView('app')" value="app">应用<v-icon>mdi-application</v-icon></v-btn>
+          <v-btn @click="switchView('sub')" value="sub">订阅<v-icon>mdi-database</v-icon></v-btn>
+          <v-btn @click="switchView('my')" value="my">
             <template v-if="myIcon">
               <span v-if="!isHideMyTitle">我的</span>
               <v-avatar :size="isHideMyTitle ? 36 : 24"><v-img :src="myIcon" /></v-avatar>
@@ -1524,7 +1524,12 @@
         watch: {
           'ui.path': {
             handler(newval, oldval) {
+              this.handleHistory(newval)
+              if (/^\/#/.test(newval)) {
+                newval = newval.replace('/#', '')
+              }
               const [, view, subview] = newval.split('/')
+
               this.ui.view = view
               this.ui.subview = subview
               if (oldval) {
@@ -1672,9 +1677,7 @@
             this.path = defview
           }
           // 监听浏览器后退事件
-          window.addEventListener('popstate', (e) => {
-            this.path = e.state.url
-          }, false)
+          window.addEventListener('popstate', (e) => (this.path = e.state.url), false)
           // 如果后端没有渲染数据, 则发出请求获取数据
           if (this.boxServerData) {
             this.box = this.boxServerData
@@ -1694,22 +1697,15 @@
             this.ui.scrollY[this.path] = event.currentTarget.scrollY
           },
           handleHistory(path) {
-            const state = { title: 'BoxJs', url: path };
-
+            const state = { title: 'BoxJs', url: path }
             if (!history.state) {
-              history.replaceState(state, '');
+              history.replaceState(state, '')
             }
-            history.pushState(state, '', '#' + path)
+            history.pushState(state, '', path)
           },
           // 页面返回
           back() {
-            if (this.view === 'bak' && !this.bfpath) {
-              this.path = '/my'
-            } else if (this.view === 'app' && !this.bfpath) {
-              this.path = '/app'
-            } else {
-              this.path = this.bfpath
-            }
+            history.back()
           },
           // 切换当前容器环境
           switchEnv(env) {
@@ -1718,37 +1714,34 @@
           // 切换当前视图
           switchView(path) {
             if (this.path !== path) {
-              this.path = path
+              this.path = `/#/${path}`
             } else {
               const scrollY = this.ui.scrollY[this.path]
               const isTopY = _.isNil(scrollY) || scrollY === 0
-              if (path === '/app' && isTopY) {
+              if (path === '/#/app' && isTopY) {
                 Object.assign(this.box.usercfgs, { favapppanel: [], subapppanel: [], sysapppanel: [] })
-              } else if (path === '/sub' && isTopY) {
+              } else if (path === '/#/sub' && isTopY) {
                 this.reloadAppSub()
               }
               if (this.ui.scrollY[path] !== 0) {
                 this.$vuetify.goTo(0, { duration: 200, offset: 0 })
               }
             }
-            this.handleHistory(path)
           },
           // 切换应用视图
           switchAppView(appId) {
-            const path = `/app/${appId}`
+            const path = `/#/app/${appId}`
             this.path = path
-            this.handleHistory(path)
           },
           // 切换备份视图
           switchBakView(bakId) {
             const bak = this.baks.find((bak) => bak.id === bakId)
-            const path = `/bak/${bakId}`
+            const path = `/#/bak/${bakId}`
             if (!bak.bak) {
               this.loadGlobalBak().then((resp) => (this.path = path))
             } else {
               this.path = path
             }
-            this.handleHistory(path)
           },
           // 重载主题
           loadTheme() {
