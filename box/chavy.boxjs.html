@@ -1524,9 +1524,6 @@
         watch: {
           'ui.path': {
             handler(newval, oldval) {
-              if (!this.isWebApp && !this.isCors) {
-                history.pushState({ title: 'BoxJs' }, '', newval)
-              }
               const [, view, subview] = newval.split('/')
               this.ui.view = view
               this.ui.subview = subview
@@ -1675,7 +1672,10 @@
             this.path = defview
           }
           // 监听浏览器后退事件
-          window.addEventListener('popstate', () => (this.path = path), false)
+          window.addEventListener('popstate', (e) => {
+            console.log(e)
+            this.path = e.state.url
+          }, false)
           // 如果后端没有渲染数据, 则发出请求获取数据
           if (this.boxServerData) {
             this.box = this.boxServerData
@@ -1693,6 +1693,14 @@
           // 记录每个页面的滚动值
           onScroll(event) {
             this.ui.scrollY[this.path] = event.currentTarget.scrollY
+          },
+          handleHistory(path) {
+            const state = { title: 'BoxJs', url: path };
+
+            if (!history.state) {
+              history.replaceState(state, '');
+            }
+            history.pushState(state, '', path)
           },
           // 页面返回
           back() {
@@ -1724,6 +1732,7 @@
                 this.$vuetify.goTo(0, { duration: 200, offset: 0 })
               }
             }
+            this.handleHistory(path)
           },
           // 切换应用视图
           switchAppView(appId) {
