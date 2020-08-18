@@ -1,6 +1,23 @@
 {
   "releases": [
     {
+      "version": "0.7.31",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "icon": "https://avatars3.githubusercontent.com/u/29748519",
+      "repo": "https://github.com/chavyleung",
+      "notes": [
+        {
+          "name": "调试",
+          "descs": ["支持 vue devtool (侧栏开启调试模式)"]
+        },
+        {
+          "name": "感谢",
+          "descs": ["感谢 @id77 大佬 PR"]
+        }
+      ]
+    },
+    {
       "version": "0.7.30",
       "tags": ["beta"],
       "author": "@chavyleung",
