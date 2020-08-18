@@ -1,6 +1,23 @@
 {
   "releases": [
     {
+      "version": "0.7.34",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "icon": "https://avatars3.githubusercontent.com/u/29748519",
+      "repo": "https://github.com/chavyleung",
+      "notes": [
+        {
+          "name": "调试",
+          "descs": ["调试模式下支持自定义页面源码地址"]
+        },
+        {
+          "name": "修复",
+          "descs": ["底栏事件无效问题", "部分情况下贡献者重复加载问题"]
+        }
+      ]
+    },
+    {
       "version": "0.7.33",
       "tags": ["beta"],
       "author": "@chavyleung",

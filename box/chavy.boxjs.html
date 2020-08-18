@@ -90,14 +90,7 @@
         ></v-system-bar>
         <v-app-bar v-bind="appBarBind" v-if="!box.usercfgs.isHidedSearchBar">
           <!-- 搜索条 -->
-          <v-autocomplete
-            v-bind="ui.searchBar"
-            :label="`BoxJs - v${version}`"
-            @click="ui.searchDialog.show = true"
-            hide-no-data
-            hide-details
-            solo
-          >
+          <v-autocomplete v-bind="ui.searchBar" :label="title" @click="ui.searchDialog.show = true" hide-no-data hide-details solo>
             <template #prepend-inner>
               <!-- 容器切换 Surge、QuanX、Loon -->
               <v-menu bottom left v-if="!isLoading && isMainView">
@@ -132,14 +125,19 @@
               <v-btn icon dark @click="ui.searchDialog.show = false">
                 <v-icon>mdi-chevron-left</v-icon>
               </v-btn>
-              <v-text-field v-model="ui.searchBar.input" :label="`BoxJs - v${version}`" autofocus hide-details solo></v-text-field>
+              <v-text-field v-model="ui.searchBar.input" :label="title" autofocus hide-details solo></v-text-field>
               <v-btn icon @click="window.open(box.syscfgs.orz3.repo)">
                 <v-avatar size="26"><img :src="box.syscfgs.orz3.icon" /></v-avatar>
               </v-btn>
             </v-toolbar>
             <v-card-text class="px-0">
               <v-list nav>
-                <v-list-item v-for="(app, appIdx) in searchApps" @click="ui.searchDialog.show = false, switchAppView(app.id)" dense>
+                <v-list-item
+                  v-for="(app, appIdx) in searchApps"
+                  :key="app.id"
+                  @click="ui.searchDialog.show = false, switchAppView(app.id)"
+                  dense
+                >
                   <v-list-item-avatar class="elevation-3"><img :src="app.icon" /></v-list-item-avatar>
                   <v-list-item-content>
                     <v-list-item-title>{{`${app.name} (${app.id})`}}</v-list-item-title>
@@ -175,6 +173,7 @@
             </v-list-item>
             <v-divider></v-divider>
             <v-list-item class="pt-1">
+              <v-progress-linear :active="isLoading" height="1" absolute top indeterminate></v-progress-linear>
               <v-row justify="start" no-gutters>
                 <v-col v-for="(c, cIdx) in ui.contributors" cols="2" :key="c.id">
                   <v-tooltip bottom>
@@ -414,6 +413,19 @@
               <v-btn fab small text>
                 <v-avatar size="32"><v-icon>mdi-language-html5</v-icon></v-avatar>
               </v-btn>
+            </v-list-item>
+            <v-list-item v-if="box.usercfgs.isDebugWeb">
+              <v-list-item-content>
+                <v-text-field
+                  label="调试页面地址"
+                  v-model="box.usercfgs.debugger_web"
+                  hint="设置页面源码的获取地址"
+                  placeholder="http://ip:port/boxjs.html"
+                  persistent-hint
+                  @change="saveUserCfgs"
+                >
+                </v-text-field>
+              </v-list-item-content>
             </v-list-item>
             <v-list-item class="mt-4"></v-list-item>
           </v-list>
@@ -1216,6 +1228,13 @@
           version() {
             return this.box.syscfgs.version
           },
+          // 标题
+          title() {
+            const isDebugWeb = this.box.usercfgs.isDebugWeb
+            const debugger_web = this.box.usercfgs.debugger_web
+            const isDebugMode = this.box.syscfgs.isDebugMode
+            return `BoxJs - v${this.version}${isDebugMode ? ` - ${debugger_web}` : ''}`
+          },
           // 判断是否有新版本
           hasNewVersion() {
             const curver = this.box.syscfgs.version
@@ -1615,7 +1634,7 @@
           'ui.naviDrawer.show': {
             handler(newval, oldval) {
               // 获取贡献者列表
-              if (newval === true && !this.box.syscfgs.contributors) {
+              if (_.isEmpty(this.ui.contributors)) {
                 this.getContributors()
               }
             }
@@ -1705,7 +1724,13 @@
           },
           // 页面返回
           back() {
-            history.back()
+            if (this.view === 'bak' && !this.bfpath) {
+              this.path = '/#/my'
+            } else if (this.view === 'app' && !this.bfpath) {
+              this.path = '/#/app'
+            } else {
+              history.back()
+            }
           },
           // 切换当前容器环境
           switchEnv(env) {
@@ -1713,8 +1738,9 @@
           },
           // 切换当前视图
           switchView(path) {
+            path = `/#/${path}`
             if (this.path !== path) {
-              this.path = `/#/${path}`
+              this.path = path
             } else {
               const scrollY = this.ui.scrollY[this.path]
               const isTopY = _.isNil(scrollY) || scrollY === 0
@@ -2081,7 +2107,6 @@
           // 获取仓库贡献者
           getContributors() {
             const url = 'https://api.github.com/repos/chavyleung/scripts/contributors'
-            this.box.syscfgs.contributors = []
             axios.get(url).then((resp) => {
               if (!resp) return
               resp.data.forEach((contributor) => {
