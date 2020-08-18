@@ -1673,7 +1673,6 @@
           }
           // 监听浏览器后退事件
           window.addEventListener('popstate', (e) => {
-            console.log(e)
             this.path = e.state.url
           }, false)
           // 如果后端没有渲染数据, 则发出请求获取数据
