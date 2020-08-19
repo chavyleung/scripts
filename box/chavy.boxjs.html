@@ -13,6 +13,17 @@
     <link href="https://cdn.jsdelivr.net/npm/@mdi/font@5.x/css/materialdesignicons.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet" />
     <style>
+      #BG {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        z-index: 0;
+        background-position: center;
+        background-size: cover;
+        background-repeat: no-repeat;
+      }
       [v-cloak] {
         display: none;
       }
@@ -78,6 +89,7 @@
     </style>
   </head>
   <body>
+    <div id="BG"></div>
     <div id="app" v-cloak>
       <v-app v-if="box" :style="appViewStyle">
         <v-snackbar top app v-model="ui.snackbar.show" v-bind="ui.snackbar">{{ui.snackbar.msg}}</v-snackbar>
@@ -1366,16 +1378,10 @@
             if (this.isWallpaper) {
               const bodyStyle = [
                 `background-color: ${this.isDarkMode ? '#121212' : '#fff'}`,
-                `background-image: linear-gradient(rgba(0,0,0,.2) 1%, rgba(255,255,255,0) 10%), url(${this.box.usercfgs.bgimg})`,
-                'background-position: center',
-                'background-size: cover',
-                'background-repeat: no-repeat',
-                'background-attachment: scroll',
-                'height: 100vh',
-                'overflow-y: scroll'
+                `background-image: linear-gradient(rgba(0,0,0,.2) 1%, rgba(255,255,255,0) 10%), url(${this.box.usercfgs.bgimg})`
               ]
               // document.querySelector('body').removeAttribute('style')
-              document.querySelector('body').setAttribute('style', bodyStyle.join('; '))
+              document.querySelector('#BG').setAttribute('style', bodyStyle.join('; '))
             } else {
               const darkBg = 'background-color: #121212'
               const lightBg = 'background: linear-gradient(rgba(0,0,0,.3) 1%, rgba(255,255,255,0) 10%)'
