@@ -94,6 +94,7 @@
     <div id="app" v-cloak>
       <v-app v-if="box" :style="appViewStyle">
         <v-snackbar top app v-model="ui.snackbar.show" v-bind="ui.snackbar">{{ui.snackbar.msg}}</v-snackbar>
+        <v-progress-linear :active="isLoading && box.usercfgs.isHidedSearchBar" height="1" absolute top indeterminate></v-progress-linear>
         <!-- 头部 -->
         <!-- 只有有隐藏搜索栏时才出现，该控件完全隐藏，点击屏幕顶部恢复显示搜索栏 -->
         <v-system-bar
@@ -139,7 +140,7 @@
                 <v-icon>mdi-chevron-left</v-icon>
               </v-btn>
               <v-text-field v-model="ui.searchBar.input" :label="title" autofocus hide-details solo></v-text-field>
-              <v-btn icon @click="window.open(box.syscfgs.orz3.repo)">
+              <v-btn icon @click="open(box.syscfgs.orz3.repo)">
                 <v-avatar size="26"><img :src="box.syscfgs.orz3.icon" /></v-avatar>
               </v-btn>
             </v-toolbar>
@@ -170,14 +171,14 @@
         <!-- 侧栏 -->
         <v-navigation-drawer app v-model="ui.naviDrawer.show" height="100%" temporary right>
           <v-list dense nav>
-            <v-list-item dense @click="window.open(box.syscfgs.chavy.repo)">
+            <v-list-item dense @click="open(box.syscfgs.chavy.repo)">
               <v-list-item-avatar><img :src="box.syscfgs.chavy.icon" /></v-list-item-avatar>
               <v-list-item-content>
                 <v-list-item-title>{{box.syscfgs.chavy.id}}</v-list-item-title>
                 <v-list-item-subtitle>{{box.syscfgs.chavy.repo}}</v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>
-            <v-list-item dense @click="window.open(box.syscfgs.senku.repo)">
+            <v-list-item dense @click="open(box.syscfgs.senku.repo)">
               <v-list-item-avatar><img :src="box.syscfgs.senku.icon" /></v-list-item-avatar>
               <v-list-item-content>
                 <v-list-item-title>{{box.syscfgs.senku.id}}</v-list-item-title>
@@ -192,7 +193,7 @@
                   <v-tooltip bottom>
                     <template v-slot:activator="{ on, attrs }">
                       <a>
-                        <v-avatar v-on="on" class="ma-1" size="26" @click="window.open(c.repo)">
+                        <v-avatar v-on="on" class="ma-1" size="26" @click="open(c.repo)">
                           <img :src="c.icon" />
                         </v-avatar>
                       </a>
@@ -265,7 +266,7 @@
               >
               </v-switch>
               <v-spacer></v-spacer>
-              <v-btn fab small text @click="window.open(box.syscfgs.orz3.repo)">
+              <v-btn fab small text @click="open(box.syscfgs.orz3.repo)">
                 <v-avatar size="32"><img :src="box.syscfgs.orz3.icon" /></v-avatar>
               </v-btn>
             </v-list-item>
@@ -343,7 +344,7 @@
                 @change="saveUserCfgs"
               ></v-switch>
               <v-spacer></v-spacer>
-              <v-btn fab small text @click="window.open(box.syscfgs.boxjs.repo)">
+              <v-btn fab small text @click="open(box.syscfgs.boxjs.repo)">
                 <v-avatar size="32"><v-icon>mdi-help</v-icon></v-avatar>
               </v-btn>
             </v-list-item>
@@ -358,7 +359,7 @@
                 @change="saveUserCfgs"
               ></v-switch>
               <v-spacer></v-spacer>
-              <v-btn fab small text @click="window.open(box.syscfgs.boxjs.repo)">
+              <v-btn fab small text @click="open(box.syscfgs.boxjs.repo)">
                 <v-avatar size="32">
                   <img :src="box.syscfgs.boxjs.icons[iconThemeIdx]" />
                 </v-avatar>
@@ -616,7 +617,7 @@
           <!-- 应用详情 -->
           <v-container fluid v-if="view === 'app' && !!curapp" v-scroll="onScroll">
             <v-subheader>
-              <h2>{{curapp.name}}</h2>
+              <h2 :style="appTitleStyle">{{curapp.name}}</h2>
               <v-spacer></v-spacer>
               <v-btn v-if="curapp.script" icon @click="runScript(curapp.script, curapp.script_timeout)">
                 <v-icon color="primary">mdi-play-circle</v-icon>
@@ -888,7 +889,7 @@
           <v-container fluid v-else-if="view === 'sub'" v-scroll="onScroll">
             <template v-if="appSubs.length === 0">
               <v-btn block class="primary" @click="addAppSubDialog = true">添加订阅</v-btn>
-              <v-btn block class="primary" @click="window.open('https://chavyleung.gitbook.io/boxjs/awesome/subscriptions')">
+              <v-btn block class="primary" @click="open('https://chavyleung.gitbook.io/boxjs/awesome/subscriptions')">
                 <v-icon class="mr-2">mdi-cloud</v-icon>进来看看
               </v-btn>
             </template>
@@ -897,7 +898,7 @@
                 <v-subheader inset dense>
                   应用订阅 ({{appSubs.length}})
                   <v-spacer></v-spacer>
-                  <v-btn icon @click="window.open('https://chavyleung.gitbook.io/boxjs/awesome/subscriptions')">
+                  <v-btn icon @click="open('https://chavyleung.gitbook.io/boxjs/awesome/subscriptions')">
                     <v-icon>mdi-cloud-circle</v-icon>
                   </v-btn>
                   <v-btn icon @click="reloadAppSub()">
@@ -928,7 +929,7 @@
                           <v-btn icon v-on="on"><v-icon>mdi-dots-vertical</v-icon></v-btn>
                         </template>
                         <v-list dense>
-                          <v-list-item @click="window.open(sub.repo)">
+                          <v-list-item @click="open(sub.repo)">
                             <v-list-item-title>仓库</v-list-item-title>
                           </v-list-item>
                           <v-list-item @click="copy(sub.url)">
@@ -1126,11 +1127,11 @@
             :right="!box.usercfgs.isLeftBoxIcon === true"
           >
             <template #activator>
-              <v-btn fab text @dblclick="window.location.reload()">
+              <v-btn fab text @dblclick="reload()">
                 <v-avatar><img :src="box.syscfgs.boxjs.icons[iconThemeIdx]" /></v-avatar>
               </v-btn>
             </template>
-            <v-btn dark v-if="!box.usercfgs.isHideHelp" fab small color="grey" @click="window.open('https://chavyleung.gitbook.io/boxjs')">
+            <v-btn dark v-if="!box.usercfgs.isHideHelp" fab small color="grey" @click="open('https://chavyleung.gitbook.io/boxjs')">
               <v-icon>mdi-help</v-icon>
             </v-btn>
             <v-btn dark v-if="!box.usercfgs.isHideHelp" fab small color="purple" @click="ui.versionsheet.show = true">
@@ -1141,7 +1142,7 @@
                 {{box.usercfgs.isLeftBoxIcon ? 'mdi-format-horizontal-align-right' : 'mdi-format-horizontal-align-left'}}
               </v-icon>
             </v-btn>
-            <v-btn dark v-if="!box.usercfgs.isHideRefresh" fab small color="orange" @click="window.location.reload()">
+            <v-btn dark v-if="!box.usercfgs.isHideRefresh" fab small color="orange" @click="reload()">
               <v-icon>mdi-refresh</v-icon>
             </v-btn>
             <v-btn dark v-if="!box.usercfgs.isHideCoding" fab small @click="path = '/#/coding'">
@@ -1155,7 +1156,7 @@
         <v-bottom-sheet v-model="ui.versionsheet.show" scrollable>
           <v-card v-if="box.versions">
             <v-subheader>
-              <v-btn icon small @click="window.open('https://chavyleung.gitbook.io/boxjs/base/upgrade')">
+              <v-btn icon small @click="open('https://chavyleung.gitbook.io/boxjs/base/upgrade')">
                 <v-icon>mdi-help-circle</v-icon>
               </v-btn>
               <v-spacer></v-spacer>
@@ -1331,10 +1332,6 @@
           isSystemDarkMode() {
             return window.matchMedia('(prefers-color-scheme: dark)').matches
           },
-          // 是否透明主题
-          // isTransparent() {
-          //   return this.box.usercfgs.isTransparent
-          // },
           // 是否透明图标
           isTransparentIcons() {
             return this.box.usercfgs.isTransparentIcons
@@ -1372,21 +1369,14 @@
           },
           // 样式
           appViewStyle() {
-            // if (this.path !== '/') {
-            //   return null
-            // }
             // 主题发生变化时给 <body> 设置背景色
             if (this.isWallpaper) {
-              const bodyStyle = [
-                `background-color: ${this.isDarkMode ? '#121212' : '#fff'}`,
-                `background-image: linear-gradient(rgba(0,0,0,.2) 1%, rgba(255,255,255,0) 10%), url(${this.box.usercfgs.bgimg})`
-              ]
-              // document.querySelector('body').removeAttribute('style')
-              document.querySelector('#BG').setAttribute('style', bodyStyle.join('; '))
+              this.setWallpaper()
             } else {
-              const darkBg = 'background-color: #121212'
-              const lightBg = 'background: linear-gradient(rgba(0,0,0,.3) 1%, rgba(255,255,255,0) 10%)'
-              document.querySelector('body').setAttribute('style', this.isDarkMode ? darkBg : lightBg)
+              this.clearWallpaper()
+              const darkBg = `background-color: #121212; background-image: none;`
+              const lightBg = `background: linear-gradient(rgba(0,0,0,.3) 1%, rgba(255,255,255,0) 10%); background-image: none;`
+              document.querySelector('#BG').setAttribute('style', this.isDarkMode ? darkBg : lightBg)
             }
             if (this.isWebApp) {
               return { background: 'none' }
@@ -1397,6 +1387,14 @@
             } else {
               return
             }
+          },
+          appTitleStyle() {
+            const style = {}
+            if (this.isWallpaper) {
+              style['color'] = '#fff'
+              style['text-shadow'] = 'black 0.1em 0.1em 0.2em'
+            }
+            return style
           },
           appBarBind() {
             let app = !!this.box.usercfgs.isPinedSearchBar && !this.box.usercfgs.isHidedSearchBar
@@ -1718,6 +1716,13 @@
           this.loadTheme()
         },
         methods: {
+          reload() {
+            this.isLoading = true
+            window.location.reload()
+          },
+          open(url) {
+            window.open(url)
+          },
           // 记录每个页面的滚动值
           onScroll(event) {
             const currentY = event.currentTarget.scrollY
@@ -1725,11 +1730,20 @@
             this.ui.scrollY[this.path] = event.currentTarget.scrollY
             // 下拉显示/隐藏顶栏
             // 回弹时才触发显示与隐藏, 1 秒内不重复触发
-            if (currentY < historyY && currentY < -30 && !this.ui.isWaitToggleSearchBar) {
+            if (currentY < historyY && currentY < -80 && !this.ui.isWaitToggleSearchBar) {
               this.ui.isWaitToggleSearchBar = true
               this.box.usercfgs.isHidedSearchBar = !this.box.usercfgs.isHidedSearchBar
               this.toggleWaitSearchBar()
             }
+          },
+          setWallpaper() {
+            const bgStyle = [
+              `background-image: linear-gradient(rgba(0,0,0,.2) 1%, rgba(255,255,255,0) 10%), url(${this.box.usercfgs.bgimg})`
+            ]
+            document.querySelector('#BG').setAttribute('style', bgStyle.join('; '))
+          },
+          clearWallpaper() {
+            document.querySelector('#BG').removeAttribute('style')
           },
           toggleWaitSearchBar: _.debounce(function () {
             this.ui.isWaitToggleSearchBar = false
@@ -1766,7 +1780,10 @@
             } else {
               const scrollY = this.ui.scrollY[this.path]
               const isTopY = _.isNil(scrollY) || scrollY === 0
-              if (path === '/#/app' && isTopY) {
+              if (path === '/#/' && isTopY) {
+                this.clearWallpaper()
+                this.setWallpaper()
+              } else if (path === '/#/app' && isTopY) {
                 Object.assign(this.box.usercfgs, { favapppanel: [], subapppanel: [], sysapppanel: [] })
               } else if (path === '/#/sub' && isTopY) {
                 this.reloadAppSub()

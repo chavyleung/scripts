@@ -1,6 +1,32 @@
 {
   "releases": [
     {
+      "version": "0.7.37",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "icon": "https://avatars3.githubusercontent.com/u/29748519",
+      "repo": "https://github.com/chavyleung",
+      "msg": "更新[BoxJs TF]: 应用标题加阴影, 优化调试代码, 单击首页重渲染壁纸",
+      "notes": [
+        {
+          "name": "优化",
+          "descs": ["应用标题加阴影"]
+        },
+        {
+          "name": "调试",
+          "descs": ["优化代码"]
+        },
+        {
+          "name": "新增",
+          "descs": ["单击首页回到顶部, 再单击一次重新渲染壁纸"]
+        },
+        {
+          "name": "壁纸",
+          "descs": ["无背景,", "随机,https://uploadbeta.com/api/pictures/random", "推女郎,https://uploadbeta.com/api/pictures/random/?key=推女郎", "性感,https://uploadbeta.com/api/pictures/random/?key=性感", "车模,https://uploadbeta.com/api/pictures/random/?key=车模", "美腿,https://uploadbeta.com/api/pictures/random/?key=美腿", "美女,https://uploadbeta.com/api/pictures/random/?key=美女", "手机妹子,http://api.btstu.cn/sjbz/zsy.php", "手机美女,http://api.btstu.cn/sjbz/?m_lx=suiji"]
+        }
+      ]
+    },
+    {
       "version": "0.7.36",
       "tags": ["beta"],
       "author": "@chavyleung",
