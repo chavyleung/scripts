@@ -1,6 +1,24 @@
 {
   "releases": [
     {
+      "version": "0.7.40",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "icon": "https://avatars3.githubusercontent.com/u/29748519",
+      "repo": "https://github.com/chavyleung",
+      "msg": "更新[BoxJs TF]: 新增壁纸模式、悬浮按钮手势",
+      "notes": [
+        {
+          "name": "新增",
+          "descs": ["壁纸模式", "悬浮按钮手势"]
+        },
+        {
+          "name": "悬浮按钮手势",
+          "descs": ["上滑: 刷新页面 (效果同双击)", "左滑: 悬浮按钮左靠", "右滑: 悬浮按钮右靠", "下滑: 切换壁纸模式"]
+        }
+      ]
+    },
+    {
       "version": "0.7.39",
       "tags": ["beta"],
       "author": "@chavyleung",

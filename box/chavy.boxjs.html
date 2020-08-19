@@ -86,7 +86,7 @@
     <div id="BG"></div>
     <div id="app" v-cloak>
       <v-app v-if="box" :style="appViewStyle">
-        <v-app-bar app v-bind="appBarBind" v-if="!box.usercfgs.isHidedSearchBar">
+        <v-app-bar app v-bind="appBarBind" v-show="!box.usercfgs.isHidedSearchBar">
           <!-- 搜索条 -->
           <v-autocomplete v-bind="ui.searchBar" :label="title" @click="ui.searchDialog.show = true" hide-no-data hide-details solo>
             <template #prepend-inner>
@@ -260,6 +260,22 @@
               <v-switch
                 dense
                 class="mt-0"
+                label="壁纸模式"
+                v-model="isWallpaperMode"
+                @change="saveUserCfgs"
+                :persistent-hint="true"
+                hint="同时隐藏顶栏、底栏、图标"
+              >
+              </v-switch>
+              <v-spacer></v-spacer>
+              <v-btn fab small text>
+                <v-avatar size="32"><v-icon>mdi-image</v-icon></v-avatar>
+              </v-btn>
+            </v-list-item>
+            <v-list-item class="mt-4">
+              <v-switch
+                dense
+                class="mt-0"
                 label="隐藏搜索栏"
                 v-model="box.usercfgs.isHidedSearchBar"
                 @change="saveUserCfgs"
@@ -420,7 +436,7 @@
           <v-snackbar top app v-model="ui.snackbar.show" v-bind="ui.snackbar">{{ui.snackbar.msg}}</v-snackbar>
           <!-- 主页 -->
           <v-container fluid v-show="view === ''">
-            <v-row no-gutters>
+            <v-row no-gutters v-show="!box.usercfgs.isHidedAppIcons">
               <v-col cols="3" md="2" v-for="(app, appIdx) in favApps" :key="app.id" class="d-flex justify-space-around">
                 <div class="ma-2" @click="switchAppView(app.id)">
                   <v-card v-if="isDarkMode" style="border-radius: 12px;">
@@ -1041,7 +1057,7 @@
           </v-container>
         </v-main>
         <!-- 底部 -->
-        <v-bottom-navigation app grow color="primary" :value="view">
+        <v-bottom-navigation app grow color="primary" :value="view" v-show="!box.usercfgs.isHidedNaviBottom">
           <v-progress-linear :active="isLoading" height="2" absolute top indeterminate></v-progress-linear>
           <v-btn @click="switchView('')" value="">首页<v-icon>mdi-home</v-icon></v-btn>
           <v-btn @click="switchView('app')" value="app">应用<v-icon>mdi-application</v-icon></v-btn>
@@ -1068,7 +1084,17 @@
             :right="!box.usercfgs.isLeftBoxIcon === true"
           >
             <template #activator>
-              <v-btn fab text @dblclick="reload()">
+              <v-btn
+                fab
+                text
+                @dblclick="reload()"
+                v-touch="{
+                  left: () => box.usercfgs.isLeftBoxIcon = true,
+                  right: () => box.usercfgs.isLeftBoxIcon = false,
+                  up: () => reload(),
+                  down: () => isWallpaperMode = !!!isWallpaperMode
+                }"
+              >
                 <v-avatar><img :src="box.syscfgs.boxjs.icons[iconThemeIdx]" /></v-avatar>
               </v-btn>
             </template>
@@ -1242,6 +1268,21 @@
           // 判断当前是否`WebApp`
           isWebApp() {
             return window.navigator.standalone
+          },
+          // 是否壁纸模式
+          isWallpaperMode: {
+            get() {
+              return this.box.usercfgs.isWallpaperMode
+            },
+            set(val) {
+              const cfgs = {
+                isHidedSearchBar: val === true,
+                isHidedAppIcons: val === true,
+                isHidedNaviBottom: val === true
+              }
+              Object.assign(this.box.usercfgs, cfgs)
+              this.box.usercfgs.isWallpaperMode = val === true
+            }
           },
           // 当前环境: Surge、QuanX、Loon、NodeJs
           env: {
