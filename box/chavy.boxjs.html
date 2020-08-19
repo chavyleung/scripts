@@ -101,7 +101,7 @@
           @click="box.usercfgs.isHidedSearchBar = false"
           v-if="box.usercfgs.isHidedSearchBar"
         ></v-system-bar>
-        <v-app-bar v-bind="appBarBind" v-if="!box.usercfgs.isHidedSearchBar">
+        <v-app-bar v-bind="appBarBind" v-show="!box.usercfgs.isHidedSearchBar">
           <!-- 搜索条 -->
           <v-autocomplete v-bind="ui.searchBar" :label="title" @click="ui.searchDialog.show = true" hide-no-data hide-details solo>
             <template #prepend-inner>
@@ -1144,7 +1144,7 @@
             <v-btn dark v-if="!box.usercfgs.isHideRefresh" fab small color="orange" @click="window.location.reload()">
               <v-icon>mdi-refresh</v-icon>
             </v-btn>
-            <v-btn dark v-if="!box.usercfgs.isHideCoding" fab small @click="path = '/coding'">
+            <v-btn dark v-if="!box.usercfgs.isHideCoding" fab small @click="path = '/#/coding'">
               <v-icon>mdi-code-tags</v-icon>
             </v-btn>
             <v-btn dark v-if="!box.usercfgs.isHidedSearch" fab small color="green" @click="ui.searchDialog.show = true">
@@ -1216,7 +1216,7 @@
               scrollY: {}, //记录每个界面的滚动值
               overlay: { show: false, val: 60 },
               snackbar: { show: false, color: 'primary', msg: '' },
-              searchBar: { color: 'primary', readonly: true, input: '' },
+              searchBar: { color: 'primary', readonly: true, input: '', hideNoData: true, hideDetails: true, solo: true },
               searchDialog: { show: false },
               versionsheet: { show: false },
               updatesheet: { show: false },
@@ -1399,14 +1399,14 @@
             }
           },
           appBarBind() {
-            let app = !!this.box.usercfgs.isPinedSearchBar
+            let app = !!this.box.usercfgs.isPinedSearchBar && !this.box.usercfgs.isHidedSearchBar
             let color = 'transparent'
             const isEmptyLight = this.isWebApp && !this.isDarkMode && !this.isWallpaper
             if (isEmptyLight) {
               color = 'primary'
             }
             let flat = color === 'transparent'
-            return { app, color, flat, height: '68' }
+            return { app, color, flat, height: '68', maxHeight: '68' }
           },
           searchBarBind() {
             const color = this.isDarkMode ? null : 'primary'
@@ -1720,8 +1720,20 @@
         methods: {
           // 记录每个页面的滚动值
           onScroll(event) {
+            const currentY = event.currentTarget.scrollY
+            const historyY = this.ui.scrollY[this.path]
             this.ui.scrollY[this.path] = event.currentTarget.scrollY
+            // 下拉显示/隐藏顶栏
+            // 回弹时才触发显示与隐藏, 1 秒内不重复触发
+            if (currentY < historyY && currentY < -30 && !this.ui.isWaitToggleSearchBar) {
+              this.ui.isWaitToggleSearchBar = true
+              this.box.usercfgs.isHidedSearchBar = !this.box.usercfgs.isHidedSearchBar
+              this.toggleWaitSearchBar()
+            }
           },
+          toggleWaitSearchBar: _.debounce(function () {
+            this.ui.isWaitToggleSearchBar = false
+          }, 1000),
           handleHistory(path) {
             const state = { title: 'BoxJs', url: path }
             if (!history.state) {

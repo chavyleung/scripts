@@ -1,6 +1,27 @@
 {
   "releases": [
     {
+      "version": "0.7.36",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "icon": "https://avatars3.githubusercontent.com/u/29748519",
+      "repo": "https://github.com/chavyleung",
+      "notes": [
+        {
+          "name": "新增",
+          "descs": ["下拉显示&隐藏搜索栏"]
+        },
+        {
+          "name": "优化",
+          "descs": ["固定背景"]
+        },
+        {
+          "name": "修复",
+          "descs": ["搜索栏高度问题"]
+        }
+      ]
+    },
+    {
       "version": "0.7.35",
       "tags": ["beta"],
       "author": "@chavyleung",
