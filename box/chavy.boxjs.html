@@ -401,6 +401,7 @@
             <v-list-item v-if="box.usercfgs.isDebugWeb">
               <v-list-item-content>
                 <v-text-field
+                  clearable
                   label="调试页面地址"
                   v-model="box.usercfgs.debugger_web"
                   hint="设置页面源码的获取地址"
@@ -415,10 +416,10 @@
           </v-list>
         </v-navigation-drawer>
         <!-- 主页 -->
-        <v-main>
+        <v-main v-scroll="onScroll">
           <v-snackbar top app v-model="ui.snackbar.show" v-bind="ui.snackbar">{{ui.snackbar.msg}}</v-snackbar>
           <!-- 主页 -->
-          <v-container fluid v-show="view === ''" v-scroll="onScroll">
+          <v-container fluid v-show="view === ''">
             <v-row no-gutters>
               <v-col cols="3" md="2" v-for="(app, appIdx) in favApps" :key="app.id" class="d-flex justify-space-around">
                 <div class="ma-2" @click="switchAppView(app.id)">
@@ -446,7 +447,7 @@
             </v-row>
           </v-container>
           <!-- 应用列表 -->
-          <v-container fluid v-show="view === 'app' && !curapp" v-scroll="onScroll">
+          <v-container fluid v-show="view === 'app' && !curapp">
             <!-- 收藏应用 -->
             <v-expansion-panels multiple class="mb-4" v-if="favApps.length > 0" v-model="box.usercfgs.favapppanel">
               <v-expansion-panel>
@@ -547,7 +548,7 @@
             </v-expansion-panels>
           </v-container>
           <!-- 代码编辑 -->
-          <v-container fluid class="fill-height" v-show="view === 'coding'" v-scroll="onScroll">
+          <v-container fluid class="fill-height" v-show="view === 'coding'">
             <v-card flat style="width: inherit;">
               <v-subheader>
                 <h2>脚本编辑器</h2>
@@ -559,7 +560,7 @@
             </v-card>
           </v-container>
           <!-- 应用详情 -->
-          <v-container fluid v-if="view === 'app' && !!curapp" v-scroll="onScroll">
+          <v-container fluid v-if="view === 'app' && !!curapp">
             <v-subheader>
               <h2 :style="appTitleStyle">{{curapp.name}}</h2>
               <v-spacer></v-spacer>
@@ -825,7 +826,7 @@
             </v-card>
           </v-container>
           <!-- 订阅列表 -->
-          <v-container fluid v-else-if="view === 'sub'" v-scroll="onScroll">
+          <v-container fluid v-else-if="view === 'sub'">
             <template v-if="appSubs.length === 0">
               <v-btn block class="primary" @click="addAppSubDialog = true">添加订阅</v-btn>
               <v-btn block class="primary" @click="open('https://chavyleung.gitbook.io/boxjs/awesome/subscriptions')">
@@ -918,7 +919,7 @@
             </v-dialog>
           </v-container>
           <!-- 我的 -->
-          <v-container fluid v-else-if="view === 'my'" v-scroll="onScroll">
+          <v-container fluid v-else-if="view === 'my'">
             <v-card class="mx-auto">
               <v-card-title class="headline">
                 {{box.usercfgs.name ? box.usercfgs.name : '大侠, 留个名字吧!'}}
@@ -1004,7 +1005,7 @@
             </v-card>
           </v-container>
           <!-- 备份详情 -->
-          <v-container fluid v-else-if="view === 'bak' && !!curbak" v-scroll="onScroll">
+          <v-container fluid v-else-if="view === 'bak' && !!curbak">
             <v-subheader>
               <h2>{{curbak.name}}</h2>
               <v-spacer></v-spacer>
@@ -1041,7 +1042,7 @@
         </v-main>
         <!-- 底部 -->
         <v-bottom-navigation app grow color="primary" :value="view">
-          <v-progress-linear :active="isLoading && box.usercfgs.isHidedSearchBar" height="2" absolute top indeterminate></v-progress-linear>
+          <v-progress-linear :active="isLoading" height="2" absolute top indeterminate></v-progress-linear>
           <v-btn @click="switchView('')" value="">首页<v-icon>mdi-home</v-icon></v-btn>
           <v-btn @click="switchView('app')" value="app">应用<v-icon>mdi-application</v-icon></v-btn>
           <v-btn @click="switchView('sub')" value="sub">订阅<v-icon>mdi-database</v-icon></v-btn>
@@ -1690,6 +1691,7 @@
           onScroll(event) {
             const currentY = event.currentTarget.scrollY
             const historyY = this.ui.scrollY[this.path]
+            console.log(`historyY: ${historyY}, currentY: ${currentY}`)
             this.ui.scrollY[this.path] = event.currentTarget.scrollY
             // 下拉显示/隐藏顶栏
             // 回弹时才触发显示与隐藏, 1 秒内不重复触发
