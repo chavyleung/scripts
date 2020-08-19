@@ -1,6 +1,6 @@
 const $ = new Env('BoxJs')
 
-$.version = '0.7.37'
+$.version = '0.7.38'
 $.versionType = 'beta'
 
 /**
@@ -540,7 +540,9 @@ async function apiRunScript() {
   if (opts.isRemote) {
     if ($.isSurge() && ishttpapi) {
       const runOpts = { timeout: opts.timeout }
-      await $.getScript(opts.url).then((script) => $.runScript(script, runOpts))
+      let script_text = null
+      await $.getScript(opts.url).then((script) => (script_text = script))
+      await $.runScript(script_text, runOpts).then((resp) => ($.json = resp))
     } else {
       $.getScript(opts.url).then((script) => {
         // 避免被执行脚本误认为是 rewrite 环境

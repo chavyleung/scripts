@@ -25,16 +25,6 @@
         background-repeat: no-repeat;
         background-color: transparent;
       }
-      [v-cloak] {
-        display: none;
-      }
-      .text-pre-wrap {
-        white-space: pre-wrap !important;
-      }
-      body {
-        padding-top: constant(safe-area-inset-top) !important;
-        padding-top: env(safe-area-inset-top);
-      }
       @media (prefers-color-scheme: light) {
         body {
           background-color: #fff;
@@ -45,22 +35,35 @@
           background-color: #121212;
         }
       }
-      .v-app-bar .v-toolbar__content {
-        padding: 4px 12px;
+      [v-cloak] {
+        display: none;
       }
-      .v-app-bar .v-input__slot {
-        padding: 0 !important;
+      .text-pre-wrap {
+        white-space: pre-wrap !important;
       }
-      .v-app-bar,
-      .v-toolbar,
-      .v-navigation-drawer__content {
-        box-sizing: content-box;
-        padding-top: constant(safe-area-inset-top);
-        padding-top: env(safe-area-inset-top);
+      .v-navigation-drawer {
+        padding-top: env(safe-area-inset-top) !important;
+        padding-left: env(safe-area-inset-left) !important;
       }
-      .v-app-bar .v-autocomplete,
-      .v-input {
-        box-sizing: border-box;
+      .v-app-bar {
+        height: auto !important;
+        padding-top: env(safe-area-inset-top) !important;
+        padding-left: env(safe-area-inset-left) !important;
+      }
+      .v-toolbar {
+        height: auto !important;
+        padding-top: env(safe-area-inset-top) !important;
+        padding-left: env(safe-area-inset-left) !important;
+      }
+      .v-toolbar__content {
+        padding-left: 12px !important;
+        padding-right: 12px !important;
+      }
+      .v-main {
+        margin-top: env(safe-area-inset-top) !important;
+        margin-left: env(safe-area-inset-left) !important;
+        margin-right: env(safe-area-inset-right) !important;
+        margin-bottom: env(safe-area-inset-bottom) !important;
       }
       .v-bottom-navigation,
       .v-bottom-sheet {
@@ -73,16 +76,6 @@
       .v-bottom-navigation button {
         box-sizing: border-box;
       }
-      .v-main.safe {
-        background: none;
-        margin-bottom: 56px;
-        padding-bottom: constant(safe-area-inset-bottom);
-        padding-bottom: env(safe-area-inset-bottom);
-      }
-      .v-main .v-main__wrap {
-        padding-bottom: constant(safe-area-inset-bottom);
-        padding-bottom: env(safe-area-inset-bottom);
-      }
       .v-speed-dial {
         margin-bottom: calc(48px + constant(safe-area-inset-bottom));
         margin-bottom: calc(48px + env(safe-area-inset-bottom));
@@ -93,23 +86,14 @@
     <div id="BG"></div>
     <div id="app" v-cloak>
       <v-app v-if="box" :style="appViewStyle">
-        <v-snackbar top app v-model="ui.snackbar.show" v-bind="ui.snackbar">{{ui.snackbar.msg}}</v-snackbar>
-        <v-progress-linear :active="isLoading && box.usercfgs.isHidedSearchBar" height="1" absolute top indeterminate></v-progress-linear>
-        <!-- 头部 -->
-        <!-- 只有有隐藏搜索栏时才出现，该控件完全隐藏，点击屏幕顶部恢复显示搜索栏 -->
-        <v-system-bar
-          color="transparent"
-          @click="box.usercfgs.isHidedSearchBar = false"
-          v-if="box.usercfgs.isHidedSearchBar"
-        ></v-system-bar>
-        <v-app-bar v-bind="appBarBind" v-show="!box.usercfgs.isHidedSearchBar">
+        <v-app-bar app v-bind="appBarBind" v-if="!box.usercfgs.isHidedSearchBar">
           <!-- 搜索条 -->
           <v-autocomplete v-bind="ui.searchBar" :label="title" @click="ui.searchDialog.show = true" hide-no-data hide-details solo>
             <template #prepend-inner>
               <!-- 容器切换 Surge、QuanX、Loon -->
               <v-menu bottom left v-if="!isLoading && isMainView">
                 <template #activator="{ on }">
-                  <v-btn v-on="on" icon>
+                  <v-btn v-on="on" icon class="ml-n3">
                     <v-avatar size="26"><img :src="env.icons[iconEnvThemeIdx]" /></v-avatar>
                   </v-btn>
                 </template>
@@ -121,13 +105,13 @@
                 </v-list>
               </v-menu>
               <!-- 返回按钮 -->
-              <v-btn icon @click="back" v-else-if="!isLoading && !isMainView">
+              <v-btn icon class="ml-n3" @click="back" v-else-if="!isLoading && !isMainView">
                 <v-icon>mdi-chevron-left</v-icon>
               </v-btn>
-              <v-btn icon v-show="isLoading" :loading="isLoading" color="primary"></v-btn>
+              <v-btn icon class="ml-n3" v-show="isLoading" :loading="isLoading" color="primary"></v-btn>
             </template>
             <template #append>
-              <v-btn icon @click="ui.naviDrawer.show = true">
+              <v-btn icon class="mr-n3" @click="ui.naviDrawer.show = true">
                 <v-avatar size="26"><v-icon>mdi-menu</v-icon></v-avatar>
               </v-btn>
             </template>
@@ -135,20 +119,22 @@
         </v-app-bar>
         <v-dialog v-model="ui.searchDialog.show" fullscreen scrollable>
           <v-card>
-            <v-toolbar v-bind="searchBarBind">
-              <v-btn icon dark @click="ui.searchDialog.show = false">
-                <v-icon>mdi-chevron-left</v-icon>
-              </v-btn>
-              <v-text-field v-model="ui.searchBar.input" :label="title" autofocus hide-details solo></v-text-field>
-              <v-btn icon @click="open(box.syscfgs.orz3.repo)">
-                <v-avatar size="26"><img :src="box.syscfgs.orz3.icon" /></v-avatar>
-              </v-btn>
-            </v-toolbar>
+            <v-card-header>
+              <v-toolbar v-bind="searchBarBind">
+                <v-btn icon dark @click="ui.searchDialog.show = false">
+                  <v-icon>mdi-chevron-left</v-icon>
+                </v-btn>
+                <v-text-field v-model="ui.searchBar.input" :label="title" autofocus hide-details solo></v-text-field>
+                <v-btn icon @click="open(box.syscfgs.orz3.repo)">
+                  <v-avatar size="26"><img :src="box.syscfgs.orz3.icon" /></v-avatar>
+                </v-btn>
+              </v-toolbar>
+            </v-card-header>
             <v-card-text class="px-0">
               <v-list nav>
                 <v-list-item
                   v-for="(app, appIdx) in searchApps"
-                  :key="app.id"
+                  :key="appIdx"
                   @click="ui.searchDialog.show = false, switchAppView(app.id)"
                   dense
                 >
@@ -445,7 +431,8 @@
           </v-list>
         </v-navigation-drawer>
         <!-- 主页 -->
-        <v-main class="safe">
+        <v-main>
+          <v-snackbar top app v-model="ui.snackbar.show" v-bind="ui.snackbar">{{ui.snackbar.msg}}</v-snackbar>
           <!-- 主页 -->
           <v-container fluid v-show="view === ''" v-scroll="onScroll">
             <v-row no-gutters>
@@ -584,51 +571,19 @@
                 <v-btn icon @click="exeScript" :loading="isLoading">
                   <v-icon color="primary">mdi-play-circle</v-icon>
                 </v-btn>
-                <v-bottom-sheet v-model="ui.exeScriptSheet.show" scrollable>
-                  <v-card>
-                    <v-card-title>
-                      执行结果
-                      <v-spacer></v-spacer>
-                      <v-btn icon @click="ui.exeScriptSheet.show = false">
-                        <v-icon>mdi-close</v-icon>
-                      </v-btn>
-                    </v-card-title>
-                    <v-divider></v-divider>
-                    <v-card-text style="height: 80%;">
-                      <div class="mt-4">
-                        <p
-                          class="text-pre-wrap"
-                          v-if="ui.exeScriptSheet.resp && ui.exeScriptSheet.resp.exception"
-                          v-text="ui.exeScriptSheet.resp.exception"
-                        ></p>
-                        <p
-                          class="text-pre-wrap"
-                          v-else-if="ui.exeScriptSheet.resp && ui.exeScriptSheet.resp.output"
-                          v-text="ui.exeScriptSheet.resp.output"
-                        ></p>
-                      </div>
-                    </v-card-text>
-                  </v-card>
-                </v-bottom-sheet>
               </v-subheader>
             </v-card>
-            <div class="pa-0" id="container" style="width: inherit; height: inherit;"></div>
           </v-container>
           <!-- 应用详情 -->
           <v-container fluid v-if="view === 'app' && !!curapp" v-scroll="onScroll">
             <v-subheader>
               <h2 :style="appTitleStyle">{{curapp.name}}</h2>
               <v-spacer></v-spacer>
-              <v-btn v-if="curapp.script" icon @click="runScript(curapp.script, curapp.script_timeout)">
+              <v-btn v-if="curapp.script" icon :loading="isLoading" @click="runScript(curapp.script, curapp.script_timeout)">
                 <v-icon color="primary">mdi-play-circle</v-icon>
               </v-btn>
             </v-subheader>
-            <v-card
-              flat
-              class="mb-4"
-              :color="isWallpaper ? null : 'transparent'"
-              v-if="curapp.desc || curapp.descs || curapp.desc_html || curapp.descs_html"
-            >
+            <v-card class="mb-4" v-if="curapp.desc || curapp.descs || curapp.desc_html || curapp.descs_html">
               <v-card-subtitle>
                 <p v-if="curapp.desc" v-text="curapp.desc" class="text-pre-wrap"></p>
                 <p
@@ -650,7 +605,7 @@
                     <v-list-item-title>
                       {{scriptIdx + 1}}. {{script.name}}
                     </v-list-item-title>
-                    <v-btn icon @click.stop="runScript(script.script, script.script_timeout)">
+                    <v-btn icon :loading="isLoading" @click.stop="runScript(script.script, script.script_timeout)">
                       <v-icon>mdi-play-circle</v-icon>
                     </v-btn>
                   </v-list-item>
@@ -1102,6 +1057,7 @@
         </v-main>
         <!-- 底部 -->
         <v-bottom-navigation app grow color="primary" :value="view">
+          <v-progress-linear :active="isLoading && box.usercfgs.isHidedSearchBar" height="2" absolute top indeterminate></v-progress-linear>
           <v-btn @click="switchView('')" value="">首页<v-icon>mdi-home</v-icon></v-btn>
           <v-btn @click="switchView('app')" value="app">应用<v-icon>mdi-application</v-icon></v-btn>
           <v-btn @click="switchView('sub')" value="sub">订阅<v-icon>mdi-database</v-icon></v-btn>
@@ -1180,6 +1136,25 @@
             </v-card-text>
           </v-card>
         </v-bottom-sheet>
+        <v-bottom-sheet v-model="ui.exeScriptSheet.show" scrollable>
+          <v-card>
+            <v-card-title>
+              执行结果
+              <v-spacer></v-spacer>
+              <v-btn icon @click="ui.exeScriptSheet.show = false">
+                <v-icon>mdi-close</v-icon>
+              </v-btn>
+            </v-card-title>
+            <v-divider></v-divider>
+            <v-card-text style="height: 80%;">
+              <div class="mt-4" v-if="ui.exeScriptSheet.resp">
+                <p class="text-pre-wrap" v-if="ui.exeScriptSheet.resp.exception" v-text="ui.exeScriptSheet.resp.exception"></p>
+                <p class="text-pre-wrap" v-else-if="ui.exeScriptSheet.resp.output" v-text="ui.exeScriptSheet.resp.output"></p>
+                <p v-else v-text="ui.exeScriptSheet.resp"></p>
+              </div>
+            </v-card-text>
+          </v-card>
+        </v-bottom-sheet>
       </v-app>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.min.js"></script>
@@ -1217,7 +1192,15 @@
               scrollY: {}, //记录每个界面的滚动值
               overlay: { show: false, val: 60 },
               snackbar: { show: false, color: 'primary', msg: '' },
-              searchBar: { color: 'primary', readonly: true, input: '', hideNoData: true, hideDetails: true, solo: true },
+              searchBar: {
+                color: 'primary',
+                class: 'rounded-xl',
+                readonly: true,
+                input: '',
+                hideNoData: true,
+                hideDetails: true,
+                solo: true
+              },
               searchDialog: { show: false },
               versionsheet: { show: false },
               updatesheet: { show: false },
@@ -1397,18 +1380,14 @@
             return style
           },
           appBarBind() {
-            let app = !!this.box.usercfgs.isPinedSearchBar && !this.box.usercfgs.isHidedSearchBar
-            let color = 'transparent'
             const isEmptyLight = this.isWebApp && !this.isDarkMode && !this.isWallpaper
-            if (isEmptyLight) {
-              color = 'primary'
-            }
-            let flat = color === 'transparent'
-            return { app, color, flat, height: '68', maxHeight: '68' }
+            const color = isEmptyLight ? 'primary' : 'transparent'
+            const flat = color === 'transparent'
+            return { color, flat }
           },
           searchBarBind() {
             const color = this.isDarkMode ? null : 'primary'
-            return { color, height: '68' }
+            return { color }
           },
           appIconFontStyle() {
             const style = {
@@ -1912,7 +1891,12 @@
           // 运行远程脚本
           runScript(url, timeout) {
             const opts = { url, timeout, isRemote: true }
-            axios.post('/api/runScript', opts)
+            axios.post('/api/runScript', opts).then((resp) => {
+              if (this.box.usercfgs.httpapi) {
+                this.ui.exeScriptSheet.resp = JSON.parse(resp.data)
+                this.ui.exeScriptSheet.show = true
+              }
+            })
           },
           // 运行文本脚本
           exeScript() {
