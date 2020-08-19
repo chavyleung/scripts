@@ -260,22 +260,6 @@
               <v-switch
                 dense
                 class="mt-0"
-                label="固定搜索栏"
-                v-model="box.usercfgs.isPinedSearchBar"
-                @change="saveUserCfgs"
-                :persistent-hint="true"
-                hint="搜索栏是否跟随滚动"
-              >
-              </v-switch>
-              <v-spacer></v-spacer>
-              <v-btn fab small text>
-                <v-avatar size="32"><v-icon>mdi-pin</v-icon></v-avatar>
-              </v-btn>
-            </v-list-item>
-            <v-list-item class="mt-4">
-              <v-switch
-                dense
-                class="mt-0"
                 label="隐藏搜索栏"
                 v-model="box.usercfgs.isHidedSearchBar"
                 @change="saveUserCfgs"
