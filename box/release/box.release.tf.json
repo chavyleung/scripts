@@ -1,6 +1,32 @@
 {
   "releases": [
     {
+      "version": "0.7.41",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "icon": "https://avatars3.githubusercontent.com/u/29748519",
+      "repo": "https://github.com/chavyleung",
+      "msg": "更新[BoxJs TF]: 修复顶栏隐藏时图标没往上挪, 悬浮按钮上滑切壁纸, 壁纸模式隐藏悬浮按钮",
+      "notes": [
+        {
+          "name": "优化",
+          "descs": ["壁纸模式会把悬浮按钮也隐藏起来"]
+        },
+        {
+          "name": "修复",
+          "descs": ["顶栏隐藏时图标没有往上挪"]
+        },
+        {
+          "name": "悬浮按钮手势",
+          "descs": ["上滑: 重渲染&切换壁纸", "左滑: 悬浮按钮左靠", "右滑: 悬浮按钮右靠", "下滑: 切换壁纸模式"]
+        },
+        {
+          "name": "说明",
+          "descs": ["壁纸模式下: 下滑取消壁纸模式", "非壁纸模式: 下滑显示\\隐藏顶栏"]
+        }
+      ]
+    },
+    {
       "version": "0.7.40",
       "tags": ["beta"],
       "author": "@chavyleung",

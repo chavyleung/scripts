@@ -86,7 +86,7 @@
     <div id="BG"></div>
     <div id="app" v-cloak>
       <v-app v-if="box" :style="appViewStyle">
-        <v-app-bar app v-bind="appBarBind" v-show="!box.usercfgs.isHidedSearchBar">
+        <v-app-bar app v-bind="appBarBind" v-if="!box.usercfgs.isHidedSearchBar">
           <!-- 搜索条 -->
           <v-autocomplete v-bind="ui.searchBar" :label="title" @click="ui.searchDialog.show = true" hide-no-data hide-details solo>
             <template #prepend-inner>
@@ -1075,7 +1075,7 @@
         </v-bottom-navigation>
         <v-fab-transition>
           <v-speed-dial
-            v-show="!box.usercfgs.isHideBoxIcon"
+            v-show="!box.usercfgs.isHideBoxIcon && !isWallpaperMode"
             direction="top"
             fixed
             fab
@@ -1091,7 +1091,10 @@
                 v-touch="{
                   left: () => box.usercfgs.isLeftBoxIcon = true,
                   right: () => box.usercfgs.isLeftBoxIcon = false,
-                  up: () => reload(),
+                  up: () => {
+                    clearWallpaper()
+                    setWallpaper()
+                  },
                   down: () => isWallpaperMode = !!!isWallpaperMode
                 }"
               >
@@ -1732,14 +1735,20 @@
           onScroll(event) {
             const currentY = event.currentTarget.scrollY
             const historyY = this.ui.scrollY[this.path]
-            console.log(`historyY: ${historyY}, currentY: ${currentY}`)
             this.ui.scrollY[this.path] = event.currentTarget.scrollY
             // 下拉显示/隐藏顶栏
             // 回弹时才触发显示与隐藏, 1 秒内不重复触发
             if (currentY < historyY && currentY < -80 && !this.ui.isWaitToggleSearchBar) {
-              this.ui.isWaitToggleSearchBar = true
-              this.box.usercfgs.isHidedSearchBar = !this.box.usercfgs.isHidedSearchBar
-              this.toggleWaitSearchBar()
+              // 壁纸模式: 取消模式模式
+              if (this.isWallpaperMode) {
+                this.isWallpaperMode = false
+              }
+              // 非壁纸模式: 显示&隐藏顶栏
+              else {
+                this.ui.isWaitToggleSearchBar = true
+                this.box.usercfgs.isHidedSearchBar = !this.box.usercfgs.isHidedSearchBar
+                this.toggleWaitSearchBar()
+              }
             }
           },
           setWallpaper() {
