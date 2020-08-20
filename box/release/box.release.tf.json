@@ -1,12 +1,12 @@
 {
   "releases": [
     {
-      "version": "0.7.42",
+      "version": "0.7.43",
       "tags": ["beta"],
       "author": "@chavyleung",
       "icon": "https://avatars3.githubusercontent.com/u/29748519",
       "repo": "https://github.com/chavyleung",
-      "msg": "更新[BoxJs TF]: 新的手势, 优化样式",
+      "msg": "更新[BoxJs TF]: 修复非壁纸模式下上滑仍然重新渲染壁纸",
       "notes": [
         {
           "name": "新增",
@@ -14,7 +14,7 @@
         },
         {
           "name": "修复",
-          "descs": ["代码编辑器不显示问题", "二次进入搜索界面无法自动获取焦点"]
+          "descs": ["代码编辑器不显示问题", "二次进入搜索界面无法自动获取焦点", "非壁纸模式下上滑仍然重新渲染壁纸"]
         }
       ]
     },
