@@ -1,6 +1,24 @@
 {
   "releases": [
     {
+      "version": "0.7.42",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "icon": "https://avatars3.githubusercontent.com/u/29748519",
+      "repo": "https://github.com/chavyleung",
+      "msg": "更新[BoxJs TF]: 新的手势, 优化样式",
+      "notes": [
+        {
+          "name": "新增",
+          "descs": ["在顶栏上滑可隐藏顶栏", "在底栏下滑可以隐藏底栏", "壁纸模式上滑可以重新渲染壁纸"]
+        },
+        {
+          "name": "修复",
+          "descs": ["代码编辑器不显示问题", "二次进入搜索界面无法自动获取焦点"]
+        }
+      ]
+    },
+    {
       "version": "0.7.41",
       "tags": ["beta"],
       "author": "@chavyleung",
