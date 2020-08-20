@@ -126,7 +126,7 @@ async function handlePage() {
 
   // 调试模式: 是否每次都获取新的页面
   const isDebugWeb = [true, 'true'].includes($.getdata('@chavy_boxjs_userCfgs.isDebugWeb'))
-  const debugger_web = $.getjson('chavy_boxjs_userCfgs').debugger_web
+  const debugger_web = $.getdata('@chavy_boxjs_userCfgs.debugger_web')
   const cache = $.getjson($.KEY_web_cache, null)
 
   // 如果没有开启调试模式，且当前版本与缓存版本一致，且直接取缓存
