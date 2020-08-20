@@ -449,8 +449,18 @@
         <v-main v-scroll="onScroll">
           <v-snackbar top app v-model="ui.snackbar.show" v-bind="ui.snackbar">{{ui.snackbar.msg}}</v-snackbar>
           <!-- 主页 -->
-          <v-container fluid v-show="view === ''">
-            <v-row no-gutters v-show="!isHidedAppIcons">
+          <v-container
+            fluid
+            class="fill-height"
+            v-show="view === ''"
+            v-touch="{ up: () => {
+              if (isWallpaper) {
+                clearWallpaper()
+                setWallpaper()
+              }
+            } }"
+          >
+            <v-row no-gutters v-show="!isHidedAppIcons" class="align-self-start">
               <v-col cols="3" md="2" v-for="(app, appIdx) in favApps" :key="app.id" class="d-flex justify-space-around">
                 <div class="ma-2" @click="switchAppView(app.id)">
                   <v-card v-if="isDarkMode" style="border-radius: 12px;">
@@ -588,6 +598,7 @@
                 </v-btn>
               </v-subheader>
             </v-card>
+            <div class="pa-0" id="container" style="width: inherit; height: inherit;"></div>
           </v-container>
           <!-- 应用详情 -->
           <v-container fluid v-if="view === 'app' && !!curapp">
