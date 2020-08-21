@@ -14,9 +14,21 @@ let VAL_signcookie = chavy.getdata(KEY_signcookie)
     await answerquestion()
     await getquestion()
   }
-  await openbox('copperbox', '铜宝箱', 'simpleBody=nUuymDQ/BcC2Q6QH21Tjww23J7qtVaDlUN17k1/KY%2BXGDsRVwDRJ8YfjAMraptIL%0D%0A4t2g56kUpDGFsn9z6%2BofyiL5QwfBYZBZOTw9stNt9mc%3D')
-  await openbox('silverbox', '银宝箱', 'simpleBody=nUuymDQ/BcC2Q6QH21Tjww23J7qtVaDlUN17k1/KY%2BXGDsRVwDRJ8YfjAMraptIL%0D%0ADPPhFllL7eBnJs52RODWxxe9rquyWdYcDcbyirN6KiE%3D')
-  await openbox('goldenbox', '金宝箱', 'simpleBody=3abxJMn7LwEdH8u1Xpe2qN6AtFpDhBrmviLyoU%2BunKwnS1IGS7DIfS0HiKtt03G0%0D%0A/zVCARFyXUFFrOxLRrgAS4m/u4BiQYWJzTUeUqLAFZk%3D')
+  await openbox(
+    'copperbox',
+    '铜宝箱',
+    'simpleBody=nUuymDQ/BcC2Q6QH21Tjww23J7qtVaDlUN17k1/KY%2BXGDsRVwDRJ8YfjAMraptIL%0D%0A4t2g56kUpDGFsn9z6%2BofyiL5QwfBYZBZOTw9stNt9mc%3D'
+  )
+  await openbox(
+    'silverbox',
+    '银宝箱',
+    'simpleBody=nUuymDQ/BcC2Q6QH21Tjww23J7qtVaDlUN17k1/KY%2BXGDsRVwDRJ8YfjAMraptIL%0D%0ADPPhFllL7eBnJs52RODWxxe9rquyWdYcDcbyirN6KiE%3D'
+  )
+  await openbox(
+    'goldenbox',
+    '金宝箱',
+    'simpleBody=3abxJMn7LwEdH8u1Xpe2qN6AtFpDhBrmviLyoU%2BunKwnS1IGS7DIfS0HiKtt03G0%0D%0A/zVCARFyXUFFrOxLRrgAS4m/u4BiQYWJzTUeUqLAFZk%3D'
+  )
   await getinfo()
   showmsg()
   chavy.done()
@@ -28,7 +40,7 @@ function signdaily() {
     url.headers['clientType'] = `ios_rrsp_jzsp`
     url.headers['Accept-Encoding'] = `gzip, deflate, br`
     url.headers['Connection'] = `keep-alive`
-    url.headers['clientVersion'] = `4.3.5`
+    url.headers['clientVersion'] = `4.10.1`
     url.headers['Content-Type'] = `application/x-www-form-urlencoded; charset=UTF-8`
     url.headers['Origin'] = `https://mobile.rr.tv`
     url.headers['Referer'] = `https://mobile.rr.tv/`
@@ -36,7 +48,8 @@ function signdaily() {
     url.headers['Host'] = `api.rr.tv`
     url.headers['Accept-Language'] = `zh-cn`
     url.headers['Content-Length'] = `12`
-    url.headers['User-Agent'] = 'Mozilla/5.0 (iPhone; CPU iPhone OS 13_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 App/RRSPApp platform/iPhone AppVersion/4.3.5'
+    url.headers['User-Agent'] =
+      'Mozilla/5.0 (iPhone; CPU iPhone OS 13_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 App/RRSPApp platform/iPhone AppVersion/4.10.1'
     chavy.post(url, (error, response, data) => {
       try {
         signinfo.signdaily = JSON.parse(data)
@@ -65,7 +78,8 @@ function signwelfare() {
     url.headers['Host'] = `api.rr.tv`
     url.headers['Accept-Language'] = `zh-cn`
     url.headers['Content-Length'] = `45`
-    url.headers['User-Agent'] = 'Mozilla/5.0 (iPhone; CPU iPhone OS 13_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 App/RRSPApp platform/iPhone AppVersion/4.3.5'
+    url.headers['User-Agent'] =
+      'Mozilla/5.0 (iPhone; CPU iPhone OS 13_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 App/RRSPApp platform/iPhone AppVersion/4.10.1'
     chavy.post(url, (error, response, data) => {
       try {
         signinfo.signwelfare = JSON.parse(data)
@@ -86,7 +100,7 @@ function getinfo() {
     url.headers['clientType'] = `ios_rrsp_jzsp`
     url.headers['Accept-Encoding'] = `gzip, deflate, br`
     url.headers['Connection'] = `keep-alive`
-    url.headers['clientVersion'] = `4.3.5`
+    url.headers['clientVersion'] = `4.10.1`
     url.headers['Content-Type'] = `application/x-www-form-urlencoded; charset=UTF-8`
     url.headers['Origin'] = `https://mobile.rr.tv`
     url.headers['Referer'] = `https://mobile.rr.tv/`
@@ -94,7 +108,8 @@ function getinfo() {
     url.headers['Host'] = `api.rr.tv`
     url.headers['Accept-Language'] = `zh-cn`
     url.headers['Content-Length'] = `0`
-    url.headers['User-Agent'] = 'Mozilla/5.0 (iPhone; CPU iPhone OS 13_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 App/RRSPApp platform/iPhone AppVersion/4.3.5'
+    url.headers['User-Agent'] =
+      'Mozilla/5.0 (iPhone; CPU iPhone OS 13_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 App/RRSPApp platform/iPhone AppVersion/4.10.1'
     chavy.post(url, (error, response, data) => {
       try {
         signinfo.userinfo = JSON.parse(data)
@@ -115,7 +130,7 @@ function getquestion() {
     url.headers['clientType'] = `ios_rrsp_jzsp`
     url.headers['Accept-Encoding'] = `gzip, deflate, br`
     url.headers['Connection'] = `keep-alive`
-    url.headers['clientVersion'] = `4.3.5`
+    url.headers['clientVersion'] = `4.10.1`
     url.headers['Content-Type'] = `application/x-www-form-urlencoded; charset=UTF-8`
     url.headers['Origin'] = `https://mobile.rr.tv`
     url.headers['Referer'] = `https://mobile.rr.tv/`
@@ -123,9 +138,11 @@ function getquestion() {
     url.headers['Host'] = `api.rr.tv`
     url.headers['Accept-Language'] = `zh-cn`
     url.headers['Content-Length'] = `0`
-    url.headers['User-Agent'] = 'Mozilla/5.0 (iPhone; CPU iPhone OS 13_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 App/RRSPApp platform/iPhone AppVersion/4.3.5'
+    url.headers['User-Agent'] =
+      'Mozilla/5.0 (iPhone; CPU iPhone OS 13_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 App/RRSPApp platform/iPhone AppVersion/4.10.1'
     chavy.post(url, (error, response, data) => {
       try {
+        console.log(data)
         signinfo.question = JSON.parse(data)
         signinfo.questionopts = {}
         for (opt of signinfo.question.data.question.optionViewList) {
@@ -156,7 +173,7 @@ function answerquestion() {
     url.headers['clientType'] = `ios_rrsp_jzsp`
     url.headers['Accept-Encoding'] = `gzip, deflate, br`
     url.headers['Connection'] = `keep-alive`
-    url.headers['clientVersion'] = `4.3.5`
+    url.headers['clientVersion'] = `4.10.1`
     url.headers['Content-Type'] = `application/x-www-form-urlencoded; charset=UTF-8`
     url.headers['Origin'] = `https://mobile.rr.tv`
     url.headers['Referer'] = `https://mobile.rr.tv/`
@@ -164,7 +181,8 @@ function answerquestion() {
     url.headers['Host'] = `api.rr.tv`
     url.headers['Accept-Language'] = `zh-cn`
     url.headers['Content-Length'] = `0`
-    url.headers['User-Agent'] = 'Mozilla/5.0 (iPhone; CPU iPhone OS 13_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 App/RRSPApp platform/iPhone AppVersion/4.3.5'
+    url.headers['User-Agent'] =
+      'Mozilla/5.0 (iPhone; CPU iPhone OS 13_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 App/RRSPApp platform/iPhone AppVersion/4.10.1'
     chavy.post(url, (error, response, data) => {
       try {
         signinfo.answerquestion = JSON.parse(data)
@@ -243,7 +261,8 @@ function showmsg() {
   if (signinfo.question.data.question) {
     detail += `\n查看答题详情`
     detail += `\n\n问题: ${signinfo.question.data.question.questionStr}`
-    for (key in signinfo.questionopts) detail += `\n选项: ${signinfo.questionopts[key].optionStr}, 回答人数: ${signinfo.questionopts[key].answererCount} (${signinfo.questionopts[key].percent})`
+    for (key in signinfo.questionopts)
+      detail += `\n选项: ${signinfo.questionopts[key].optionStr}, 回答人数: ${signinfo.questionopts[key].answererCount} (${signinfo.questionopts[key].percent})`
     if (signinfo.selectId) {
       detail += `\n最佳回答: ${signinfo.answeropt.optionStr}`
       detail += `\n我的回答: ${signinfo.questionopts[signinfo.selectId].optionStr}`
