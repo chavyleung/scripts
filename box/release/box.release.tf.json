@@ -6,11 +6,15 @@
       "author": "@chavyleung",
       "icon": "https://avatars3.githubusercontent.com/u/29748519",
       "repo": "https://github.com/chavyleung",
-      "msg": "更新[BoxJs TF]: 运行脚本可显示执行结果",
+      "msg": "更新[BoxJs TF]: 全局搜索结果位置不正确问题",
       "notes": [
         {
           "name": "新增",
           "descs": ["Surge、QuanX、Loon 手动运行脚本时都可以显示执行结果"]
+        },
+        {
+          "name": "修复",
+          "descs": ["全局搜索结果位置不正确问题"]
         }
       ]
     },

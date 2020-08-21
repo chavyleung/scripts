@@ -118,16 +118,18 @@
           </v-autocomplete>
         </v-app-bar>
         <v-dialog v-model="ui.searchDialog.show" fullscreen scrollable>
-          <v-card>
-            <v-toolbar v-bind="searchBarBind" class="safe">
-              <v-btn icon dark @click="ui.searchDialog.show = false">
-                <v-icon>mdi-chevron-left</v-icon>
-              </v-btn>
-              <v-text-field ref="search" v-model="ui.searchBar.input" :label="title" autofocus hide-details solo></v-text-field>
-              <v-btn icon @click="open(box.syscfgs.orz3.repo)">
-                <v-avatar size="26"><img :src="box.syscfgs.orz3.icon" /></v-avatar>
-              </v-btn>
-            </v-toolbar>
+          <v-card class="align-self-start">
+            <v-card-subtitle class="pa-0">
+              <v-toolbar v-bind="searchBarBind" class="safe">
+                <v-btn icon dark @click="ui.searchDialog.show = false">
+                  <v-icon>mdi-chevron-left</v-icon>
+                </v-btn>
+                <v-text-field ref="search" v-model="ui.searchBar.input" :label="title" autofocus hide-details solo></v-text-field>
+                <v-btn icon @click="open(box.syscfgs.orz3.repo)">
+                  <v-avatar size="26"><img :src="box.syscfgs.orz3.icon" /></v-avatar>
+                </v-btn>
+              </v-toolbar>
+            </v-card-subtitle>
             <v-card-text class="px-0">
               <v-list nav>
                 <v-list-item
