@@ -37,19 +37,10 @@ let VAL_signcookie = chavy.getdata(KEY_signcookie)
 function signdaily() {
   return new Promise((resolve, reject) => {
     let url = { url: `https://api.rr.tv/rrtv-activity/sign/sign`, headers: { token: VAL_signcookie } }
-    url.headers['clientType'] = `ios_rrsp_jzsp`
-    url.headers['Accept-Encoding'] = `gzip, deflate, br`
-    url.headers['Connection'] = `keep-alive`
-    url.headers['clientVersion'] = `4.10.1`
-    url.headers['Content-Type'] = `application/x-www-form-urlencoded; charset=UTF-8`
-    url.headers['Origin'] = `https://mobile.rr.tv`
-    url.headers['Referer'] = `https://mobile.rr.tv/`
-    url.headers['Accept'] = `application/json, text/plain, */*`
-    url.headers['Host'] = `api.rr.tv`
-    url.headers['Accept-Language'] = `zh-cn`
-    url.headers['Content-Length'] = `12`
+    url.headers['clientType'] = `web`
+    url.headers['clientVersion'] = ``
     url.headers['User-Agent'] =
-      'Mozilla/5.0 (iPhone; CPU iPhone OS 13_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 App/RRSPApp platform/iPhone AppVersion/4.10.1'
+      'Mozilla/5.0 (iPhone; CPU iPhone OS 13_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 App/RRSPApp platform/iPhone AppVersion/'
     chavy.post(url, (error, response, data) => {
       try {
         signinfo.signdaily = JSON.parse(data)
@@ -68,18 +59,9 @@ function signwelfare() {
   return new Promise((resolve, reject) => {
     let url = { url: `https://api.rr.tv/dailyWelfare/getWelfare`, headers: { token: VAL_signcookie } }
     url.headers['clientType'] = `web`
-    url.headers['Accept-Encoding'] = `gzip, deflate, br`
-    url.headers['Connection'] = `keep-alive`
-    url.headers['clientVersion'] = `0.0.1`
-    url.headers['Content-Type'] = `application/x-www-form-urlencoded; charset=UTF-8`
-    url.headers['Origin'] = `https://mobile.rr.tv`
-    url.headers['Referer'] = `https://mobile.rr.tv/mission/`
-    url.headers['Accept'] = `application/json, text/plain, */*`
-    url.headers['Host'] = `api.rr.tv`
-    url.headers['Accept-Language'] = `zh-cn`
-    url.headers['Content-Length'] = `45`
+    url.headers['clientVersion'] = ``
     url.headers['User-Agent'] =
-      'Mozilla/5.0 (iPhone; CPU iPhone OS 13_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 App/RRSPApp platform/iPhone AppVersion/4.10.1'
+      'Mozilla/5.0 (iPhone; CPU iPhone OS 13_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 App/RRSPApp platform/iPhone AppVersion/'
     chavy.post(url, (error, response, data) => {
       try {
         signinfo.signwelfare = JSON.parse(data)
@@ -97,19 +79,10 @@ function signwelfare() {
 function getinfo() {
   return new Promise((resolve, reject) => {
     let url = { url: `https://api.rr.tv/user/profile`, headers: { token: VAL_signcookie } }
-    url.headers['clientType'] = `ios_rrsp_jzsp`
-    url.headers['Accept-Encoding'] = `gzip, deflate, br`
-    url.headers['Connection'] = `keep-alive`
-    url.headers['clientVersion'] = `4.10.1`
-    url.headers['Content-Type'] = `application/x-www-form-urlencoded; charset=UTF-8`
-    url.headers['Origin'] = `https://mobile.rr.tv`
-    url.headers['Referer'] = `https://mobile.rr.tv/`
-    url.headers['Accept'] = `application/json, text/plain, */*`
-    url.headers['Host'] = `api.rr.tv`
-    url.headers['Accept-Language'] = `zh-cn`
-    url.headers['Content-Length'] = `0`
+    url.headers['clientType'] = `web`
+    url.headers['clientVersion'] = ``
     url.headers['User-Agent'] =
-      'Mozilla/5.0 (iPhone; CPU iPhone OS 13_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 App/RRSPApp platform/iPhone AppVersion/4.10.1'
+      'Mozilla/5.0 (iPhone; CPU iPhone OS 13_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 App/RRSPApp platform/iPhone AppVersion/'
     chavy.post(url, (error, response, data) => {
       try {
         signinfo.userinfo = JSON.parse(data)
@@ -127,19 +100,10 @@ function getinfo() {
 function getquestion() {
   return new Promise((resolve, reject) => {
     let url = { url: `https://api.rr.tv/v3plus/question/getQuestion`, headers: { token: VAL_signcookie } }
-    url.headers['clientType'] = `ios_rrsp_jzsp`
-    url.headers['Accept-Encoding'] = `gzip, deflate, br`
-    url.headers['Connection'] = `keep-alive`
-    url.headers['clientVersion'] = `4.10.1`
-    url.headers['Content-Type'] = `application/x-www-form-urlencoded; charset=UTF-8`
-    url.headers['Origin'] = `https://mobile.rr.tv`
-    url.headers['Referer'] = `https://mobile.rr.tv/`
-    url.headers['Accept'] = `application/json, text/plain, */*`
-    url.headers['Host'] = `api.rr.tv`
-    url.headers['Accept-Language'] = `zh-cn`
-    url.headers['Content-Length'] = `0`
+    url.headers['clientType'] = `web`
+    url.headers['clientVersion'] = ``
     url.headers['User-Agent'] =
-      'Mozilla/5.0 (iPhone; CPU iPhone OS 13_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 App/RRSPApp platform/iPhone AppVersion/4.10.1'
+      'Mozilla/5.0 (iPhone; CPU iPhone OS 13_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 App/RRSPApp platform/iPhone AppVersion/'
     chavy.post(url, (error, response, data) => {
       try {
         console.log(data)
@@ -170,19 +134,10 @@ function answerquestion() {
   return new Promise((resolve, reject) => {
     let url = { url: `https://api.rr.tv/v3plus/question/answerQuestion`, headers: { token: VAL_signcookie } }
     url.body = `optionId=${signinfo.answeropt.id}`
-    url.headers['clientType'] = `ios_rrsp_jzsp`
-    url.headers['Accept-Encoding'] = `gzip, deflate, br`
-    url.headers['Connection'] = `keep-alive`
-    url.headers['clientVersion'] = `4.10.1`
-    url.headers['Content-Type'] = `application/x-www-form-urlencoded; charset=UTF-8`
-    url.headers['Origin'] = `https://mobile.rr.tv`
-    url.headers['Referer'] = `https://mobile.rr.tv/`
-    url.headers['Accept'] = `application/json, text/plain, */*`
-    url.headers['Host'] = `api.rr.tv`
-    url.headers['Accept-Language'] = `zh-cn`
-    url.headers['Content-Length'] = `0`
+    url.headers['clientType'] = `web`
+    url.headers['clientVersion'] = ``
     url.headers['User-Agent'] =
-      'Mozilla/5.0 (iPhone; CPU iPhone OS 13_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 App/RRSPApp platform/iPhone AppVersion/4.10.1'
+      'Mozilla/5.0 (iPhone; CPU iPhone OS 13_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 App/RRSPApp platform/iPhone AppVersion/'
     chavy.post(url, (error, response, data) => {
       try {
         signinfo.answerquestion = JSON.parse(data)
@@ -201,17 +156,7 @@ function openbox(boxcode, boxname, body) {
   return new Promise((resolve, reject) => {
     let url = { url: `https://api.rr.tv/v3plus/taskCenter/openBox`, headers: { token: VAL_signcookie } }
     url.body = body
-    url.headers['Accept'] = `*/*`
-    url.headers['Accept-Encoding'] = `gzip, deflate, br`
-    url.headers['Accept-Language'] = `zh-Hans-CN;q=1, en-US;q=0.9`
-    url.headers['Connection'] = `keep-alive`
-    url.headers['Content-Type'] = `application/x-www-form-urlencoded`
-    url.headers['Host'] = `api.rr.tv`
-    url.headers['User-Agent'] = `PUClient/4.3.6 (iPhone; iOS 13.3.1; Scale/2.00)`
-    url.headers['clientType'] = `ios_rrsp_jzsp`
-    url.headers['clientVersion'] = `4.3.6`
-    url.headers['deviceMode'] = `iPhone 8`
-    url.headers['p'] = `iOS`
+    url.headers['clientType'] = `web`
     chavy.post(url, (error, response, data) => {
       try {
         signinfo[boxcode] = JSON.parse(data)
