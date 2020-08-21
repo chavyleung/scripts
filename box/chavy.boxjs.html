@@ -593,7 +593,7 @@
               <v-subheader>
                 <h2>脚本编辑器</h2>
                 <v-spacer></v-spacer>
-                <v-btn icon @click="exeScript" :loading="isLoading">
+                <v-btn icon @click="runTxtScript" :loading="isLoading">
                   <v-icon color="primary">mdi-play-circle</v-icon>
                 </v-btn>
               </v-subheader>
@@ -605,7 +605,7 @@
             <v-subheader>
               <h2 :style="appTitleStyle">{{curapp.name}}</h2>
               <v-spacer></v-spacer>
-              <v-btn v-if="curapp.script" icon :loading="isLoading" @click="runScript(curapp.script, curapp.script_timeout)">
+              <v-btn v-if="curapp.script" icon :loading="isLoading" @click="runRemoteScript(curapp.script, curapp.script_timeout)">
                 <v-icon color="primary">mdi-play-circle</v-icon>
               </v-btn>
             </v-subheader>
@@ -631,7 +631,7 @@
                     <v-list-item-title>
                       {{scriptIdx + 1}}. {{script.name}}
                     </v-list-item-title>
-                    <v-btn icon :loading="isLoading" @click.stop="runScript(script.script, script.script_timeout)">
+                    <v-btn icon :loading="isLoading" @click.stop="runRemoteScript(script.script, script.script_timeout)">
                       <v-icon>mdi-play-circle</v-icon>
                     </v-btn>
                   </v-list-item>
@@ -1147,7 +1147,7 @@
             <v-btn dark v-if="!box.usercfgs.isHideRefresh" fab small color="orange" @click="reload()">
               <v-icon>mdi-refresh</v-icon>
             </v-btn>
-            <v-btn dark v-if="!box.usercfgs.isHideCoding" fab small @click="path = '/#/coding'">
+            <v-btn dark v-if="!box.usercfgs.isHideCoding" fab small @click="switchView('coding')">
               <v-icon>mdi-code-tags</v-icon>
             </v-btn>
             <v-btn dark v-if="!box.usercfgs.isHidedSearch" fab small color="green" @click="ui.searchDialog.show = true">
@@ -1155,9 +1155,9 @@
             </v-btn>
           </v-speed-dial>
         </v-fab-transition>
-        <v-bottom-sheet v-model="ui.versionsheet.show" scrollable>
+        <v-bottom-sheet v-model="ui.versionsheet.show" scrollable fullscreen>
           <v-card v-if="box.versions">
-            <v-subheader>
+            <v-subheader v-touch="{ down: () => ui.versionsheet.show = false }">
               <v-btn icon small @click="open('https://chavyleung.gitbook.io/boxjs/base/upgrade')">
                 <v-icon>mdi-help-circle</v-icon>
               </v-btn>
@@ -1165,7 +1165,7 @@
               <v-btn text small v-if="hasNewVersion">新版本</v-btn>
               <v-spacer></v-spacer>
               <v-btn icon small @click="ui.versionsheet.show = false">
-                <v-icon>mdi-close</v-icon>
+                <v-icon>mdi-chevron-double-down</v-icon>
               </v-btn>
             </v-subheader>
             <v-divider></v-divider>
@@ -1182,13 +1182,13 @@
             </v-card-text>
           </v-card>
         </v-bottom-sheet>
-        <v-bottom-sheet v-model="ui.exeScriptSheet.show" scrollable>
+        <v-bottom-sheet v-model="ui.exeScriptSheet.show" scrollable fullscreen>
           <v-card>
-            <v-card-title>
+            <v-card-title v-touch="{ down: () => ui.exeScriptSheet.show = false }">
               执行结果
               <v-spacer></v-spacer>
               <v-btn icon @click="ui.exeScriptSheet.show = false">
-                <v-icon>mdi-close</v-icon>
+                <v-icon>mdi-chevron-double-down</v-icon>
               </v-btn>
             </v-card-title>
             <v-divider></v-divider>
@@ -1196,7 +1196,7 @@
               <div class="mt-4" v-if="ui.exeScriptSheet.resp">
                 <p class="text-pre-wrap" v-if="ui.exeScriptSheet.resp.exception" v-text="ui.exeScriptSheet.resp.exception"></p>
                 <p class="text-pre-wrap" v-else-if="ui.exeScriptSheet.resp.output" v-text="ui.exeScriptSheet.resp.output"></p>
-                <p v-else v-text="ui.exeScriptSheet.resp"></p>
+                <p v-else v-text="JSON.stringify(ui.exeScriptSheet.resp)"></p>
               </div>
             </v-card-text>
           </v-card>
@@ -1645,9 +1645,7 @@
                     ' * 这段脚本是可以直接运行的!',
                     ' */ ',
                     'const host = $.getdata("boxjs_host")',
-                    '$.json = {',
-                    '  msg: "这段 json 是返回给浏览器的!"',
-                    '}',
+                    'console.log("输出的内容是返回给浏览器的!")',
                     '$.msg($.name, host)',
                     '$.done()',
                     '// $done() 或 $.done() 都可以'
@@ -1675,7 +1673,7 @@
                   this.ui.editor = monaco.editor.create(document.getElementById('container'), {
                     fontSize: 12,
                     tabSize: 2,
-                    value: this.box.usercfgs.httpapi ? surgejs_demo.join('\n') : envjs_demo.join('\n'),
+                    value: this.env === 'Surge' && this.box.usercfgs.httpapi ? surgejs_demo.join('\n') : envjs_demo.join('\n'),
                     language: 'javascript',
                     minimap: { enabled: false },
                     theme: this.isDarkMode ? 'vs-dark' : 'vs'
@@ -1988,24 +1986,20 @@
             app.isLoaded = true
           },
           // 运行远程脚本
-          runScript(url, timeout) {
+          runRemoteScript(url, timeout) {
             const opts = { url, timeout, isRemote: true }
-            axios.post('/api/runScript', opts).then((resp) => {
-              if (this.box.usercfgs.httpapi) {
-                this.ui.exeScriptSheet.resp = JSON.parse(resp.data)
-                this.ui.exeScriptSheet.show = true
-              }
-            })
+            this.runScript(opts)
           },
           // 运行文本脚本
-          exeScript() {
+          runTxtScript() {
             const script = this.ui.editor.getValue()
             const opts = { script }
+            this.runScript(opts)
+          },
+          runScript(opts) {
             axios.post('/api/runScript', opts).then((resp) => {
-              if (this.box.usercfgs.httpapi) {
-                this.ui.exeScriptSheet.resp = JSON.parse(resp.data)
-                this.ui.exeScriptSheet.show = true
-              }
+              this.ui.exeScriptSheet.resp = resp.data
+              this.ui.exeScriptSheet.show = true
             })
           },
           // 保存用户偏好

@@ -1,6 +1,20 @@
 {
   "releases": [
     {
+      "version": "0.7.44",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "icon": "https://avatars3.githubusercontent.com/u/29748519",
+      "repo": "https://github.com/chavyleung",
+      "msg": "更新[BoxJs TF]: 运行脚本可显示执行结果",
+      "notes": [
+        {
+          "name": "新增",
+          "descs": ["Surge、QuanX、Loon 手动运行脚本时都可以显示执行结果"]
+        }
+      ]
+    },
+    {
       "version": "0.7.43",
       "tags": ["beta"],
       "author": "@chavyleung",

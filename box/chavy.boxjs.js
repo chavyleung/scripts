@@ -1,6 +1,9 @@
 const $ = new Env('BoxJs')
 
-$.version = '0.7.43'
+// 为 eval 准备的上下文环境
+const $eval_env = {}
+
+$.version = '0.7.44'
 $.versionType = 'beta'
 
 /**
@@ -537,29 +540,47 @@ async function apiRunScript() {
   const opts = $.toObj($request.body)
   const httpapi = $.getdata('@chavy_boxjs_userCfgs.httpapi')
   const ishttpapi = /.*?@.*?:[0-9]+/.test(httpapi)
+  let script_text = null
   if (opts.isRemote) {
-    if ($.isSurge() && ishttpapi) {
-      const runOpts = { timeout: opts.timeout }
-      let script_text = null
-      await $.getScript(opts.url).then((script) => (script_text = script))
-      await $.runScript(script_text, runOpts).then((resp) => ($.json = resp))
-    } else {
-      $.getScript(opts.url).then((script) => {
-        // 避免被执行脚本误认为是 rewrite 环境
-        // 所以需要 `$request = undefined`
-        $request = undefined
-        eval(script)
-      })
-    }
+    await $.getScript(opts.url).then((script) => (script_text = script))
   } else {
-    // 对于手动执行的脚本, 把 $done 的时机交给脚本自主控制
-    if ($.isSurge() && ishttpapi) {
-      const runOpts = { timeout: opts.timeout }
-      await $.runScript(opts.script, runOpts).then((resp) => ($.json = resp))
-    } else {
-      $.isSkipDone = true
+    script_text = opts.script
+  }
+  if ($.isSurge() && ishttpapi) {
+    const runOpts = { timeout: opts.timeout }
+    await $.runScript(script_text, runOpts).then((resp) => ($.json = JSON.parse(resp)))
+  } else {
+    await new Promise((resolve) => {
+      $eval_env.resolve = resolve
+      // 避免被执行脚本误认为是 rewrite 环境
+      // 所以需要 `$request = undefined`
+      $eval_env.request = $request
       $request = undefined
-      eval(opts.script)
+      // 重写 console.log, 把日志记录到 $.cached_logs
+      $.cached_logs = []
+      console.cloned_log = console.log
+      console.log = (l) => {
+        console.cloned_log(l)
+        $.cached_logs.push(l)
+      }
+      // 重写脚本内的 $done, 调用 $done() 即是调用 $eval_env.resolve()
+      script_text = script_text.replace(/\$done/g, '$eval_env.resolve')
+      script_text = script_text.replace(/\$\.done/g, '$eval_env.resolve')
+      try {
+        eval(script_text)
+      } catch (e) {
+        $.cached_logs.push(e)
+        resolve()
+      }
+    })
+    // 还原 console.log
+    console.log = console.cloned_log
+    // 还原 $request
+    $request = $eval_env.request
+    // 返回数据
+    $.json = {
+      result: '',
+      output: $.cached_logs.join('\n')
     }
   }
 }
@@ -626,9 +647,6 @@ function upgradeUserData() {
  * ===================================
  */
 function doneBox() {
-  if ($.isSkipDone === true) {
-    return
-  }
   // 记录当前使用哪个域名访问
   $.setdata(getHost($request.url), $.KEY_boxjs_host)
   if ($.isOptions) doneOptions()
