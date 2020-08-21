@@ -1,6 +1,24 @@
 {
   "releases": [
     {
+      "version": "0.7.45",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "icon": "https://avatars3.githubusercontent.com/u/29748519",
+      "repo": "https://github.com/chavyleung",
+      "msg": "更新[BoxJs TF]: 修复脚本执行结果、更新日志页面位置不正确, 主页左滑进入壁纸模式",
+      "notes": [
+        {
+          "name": "新增",
+          "descs": ["主页左滑进入壁纸模式"]
+        },
+        {
+          "name": "修复",
+          "descs": ["脚本执行结果、更新日志页面位置不正确"]
+        }
+      ]
+    },
+    {
       "version": "0.7.44",
       "tags": ["beta"],
       "author": "@chavyleung",

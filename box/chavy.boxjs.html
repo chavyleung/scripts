@@ -45,6 +45,10 @@
         padding-top: constant(safe-area-inset-top) !important;
         padding-top: env(safe-area-inset-top) !important;
       }
+      .v-bottom-sheet.v-dialog--fullscreen {
+        padding-top: constant(safe-area-inset-top) !important;
+        padding-top: env(safe-area-inset-top) !important;
+      }
       .v-app-bar.safe {
         height: auto !important;
         padding-top: constant(safe-area-inset-top) !important;
@@ -450,8 +454,8 @@
         <!-- 主页 -->
         <v-main v-scroll="onScroll">
           <v-snackbar top app v-model="ui.snackbar.show" v-bind="ui.snackbar">{{ui.snackbar.msg}}</v-snackbar>
+          <!-- 主页 -->
           <v-fade-transition>
-            <!-- 主页 -->
             <v-container
               fluid
               class="fill-height"
@@ -463,8 +467,22 @@
                   setWallpaper()
                 }
               },
-              left: () => switchView('app'),
-              right: () => switchView('my')
+              left: () => {
+                if (isWallpaperMode) {
+                  switchView('')
+                  isWallpaperMode = !isWallpaperMode
+                } else {
+                  switchView('app')
+                }
+              },
+              right: () => {
+                if (isWallpaperMode) {
+                  switchView('')
+                  isWallpaperMode = !isWallpaperMode
+                } else {
+                  isWallpaperMode = !isWallpaperMode
+                }
+              }
             }"
             >
               <v-row no-gutters v-show="!isHidedAppIcons" class="align-self-start">
@@ -494,8 +512,8 @@
               </v-row>
             </v-container>
           </v-fade-transition>
+          <!-- 应用列表 -->
           <v-fade-transition>
-            <!-- 应用列表 -->
             <v-container
               fluid
               v-show="view === 'app' && !curapp"
@@ -604,8 +622,8 @@
               </v-expansion-panels>
             </v-container>
           </v-fade-transition>
+          <!-- 订阅列表 -->
           <v-fade-transition>
-            <!-- 订阅列表 -->
             <v-container
               fluid
               v-show="view === 'sub'"
@@ -706,15 +724,18 @@
               </v-dialog>
             </v-container>
           </v-fade-transition>
+          <!-- 我的 -->
           <v-fade-transition>
-            <!-- 我的 -->
             <v-container
               fluid
               v-show="view === 'my'"
               v-touch="{ 
-              left: () => switchView(''),
-              right: () => switchView('sub')
-            }"
+                left: () => {
+                  isWallpaperMode = !isWallpaperMode
+                  switchView('')
+                },
+                right: () => switchView('sub')
+              }"
             >
               <v-card class="mx-auto">
                 <v-card-title class="headline">
@@ -806,7 +827,13 @@
             </v-container>
           </v-fade-transition>
           <!-- 代码编辑 -->
-          <v-container fluid class="fill-height" v-show="view === 'coding'">
+          <v-container
+            fluid
+            v-show="view === 'coding'"
+            v-touch="{ 
+              right: back
+            }"
+          >
             <v-card flat style="width: inherit;">
               <v-subheader>
                 <h2>脚本编辑器</h2>
@@ -819,8 +846,14 @@
             <div class="pa-0" id="container" style="width: inherit; height: inherit;"></div>
           </v-container>
           <!-- 应用详情 -->
-          <v-container fluid v-if="view === 'app' && !!curapp">
-            <v-subheader>
+          <v-container
+            fluid
+            v-if="view === 'app' && !!curapp"
+            v-touch="{ 
+              right: back
+            }"
+          >
+            <v-subheader class="align-self-start">
               <h2 :style="appTitleStyle">{{curapp.name}}</h2>
               <v-spacer></v-spacer>
               <v-btn v-if="curapp.script" icon :loading="isLoading" @click="runRemoteScript(curapp.script, curapp.script_timeout)">
@@ -1085,7 +1118,14 @@
             </v-card>
           </v-container>
           <!-- 备份详情 -->
-          <v-container fluid v-else-if="view === 'bak' && !!curbak">
+          <v-container
+            fluid
+            class="fill-height"
+            v-else-if="view === 'bak' && !!curbak"
+            v-touch="{ 
+              right: back
+            }"
+          >
             <v-subheader>
               <h2>{{curbak.name}}</h2>
               <v-spacer></v-spacer>
