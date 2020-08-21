@@ -6,11 +6,11 @@
       "author": "@chavyleung",
       "icon": "https://avatars3.githubusercontent.com/u/29748519",
       "repo": "https://github.com/chavyleung",
-      "msg": "更新[BoxJs TF]: 全局搜索结果位置不正确问题",
+      "msg": "更新[BoxJs TF]: 主屏幕左右滑动可切换 首页、应用、订阅、我的 页面",
       "notes": [
         {
           "name": "新增",
-          "descs": ["Surge、QuanX、Loon 手动运行脚本时都可以显示执行结果"]
+          "descs": ["Surge、QuanX、Loon 手动运行脚本时都可以显示执行结果", "主屏幕左右滑动可切换 首页、应用、订阅、我的 页面"]
         },
         {
           "name": "修复",
