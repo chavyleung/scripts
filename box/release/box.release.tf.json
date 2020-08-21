@@ -6,6 +6,20 @@
       "author": "@chavyleung",
       "icon": "https://avatars3.githubusercontent.com/u/29748519",
       "repo": "https://github.com/chavyleung",
+      "msg": "更新[BoxJs TF]: 修复代码编辑器高度, 部分界面左右滑动范围问题",
+      "notes": [
+        {
+          "name": "修复",
+          "descs": ["代码编辑器高度问题", "部分界面只能在有内容的范围左右滑动问题"]
+        }
+      ]
+    },
+    {
+      "version": "0.7.46",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "icon": "https://avatars3.githubusercontent.com/u/29748519",
+      "repo": "https://github.com/chavyleung",
       "msg": "更新[BoxJs TF]: 移除滑动动画, 勿扰模式不弹脚本执行结果页, 操作优化",
       "notes": [
         {

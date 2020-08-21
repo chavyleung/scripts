@@ -69,6 +69,9 @@
         margin-bottom: constant(safe-area-inset-bottom) !important;
         margin-bottom: env(safe-area-inset-bottom) !important;
       }
+      .v-main .container {
+        height: 100%;
+      }
       .v-bottom-navigation,
       .v-bottom-sheet {
         padding-bottom: constant(safe-area-inset-bottom);
@@ -457,7 +460,6 @@
           <!-- 主页 -->
           <v-container
             fluid
-            class="fill-height"
             v-show="view === ''"
             v-touch="{
               up: () => {
@@ -827,7 +829,7 @@
               right: back
             }"
           >
-            <v-card flat style="width: inherit;">
+            <v-card rounded="0" flat style="width: inherit;">
               <v-subheader>
                 <h2>脚本编辑器</h2>
                 <v-spacer></v-spacer>
@@ -846,7 +848,7 @@
               right: back
             }"
           >
-            <v-subheader class="align-self-start">
+            <v-subheader>
               <h2 :style="appTitleStyle">{{curapp.name}}</h2>
               <v-spacer></v-spacer>
               <v-btn v-if="curapp.script" icon :loading="isLoading" @click="runRemoteScript(curapp.script, curapp.script_timeout)">
@@ -1113,21 +1115,20 @@
           <!-- 备份详情 -->
           <v-container
             fluid
-            class="fill-height"
             v-else-if="view === 'bak' && !!curbak"
             v-touch="{ 
               right: back
             }"
           >
             <v-subheader>
-              <h2>{{curbak.name}}</h2>
+              <h2 :style="appTitleStyle">{{curbak.name}}</h2>
               <v-spacer></v-spacer>
               <v-btn icon color="primary" @click="revertGlobalBak">
                 <v-icon>mdi-share-circle</v-icon>
               </v-btn>
             </v-subheader>
-            <v-card flat class="mb-4" color="transparent">
-              <v-card-subtitle class="py-0">
+            <v-card class="mb-4">
+              <v-card-subtitle>
                 <p class="my-0">说明:</p>
                 <p class="my-0">1. 点击右上角 <v-icon color="primary" small>mdi-share-circle</v-icon> 按钮还原!</p>
                 <p class="my-0">2. 点击 <v-icon color="primary" small>mdi-clipboard-text-multiple</v-icon> 按钮可复制备份.</p>
@@ -1745,7 +1746,7 @@
                   this.ui.editor = monaco.editor.create(document.getElementById('container'), {
                     fontSize: 12,
                     tabSize: 2,
-                    value: this.env === 'Surge' && this.box.usercfgs.httpapi ? surgejs_demo.join('\n') : envjs_demo.join('\n'),
+                    value: this.env.id === 'Surge' && this.box.usercfgs.httpapi ? surgejs_demo.join('\n') : envjs_demo.join('\n'),
                     language: 'javascript',
                     minimap: { enabled: false },
                     theme: this.isDarkMode ? 'vs-dark' : 'vs'
