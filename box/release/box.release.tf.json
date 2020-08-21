@@ -1,6 +1,24 @@
 {
   "releases": [
     {
+      "version": "0.7.46",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "icon": "https://avatars3.githubusercontent.com/u/29748519",
+      "repo": "https://github.com/chavyleung",
+      "msg": "更新[BoxJs TF]: 移除滑动动画, 勿扰模式不弹脚本执行结果页, 操作优化",
+      "notes": [
+        {
+          "name": "优化",
+          "descs": ["勿扰模式下运行脚本不弹出结果页", "壁纸模式下滑更容易退出壁纸模式"]
+        },
+        {
+          "name": "移除",
+          "descs": ["左右滑动切换页面的动画"]
+        }
+      ]
+    },
+    {
       "version": "0.7.45",
       "tags": ["beta"],
       "author": "@chavyleung",

@@ -455,16 +455,20 @@
         <v-main v-scroll="onScroll">
           <v-snackbar top app v-model="ui.snackbar.show" v-bind="ui.snackbar">{{ui.snackbar.msg}}</v-snackbar>
           <!-- 主页 -->
-          <v-fade-transition>
-            <v-container
-              fluid
-              class="fill-height"
-              v-show="view === ''"
-              v-touch="{ 
+          <v-container
+            fluid
+            class="fill-height"
+            v-show="view === ''"
+            v-touch="{
               up: () => {
                 if (isWallpaperMode) {
                   clearWallpaper()
                   setWallpaper()
+                }
+              },
+              down: () => {
+                if (isWallpaperMode) {
+                  isWallpaperMode = !isWallpaperMode
                 }
               },
               left: () => {
@@ -484,348 +488,337 @@
                 }
               }
             }"
-            >
-              <v-row no-gutters v-show="!isHidedAppIcons" class="align-self-start">
-                <v-col cols="3" md="2" v-for="(app, appIdx) in favApps" :key="app.id" class="d-flex justify-space-around">
-                  <div class="ma-2" @click="switchAppView(app.id)">
-                    <v-card v-if="isDarkMode" style="border-radius: 12px;">
-                      <v-img style="border-radius: 12px;" :aspect-ratio="1" width="54" height="54" contain v-ripple :src="app.icon"></v-img>
-                    </v-card>
-                    <v-img
-                      v-else
-                      style="border-radius: 12px;"
-                      :aspect-ratio="1"
-                      width="54"
-                      height="54"
-                      contain
-                      v-ripple
-                      class="elevation-3"
-                      :src="app.icon"
-                    ></v-img>
-                    <p class="text-center ma-0">
-                      <span class="d-inline-block text-truncate font-weight-bold" :style="appIconFontStyle">
-                        {{app.name}}
-                      </span>
-                    </p>
-                  </div>
-                </v-col>
-              </v-row>
-            </v-container>
-          </v-fade-transition>
+          >
+            <v-row no-gutters v-show="!isHidedAppIcons" class="align-self-start">
+              <v-col cols="3" md="2" v-for="(app, appIdx) in favApps" :key="app.id" class="d-flex justify-space-around">
+                <div class="ma-2" @click="switchAppView(app.id)">
+                  <v-card v-if="isDarkMode" style="border-radius: 12px;">
+                    <v-img style="border-radius: 12px;" :aspect-ratio="1" width="54" height="54" contain v-ripple :src="app.icon"></v-img>
+                  </v-card>
+                  <v-img
+                    v-else
+                    style="border-radius: 12px;"
+                    :aspect-ratio="1"
+                    width="54"
+                    height="54"
+                    contain
+                    v-ripple
+                    class="elevation-3"
+                    :src="app.icon"
+                  ></v-img>
+                  <p class="text-center ma-0">
+                    <span class="d-inline-block text-truncate font-weight-bold" :style="appIconFontStyle">
+                      {{app.name}}
+                    </span>
+                  </p>
+                </div>
+              </v-col>
+            </v-row>
+          </v-container>
           <!-- 应用列表 -->
-          <v-fade-transition>
-            <v-container
-              fluid
-              v-show="view === 'app' && !curapp"
-              v-touch="{ 
+          <v-container
+            fluid
+            v-show="view === 'app' && !curapp"
+            v-touch="{ 
               left: () => switchView('sub'),
               right: () => switchView('')
             }"
-            >
-              <!-- 收藏应用 -->
-              <v-expansion-panels multiple class="mb-4" v-if="favApps.length > 0" v-model="box.usercfgs.favapppanel">
-                <v-expansion-panel>
-                  <v-expansion-panel-header>
-                    收藏应用 ({{favApps.length}})
-                  </v-expansion-panel-header>
-                  <v-expansion-panel-content>
-                    <v-list dense nav class="ma-n4">
-                      <template v-for="(app, appIdx) in favApps">
-                        <v-list-item dense @click="switchAppView(app.id)" :key="app.id">
-                          <v-list-item-avatar class="elevation-3"><v-img :src="app.icon" /></v-list-item-avatar>
-                          <v-list-item-content>
-                            <v-list-item-title>{{app.name}} ({{app.id}})</v-list-item-title>
-                            <v-list-item-subtitle>{{app.repo}}</v-list-item-subtitle>
-                            <v-list-item-subtitle>{{app.author}}</v-list-item-subtitle>
-                          </v-list-item-content>
-                          <v-list-item-action>
-                            <v-menu bottom left>
-                              <template #activator="{ on }">
-                                <v-btn icon v-on="on"><v-icon>mdi-dots-vertical</v-icon></v-btn>
-                              </template>
-                              <v-list>
-                                <v-list-item dense v-if="appIdx > 0" @click="moveFav(appIdx, -1)">
-                                  <v-list-item-title>上移</v-list-item-title>
-                                </v-list-item>
-                                <v-list-item dense v-if="appIdx + 1 < favApps.length" @click="moveFav(appIdx, 1)">
-                                  <v-list-item-title>下移</v-list-item-title>
-                                </v-list-item>
-                                <v-divider v-if="favApps.length > 1"></v-divider>
-                                <v-list-item dense @click="favApp(app.id)">
-                                  <v-list-item-title>取消收藏</v-list-item-title>
-                                </v-list-item>
-                              </v-list>
-                            </v-menu>
-                          </v-list-item-action>
-                        </v-list-item>
-                        <!-- <v-divider inset v-if="favApps.length !== appIdx + 1"></v-divider> -->
-                      </template>
-                    </v-list>
-                  </v-expansion-panel-content>
-                </v-expansion-panel>
-              </v-expansion-panels>
-              <!-- 订阅应用 -->
-              <v-expansion-panels multiple class="mb-4" v-if="appSubs.length > 0" v-model="box.usercfgs.subapppanel">
-                <v-expansion-panel v-for="(sub, subIdx) in appSubs" :key="sub.id" v-if="!sub.isErr">
-                  <v-expansion-panel-header>
-                    {{sub.name}} ({{sub.apps.length}})
-                  </v-expansion-panel-header>
-                  <v-expansion-panel-content>
-                    <v-list dense nav class="ma-n4">
-                      <template v-for="(app, appIdx) in sub.apps">
-                        <v-list-item dense @click="switchAppView(app.id)" :key="app.id">
-                          <v-list-item-avatar class="elevation-3"><v-img :src="app.icon" /></v-list-item-avatar>
-                          <v-list-item-content>
-                            <v-list-item-title>{{app.name}} ({{app.id}})</v-list-item-title>
-                            <v-list-item-subtitle>{{app.repo}}</v-list-item-subtitle>
-                            <v-list-item-subtitle>{{app.author}}</v-list-item-subtitle>
-                          </v-list-item-content>
-                          <v-list-item-action>
-                            <v-btn icon @click.stop="favApp(app.id)">
-                              <v-icon :color="app.favIconColor" v-text="app.favIcon" />
-                            </v-btn>
-                          </v-list-item-action>
-                        </v-list-item>
-                        <!-- <v-divider inset v-if="sub.apps.length !== appIdx + 1"></v-divider> -->
-                      </template>
-                    </v-list>
-                  </v-expansion-panel-content>
-                </v-expansion-panel>
-              </v-expansion-panels>
-              <!-- 内置应用 -->
-              <v-expansion-panels multiplev-if="sysApps.length > 0" v-model="box.usercfgs.sysapppanel">
-                <v-expansion-panel>
-                  <v-expansion-panel-header>
-                    内置应用 ({{sysApps.length}})
-                  </v-expansion-panel-header>
-                  <v-expansion-panel-content>
-                    <v-list dense nav class="ma-n4">
-                      <template v-for="(app, appIdx) in sysApps">
-                        <v-list-item dense @click="switchAppView(app.id)" :key="app.id">
-                          <v-list-item-avatar class="elevation-3"><v-img :src="app.icon" /></v-list-item-avatar>
-                          <v-list-item-content>
-                            <v-list-item-title>{{app.name}} ({{app.id}})</v-list-item-title>
-                            <v-list-item-subtitle>{{app.repo}}</v-list-item-subtitle>
-                            <v-list-item-subtitle>{{app.author}}</v-list-item-subtitle>
-                          </v-list-item-content>
-                          <v-list-item-action>
-                            <v-btn icon @click.stop="favApp(app.id)">
-                              <v-icon :color="app.favIconColor" v-text="app.favIcon" />
-                            </v-btn>
-                          </v-list-item-action>
-                        </v-list-item>
-                        <!-- <v-divider inset v-if="sysApps.length !== appIdx + 1"></v-divider> -->
-                      </template>
-                    </v-list>
-                  </v-expansion-panel-content>
-                </v-expansion-panel>
-              </v-expansion-panels>
-            </v-container>
-          </v-fade-transition>
+          >
+            <!-- 收藏应用 -->
+            <v-expansion-panels multiple class="mb-4" v-if="favApps.length > 0" v-model="box.usercfgs.favapppanel">
+              <v-expansion-panel>
+                <v-expansion-panel-header>
+                  收藏应用 ({{favApps.length}})
+                </v-expansion-panel-header>
+                <v-expansion-panel-content>
+                  <v-list dense nav class="ma-n4">
+                    <template v-for="(app, appIdx) in favApps">
+                      <v-list-item dense @click="switchAppView(app.id)" :key="app.id">
+                        <v-list-item-avatar class="elevation-3"><v-img :src="app.icon" /></v-list-item-avatar>
+                        <v-list-item-content>
+                          <v-list-item-title>{{app.name}} ({{app.id}})</v-list-item-title>
+                          <v-list-item-subtitle>{{app.repo}}</v-list-item-subtitle>
+                          <v-list-item-subtitle>{{app.author}}</v-list-item-subtitle>
+                        </v-list-item-content>
+                        <v-list-item-action>
+                          <v-menu bottom left>
+                            <template #activator="{ on }">
+                              <v-btn icon v-on="on"><v-icon>mdi-dots-vertical</v-icon></v-btn>
+                            </template>
+                            <v-list>
+                              <v-list-item dense v-if="appIdx > 0" @click="moveFav(appIdx, -1)">
+                                <v-list-item-title>上移</v-list-item-title>
+                              </v-list-item>
+                              <v-list-item dense v-if="appIdx + 1 < favApps.length" @click="moveFav(appIdx, 1)">
+                                <v-list-item-title>下移</v-list-item-title>
+                              </v-list-item>
+                              <v-divider v-if="favApps.length > 1"></v-divider>
+                              <v-list-item dense @click="favApp(app.id)">
+                                <v-list-item-title>取消收藏</v-list-item-title>
+                              </v-list-item>
+                            </v-list>
+                          </v-menu>
+                        </v-list-item-action>
+                      </v-list-item>
+                      <!-- <v-divider inset v-if="favApps.length !== appIdx + 1"></v-divider> -->
+                    </template>
+                  </v-list>
+                </v-expansion-panel-content>
+              </v-expansion-panel>
+            </v-expansion-panels>
+            <!-- 订阅应用 -->
+            <v-expansion-panels multiple class="mb-4" v-if="appSubs.length > 0" v-model="box.usercfgs.subapppanel">
+              <v-expansion-panel v-for="(sub, subIdx) in appSubs" :key="sub.id" v-if="!sub.isErr">
+                <v-expansion-panel-header>
+                  {{sub.name}} ({{sub.apps.length}})
+                </v-expansion-panel-header>
+                <v-expansion-panel-content>
+                  <v-list dense nav class="ma-n4">
+                    <template v-for="(app, appIdx) in sub.apps">
+                      <v-list-item dense @click="switchAppView(app.id)" :key="app.id">
+                        <v-list-item-avatar class="elevation-3"><v-img :src="app.icon" /></v-list-item-avatar>
+                        <v-list-item-content>
+                          <v-list-item-title>{{app.name}} ({{app.id}})</v-list-item-title>
+                          <v-list-item-subtitle>{{app.repo}}</v-list-item-subtitle>
+                          <v-list-item-subtitle>{{app.author}}</v-list-item-subtitle>
+                        </v-list-item-content>
+                        <v-list-item-action>
+                          <v-btn icon @click.stop="favApp(app.id)">
+                            <v-icon :color="app.favIconColor" v-text="app.favIcon" />
+                          </v-btn>
+                        </v-list-item-action>
+                      </v-list-item>
+                      <!-- <v-divider inset v-if="sub.apps.length !== appIdx + 1"></v-divider> -->
+                    </template>
+                  </v-list>
+                </v-expansion-panel-content>
+              </v-expansion-panel>
+            </v-expansion-panels>
+            <!-- 内置应用 -->
+            <v-expansion-panels multiplev-if="sysApps.length > 0" v-model="box.usercfgs.sysapppanel">
+              <v-expansion-panel>
+                <v-expansion-panel-header>
+                  内置应用 ({{sysApps.length}})
+                </v-expansion-panel-header>
+                <v-expansion-panel-content>
+                  <v-list dense nav class="ma-n4">
+                    <template v-for="(app, appIdx) in sysApps">
+                      <v-list-item dense @click="switchAppView(app.id)" :key="app.id">
+                        <v-list-item-avatar class="elevation-3"><v-img :src="app.icon" /></v-list-item-avatar>
+                        <v-list-item-content>
+                          <v-list-item-title>{{app.name}} ({{app.id}})</v-list-item-title>
+                          <v-list-item-subtitle>{{app.repo}}</v-list-item-subtitle>
+                          <v-list-item-subtitle>{{app.author}}</v-list-item-subtitle>
+                        </v-list-item-content>
+                        <v-list-item-action>
+                          <v-btn icon @click.stop="favApp(app.id)">
+                            <v-icon :color="app.favIconColor" v-text="app.favIcon" />
+                          </v-btn>
+                        </v-list-item-action>
+                      </v-list-item>
+                      <!-- <v-divider inset v-if="sysApps.length !== appIdx + 1"></v-divider> -->
+                    </template>
+                  </v-list>
+                </v-expansion-panel-content>
+              </v-expansion-panel>
+            </v-expansion-panels>
+          </v-container>
           <!-- 订阅列表 -->
-          <v-fade-transition>
-            <v-container
-              fluid
-              v-show="view === 'sub'"
-              v-touch="{ 
+          <v-container
+            fluid
+            v-show="view === 'sub'"
+            v-touch="{ 
               left: () => switchView('my'),
               right: () => switchView('app')
             }"
-            >
-              <template v-if="appSubs.length === 0">
-                <v-btn block class="primary" @click="addAppSubDialog = true">添加订阅</v-btn>
-                <v-btn block class="primary" @click="open('https://chavyleung.gitbook.io/boxjs/awesome/subscriptions')">
-                  <v-icon class="mr-2">mdi-cloud</v-icon>进来看看
-                </v-btn>
-              </template>
-              <v-card v-else>
-                <v-list dense nav>
-                  <v-subheader inset dense>
-                    应用订阅 ({{appSubs.length}})
-                    <v-spacer></v-spacer>
-                    <v-btn icon @click="open('https://chavyleung.gitbook.io/boxjs/awesome/subscriptions')">
-                      <v-icon>mdi-cloud-circle</v-icon>
-                    </v-btn>
-                    <v-btn icon @click="reloadAppSub()">
-                      <v-icon>mdi-refresh-circle</v-icon>
-                    </v-btn>
-                    <v-btn icon>
-                      <v-icon color="primary" @click="addAppSubDialog = true">mdi-plus-circle</v-icon>
-                    </v-btn>
-                  </v-subheader>
-                  <template v-for="(sub, subIdx) in appSubs">
-                    <v-list-item dense two-line @click="reloadAppSub(sub)" :key="sub.id">
-                      <v-list-item-avatar v-if="sub.icon"><v-img :src="sub.icon" /></v-list-item-avatar>
-                      <v-list-item-avatar v-else color="primary"><v-icon dark>mdi-account</v-icon></v-list-item-avatar>
-                      <v-list-item-content>
-                        <v-list-item-title>
-                          {{sub.name}} ({{sub.apps.length}})
-                          <v-chip v-if="sub.isErr" color="pink" dark x-small class="ml-1 mb-1">格式错误</v-chip>
-                        </v-list-item-title>
-                        <v-list-item-subtitle>{{sub.repo ? sub.repo : sub.url}}</v-list-item-subtitle>
-                        <v-list-item-subtitle>{{sub.author ? sub.author : '@anonymous'}}</v-list-item-subtitle>
-                        <v-list-item-subtitle>
-                          更新于: {{timeago.format(sub.updateTime, 'zh_CN')}}
-                        </v-list-item-subtitle>
-                      </v-list-item-content>
-                      <v-list-item-action>
-                        <v-menu bottom left>
-                          <template #activator="{ on }">
-                            <v-btn icon v-on="on"><v-icon>mdi-dots-vertical</v-icon></v-btn>
-                          </template>
-                          <v-list dense>
-                            <v-list-item @click="open(sub.repo)">
-                              <v-list-item-title>仓库</v-list-item-title>
-                            </v-list-item>
-                            <v-list-item @click="copy(sub.url)">
-                              <v-list-item-title>复制</v-list-item-title>
-                            </v-list-item>
-                            <v-divider></v-divider>
-                            <v-list-item v-if="subIdx > 0" @click="moveSub(subIdx, -1)">
-                              <v-list-item-title>上移</v-list-item-title>
-                            </v-list-item>
-                            <v-list-item v-if="subIdx + 1 < appSubs.length" @click="moveSub(subIdx, 1)">
-                              <v-list-item-title>下移</v-list-item-title>
-                            </v-list-item>
-                            <v-divider></v-divider>
-                            <v-list-item @click="delSub(subIdx)">
-                              <v-list-item-title>删除</v-list-item-title>
-                            </v-list-item>
-                          </v-list>
-                        </v-menu>
-                      </v-list-item-action>
-                    </v-list-item>
-                    <!-- <v-divider inset v-if="appSubs.length !== subIdx + 1"></v-divider> -->
-                  </template>
-                </v-list>
+          >
+            <template v-if="appSubs.length === 0">
+              <v-btn block class="primary" @click="addAppSubDialog = true">添加订阅</v-btn>
+              <v-btn block class="primary" @click="open('https://chavyleung.gitbook.io/boxjs/awesome/subscriptions')">
+                <v-icon class="mr-2">mdi-cloud</v-icon>进来看看
+              </v-btn>
+            </template>
+            <v-card v-else>
+              <v-list dense nav>
+                <v-subheader inset dense>
+                  应用订阅 ({{appSubs.length}})
+                  <v-spacer></v-spacer>
+                  <v-btn icon @click="open('https://chavyleung.gitbook.io/boxjs/awesome/subscriptions')">
+                    <v-icon>mdi-cloud-circle</v-icon>
+                  </v-btn>
+                  <v-btn icon @click="reloadAppSub()">
+                    <v-icon>mdi-refresh-circle</v-icon>
+                  </v-btn>
+                  <v-btn icon>
+                    <v-icon color="primary" @click="addAppSubDialog = true">mdi-plus-circle</v-icon>
+                  </v-btn>
+                </v-subheader>
+                <template v-for="(sub, subIdx) in appSubs">
+                  <v-list-item dense two-line @click="reloadAppSub(sub)" :key="sub.id">
+                    <v-list-item-avatar v-if="sub.icon"><v-img :src="sub.icon" /></v-list-item-avatar>
+                    <v-list-item-avatar v-else color="primary"><v-icon dark>mdi-account</v-icon></v-list-item-avatar>
+                    <v-list-item-content>
+                      <v-list-item-title>
+                        {{sub.name}} ({{sub.apps.length}})
+                        <v-chip v-if="sub.isErr" color="pink" dark x-small class="ml-1 mb-1">格式错误</v-chip>
+                      </v-list-item-title>
+                      <v-list-item-subtitle>{{sub.repo ? sub.repo : sub.url}}</v-list-item-subtitle>
+                      <v-list-item-subtitle>{{sub.author ? sub.author : '@anonymous'}}</v-list-item-subtitle>
+                      <v-list-item-subtitle>
+                        更新于: {{timeago.format(sub.updateTime, 'zh_CN')}}
+                      </v-list-item-subtitle>
+                    </v-list-item-content>
+                    <v-list-item-action>
+                      <v-menu bottom left>
+                        <template #activator="{ on }">
+                          <v-btn icon v-on="on"><v-icon>mdi-dots-vertical</v-icon></v-btn>
+                        </template>
+                        <v-list dense>
+                          <v-list-item @click="open(sub.repo)">
+                            <v-list-item-title>仓库</v-list-item-title>
+                          </v-list-item>
+                          <v-list-item @click="copy(sub.url)">
+                            <v-list-item-title>复制</v-list-item-title>
+                          </v-list-item>
+                          <v-divider></v-divider>
+                          <v-list-item v-if="subIdx > 0" @click="moveSub(subIdx, -1)">
+                            <v-list-item-title>上移</v-list-item-title>
+                          </v-list-item>
+                          <v-list-item v-if="subIdx + 1 < appSubs.length" @click="moveSub(subIdx, 1)">
+                            <v-list-item-title>下移</v-list-item-title>
+                          </v-list-item>
+                          <v-divider></v-divider>
+                          <v-list-item @click="delSub(subIdx)">
+                            <v-list-item-title>删除</v-list-item-title>
+                          </v-list-item>
+                        </v-list>
+                      </v-menu>
+                    </v-list-item-action>
+                  </v-list-item>
+                  <!-- <v-divider inset v-if="appSubs.length !== subIdx + 1"></v-divider> -->
+                </template>
+              </v-list>
+            </v-card>
+            <v-dialog v-model="addAppSubDialog" scrollable>
+              <v-card>
+                <v-card-title>添加订阅</v-card-title>
+                <v-divider></v-divider>
+                <v-card-text>
+                  <v-textarea
+                    rows="3"
+                    clearable
+                    autofocus
+                    persistent-hint
+                    v-model="ui.addAppSubDialog.url"
+                    label="订阅地址 (URL)"
+                    hint="请粘贴 URL 格式的订阅地址!"
+                  ></v-textarea>
+                </v-card-text>
+                <v-divider></v-divider>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn text small color="grey" @click="addAppSubDialog = false">取消</v-btn>
+                  <v-btn text small color="primary" @click="addAppSub(ui.addAppSubDialog.url)" :loading="isLoading">添加</v-btn>
+                </v-card-actions>
               </v-card>
-              <v-dialog v-model="addAppSubDialog" scrollable>
-                <v-card>
-                  <v-card-title>添加订阅</v-card-title>
-                  <v-divider></v-divider>
-                  <v-card-text>
-                    <v-textarea
-                      rows="3"
-                      clearable
-                      autofocus
-                      persistent-hint
-                      v-model="ui.addAppSubDialog.url"
-                      label="订阅地址 (URL)"
-                      hint="请粘贴 URL 格式的订阅地址!"
-                    ></v-textarea>
-                  </v-card-text>
-                  <v-divider></v-divider>
-                  <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn text small color="grey" @click="addAppSubDialog = false">取消</v-btn>
-                    <v-btn text small color="primary" @click="addAppSub(ui.addAppSubDialog.url)" :loading="isLoading">添加</v-btn>
-                  </v-card-actions>
-                </v-card>
-              </v-dialog>
-            </v-container>
-          </v-fade-transition>
+            </v-dialog>
+          </v-container>
           <!-- 我的 -->
-          <v-fade-transition>
-            <v-container
-              fluid
-              v-show="view === 'my'"
-              v-touch="{ 
+          <v-container
+            fluid
+            v-show="view === 'my'"
+            v-touch="{ 
                 left: () => {
                   isWallpaperMode = !isWallpaperMode
                   switchView('')
                 },
                 right: () => switchView('sub')
               }"
-            >
-              <v-card class="mx-auto">
-                <v-card-title class="headline">
-                  {{box.usercfgs.name ? box.usercfgs.name : '大侠, 留个名字吧!'}}
-                  <v-spacer></v-spacer>
-                  <v-dialog v-model="ui.editProfileDialog.show">
-                    <template #activator="{ on }">
-                      <v-btn icon v-on="on"><v-icon>mdi-cog-outline</v-icon></v-btn>
-                    </template>
-                    <v-card>
-                      <v-card-title>个人资料</v-card-title>
-                      <v-divider></v-divider>
-                      <v-card-text>
-                        <v-text-field label="昵称" v-model="box.usercfgs.name" hint="少侠请留名!"></v-text-field>
-                        <v-text-field
-                          label="头像 (选填)"
-                          v-model="box.usercfgs.icon"
-                          hint="头像链接, 建议直接从 GitHub 获取!"
-                        ></v-text-field>
-                      </v-card-text>
-                      <v-divider></v-divider>
-                      <v-card-actions>
-                        <v-spacer></v-spacer>
-                        <v-btn text small color="grey" @click="ui.editProfileDialog.show = false">取消</v-btn>
-                        <v-btn text small color="primary" @click="ui.editProfileDialog.show = false" :loading="isLoading">保存</v-btn>
-                      </v-card-actions>
-                    </v-card>
-                  </v-dialog>
-                </v-card-title>
-                <v-divider class="mx-4"></v-divider>
-                <v-card-text>
-                  <span class="subheading">我的数据</span>
-                  <v-chip-group>
-                    <v-chip small>应用: {{this.apps.length}}</v-chip>
-                    <v-chip small>订阅: {{this.appSubs.length}}</v-chip>
-                    <v-chip small>会话: {{this.sessions.length}}</v-chip>
-                  </v-chip-group>
-                </v-card-text>
-                <v-card-actions>
-                  <!-- <v-btn text small color="red" @click="">抹掉数据</v-btn> -->
-                  <v-spacer></v-spacer>
-                  <v-dialog v-model="ui.impGlobalBakDialog.show">
-                    <template #activator="{ on }">
-                      <v-btn small v-on="on">导入</v-btn>
-                    </template>
-                    <v-card>
-                      <v-card-title>
-                        导入备份
-                      </v-card-title>
-                      <v-divider></v-divider>
-                      <v-card-text>
-                        <v-textarea
-                          rows="3"
-                          clearable
-                          autofocus
-                          v-model="ui.impGlobalBakDialog.impval"
-                          label="备份内容"
-                          hint="请粘贴全局备份内容!"
-                        ></v-textarea>
-                      </v-card-text>
-                      <v-divider></v-divider>
-                      <v-card-actions>
-                        <v-spacer></v-spacer>
-                        <v-btn text small color="grey" text @click="ui.impGlobalBakDialog.show = false">取消</v-btn>
-                        <v-btn text small color="primary" text @click="impGlobalBak" :loading="isLoading">导入</v-btn>
-                      </v-card-actions>
-                    </v-card>
-                  </v-dialog>
-                  <v-btn small @click="saveGlobalBak">备份</v-btn>
-                </v-card-actions>
-              </v-card>
-              <v-card class="mt-4" v-if="box.globalbaks">
-                <template v-for="(bak, bakIdx) in box.globalbaks">
-                  <v-divider v-if="bakIdx>0"></v-divider>
-                  <v-list-item dense @click="switchBakView(bak.id)">
-                    <v-list-item-content>
-                      <v-list-item-title>{{bak.name}}</v-list-item-title>
-                      <v-list-item-subtitle>{{dayjs(bak.createTime).format('YYYY-MM-DD HH:mm:ss')}}</v-list-item-subtitle>
-                      <v-list-item-subtitle>
-                        <v-chip x-small class="mr-2" v-for="(tag, tagIdx) in bak.tags" :key="tagIdx">{{tag}}</v-chip>
-                      </v-list-item-subtitle>
-                    </v-list-item-content>
-                    <v-list-item-action>
-                      <v-btn icon><v-icon>mdi-chevron-right</v-icon></v-btn>
-                    </v-list-item-action>
-                  </v-list-item>
-                </template>
-              </v-card>
-            </v-container>
-          </v-fade-transition>
+          >
+            <v-card class="mx-auto">
+              <v-card-title class="headline">
+                {{box.usercfgs.name ? box.usercfgs.name : '大侠, 留个名字吧!'}}
+                <v-spacer></v-spacer>
+                <v-dialog v-model="ui.editProfileDialog.show">
+                  <template #activator="{ on }">
+                    <v-btn icon v-on="on"><v-icon>mdi-cog-outline</v-icon></v-btn>
+                  </template>
+                  <v-card>
+                    <v-card-title>个人资料</v-card-title>
+                    <v-divider></v-divider>
+                    <v-card-text>
+                      <v-text-field label="昵称" v-model="box.usercfgs.name" hint="少侠请留名!"></v-text-field>
+                      <v-text-field label="头像 (选填)" v-model="box.usercfgs.icon" hint="头像链接, 建议直接从 GitHub 获取!"></v-text-field>
+                    </v-card-text>
+                    <v-divider></v-divider>
+                    <v-card-actions>
+                      <v-spacer></v-spacer>
+                      <v-btn text small color="grey" @click="ui.editProfileDialog.show = false">取消</v-btn>
+                      <v-btn text small color="primary" @click="ui.editProfileDialog.show = false" :loading="isLoading">保存</v-btn>
+                    </v-card-actions>
+                  </v-card>
+                </v-dialog>
+              </v-card-title>
+              <v-divider class="mx-4"></v-divider>
+              <v-card-text>
+                <span class="subheading">我的数据</span>
+                <v-chip-group>
+                  <v-chip small>应用: {{this.apps.length}}</v-chip>
+                  <v-chip small>订阅: {{this.appSubs.length}}</v-chip>
+                  <v-chip small>会话: {{this.sessions.length}}</v-chip>
+                </v-chip-group>
+              </v-card-text>
+              <v-card-actions>
+                <!-- <v-btn text small color="red" @click="">抹掉数据</v-btn> -->
+                <v-spacer></v-spacer>
+                <v-dialog v-model="ui.impGlobalBakDialog.show">
+                  <template #activator="{ on }">
+                    <v-btn small v-on="on">导入</v-btn>
+                  </template>
+                  <v-card>
+                    <v-card-title>
+                      导入备份
+                    </v-card-title>
+                    <v-divider></v-divider>
+                    <v-card-text>
+                      <v-textarea
+                        rows="3"
+                        clearable
+                        autofocus
+                        v-model="ui.impGlobalBakDialog.impval"
+                        label="备份内容"
+                        hint="请粘贴全局备份内容!"
+                      ></v-textarea>
+                    </v-card-text>
+                    <v-divider></v-divider>
+                    <v-card-actions>
+                      <v-spacer></v-spacer>
+                      <v-btn text small color="grey" text @click="ui.impGlobalBakDialog.show = false">取消</v-btn>
+                      <v-btn text small color="primary" text @click="impGlobalBak" :loading="isLoading">导入</v-btn>
+                    </v-card-actions>
+                  </v-card>
+                </v-dialog>
+                <v-btn small @click="saveGlobalBak">备份</v-btn>
+              </v-card-actions>
+            </v-card>
+            <v-card class="mt-4" v-if="box.globalbaks">
+              <template v-for="(bak, bakIdx) in box.globalbaks">
+                <v-divider v-if="bakIdx>0"></v-divider>
+                <v-list-item dense @click="switchBakView(bak.id)">
+                  <v-list-item-content>
+                    <v-list-item-title>{{bak.name}}</v-list-item-title>
+                    <v-list-item-subtitle>{{dayjs(bak.createTime).format('YYYY-MM-DD HH:mm:ss')}}</v-list-item-subtitle>
+                    <v-list-item-subtitle>
+                      <v-chip x-small class="mr-2" v-for="(tag, tagIdx) in bak.tags" :key="tagIdx">{{tag}}</v-chip>
+                    </v-list-item-subtitle>
+                  </v-list-item-content>
+                  <v-list-item-action>
+                    <v-btn icon><v-icon>mdi-chevron-right</v-icon></v-btn>
+                  </v-list-item-action>
+                </v-list-item>
+              </template>
+            </v-card>
+          </v-container>
           <!-- 代码编辑 -->
           <v-container
             fluid
@@ -1517,7 +1510,7 @@
             } else {
               this.clearWallpaper()
               const darkBg = `background: #121212;`
-              const lightWebappBg = `background-image: linear-gradient(rgba(0,0,0,.3) 1%, rgba(255,255,255,0) 10%, rgba(255,255,255,0));`
+              const lightWebappBg = `background-image: linear-gradient(to bottom,rgba(0,0,0,.2) 0,transparent 76px);`
               const lightBg = `${this.isWebApp ? lightWebappBg : 'background: #fff;'}`
               document.querySelector('#BG').setAttribute('style', this.isDarkMode ? darkBg : lightBg)
             }
@@ -1893,7 +1886,7 @@
           },
           setWallpaper() {
             const bgStyle = [
-              `background-image: linear-gradient(rgba(0,0,0,.2) 1%, rgba(255,255,255,0) 10%), url(${this.box.usercfgs.bgimg})`
+              `background-image: linear-gradient(to bottom,rgba(0,0,0,.2) 0,transparent 76px), url(${this.box.usercfgs.bgimg})`
             ]
             document.querySelector('#BG').setAttribute('style', bgStyle.join('; '))
           },
@@ -2077,8 +2070,10 @@
           },
           runScript(opts) {
             axios.post('/api/runScript', opts).then((resp) => {
-              this.ui.exeScriptSheet.resp = resp.data
-              this.ui.exeScriptSheet.show = true
+              if (!this.box.usercfgs.isMute) {
+                this.ui.exeScriptSheet.resp = resp.data
+                this.ui.exeScriptSheet.show = true
+              }
             })
           },
           // 保存用户偏好
