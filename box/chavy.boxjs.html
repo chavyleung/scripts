@@ -162,7 +162,7 @@
           </v-card>
         </v-dialog>
         <!-- 侧栏 -->
-        <v-navigation-drawer app v-model="ui.naviDrawer.show" height="100%" temporary right>
+        <v-navigation-drawer app v-model="ui.naviDrawer.show" height="100%" temporary right disable-route-watcher>
           <v-list dense nav>
             <v-list-item dense @click="open(box.syscfgs.chavy.repo)">
               <v-list-item-avatar><img :src="box.syscfgs.chavy.icon" /></v-list-item-avatar>
@@ -1887,15 +1887,13 @@
           },
           setWallpaper() {
             let bgimg = ''
-            if (this.box.usercfgs.bgimg === "跟随系统") {
-              const hasdark = this.bgimgs.find(bgimg => bgimg.name == "dark")
-              const haslight = this.bgimgs.find(bgimg => bgimg.name == "light")
+            if (this.box.usercfgs.bgimg === '跟随系统') {
+              const hasdark = this.bgimgs.find((bgimg) => bgimg.name == 'dark')
+              const haslight = this.bgimgs.find((bgimg) => bgimg.name == 'light')
               const darkbgimg = hasdark ? hasdark.url : ``
               const lightbgimg = haslight ? haslight.url : ``
-              this.isDarkMode ? bgimg = darkbgimg : bgimg = lightbgimg
-              const bgStyle = [
-                `background-image: linear-gradient(to bottom,rgba(0,0,0,.2) 0,transparent 76px), url(${bgimg})`
-              ]
+              this.isDarkMode ? (bgimg = darkbgimg) : (bgimg = lightbgimg)
+              const bgStyle = [`background-image: linear-gradient(to bottom,rgba(0,0,0,.2) 0,transparent 76px), url(${bgimg})`]
               document.querySelector('#BG').setAttribute('style', bgStyle.join('; '))
             } else {
               const bgStyle = [

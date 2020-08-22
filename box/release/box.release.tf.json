@@ -1,12 +1,12 @@
 {
   "releases": [
     {
-      "version": "0.7.48",
+      "version": "0.7.49",
       "tags": ["beta"],
       "author": "@GideonSenku",
       "icon": "https://avatars3.githubusercontent.com/u/29748519",
       "repo": "https://github.com/chavyleung",
-      "msg": "更新[BoxJs TF]: 新增壁纸跟随系统适配",
+      "msg": "更新[BoxJs TF]: 修复主屏左滑时与侧栏冲突问题",
       "notes": [
         {
           "name": "新增",
@@ -17,9 +17,12 @@
           "descs": ["背景清单图片默认`无`更改为`跟随系统`"]
         },
         {
+          "name": "修复",
+          "descs": ["主屏左滑时与侧栏冲突问题"]
+        },
+        {
           "name": "说明",
-          "descs": ["背景图片清单中设置:跟随系统,跟随系统{换行} light,图片地址{换行} dark,图片地址{换行}",
-            "如果不设置`跟随系统,跟随系统`,则默认跟随系统为无背景"]
+          "descs": ["背景图片清单中设置:无{换行} 跟随系统,跟随系统{换行} light,图片地址{换行} dark,图片地址{换行}", "如果不设置`跟随系统,跟随系统`,则默认跟随系统为无背景"]
         }
       ]
     },
