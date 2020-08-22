@@ -1897,14 +1897,11 @@
           },
           // 切换备份视图
           switchBakView(bakId) {
-            const bak = this.baks.find((bak) => bak.id === bakId)
             const path = `/#/bak/${bakId}`
-            if (!bak.bak) {
-              this.loadGlobalBak().then((resp) => (this.path = path))
-            } else {
+            this.loadGlobalBak().then((resp) => {
               this.path = path
-              this.handleHistory(this.path)
-            }
+              this.handleHistory(path)
+            })
           },
           // 重载主题
           loadTheme() {
