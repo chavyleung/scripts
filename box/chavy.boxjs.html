@@ -1841,7 +1841,6 @@
           } else {
             this.path = defview
           }
-          this.handleHistory(this.path)
           // 监听浏览器后退事件
           window.addEventListener('popstate', (e) => (this.path = e.state.url), false)
           // 如果后端没有渲染数据, 则发出请求获取数据
@@ -1909,10 +1908,13 @@
             this.ui.isWaitToggleSearchBar = false
           }, 1000),
           handleHistory(path) {
-            const state = { title: 'BoxJs', url: path }
+            const { hash } = window.location.href;
+            const state = { title: 'BoxJs', url:  '/' + (hash ? hash : '#/') }
             if (!history.state) {
               history.replaceState(state, '')
             }
+
+            state.url = path;
             history.pushState(state, '', path)
           },
           // 页面返回
