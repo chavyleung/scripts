@@ -1886,10 +1886,23 @@
             }
           },
           setWallpaper() {
-            const bgStyle = [
-              `background-image: linear-gradient(to bottom,rgba(0,0,0,.2) 0,transparent 76px), url(${this.box.usercfgs.bgimg})`
-            ]
-            document.querySelector('#BG').setAttribute('style', bgStyle.join('; '))
+            let bgimg = ''
+            if (this.box.usercfgs.bgimg === "跟随系统") {
+              const hasdark = this.bgimgs.find(bgimg => bgimg.name == "dark")
+              const haslight = this.bgimgs.find(bgimg => bgimg.name == "light")
+              const darkbgimg = hasdark ? hasdark.url : ``
+              const lightbgimg = haslight ? haslight.url : ``
+              this.isDarkMode ? bgimg = darkbgimg : bgimg = lightbgimg
+              const bgStyle = [
+                `background-image: linear-gradient(to bottom,rgba(0,0,0,.2) 0,transparent 76px), url(${bgimg})`
+              ]
+              document.querySelector('#BG').setAttribute('style', bgStyle.join('; '))
+            } else {
+              const bgStyle = [
+                `background-image: linear-gradient(to bottom,rgba(0,0,0,.2) 0,transparent 76px), url(${this.box.usercfgs.bgimg})`
+              ]
+              document.querySelector('#BG').setAttribute('style', bgStyle.join('; '))
+            }
           },
           clearWallpaper() {
             document.querySelector('#BG').removeAttribute('style')
