@@ -224,6 +224,7 @@
             <v-list-item>
               <v-list-item-content>
                 <v-select
+                  autofocus
                   hide-details
                   v-model="box.usercfgs.theme"
                   :items="[{text: '跟随系统', value: 'auto'}, {text: '暗黑', value: 'dark'}, {text: '明亮', value: 'light'}]"
@@ -287,7 +288,7 @@
                 v-model="box.usercfgs.isHidedSearchBar"
                 @change="saveUserCfgs"
                 :persistent-hint="true"
-                hint="右侧向左滑呼出侧栏"
+                hint="主屏幕下滑可恢复显示"
               >
               </v-switch>
               <v-spacer></v-spacer>
@@ -303,7 +304,7 @@
                 v-model="box.usercfgs.isHidedNaviBottom"
                 @change="saveUserCfgs"
                 :persistent-hint="true"
-                hint="右侧向左滑呼出侧栏"
+                hint="隐藏后只能在侧栏恢复"
               >
               </v-switch>
               <v-spacer></v-spacer>
@@ -472,22 +473,6 @@
                 if (isWallpaperMode) {
                   isWallpaperMode = !isWallpaperMode
                 }
-              },
-              left: () => {
-                if (isWallpaperMode) {
-                  switchView('')
-                  isWallpaperMode = !isWallpaperMode
-                } else {
-                  switchView('app')
-                }
-              },
-              right: () => {
-                if (isWallpaperMode) {
-                  switchView('')
-                  isWallpaperMode = !isWallpaperMode
-                } else {
-                  isWallpaperMode = !isWallpaperMode
-                }
               }
             }"
           >
@@ -518,14 +503,7 @@
             </v-row>
           </v-container>
           <!-- 应用列表 -->
-          <v-container
-            fluid
-            v-show="view === 'app' && !curapp"
-            v-touch="{ 
-              left: () => switchView('sub'),
-              right: () => switchView('')
-            }"
-          >
+          <v-container fluid v-show="view === 'app' && !curapp">
             <!-- 收藏应用 -->
             <v-expansion-panels multiple class="mb-4" v-if="favApps.length > 0" v-model="box.usercfgs.favapppanel">
               <v-expansion-panel>
@@ -626,14 +604,7 @@
             </v-expansion-panels>
           </v-container>
           <!-- 订阅列表 -->
-          <v-container
-            fluid
-            v-show="view === 'sub'"
-            v-touch="{ 
-              left: () => switchView('my'),
-              right: () => switchView('app')
-            }"
-          >
+          <v-container fluid v-show="view === 'sub'">
             <template v-if="appSubs.length === 0">
               <v-btn block class="primary" @click="addAppSubDialog = true">添加订阅</v-btn>
               <v-btn block class="primary" @click="open('https://chavyleung.gitbook.io/boxjs/awesome/subscriptions')">
@@ -726,17 +697,7 @@
             </v-dialog>
           </v-container>
           <!-- 我的 -->
-          <v-container
-            fluid
-            v-show="view === 'my'"
-            v-touch="{ 
-                left: () => {
-                  isWallpaperMode = !isWallpaperMode
-                  switchView('')
-                },
-                right: () => switchView('sub')
-              }"
-          >
+          <v-container fluid v-show="view === 'my'">
             <v-card class="mx-auto">
               <v-card-title class="headline">
                 {{box.usercfgs.name ? box.usercfgs.name : '大侠, 留个名字吧!'}}
@@ -822,13 +783,7 @@
             </v-card>
           </v-container>
           <!-- 代码编辑 -->
-          <v-container
-            fluid
-            v-show="view === 'coding'"
-            v-touch="{ 
-              right: back
-            }"
-          >
+          <v-container fluid v-show="view === 'coding'">
             <v-card rounded="0" flat style="width: inherit;">
               <v-subheader>
                 <h2>脚本编辑器</h2>
@@ -841,13 +796,7 @@
             <div class="pa-0" id="container" style="width: inherit; height: inherit;"></div>
           </v-container>
           <!-- 应用详情 -->
-          <v-container
-            fluid
-            v-if="view === 'app' && !!curapp"
-            v-touch="{ 
-              right: back
-            }"
-          >
+          <v-container fluid v-if="view === 'app' && !!curapp">
             <v-subheader>
               <h2 :style="appTitleStyle">{{curapp.name}}</h2>
               <v-spacer></v-spacer>
@@ -1113,13 +1062,7 @@
             </v-card>
           </v-container>
           <!-- 备份详情 -->
-          <v-container
-            fluid
-            v-else-if="view === 'bak' && !!curbak"
-            v-touch="{ 
-              right: back
-            }"
-          >
+          <v-container fluid v-else-if="view === 'bak' && !!curbak">
             <v-subheader>
               <h2 :style="appTitleStyle">{{curbak.name}}</h2>
               <v-spacer></v-spacer>
@@ -1908,13 +1851,12 @@
             this.ui.isWaitToggleSearchBar = false
           }, 1000),
           handleHistory(path) {
-            const { hash } = window.location.href;
-            const state = { title: 'BoxJs', url:  '/' + (hash ? hash : '#/') }
+            const { hash } = window.location.href
+            const state = { title: 'BoxJs', url: '/' + (hash ? hash : '#/') }
             if (!history.state) {
               history.replaceState(state, '')
             }
-
-            state.url = path;
+            state.url = path
             history.pushState(state, '', path)
           },
           // 页面返回

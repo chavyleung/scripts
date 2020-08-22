@@ -1,16 +1,20 @@
 {
   "releases": [
     {
-      "version": "0.7.50",
+      "version": "0.7.51",
       "tags": ["beta"],
-      "author": "@id77",
+      "author": "@id77 @chavyleung",
       "icon": "https://avatars3.githubusercontent.com/u/29748519",
       "repo": "https://github.com/chavyleung",
-      "msg": "更新[BoxJs TF]: 优化页面后退事件逻辑",
+      "msg": "更新[BoxJs TF]: 移除主屏幕的左右滑动手势",
       "notes": [
         {
+          "name": "移除",
+          "descs": ["主屏幕的左右滑动手势", "原因: 与浏览器前进后退容易发生冲突"]
+        },
+        {
           "name": "优化",
-          "descs": ["页面后退事件逻辑"]
+          "descs": ["页面后退事件逻辑", "部分侧栏设置的小字说明"]
         }
       ]
     },

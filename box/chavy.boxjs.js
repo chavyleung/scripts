@@ -3,7 +3,7 @@ const $ = new Env('BoxJs')
 // 为 eval 准备的上下文环境
 const $eval_env = {}
 
-$.version = '0.7.50'
+$.version = '0.7.51'
 $.versionType = 'beta'
 
 /**
