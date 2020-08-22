@@ -17,17 +17,17 @@ let VAL_signcookie = chavy.getdata(KEY_signcookie)
   await openbox(
     'copperbox',
     '铜宝箱',
-    'simpleBody=nUuymDQ/BcC2Q6QH21Tjww23J7qtVaDlUN17k1/KY%2BXGDsRVwDRJ8YfjAMraptIL%0D%0A4t2g56kUpDGFsn9z6%2BofyiL5QwfBYZBZOTw9stNt9mc%3D'
+    'boxId=3&token=' + VAL_signcookie
   )
   await openbox(
     'silverbox',
     '银宝箱',
-    'simpleBody=nUuymDQ/BcC2Q6QH21Tjww23J7qtVaDlUN17k1/KY%2BXGDsRVwDRJ8YfjAMraptIL%0D%0ADPPhFllL7eBnJs52RODWxxe9rquyWdYcDcbyirN6KiE%3D'
+    'boxId=2&token=' + VAL_signcookie
   )
   await openbox(
     'goldenbox',
     '金宝箱',
-    'simpleBody=3abxJMn7LwEdH8u1Xpe2qN6AtFpDhBrmviLyoU%2BunKwnS1IGS7DIfS0HiKtt03G0%0D%0A/zVCARFyXUFFrOxLRrgAS4m/u4BiQYWJzTUeUqLAFZk%3D'
+    'boxId=1&token=' + VAL_signcookie
   )
   await getinfo()
   showmsg()
@@ -39,8 +39,6 @@ function signdaily() {
     let url = { url: `https://api.rr.tv/rrtv-activity/sign/sign`, headers: { token: VAL_signcookie } }
     url.headers['clientType'] = `web`
     url.headers['clientVersion'] = ``
-    url.headers['User-Agent'] =
-      'Mozilla/5.0 (iPhone; CPU iPhone OS 13_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 App/RRSPApp platform/iPhone AppVersion/'
     chavy.post(url, (error, response, data) => {
       try {
         signinfo.signdaily = JSON.parse(data)
@@ -60,8 +58,6 @@ function signwelfare() {
     let url = { url: `https://api.rr.tv/dailyWelfare/getWelfare`, headers: { token: VAL_signcookie } }
     url.headers['clientType'] = `web`
     url.headers['clientVersion'] = ``
-    url.headers['User-Agent'] =
-      'Mozilla/5.0 (iPhone; CPU iPhone OS 13_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 App/RRSPApp platform/iPhone AppVersion/'
     chavy.post(url, (error, response, data) => {
       try {
         signinfo.signwelfare = JSON.parse(data)
@@ -81,8 +77,6 @@ function getinfo() {
     let url = { url: `https://api.rr.tv/user/profile`, headers: { token: VAL_signcookie } }
     url.headers['clientType'] = `web`
     url.headers['clientVersion'] = ``
-    url.headers['User-Agent'] =
-      'Mozilla/5.0 (iPhone; CPU iPhone OS 13_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 App/RRSPApp platform/iPhone AppVersion/'
     chavy.post(url, (error, response, data) => {
       try {
         signinfo.userinfo = JSON.parse(data)
@@ -102,8 +96,6 @@ function getquestion() {
     let url = { url: `https://api.rr.tv/v3plus/question/getQuestion`, headers: { token: VAL_signcookie } }
     url.headers['clientType'] = `web`
     url.headers['clientVersion'] = ``
-    url.headers['User-Agent'] =
-      'Mozilla/5.0 (iPhone; CPU iPhone OS 13_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 App/RRSPApp platform/iPhone AppVersion/'
     chavy.post(url, (error, response, data) => {
       try {
         console.log(data)
@@ -136,8 +128,6 @@ function answerquestion() {
     url.body = `optionId=${signinfo.answeropt.id}`
     url.headers['clientType'] = `web`
     url.headers['clientVersion'] = ``
-    url.headers['User-Agent'] =
-      'Mozilla/5.0 (iPhone; CPU iPhone OS 13_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 App/RRSPApp platform/iPhone AppVersion/'
     chavy.post(url, (error, response, data) => {
       try {
         signinfo.answerquestion = JSON.parse(data)
@@ -157,6 +147,7 @@ function openbox(boxcode, boxname, body) {
     let url = { url: `https://api.rr.tv/v3plus/taskCenter/openBox`, headers: { token: VAL_signcookie } }
     url.body = body
     url.headers['clientType'] = `web`
+    url.headers['clientVersion'] = ``
     chavy.post(url, (error, response, data) => {
       try {
         signinfo[boxcode] = JSON.parse(data)
