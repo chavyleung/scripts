@@ -1,6 +1,20 @@
 {
   "releases": [
     {
+      "version": "0.7.50",
+      "tags": ["beta"],
+      "author": "@id77",
+      "icon": "https://avatars3.githubusercontent.com/u/29748519",
+      "repo": "https://github.com/chavyleung",
+      "msg": "更新[BoxJs TF]: 优化页面后退事件逻辑",
+      "notes": [
+        {
+          "name": "优化",
+          "descs": ["页面后退事件逻辑"]
+        }
+      ]
+    },
+    {
       "version": "0.7.49",
       "tags": ["beta"],
       "author": "@GideonSenku",
