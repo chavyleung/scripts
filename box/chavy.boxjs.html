@@ -164,19 +164,19 @@
         <!-- 侧栏 -->
         <v-navigation-drawer app v-model="ui.naviDrawer.show" height="100%" temporary right disable-route-watcher>
           <v-list dense nav>
-            <v-list-item dense @click="open(box.syscfgs.chavy.repo)">
-              <v-list-item-avatar><img :src="box.syscfgs.chavy.icon" /></v-list-item-avatar>
-              <v-list-item-content>
-                <v-list-item-title>{{box.syscfgs.chavy.id}}</v-list-item-title>
-                <v-list-item-subtitle>{{box.syscfgs.chavy.repo}}</v-list-item-subtitle>
-              </v-list-item-content>
-            </v-list-item>
-            <v-list-item dense @click="open(box.syscfgs.senku.repo)">
-              <v-list-item-avatar><img :src="box.syscfgs.senku.icon" /></v-list-item-avatar>
-              <v-list-item-content>
-                <v-list-item-title>{{box.syscfgs.senku.id}}</v-list-item-title>
-                <v-list-item-subtitle>{{box.syscfgs.senku.repo}}</v-list-item-subtitle>
-              </v-list-item-content>
+            <v-list-item dense>
+              <v-list-item-avatar @click="open(box.syscfgs.boxjs.repo)" class="elevation-3">
+                <v-img :src="box.syscfgs.boxjs.icon"></v-img>
+              </v-list-item-avatar>
+              <v-row justify="start" no-gutters>
+                <v-col v-for="(c, cIdx) in ui.collaborators" cols="4" :key="c.id">
+                  <a>
+                    <v-avatar size="40" @click="open(c.repo)" class="elevation-3">
+                      <img :src="c.icon" />
+                    </v-avatar>
+                  </a>
+                </v-col>
+              </v-row>
             </v-list-item>
             <v-divider></v-divider>
             <v-list-item class="pt-1">
@@ -186,8 +186,8 @@
                   <v-tooltip bottom>
                     <template v-slot:activator="{ on, attrs }">
                       <a>
-                        <v-avatar v-on="on" class="ma-1" size="26" @click="open(c.repo)">
-                          <img :src="c.icon" />
+                        <v-avatar v-on="on" class="ma-1 elevation-3" size="26" @click="open(c.repo)">
+                          <v-img :src="c.icon"></v-img>
                         </v-avatar>
                       </a>
                     </template>
@@ -1248,6 +1248,7 @@
               subview: null,
               bfsubview: null,
               // 数据类
+              collaborators: [],
               contributors: [],
               isSaveUserCfgs: false,
               // 界面类
@@ -1831,7 +1832,7 @@
             let bgimg = ''
             if (this.box.usercfgs.bgimg === '跟随系统') {
               const hasdark = this.bgimgs.find((bgimg) => bgimg.name == '暗黑' || bgimg.name == 'dark')
-              const haslight = this.bgimgs.find((bgimg) => bgimg.name == '明亮' ||  bgimg.name == 'light')
+              const haslight = this.bgimgs.find((bgimg) => bgimg.name == '明亮' || bgimg.name == 'light')
               const darkbgimg = hasdark ? hasdark.url : ``
               const lightbgimg = haslight ? haslight.url : ``
               this.isDarkMode ? (bgimg = darkbgimg) : (bgimg = lightbgimg)
@@ -2247,9 +2248,12 @@
             axios.get(url).then((resp) => {
               if (!resp) return
               resp.data.forEach((contributor) => {
-                if ([29748519, 39037656].includes(contributor.id)) return
                 const { login: id, login, html_url: repo, avatar_url: icon } = contributor
-                this.ui.contributors.push({ id, login, repo, icon })
+                if ([29748519, 39037656, 9592236].includes(contributor.id)) {
+                  this.ui.collaborators.push({ id, login, repo, icon })
+                } else {
+                  this.ui.contributors.push({ id, login, repo, icon })
+                }
               })
             })
           },

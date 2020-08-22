@@ -1,6 +1,20 @@
 {
   "releases": [
     {
+      "version": "0.7.54",
+      "tags": ["beta"],
+      "author": "@GideonSenku",
+      "icon": "https://avatars3.githubusercontent.com/u/29748519",
+      "repo": "https://github.com/chavyleung",
+      "msg": "更新[BoxJs TF]: 侧栏增加新的贡献者 @id77",
+      "notes": [
+        {
+          "name": "贡献者",
+          "descs": ["新的贡献者 @id77"]
+        }
+      ]
+    },
+    {
       "version": "0.7.53",
       "tags": ["beta"],
       "author": "@GideonSenku",

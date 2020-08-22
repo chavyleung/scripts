@@ -3,7 +3,7 @@ const $ = new Env('BoxJs')
 // 为 eval 准备的上下文环境
 const $eval_env = {}
 
-$.version = '0.7.53'
+$.version = '0.7.54'
 $.versionType = 'beta'
 
 /**
@@ -278,10 +278,10 @@ function getSystemCfgs() {
     ],
     chavy: { id: 'ChavyLeung', icon: 'https://avatars3.githubusercontent.com/u/29748519', repo: 'https://github.com/chavyleung/scripts' },
     senku: { id: 'GideonSenku', icon: 'https://avatars1.githubusercontent.com/u/39037656', repo: 'https://github.com/GideonSenku' },
+    id77: { id: 'id77', icon: 'https://avatars0.githubusercontent.com/u/9592236', repo: 'https://github.com/id77' },
     orz3: { id: 'Orz-3', icon: 'https://raw.githubusercontent.com/Orz-3/task/master/Orz-3.png', repo: 'https://github.com/Orz-3/' },
     boxjs: { id: 'BoxJs', show: false, icon: 'https://raw.githubusercontent.com/Orz-3/task/master/box.png', icons: ['https://raw.githubusercontent.com/Orz-3/mini/master/box.png', 'https://raw.githubusercontent.com/Orz-3/task/master/box.png'], repo: 'https://github.com/chavyleung/scripts' },
-    defaultIcons: ['https://raw.githubusercontent.com/Orz-3/mini/master/appstore.png', 'https://raw.githubusercontent.com/Orz-3/task/master/appstore.png'],
-    scontributors: []
+    defaultIcons: ['https://raw.githubusercontent.com/Orz-3/mini/master/appstore.png', 'https://raw.githubusercontent.com/Orz-3/task/master/appstore.png']
   }
 }
 
