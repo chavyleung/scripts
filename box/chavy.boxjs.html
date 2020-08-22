@@ -93,7 +93,13 @@
     <div id="BG"></div>
     <div id="app" v-cloak>
       <v-app v-if="box" :style="appViewStyle">
-        <v-app-bar app v-bind="appBarBind" :class="appBarClass" :value="!isHidedSearchBar" v-touch="{ up: () => isHidedSearchBar = true }">
+        <v-app-bar
+          ref="appBar"
+          v-bind="appBarBind"
+          :class="!$refs.appBar || $refs.appBar.isActive ? 'safe' : undefined"
+          :value="!isHidedSearchBar"
+          v-touch="{ up: () => isHidedSearchBar = true }"
+        >
           <!-- 搜索条 -->
           <v-autocomplete v-bind="ui.searchBar" :label="title" @click="ui.searchDialog.show = true" hide-no-data hide-details solo>
             <template #prepend-inner>
@@ -300,6 +306,22 @@
               <v-switch
                 dense
                 class="mt-0"
+                label="自动顶栏"
+                v-model="isAutoSearchBar"
+                @change="saveUserCfgs"
+                :persistent-hint="true"
+                hint="顶栏跟随主屏滚动"
+              >
+              </v-switch>
+              <v-spacer></v-spacer>
+              <v-btn fab small text>
+                <v-avatar size="32"><v-icon>mdi-format-align-top</v-icon></v-avatar>
+              </v-btn>
+            </v-list-item>
+            <v-list-item class="mt-4">
+              <v-switch
+                dense
+                class="mt-0"
                 label="隐藏底栏"
                 v-model="box.usercfgs.isHidedNaviBottom"
                 @change="saveUserCfgs"
@@ -310,6 +332,22 @@
               <v-spacer></v-spacer>
               <v-btn fab small text>
                 <v-avatar size="32"><v-icon>mdi-dock-bottom</v-icon></v-avatar>
+              </v-btn>
+            </v-list-item>
+            <v-list-item class="mt-4">
+              <v-switch
+                dense
+                class="mt-0"
+                label="自动底栏"
+                v-model="isAutoNaviBottom"
+                @change="saveUserCfgs"
+                :persistent-hint="true"
+                hint="底栏跟随主屏滚动"
+              >
+              </v-switch>
+              <v-spacer></v-spacer>
+              <v-btn fab small text>
+                <v-avatar size="32"><v-icon>mdi-format-align-bottom</v-icon></v-avatar>
               </v-btn>
             </v-list-item>
             <!-- <v-list-item class="mt-4">
@@ -456,7 +494,7 @@
           </v-list>
         </v-navigation-drawer>
         <!-- 主页 -->
-        <v-main v-scroll="onScroll">
+        <v-main class="appBarBind.app ? 'safe' : ''" v-scroll="onScroll">
           <v-snackbar top app v-model="ui.snackbar.show" v-bind="ui.snackbar">{{ui.snackbar.msg}}</v-snackbar>
           <!-- 主页 -->
           <v-container
@@ -1098,14 +1136,7 @@
           </v-container>
         </v-main>
         <!-- 底部 -->
-        <v-bottom-navigation
-          app
-          grow
-          color="primary"
-          :value="view"
-          :input-value="!isHidedNaviBottom"
-          v-touch="{ down: () => isHidedNaviBottom = true }"
-        >
+        <v-bottom-navigation ref="naviBar" v-bind="naviBarBind" v-touch="{ down: () => isHidedNaviBottom = true }">
           <v-progress-linear :active="isLoading" height="2" absolute top indeterminate></v-progress-linear>
           <v-btn @click="switchView('')" value="">首页<v-icon>mdi-home</v-icon></v-btn>
           <v-btn @click="switchView('app')" value="app">应用<v-icon>mdi-application</v-icon></v-btn>
@@ -1411,6 +1442,17 @@
               this.box.usercfgs.isHidedSearchBar = val === true
             }
           },
+          isAutoSearchBar: {
+            get() {
+              return this.box.usercfgs.isAutoSearchBar
+            },
+            set(val) {
+              this.box.usercfgs.isAutoSearchBar = val === true
+              if (val === false && !this.isHidedSearchBar) {
+                this.$refs.appBar.isActive = true
+              }
+            }
+          },
           isHidedAppIcons: {
             get() {
               return this.box.usercfgs.isHidedAppIcons || this.isWallpaperMode
@@ -1425,6 +1467,17 @@
             },
             set(val) {
               this.box.usercfgs.isHidedNaviBottom = val === true
+            }
+          },
+          isAutoNaviBottom: {
+            get() {
+              return this.box.usercfgs.isAutoNaviBottom
+            },
+            set(val) {
+              this.box.usercfgs.isAutoNaviBottom = val === true
+              if (val === false && !this.isHidedNaviBottom) {
+                this.$refs.naviBar.isActive = true
+              }
             }
           },
           // 判断是否有壁纸
@@ -1478,19 +1531,28 @@
             return style
           },
           appBarBind() {
+            const app = true
             const isEmptyLight = this.isWebApp && !this.isDarkMode && !this.isWallpaper
             const color = isEmptyLight ? 'primary' : 'transparent'
             const flat = color === 'transparent'
-            const hideOnScroll = false
+            const hideOnScroll = !this.isHidedSearchBar && this.isAutoSearchBar
             const collapseOnScroll = false
-            return { color, flat, hideOnScroll, collapseOnScroll }
-          },
-          appBarClass() {
-            return !this.isHidedSearchBar ? 'safe' : ''
+            const scrollThreshold = 20
+            return { app, color, flat, hideOnScroll, collapseOnScroll, scrollThreshold }
           },
           searchBarBind() {
             const color = this.isDarkMode ? null : 'primary'
             return { color }
+          },
+          naviBarBind() {
+            const app = true
+            const grow = true
+            const color = 'primary'
+            const value = this.view
+            const inputValue = !this.isHidedNaviBottom
+            const hideOnScroll = !this.isHidedNaviBottom && this.isAutoNaviBottom
+            const scrollThreshold = 160
+            return { app, grow, color, value, inputValue, hideOnScroll, scrollThreshold }
           },
           appIconFontStyle() {
             const style = {
@@ -2070,7 +2132,7 @@
           // 修改应用会话
           updateAppSession(session) {
             session.datas.forEach((dat) => {
-              // 如果属性值是 undefinded 或 null, 则修改为 ``, 否则转为字符串
+              // 如果属性值是 undefined 或 null, 则修改为 ``, 否则转为字符串
               dat.val = !_.isNil(dat.val) ? _.toString(dat.val) : ''
             })
             const key = 'chavy_boxjs_sessions'

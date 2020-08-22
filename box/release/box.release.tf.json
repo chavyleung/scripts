@@ -1,9 +1,21 @@
 {
   "releases": [
     {
+      "version": "0.7.55",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "msg": "更新[BoxJs TF]: 顶栏和底栏可以设置跟随滚动",
+      "notes": [
+        {
+          "name": "新增",
+          "descs": ["顶栏和底栏可以设置跟随滚动"]
+        }
+      ]
+    },
+    {
       "version": "0.7.54",
       "tags": ["beta"],
-      "author": "@GideonSenku",
+      "author": "@id77",
       "icon": "https://avatars3.githubusercontent.com/u/29748519",
       "repo": "https://github.com/chavyleung",
       "msg": "更新[BoxJs TF]: 侧栏增加新的贡献者 @id77",
