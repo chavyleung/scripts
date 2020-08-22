@@ -1886,10 +1886,21 @@
             }
           },
           setWallpaper() {
-            const bgStyle = [
-              `background-image: linear-gradient(to bottom,rgba(0,0,0,.2) 0,transparent 76px), url(${this.box.usercfgs.bgimg})`
-            ]
-            document.querySelector('#BG').setAttribute('style', bgStyle.join('; '))
+            let bgimg = ''
+            if (this.box.usercfgs.bgimg === "true") {
+              const darkbgimg = this.bgimgs.filter(bgimg => bgimg.name == "dark")[0].url
+              const lightbgimg = this.bgimgs.filter(bgimg => bgimg.name == "light")[0].url
+              this.isDarkMode ? bgimg = darkbgimg : bgimg = lightbgimg
+              const bgStyle = [
+                `background-image: linear-gradient(to bottom,rgba(0,0,0,.2) 0,transparent 76px), url(${bgimg})`
+              ]
+              document.querySelector('#BG').setAttribute('style', bgStyle.join('; '))
+            } else {
+              const bgStyle = [
+                `background-image: linear-gradient(to bottom,rgba(0,0,0,.2) 0,transparent 76px), url(${this.box.usercfgs.bgimg})`
+              ]
+              document.querySelector('#BG').setAttribute('style', bgStyle.join('; '))
+            }
           },
           clearWallpaper() {
             document.querySelector('#BG').removeAttribute('style')

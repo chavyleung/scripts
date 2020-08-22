@@ -1,6 +1,29 @@
 {
   "releases": [
     {
+      "version": "0.7.48",
+      "tags": ["beta"],
+      "author": "@GideonSenku",
+      "icon": "https://avatars3.githubusercontent.com/u/29748519",
+      "repo": "https://github.com/chavyleung",
+      "msg": "更新[BoxJs TF]: 新增壁纸跟随系统适配",
+      "notes": [
+        {
+          "name": "新增",
+          "descs": ["背景图片可跟随系统调整"]
+        },
+        {
+          "name": "调整",
+          "descs": ["背景清单图片默认`无`更改为`跟随系统`"]
+        },
+        {
+          "name": "说明",
+          "descs": ["背景图片清单中设置:跟随系统,true换行 light,图片url换行 dark,图片url换行",
+            "如果不设置跟随系统,true,则默认跟随系统为无背景"]
+        }
+      ]
+    },
+    {
       "version": "0.7.47",
       "tags": ["beta"],
       "author": "@chavyleung",
