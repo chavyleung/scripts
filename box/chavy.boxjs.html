@@ -1919,15 +1919,7 @@
           },
           // 页面返回
           back() {
-            if (this.view === 'bak' && !this.bfpath) {
-              this.path = '/#/my'
-              this.handleHistory(this.path)
-            } else if (this.view === 'app' && !this.bfpath) {
-              this.path = '/#/app'
-              this.handleHistory(this.path)
-            } else {
-              history.back()
-            }
+            history.back()
           },
           // 切换当前容器环境
           switchEnv(env) {
