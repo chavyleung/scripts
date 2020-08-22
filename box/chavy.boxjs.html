@@ -1830,8 +1830,8 @@
           setWallpaper() {
             let bgimg = ''
             if (this.box.usercfgs.bgimg === '跟随系统') {
-              const hasdark = this.bgimgs.find((bgimg) => bgimg.name == 'dark')
-              const haslight = this.bgimgs.find((bgimg) => bgimg.name == 'light')
+              const hasdark = this.bgimgs.find((bgimg) => bgimg.name == '暗黑' || bgimg.name == 'dark')
+              const haslight = this.bgimgs.find((bgimg) => bgimg.name == '明亮' ||  bgimg.name == 'light')
               const darkbgimg = hasdark ? hasdark.url : ``
               const lightbgimg = haslight ? haslight.url : ``
               this.isDarkMode ? (bgimg = darkbgimg) : (bgimg = lightbgimg)

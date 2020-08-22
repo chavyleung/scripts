@@ -1,6 +1,24 @@
 {
   "releases": [
     {
+      "version": "0.7.53",
+      "tags": ["beta"],
+      "author": "@GideonSenku",
+      "icon": "https://avatars3.githubusercontent.com/u/29748519",
+      "repo": "https://github.com/chavyleung",
+      "msg": "更新[BoxJs TF]: 跟随系统壁纸设置同时支持中英文",
+      "notes": [
+        {
+          "name": "新增",
+          "descs": ["跟随系统壁纸设置支持中英文,且优先考虑中文关键字"]
+        },
+        {
+          "name": "说明",
+          "descs": ["中文关键字为`暗黑`和`明亮`,英文关键字不变"]
+        }
+      ]
+    },
+    {
       "version": "0.7.52",
       "tags": ["beta"],
       "author": "@id77 @chavyleung",
