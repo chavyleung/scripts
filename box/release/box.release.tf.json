@@ -1,16 +1,20 @@
 {
   "releases": [
     {
-      "version": "0.7.51",
+      "version": "0.7.52",
       "tags": ["beta"],
       "author": "@id77 @chavyleung",
       "icon": "https://avatars3.githubusercontent.com/u/29748519",
       "repo": "https://github.com/chavyleung",
-      "msg": "更新[BoxJs TF]: 移除主屏幕的左右滑动手势",
+      "msg": "更新[BoxJs TF]: 删除备份后直接回到首页问题",
       "notes": [
         {
           "name": "移除",
           "descs": ["主屏幕的左右滑动手势", "原因: 与浏览器前进后退容易发生冲突"]
+        },
+        {
+          "name": "修复",
+          "descs": ["删除备份后直接回到首页问题"]
         },
         {
           "name": "优化",
