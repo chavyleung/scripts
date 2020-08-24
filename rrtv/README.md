@@ -2,13 +2,17 @@
 
 > 代码已同时兼容 Surge & QuanX, 使用同一份签到脚本即可
 
+> 2020.8.24 增加随机观看请求，以获得足够活跃值开金宝箱。增加每周礼包抽奖，若未达到抽奖条件，则尝试使用骰子进行刷新卡片以满足条件直至骰子用完(为了节省骰子，此过程设定为周日进行，测试版)。
+
+> 2020.8.21 删去多余 header，去除版本信息以绕过验证，并修正开宝箱请求体
+
 > 2020.1.11 QuanX 在`190`版本开始, 获取 Cookie 方式需要从`script-response-body`改为`script-request-header`
 
 > 2020.1.31 增加自动领取每日福利 (无需重新获取 Cookie, 直接更新脚本即可!)
 
 > 2020.3.4 (1) 增加每日答题 (无需重新获取 Cookie, 直接更新脚本即可!) (答题是判断哪个选项回答的人数最多来选择的，所以建议把签到时间放在 00:10 以后!)
 
-> 2020.3.4 (2) 增加自动开启宝箱 (60 活跃可开`铜箱`和`银箱`, 100 活跃开`金箱`) (仅靠脚本能自动开`铜箱`和`银箱`, `金箱`需要观看视频达一定分钟数, 平常有看视频的朋友可以把签到时间压后一点, 如: `50 23 * * *` )
+> 2020.3.4 (2) 增加自动开启宝箱 (60 活跃可开`铜箱`和`银箱`, 100 活跃开`金箱`) ~~(仅靠脚本能自动开`铜箱`和`银箱`, `金箱`需要观看视频达一定分钟数, 平常有看视频的朋友可以把签到时间压后一点, 如: `50 23 * * *` )~~
 
 ## 配置 (Surge)
 
@@ -34,7 +38,7 @@ cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scr
 ^https:\/\/api\.rr\.tv\/user\/profile url script-request-header rrtv.cookie.js
 
 [task_local]
-1 0 * * * rrtv.js
+10 0 * * * rrtv.js
 ```
 
 ## 说明
@@ -79,7 +83,7 @@ cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scr
      cron "30 0 0 * * *" script-path=xxx.js # 每天00:00:30执行一次
 
      # 再粗暴点，直接:
-     cron "* */60 * * * *" script-path=xxx.js # 每60分执行一次
+     cron "0 0 * * * *" script-path=xxx.js # 每60分整点执行一次
      ```
 
    - `QuanX`配置:
@@ -90,7 +94,7 @@ cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scr
      2 0 * * * xxx.js # 每天00:02执行一次
      3 0 * * * xxx.js # 每天00:03执行一次
 
-     */60 * * * * xxx.js # 每60分执行一次
+     0 * * * * xxx.js # 每60分整点执行一次
      ```
 
 ## 感谢
