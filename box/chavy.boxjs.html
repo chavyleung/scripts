@@ -1626,7 +1626,7 @@
             const apps = []
             this.appSubs.forEach((appsub) => {
               const sub = this.appSubCaches[appsub.url]
-              if (sub && sub.apps) {
+              if (sub && sub.apps && Array.isArray(sub.apps)) {
                 sub.apps.forEach((app) => {
                   this.loadAppBaseInfo(app)
                   apps.push(app)

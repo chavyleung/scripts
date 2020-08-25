@@ -1,6 +1,18 @@
 {
   "releases": [
     {
+      "version": "0.7.56",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "msg": "更新[BoxJs TF]: 修复一处导致白屏逻辑",
+      "notes": [
+        {
+          "name": "修复",
+          "descs": ["修复一处导致白屏逻辑"]
+        }
+      ]
+    },
+    {
       "version": "0.7.55",
       "tags": ["beta"],
       "author": "@chavyleung",

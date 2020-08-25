@@ -3,7 +3,7 @@ const $ = new Env('BoxJs')
 // 为 eval 准备的上下文环境
 const $eval_env = {}
 
-$.version = '0.7.55'
+$.version = '0.7.56'
 $.versionType = 'beta'
 
 /**
@@ -253,7 +253,7 @@ function getBoxData() {
   sysapps.forEach((app) => Object.assign(datas, getAppDatas(app)))
   usercfgs.appsubs.forEach((sub) => {
     const subcache = appSubCaches[sub.url]
-    if (subcache && subcache.apps) {
+    if (subcache && subcache.apps && Array.isArray(subcache.apps)) {
       subcache.apps.forEach((app) => Object.assign(datas, getAppDatas(app)))
     }
   })
