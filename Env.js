@@ -35,6 +35,7 @@ function Env(name, opts) {
       this.dataFile = 'box.dat'
       this.logs = []
       this.isMute = false
+      this.isNeedRewrite = false
       this.logSeparator = '\n'
       this.startTime = new Date().getTime()
       Object.assign(this, opts)
@@ -261,6 +262,10 @@ function Env(name, opts) {
         delete opts.headers['Content-Length']
       }
       if (this.isSurge() || this.isLoon()) {
+        if (this.isSurge() && this.isNeedRewrite) {
+          opts.headers = opts.headers || {}
+          Object.assign(opts.headers, { 'X-Surge-Skip-Scripting': false })
+        }
         $httpClient.get(opts, (err, resp, body) => {
           if (!err && resp) {
             resp.body = body
@@ -269,6 +274,10 @@ function Env(name, opts) {
           callback(err, resp, body)
         })
       } else if (this.isQuanX()) {
+        if (this.isNeedRewrite) {
+          opts.headers = opts.headers || {}
+          Object.assign(opts.headers, { hints: false })
+        }
         $task.fetch(opts).then(
           (resp) => {
             const { statusCode: status, statusCode, headers, body } = resp
@@ -306,6 +315,10 @@ function Env(name, opts) {
       }
       if (opts.headers) delete opts.headers['Content-Length']
       if (this.isSurge() || this.isLoon()) {
+        if (this.isSurge() && this.isNeedRewrite) {
+          opts.headers = opts.headers || {}
+          Object.assign(opts.headers, { 'X-Surge-Skip-Scripting': false })
+        }
         $httpClient.post(opts, (err, resp, body) => {
           if (!err && resp) {
             resp.body = body
@@ -315,6 +328,10 @@ function Env(name, opts) {
         })
       } else if (this.isQuanX()) {
         opts.method = 'POST'
+        if (this.isNeedRewrite) {
+          opts.headers = opts.headers || {}
+          Object.assign(opts.headers, { hints: false })
+        }
         $task.fetch(opts).then(
           (resp) => {
             const { statusCode: status, statusCode, headers, body } = resp
