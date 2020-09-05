@@ -383,10 +383,16 @@ function Env(name, opts) {
           if (this.isLoon()) return rawopts
           else if (this.isQuanX()) return { 'open-url': rawopts }
           else return undefined
-        } else if (typeof rawopts === 'object' && (rawopts['open-url'] || rawopts['media-url'])) {
-          if (this.isLoon()) return rawopts['open-url']
-          else if (this.isQuanX()) return rawopts
-          else undefined
+        } else if (typeof rawopts === 'object') {
+          if (this.isLoon()) {
+            let openUrl = rawopts.openUrl || rawopts['open-url']
+            let mediaUrl = rawopts.mediaUrl || rawopts['media-url']
+            return { openUrl, mediaUrl }
+          } else if (this.isQuanX()) {
+            let openUrl = rawopts['open-url'] || rawopts.openUrl
+            let mediaUrl = rawopts['media-url'] || rawopts.mediaUrl
+            return { 'open-url': openUrl, 'media-url': mediaUrl }
+          }
         } else {
           return undefined
         }
