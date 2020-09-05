@@ -275,8 +275,8 @@ function Env(name, opts) {
         })
       } else if (this.isQuanX()) {
         if (this.isNeedRewrite) {
-          opts.headers = opts.headers || {}
-          Object.assign(opts.headers, { hints: false })
+          opts.opts = opts.opts || {}
+          Object.assign(opts.opts, { hints: false })
         }
         $task.fetch(opts).then(
           (resp) => {
@@ -329,8 +329,8 @@ function Env(name, opts) {
       } else if (this.isQuanX()) {
         opts.method = 'POST'
         if (this.isNeedRewrite) {
-          opts.headers = opts.headers || {}
-          Object.assign(opts.headers, { hints: false })
+          opts.opts = opts.opts || {}
+          Object.assign(opts.opts, { hints: false })
         }
         $task.fetch(opts).then(
           (resp) => {

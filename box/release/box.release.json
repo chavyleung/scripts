@@ -1,14 +1,14 @@
 {
   "releases": [
     {
-      "version": "0.6.19",
+      "version": "0.6.20",
       "tags": ["beta"],
       "author": "@chavyleung",
       "msg": "更新[BoxJs]: BoxJs 内的请求会可以被重写",
       "notes": [
         {
-          "name": "本次更新主要面向开发者",
-          "descs": ["BoxJs 内的请求会可以被重写"]
+          "name": "优化",
+          "descs": ["BoxJs 内的请求会可以被重写", "刷新订阅添加时间缀避免网络缓存"]
         }
       ]
     },
