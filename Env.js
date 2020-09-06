@@ -303,7 +303,10 @@ function Env(name, opts) {
               const { statusCode: status, statusCode, headers, body } = resp
               callback(null, { status, statusCode, headers, body }, body)
             },
-            (err) => callback(err)
+            (err) => {
+              const { message: error, response: resp } = err
+              callback(error, resp, resp && resp.body)
+            }
           )
       }
     }
@@ -347,7 +350,10 @@ function Env(name, opts) {
             const { statusCode: status, statusCode, headers, body } = resp
             callback(null, { status, statusCode, headers, body }, body)
           },
-          (err) => callback(err)
+          (err) => {
+            const { message: error, response: resp } = err
+            callback(error, resp, resp && resp.body)
+          }
         )
       }
     }
