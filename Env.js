@@ -401,20 +401,24 @@ function Env(name, opts) {
      */
     msg(title = name, subt = '', desc = '', opts) {
       const toEnvOpts = (rawopts) => {
-        if (!rawopts || (!this.isLoon() && this.isSurge())) return rawopts
+        if (!rawopts) return rawopts
         if (typeof rawopts === 'string') {
           if (this.isLoon()) return rawopts
           else if (this.isQuanX()) return { 'open-url': rawopts }
+          else if (this.isSurge()) return { url: rawopts }
           else return undefined
         } else if (typeof rawopts === 'object') {
           if (this.isLoon()) {
-            let openUrl = rawopts.openUrl || rawopts['open-url']
+            let openUrl = rawopts.openUrl || rawopts.url || rawopts['open-url']
             let mediaUrl = rawopts.mediaUrl || rawopts['media-url']
             return { openUrl, mediaUrl }
           } else if (this.isQuanX()) {
-            let openUrl = rawopts['open-url'] || rawopts.openUrl
+            let openUrl = rawopts['open-url'] || rawopts.url || rawopts.openUrl
             let mediaUrl = rawopts['media-url'] || rawopts.mediaUrl
             return { 'open-url': openUrl, 'media-url': mediaUrl }
+          } else if (this.isSurge()) {
+            let openUrl = rawopts.url || rawopts.openUrl || rawopts['open-url']
+            return { 'url': openUrl }
           }
         } else {
           return undefined
