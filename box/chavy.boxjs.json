@@ -247,7 +247,7 @@
       "author": "@chavyleung",
       "repo": "https://github.com/chavyleung/scripts/tree/master/neteasemusic",
       "script": "https://raw.githubusercontent.com/chavyleung/scripts/master/neteasemusic/neteasemusic.js",
-      "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/Netease.png", "https://raw.githubusercontent.com/Orz-3/task/master/Netease.png"]
+      "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/neteasemusic.png", "https://raw.githubusercontent.com/Orz-3/task/master/neteasemusic.png"]
     },
     {
       "id": "feng",
