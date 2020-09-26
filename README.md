@@ -7,7 +7,7 @@
 # BoxJs
 A SPA Appliction be used for scripts utils
 
-![Demo](https://github.com/chavyleung/scripts/blob/master/BoxJS.gif)
+<image src="https://github.com/chavyleung/scripts/blob/master/BoxJS.gif" width="30%" height="55%">
 
 [Scripts Vote](https://t.me/chavyscripts)
 
