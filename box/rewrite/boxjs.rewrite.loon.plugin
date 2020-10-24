@@ -1,0 +1,2 @@
+[Script]
+http-request ^https?://boxjs.com script-path=https://gitee.com/chavyleung/scripts/raw/master/chavy.box.js, requires-body=true, timeout=120, tag=BoxJs
