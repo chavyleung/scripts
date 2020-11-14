@@ -40,8 +40,9 @@ let gosign = JSON.parse(chavy.getdata("chavy_gosign_10010")||chavygosign)
     }
     await getinfo()
     showmsg()
-    chavy.done()
-})().catch((e) => chavy.log(`❌ ${cookieName} 签到失败: ${e}`), chavy.done())
+})()
+  .catch((e) => chavy.log(`❌ ${cookieName} 签到失败: ${e}`))
+  .finally(() => chavy.done())
 
 function loginapp() {
     return new Promise((resolve, reject) => {

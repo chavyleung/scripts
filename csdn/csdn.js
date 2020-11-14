@@ -20,8 +20,9 @@ let VAL_signheader = chavy.getdata(KEY_signheader)
     await luckyapp()
   }
   showmsg()
-  chavy.done()
-})().catch((e) => chavy.log(`❌ ${cookieName} 签到失败: ${e}`), chavy.done())
+})()
+.catch((e) => chavy.log(`❌ ${cookieName} 签到失败: ${e}`))
+.finally(() => chavy.done())
 
 function loginapp() {
   return new Promise((resolve, reject) => {

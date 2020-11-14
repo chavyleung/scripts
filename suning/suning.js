@@ -40,8 +40,9 @@ let VAl_logflag = chavy.getdata(KEY_logflag) === "true" ? true : false
   if (VAL_signgameurl && VAL_signgetgameurl) await signgame(), await getgameinfo()
   showmsg()
   chavy.log(`🔔 ${cookieName} 结束`)
-  chavy.done()
-})().catch((e) => chavy.log(`❌ ${cookieName} 签到失败: ${e}`), chavy.done())
+})()
+.catch((e) => chavy.log(`❌ ${cookieName} 签到失败: ${e}`))
+.finally(() => chavy.done())
 
 function loginapp() {
   return new Promise((resolve, reject) => {

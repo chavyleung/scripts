@@ -19,8 +19,9 @@ let VAL_mh5signheader = chavy.getdata(KEY_mh5signheader)
   await signapp()
   await getexp()
   showmsg()
-  chavy.done()
-})().catch((e) => chavy.log(`❌ ${cookieName} 签到失败: ${e}`), chavy.done())
+})()
+.catch((e) => chavy.log(`❌ ${cookieName} 签到失败: ${e}`))
+.finally(() => chavy.done())
 
 function login() {
   return new Promise((resolve, reject) => {
