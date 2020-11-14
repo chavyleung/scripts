@@ -15,8 +15,9 @@ let VAL_homeheader = chavy.getdata(KEY_homeheader)
   await browseapp()
   await getinfo()
   showmsg()
-  chavy.done()
-})().catch((e) => chavy.log(`❌ ${cookieName} 签到失败: ${e}`), chavy.done())
+})()
+.catch((e) => chavy.log(`❌ ${cookieName} 签到失败: ${e}`))
+.finally(() => chavy.done())
 
 function getinfo() {
   return new Promise((resolve, reject) => {

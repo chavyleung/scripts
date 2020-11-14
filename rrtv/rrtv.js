@@ -51,8 +51,9 @@ const week = "日一二三四五六".charAt(new Date().getDay())
   )
   await getinfo()
   showmsg()
-  chavy.done()
-})().catch((e) => chavy.log(`❌ ${cookieName} 签到失败: ${e}`), chavy.done())
+})()
+.catch((e) => chavy.log(`❌ ${cookieName} 签到失败: ${e}`))
+.finally(() => chavy.done())
 
 function getuid() {
   return new Promise((resolve, reject) => {
