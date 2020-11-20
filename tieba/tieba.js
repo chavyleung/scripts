@@ -102,7 +102,7 @@ function getbars(bars) {
           bar.totalsignCnt = _signinfo.sign_total
         } catch (e) {
           bar.contsignCnt = '❓'
-          $.logErr(e, response)
+          $.logErr(e, resp)
         } finally {
           resove()
         }
