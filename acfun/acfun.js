@@ -27,7 +27,6 @@ function sign() {
     }
     chavy.log(`${cookieName}, data: ${data}`)
   })
-  chavy.done()
 }
 
 function getinfo(signresult) {
@@ -49,6 +48,7 @@ function getinfo(signresult) {
     detail = `共签: ${result.cumulativeDays}次, 连签: ${result.continuousDays}次, 说明: ${signresult.msg}`
     chavy.msg(title, subTitle, detail)
     chavy.log(`${cookieName}, data: ${data}`)
+    chavy.done()
   })
 }
 
