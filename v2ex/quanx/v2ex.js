@@ -18,6 +18,7 @@ function sign() {
       let detail = `今天已经签过了`
       console.log(`${title}, ${subTitle}, ${detail}`)
       $notify(title, subTitle, detail)
+      $done()
     } else {
       signMission(data.match(/<input[^>]*\/mission\/daily\/redeem\?once=(\d+)[^>]*>/)[1])
     }
@@ -45,6 +46,7 @@ function signMission(code) {
       console.log(`签到失败: ${cookieName}, data: ${data}`)
       $notify(title, subTitle, detail)
     }
+    $done()
   })
 }
 
