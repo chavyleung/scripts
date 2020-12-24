@@ -1,6 +1,18 @@
 {
   "releases": [
     {
+      "version": "0.7.59",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "msg": "更新[BoxJs]: Vuetify 升级至 v2.4",
+      "notes": [
+        {
+          "name": "优化",
+          "descs": ["升级 Vuetify 版本"]
+        }
+      ]
+    },
+    {
       "version": "0.7.58",
       "tags": ["beta"],
       "author": "@chavyleung",
