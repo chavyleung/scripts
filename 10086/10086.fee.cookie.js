@@ -13,8 +13,8 @@
  * 10 0 * * * https://raw.githubusercontent.com/chavyleung/scripts/master/10086/10086.fee.js, tag=10086-查话费
  *
  * # Loon
- * http-response ^https:\/\/clientaccess.10086.cn\/biz-orange\/LN\/uamrandcodelogin\/autoLogin script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/10086/10086.fee.cookie.js, requires-body=true
- * http-response ^https:\/\/clientaccess.10086.cn\/biz-orange\/BN\/realFeeQuery\/getRealFee script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/10086/10086.fee.cookie.js, requires-body=true
+ * http-request ^https:\/\/clientaccess.10086.cn\/biz-orange\/LN\/uamrandcodelogin\/autoLogin script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/10086/10086.fee.cookie.js, requires-body=true, tag=中国移动-查话费
+ * http-request ^https:\/\/clientaccess.10086.cn\/biz-orange\/BN\/realFeeQuery\/getRealFee script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/10086/10086.fee.cookie.js, requires-body=true, tag=中国移动-查话费
  * cron "10 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/10086/10086.fee.js
  *
  */
