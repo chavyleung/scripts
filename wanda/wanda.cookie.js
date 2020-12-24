@@ -11,7 +11,7 @@
  * 10 0 * * * https://raw.githubusercontent.com/chavyleung/scripts/master/wanda/wanda.js, tag=wanda-签到
  *
  * # Loon
- * http-response ^https:\/\/user-api-prd-mx\.wandafilm\.com script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/wanda/wanda.cookie.js
+ * http-request ^https:\/\/user-api-prd-mx\.wandafilm\.com script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/wanda/wanda.cookie.js, tag=万达电影
  * cron "10 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/wanda/wanda.js
  * 
  * # 获取方式:进入签到页面获取，网页端:https://act-m.wandacinemas.com/2005/17621a8caacc4d190dadd/
