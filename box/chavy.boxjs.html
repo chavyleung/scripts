@@ -1601,7 +1601,8 @@
             const apps = []
             this.appSubs.forEach((appsub) => {
               const sub = this.appSubCaches[appsub.url]
-              if (sub && sub.apps && Array.isArray(sub.apps)) {
+              debugger
+              if (sub && sub.apps && Array.isArray(sub.apps) && !appsub.isErr) {
                 sub.apps.forEach((app) => {
                   this.loadAppBaseInfo(app)
                   apps.push(app)
@@ -1616,7 +1617,9 @@
             const subs = JSON.parse(JSON.stringify(this.box.usercfgs.appsubs))
             subs.forEach((sub) => {
               const cacheSub = this.appSubCaches[sub.url]
-              if (cacheSub) {
+              const isValidSub = cacheSub && Array.isArray(cacheSub.apps) && cacheSub.apps.length > 0
+              const isValidSubApps = isValidSub && !cacheSub.apps.find((app) => !app.id)
+              if (cacheSub && isValidSub && isValidSubApps) {
                 Object.assign(sub, cacheSub)
               } else {
                 sub.isErr = true
