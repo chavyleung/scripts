@@ -1,6 +1,18 @@
 {
   "releases": [
     {
+      "version": "0.7.61",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "msg": "更新[BoxJs]: 修复订阅为 null 时数据加载报错",
+      "notes": [
+        {
+          "name": "修复",
+          "descs": ["由于网络问题，导致订阅数据异常后，访问页面时仅显示 BoxJs 字样问题。"]
+        }
+      ]
+    },
+    {
       "version": "0.7.60",
       "tags": ["beta"],
       "author": "@chavyleung",

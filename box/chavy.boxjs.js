@@ -3,7 +3,7 @@ const $ = new Env('BoxJs')
 // 为 eval 准备的上下文环境
 const $eval_env = {}
 
-$.version = '0.7.60'
+$.version = '0.7.61'
 $.versionType = 'beta'
 
 // 发出的请求需要需要 Surge、QuanX 的 rewrite
@@ -343,6 +343,13 @@ function getSystemApps() {
 function getUserCfgs() {
   const defcfgs = { favapps: [], appsubs: [], isPinedSearchBar: true, httpapi: 'examplekey@127.0.0.1:6166' }
   const usercfgs = Object.assign(defcfgs, $.getjson($.KEY_usercfgs, {}))
+
+  // 处理异常数据：删除所有为 null 的订阅
+  if (usercfgs.appsubs.includes(null)) {
+    usercfgs.appsubs = usercfgs.appsubs.filter((sub) => sub)
+    $.setjson(usercfgs, $.KEY_usercfgs)
+  }
+
   return usercfgs
 }
 
