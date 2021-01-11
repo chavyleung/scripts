@@ -80,6 +80,9 @@
       .v-bottom-navigation button {
         box-sizing: border-box;
       }
+      .v-bottom-navigation button.v-btn:before {
+        background-color: transparent;
+      }
       .v-speed-dial {
         margin-bottom: calc(48px + constant(safe-area-inset-bottom));
         margin-bottom: calc(48px + env(safe-area-inset-bottom));
@@ -1601,7 +1604,6 @@
             const apps = []
             this.appSubs.forEach((appsub) => {
               const sub = this.appSubCaches[appsub.url]
-              debugger
               if (sub && sub.apps && Array.isArray(sub.apps) && !appsub.isErr) {
                 sub.apps.forEach((app) => {
                   this.loadAppBaseInfo(app)
