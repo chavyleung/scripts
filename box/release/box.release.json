@@ -1,7 +1,7 @@
 {
   "releases": [
     {
-      "version": "0.7.63",
+      "version": "0.7.64",
       "tags": ["beta"],
       "author": "@whyour",
       "msg": "更新[BoxJs]: 优化底栏按钮高亮样式",
