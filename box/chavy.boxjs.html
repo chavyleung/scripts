@@ -998,6 +998,9 @@
                         </v-card-actions>
                       </v-card>
                     </v-dialog>
+                    <v-list-item @click="copyData(curapp)">
+                      <v-list-item-title>复制数据</v-list-item-title>
+                    </v-list-item>
                     <v-divider></v-divider>
                     <v-list-item @click="clearAppDatas()">
                       <v-list-item-title>清空数据</v-list-item-title>
@@ -2151,6 +2154,15 @@
               delete resp.data.usercfgs
               Object.assign(this.box, resp.data)
             })
+          },
+          // 复制应用数据为对象数据
+          copyData(curdata) {
+            const datas = curdata.datas
+            let result = {}
+            datas.forEach(({ key, val }) => {
+              result[key] = val
+            })
+            copy(JSON.stringify(result))
           },
           // 保存应用数据
           clearAppDatas(key) {
