@@ -1,6 +1,22 @@
 {
   "releases": [
     {
+      "version": "0.7.63",
+      "tags": ["beta"],
+      "author": "@whyour",
+      "msg": "更新[BoxJs]: 优化底栏按钮高亮样式",
+      "notes": [
+        {
+          "name": "增加",
+          "descs": ["只复制 App 数据为对象功能"]
+        },
+        {
+          "name": "感谢",
+          "descs": ["@whyour PR"]
+        }
+      ]
+    },
+    {
       "version": "0.7.62",
       "tags": ["beta"],
       "author": "@chavyleung",

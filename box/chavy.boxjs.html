@@ -2159,8 +2159,8 @@
           copyData(curdata) {
             const datas = curdata.datas
             let result = {}
-            datas.forEach(({key,val})=>{
-              result[key] = val;
+            datas.forEach(({ key, val }) => {
+              result[key] = val
             })
             copy(JSON.stringify(result))
           },
