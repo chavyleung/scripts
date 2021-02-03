@@ -1,6 +1,22 @@
 {
   "releases": [
     {
+      "version": "0.7.65",
+      "tags": ["beta"],
+      "author": "@id77",
+      "msg": "更新[BoxJs]: 应用会话前，清空当前会话数据",
+      "notes": [
+        {
+          "name": "优化",
+          "descs": ["应用会话前，清空当前会话数据"]
+        },
+        {
+          "name": "感谢",
+          "descs": ["@id77 PR"]
+        }
+      ]
+    },
+    {
       "version": "0.7.64",
       "tags": ["beta"],
       "author": "@whyour",

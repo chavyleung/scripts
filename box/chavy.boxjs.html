@@ -2150,6 +2150,8 @@
             const val = JSON.stringify(this.box.curSessions)
             const curSessions = [{ key, val }]
             const datas = [...session.datas, ...curSessions]
+
+            this.clearAppDatas()
             axios.post('/api/save', datas).then((resp) => {
               delete resp.data.usercfgs
               Object.assign(this.box, resp.data)
