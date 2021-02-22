@@ -1,6 +1,22 @@
 {
   "releases": [
     {
+      "version": "0.7.67",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "msg": "更新[BoxJs]: 自动替换 BoxJs 订阅中 Orz-3/mini 库的图标路径",
+      "notes": [
+        {
+          "name": "修复",
+          "descs": ["Orz-3/mini 库图标路径"]
+        },
+        {
+          "name": "注意",
+          "descs": ["如果订阅里有旧的图标路径，BoxJs 会自动转换为新路径，有问题请反馈"]
+        }
+      ]
+    },
+    {
       "version": "0.7.66",
       "tags": ["beta"],
       "author": "@chavyleung",

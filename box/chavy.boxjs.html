@@ -2001,7 +2001,13 @@
           loadAppBaseInfo(app) {
             // 应用图标
             app.icons = app.icons ? app.icons : this.ui.defaultIcons
+            const isBrokenIcons = app.icons.find((i) => i.includes('/Orz-3/task/master/'))
+            if (isBrokenIcons) {
+              app.icons[0] = app.icons[0].replace('/Orz-3/mini/master/', '/Orz-3/mini/master/Alpha/')
+              app.icons[1] = app.icons[1].replace('/Orz-3/task/master/', '/Orz-3/mini/master/Color/')
+            }
             app.icon = app.icons[this.iconThemeIdx]
+
             // 是否收藏
             const isFav = this.box.usercfgs.favapps.includes(app.id)
             app.favIcon = isFav ? 'mdi-star' : 'mdi-star-outline'
