@@ -1,6 +1,18 @@
 {
   "releases": [
     {
+      "version": "0.7.66",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "msg": "更新[BoxJs]: 更新 Orz-3/mini 库图标路径",
+      "notes": [
+        {
+          "name": "修复",
+          "descs": ["Orz-3/mini 库图标路径"]
+        }
+      ]
+    },
+    {
       "version": "0.7.65",
       "tags": ["beta"],
       "author": "@id77",
