@@ -2000,7 +2000,7 @@
           // 加载应用信息
           loadAppBaseInfo(app) {
             // 应用图标
-            app.icons = app.icons ? app.icons : this.ui.defaultIcons
+            app.icons = Array.isArray(app.icons) ? app.icons : this.ui.defaultIcons
             const isBrokenIcons = app.icons.find((i) => i.includes('/Orz-3/task/master/'))
             if (isBrokenIcons) {
               app.icons[0] = app.icons[0].replace('/Orz-3/mini/master/', '/Orz-3/mini/master/Alpha/')
