@@ -1,6 +1,22 @@
 {
   "releases": [
     {
+      "version": "0.7.69",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "msg": "更新[BoxJs]: 移除 gitee 链接, 改用 github raw 及 jsdelivr",
+      "notes": [
+        {
+          "name": "说明",
+          "descs": ["由于通过 gitee 访问部分仓库资源时出现 `根据相关法律政策,该内容无法显示`", "虽然我手动同步 github 代码后已经可以正常访问", "但为避免以后出现不可预知的情况：", "我们把全部 gitee 链接替换为 github raw 及 jsdelivr", "----", "大家只需正常更新订阅并重启代理即可"]
+        },
+        {
+          "name": "感谢",
+          "descs": ["@zZPiglet PR"]
+        }
+      ]
+    },
+    {
       "version": "0.7.68",
       "tags": ["beta"],
       "author": "@chavyleung",

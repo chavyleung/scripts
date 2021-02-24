@@ -3,7 +3,7 @@ const $ = new Env('BoxJs')
 // 为 eval 准备的上下文环境
 const $eval_env = {}
 
-$.version = '0.7.68'
+$.version = '0.7.69'
 $.versionType = 'beta'
 
 // 发出的请求需要需要 Surge、QuanX 的 rewrite
@@ -44,7 +44,7 @@ $.html = $.name // `页面`类请求的响应体
 // 页面源码地址
 $.web = `https://cdn.jsdelivr.net/gh/chavyleung/scripts@${$.version}/box/chavy.boxjs.html?_=${new Date().getTime()}`
 // 版本说明地址 (Release Note)
-$.ver = 'https://gitee.com/chavyleung/scripts/raw/master/box/release/box.release.tf.json'
+$.ver = `https://cdn.jsdelivr.net/gh/chavyleung/scripts@${$.version}/box/release/box.release.tf.json`
 
 !(async () => {
   // 勿扰模式
