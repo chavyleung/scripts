@@ -182,6 +182,15 @@
       "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/Alpha/sfexpress.png", "https://raw.githubusercontent.com/Orz-3/mini/master/Color/sfexpress.png"]
     },
     {
+      "id": "flyertea",
+      "name": "飞客茶馆",
+      "keys": ["chavy_cookie_flyertea", "chavy_token_flyertea"],
+      "author": "@chavyleung",
+      "repo": "https://github.com/chavyleung/scripts/tree/master/flyertea",
+      "script": "https://raw.githubusercontent.com/chavyleung/scripts/master/flyertea/flyertea.js",
+      "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/Alpha/flyertea.png", "https://raw.githubusercontent.com/Orz-3/mini/master/Color/flyertea.png"]
+    },
+    {
       "id": "chavyleung.suning",
       "name": "苏宁易购",
       "settings": [{ "id": "chavy_logflag_suning", "name": "响应日志", "val": false, "type": "boolean", "desc": "是否输出响应返回体" }],
