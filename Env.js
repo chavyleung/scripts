@@ -316,6 +316,7 @@ function Env(name, opts) {
     }
 
     post(opts, callback = () => {}) {
+      const method = opts.method ? opts.method.toLocaleLowerCase() : 'post'
       // 如果指定了请求体, 但没指定`Content-Type`, 则自动生成
       if (opts.body && opts.headers && !opts.headers['Content-Type']) {
         opts.headers['Content-Type'] = 'application/x-www-form-urlencoded'
@@ -326,7 +327,7 @@ function Env(name, opts) {
           opts.headers = opts.headers || {}
           Object.assign(opts.headers, { 'X-Surge-Skip-Scripting': false })
         }
-        $httpClient.post(opts, (err, resp, body) => {
+        $httpClient[method](opts, (err, resp, body) => {
           if (!err && resp) {
             resp.body = body
             resp.statusCode = resp.status
@@ -334,7 +335,7 @@ function Env(name, opts) {
           callback(err, resp, body)
         })
       } else if (this.isQuanX()) {
-        opts.method = 'POST'
+        opts.method = method
         if (this.isNeedRewrite) {
           opts.opts = opts.opts || {}
           Object.assign(opts.opts, { hints: false })
@@ -349,7 +350,7 @@ function Env(name, opts) {
       } else if (this.isNode()) {
         this.initGotEnv(opts)
         const { url, ..._opts } = opts
-        this.got.post(url, _opts).then(
+        this.got[method](url, _opts).then(
           (resp) => {
             const { statusCode: status, statusCode, headers, body } = resp
             callback(null, { status, statusCode, headers, body }, body)
