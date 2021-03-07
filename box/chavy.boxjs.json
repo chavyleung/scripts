@@ -360,6 +360,15 @@
       "repo": "https://github.com/chavyleung/scripts/tree/master/rrtv",
       "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/Alpha/rrtv.png", "https://raw.githubusercontent.com/Orz-3/mini/master/Color/rrtv.png"],
       "script": "https://raw.githubusercontent.com/chavyleung/scripts/master/rrtv/rrtv.js"
+    },
+    {
+      "id": "everphoto",
+      "name": "时光相册",
+      "keys": ["chavy_sign_url_everphoto", "chavy_sign_header_everphoto"],
+      "author": "@chavyleung",
+      "repo": "https://github.com/chavyleung/scripts/tree/master/everphoto",
+      "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/Alpha/everphoto.png", "https://raw.githubusercontent.com/Orz-3/mini/master/Color/everphoto.png"],
+      "script": "https://raw.githubusercontent.com/chavyleung/scripts/master/everphoto/everphoto.js"
     }
   ]
 }
