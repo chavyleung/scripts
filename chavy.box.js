@@ -3,7 +3,7 @@ const $ = new Env('BoxJs')
 // 为 eval 准备的上下文环境
 const $eval_env = {}
 
-$.version = '0.7.69'
+$.version = '0.7.70'
 $.versionType = 'beta'
 
 // 发出的请求需要需要 Surge、QuanX 的 rewrite
@@ -368,6 +368,13 @@ function getAppSubCaches() {
  */
 function getGlobalBaks(isComplete = false) {
   const globalbaks = $.getjson($.KEY_globalBaks, [])
+
+  // 处理异常数据：删除所有为 null 的备份
+  if (globalbaks.includes(null)) {
+    globalbaks = globalbaks.filter((bak) => bak)
+    $.setjson(globalbaks, $.KEY_globalBaks)
+  }
+
   if (isComplete) {
     return globalbaks
   } else {
