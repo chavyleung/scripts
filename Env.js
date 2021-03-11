@@ -58,6 +58,10 @@ function Env(name, opts) {
       return 'undefined' !== typeof $loon
     }
 
+    isShadowrocket() {
+      return 'undefined' !== typeof $rocket
+    }
+
     toObj(str, defaultValue = null) {
       try {
         return JSON.parse(str)

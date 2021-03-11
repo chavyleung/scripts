@@ -1,6 +1,22 @@
 {
   "releases": [
     {
+      "version": "0.7.72",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "msg": "更新[BoxJs]: 适配小火箭, 感谢 @Orz-3 提供图标",
+      "notes": [
+        {
+          "name": "适配",
+          "descs": ["Shadowrocket (小火箭)"]
+        },
+        {
+          "name": "感谢",
+          "descs": ["@Orz-3 提供图标"]
+        }
+      ]
+    },
+    {
       "version": "0.7.71",
       "tags": ["beta"],
       "author": "@chavyleung",
