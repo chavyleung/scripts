@@ -510,6 +510,9 @@
               down: () => {
                 if (isWallpaperMode) {
                   isWallpaperMode = !isWallpaperMode
+                  if(!isWallpaperMode){
+                    changeWallpaper()
+                  }
                 }
               }
             }"
@@ -1157,7 +1160,10 @@
                     clearWallpaper()
                     setWallpaper()
                   },
-                  down: () => isWallpaperMode = !!!isWallpaperMode
+                  down: () => {
+                    isWallpaperMode = !!!isWallpaperMode
+                    changeWallpaper()
+                  }
                 }"
               >
                 <v-avatar><img :src="box.syscfgs.boxjs.icons[iconThemeIdx]" /></v-avatar>
@@ -1341,6 +1347,24 @@
             },
             set(val) {
               this.box.usercfgs.isWallpaperMode = val === true
+            }
+          },
+          // 切换壁纸
+          changeWallpaper() {
+            if(this.isWallpaperMode){
+              this.box.usercfgs.changeBgImgEnterDefault = this.box.usercfgs.changeBgImgEnterDefault ? this.box.usercfgs.changeBgImgEnterDefault : "妹子"
+              const bgUrl = this.bgimgs.find((bgimg) => bgimg.name === this.box.usercfgs.changeBgImgEnterDefault).url
+              if (bgUrl) {
+                this.box.usercfgs.bgimg = bgUrl
+                this.saveUserCfgs(false)
+              }
+            }else{
+              this.box.usercfgs.changeBgImgOutDefault = this.box.usercfgs.changeBgImgOutDefault ? this.box.usercfgs.changeBgImgOutDefault : '无'
+              const bgUrl = this.bgimgs.find((bgimg) => bgimg.name === this.box.usercfgs.changeBgImgOutDefault).url
+              if (bgUrl || bgUrl === '') {
+                this.box.usercfgs.bgimg = bgUrl
+                this.saveUserCfgs(false)
+              }
             }
           },
           // 当前环境: Surge、QuanX、Loon、NodeJs
@@ -1870,6 +1894,7 @@
                 this.ui.isWaitToggleSearchBar = true
                 this.isHidedSearchBar = !this.isHidedSearchBar
                 this.toggleWaitSearchBar()
+                this.box.usercfgs.bgimg = ''
               }
             }
           },
