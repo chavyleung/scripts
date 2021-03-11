@@ -1,6 +1,22 @@
 {
   "releases": [
     {
+      "version": "0.7.74",
+      "tags": ["beta"],
+      "author": "@lowking",
+      "msg": "更新[BoxJs]: 更方便快捷的看小姐姐",
+      "notes": [
+        {
+          "name": "新增特性",
+          "descs": ["悬浮图标下滑进入壁纸模式自动切换到配置好的壁纸，退出同理"]
+        },
+        {
+          "name": "感谢",
+          "descs": ["@lowking PR"]
+        }
+      ]
+    },
+    {
       "version": "0.7.73",
       "tags": ["beta"],
       "author": "@chavyleung",
