@@ -1349,19 +1349,21 @@
           },
           // 切换壁纸
           changeWallpaper() {
-            if(this.isWallpaperMode){
-              this.box.usercfgs.changeBgImgEnterDefault = this.box.usercfgs.changeBgImgEnterDefault ? this.box.usercfgs.changeBgImgEnterDefault : "妹子"
-              const bgUrl = this.bgimgs.find((bgimg) => bgimg.name === this.box.usercfgs.changeBgImgEnterDefault).url
-              if (bgUrl) {
-                this.box.usercfgs.bgimg = bgUrl
-                this.saveUserCfgs(false)
+            if (this.isWallpaperMode) {
+              if (this.box.usercfgs.changeBgImgEnterDefault) {
+                const bgUrl = this.bgimgs.find((bgimg) => bgimg.name === this.box.usercfgs.changeBgImgEnterDefault).url
+                if (bgUrl) {
+                  this.box.usercfgs.bgimg = bgUrl
+                  this.saveUserCfgs(false)
+                }
               }
-            }else{
-              this.box.usercfgs.changeBgImgOutDefault = this.box.usercfgs.changeBgImgOutDefault ? this.box.usercfgs.changeBgImgOutDefault : '无'
-              const bgUrl = this.bgimgs.find((bgimg) => bgimg.name === this.box.usercfgs.changeBgImgOutDefault).url
-              if (bgUrl || bgUrl === '') {
-                this.box.usercfgs.bgimg = bgUrl
-                this.saveUserCfgs(false)
+            } else {
+              if (this.box.usercfgs.changeBgImgOutDefault) {
+                const bgUrl = this.bgimgs.find((bgimg) => bgimg.name === this.box.usercfgs.changeBgImgOutDefault).url
+                if (bgUrl || bgUrl === '') {
+                  this.box.usercfgs.bgimg = bgUrl
+                  this.saveUserCfgs(false)
+                }
               }
             }
           },
@@ -1892,7 +1894,6 @@
                 this.ui.isWaitToggleSearchBar = true
                 this.isHidedSearchBar = !this.isHidedSearchBar
                 this.toggleWaitSearchBar()
-                this.box.usercfgs.bgimg = ''
               }
             }
           },
