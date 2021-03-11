@@ -1,6 +1,18 @@
 {
   "releases": [
     {
+      "version": "0.7.73",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "msg": "更新[BoxJs]: 修复小火箭环境下手动运行脚本报错问题",
+      "notes": [
+        {
+          "name": "修复",
+          "descs": ["小火箭环境下手动运行脚本报错问题"]
+        }
+      ]
+    },
+    {
       "version": "0.7.72",
       "tags": ["beta"],
       "author": "@chavyleung",

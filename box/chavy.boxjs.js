@@ -3,7 +3,7 @@ const $ = new Env('BoxJs')
 // 为 eval 准备的上下文环境
 const $eval_env = {}
 
-$.version = '0.7.72'
+$.version = '0.7.73'
 $.versionType = 'beta'
 
 // 发出的请求需要需要 Surge、QuanX 的 rewrite
@@ -564,7 +564,7 @@ async function apiRunScript() {
   } else {
     script_text = opts.script
   }
-  if ($.isSurge() && ishttpapi) {
+  if ($.isSurge() && !$.isLoon() && !$.isShadowrocket() && ishttpapi) {
     const runOpts = { timeout: opts.timeout }
     await $.runScript(script_text, runOpts).then((resp) => ($.json = JSON.parse(resp)))
   } else {
