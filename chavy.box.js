@@ -3,7 +3,7 @@ const $ = new Env('BoxJs')
 // 为 eval 准备的上下文环境
 const $eval_env = {}
 
-$.version = '0.7.75'
+$.version = '0.7.76'
 $.versionType = 'beta'
 
 // 发出的请求需要需要 Surge、QuanX 的 rewrite
@@ -44,7 +44,7 @@ $.html = $.name // `页面`类请求的响应体
 // 页面源码地址
 $.web = `https://cdn.jsdelivr.net/gh/chavyleung/scripts@${$.version}/box/chavy.boxjs.html?_=${new Date().getTime()}`
 // 版本说明地址 (Release Note)
-$.ver = `https://cdn.jsdelivr.net/gh/chavyleung/scripts@${$.version}/box/release/box.release.tf.json`
+$.ver = `https://github.com/chavyleung/scripts/raw/master/box/release/box.release.tf.json`
 
 !(async () => {
   // 勿扰模式
@@ -300,9 +300,9 @@ function getSystemApps() {
       name: '偏好设置',
       descs: ['可设置 http-api 地址 & 超时时间 (Surge TF)', '可设置明暗两种主题下的主色调'],
       keys: [
-        '@chavy_boxjs_userCfgs.httpapi', 
-        '@chavy_boxjs_userCfgs.bgimg', 
-        '@chavy_boxjs_userCfgs.color_dark_primary', 
+        '@chavy_boxjs_userCfgs.httpapi',
+        '@chavy_boxjs_userCfgs.bgimg',
+        '@chavy_boxjs_userCfgs.color_dark_primary',
         '@chavy_boxjs_userCfgs.color_light_primary'
       ],
       settings: [
@@ -314,6 +314,32 @@ function getSystemApps() {
         { id: '@chavy_boxjs_userCfgs.changeBgImgOutDefault', name: '手势退出壁纸模式默认背景图片', val: '', type: 'text', placeholder: '填写上面背景图片清单的值', persistentHint:true, desc: '' },
         { id: '@chavy_boxjs_userCfgs.color_light_primary', name: '明亮色调', canvas: true, val: '#F7BB0E', type: 'colorpicker', desc: '' },
         { id: '@chavy_boxjs_userCfgs.color_dark_primary', name: '暗黑色调', canvas: true, val: '#2196F3', type: 'colorpicker', desc: '' }
+      ],
+      scripts: [
+        {
+          name: "抹掉：所有缓存",
+          script: "https://raw.githubusercontent.com/chavyleung/scripts/master/box/scripts/boxjs.revert.caches.js"
+        },
+        {
+          name: "抹掉：收藏应用",
+          script: "https://raw.githubusercontent.com/chavyleung/scripts/master/box/scripts/boxjs.revert.usercfgs.favapps.js"
+        },
+        {
+          name: "抹掉：用户偏好",
+          script: "https://raw.githubusercontent.com/chavyleung/scripts/master/box/scripts/boxjs.revert.usercfgs.js"
+        },
+        {
+          name: "抹掉：所有会话",
+          script: "https://raw.githubusercontent.com/chavyleung/scripts/master/box/scripts/boxjs.revert.usercfgs.sessions.js"
+        },
+        {
+          name: "抹掉：所有备份",
+          script: "https://raw.githubusercontent.com/chavyleung/scripts/master/box/scripts/boxjs.revert.baks.js"
+        },
+        {
+          name: "抹掉：BoxJs (注意备份)",
+          script: "https://raw.githubusercontent.com/chavyleung/scripts/master/box/scripts/boxjs.revert.boxjs.js"
+        }
       ],
       author: '@chavyleung',
       repo: 'https://github.com/chavyleung/scripts/blob/master/box/switcher/box.switcher.js',
