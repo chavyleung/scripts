@@ -211,12 +211,12 @@
                   v-model="box.usercfgs.httpapi"
                   :items="box.usercfgs.httpapis.split(',')"
                   @change="saveUserCfgs"
-                  label="HTTP-API (Surge TF)"
+                  label="HTTP-API (Surge)"
                 >
                 </v-select>
                 <v-text-field
                   v-else
-                  label="HTTP-API (Surge TF)"
+                  label="HTTP-API (Surge)"
                   v-model="box.usercfgs.httpapi"
                   hint="Surge http-api 地址."
                   placeholder="examplekey@127.0.0.1:6166"

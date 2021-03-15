@@ -1,6 +1,18 @@
 {
   "releases": [
     {
+      "version": "0.7.77",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "msg": "更新[BoxJs]: 更新文案",
+      "notes": [
+        {
+          "name": "更新",
+          "descs": ["部分文案"]
+        }
+      ]
+    },
+    {
       "version": "0.7.76",
       "tags": ["beta"],
       "author": "@chavyleung",
