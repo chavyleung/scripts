@@ -1,6 +1,32 @@
 {
   "releases": [
     {
+      "version": "0.7.78",
+      "tags": ["beta"],
+      "author": "@chouchoui",
+      "msg": "更新[BoxJs]: 增加版本说明",
+      "notes": [
+        {
+          "name": "新增",
+          "descs": [
+            "偏好设置增加 HTTP Backend (Quantumult X)",
+            "说明: ",
+            "发现: Quantumult X 通过重写的方式访问 BoxJs 可能会导致无法删除备份的问题, 但通过 HTTP Backend 方式访问则正常。",
+            "建议: 改用 HTTP Backend 或 重写与 HTTP Backend 结合的方式访问 BoxJs",
+            "姿势: 见 使用文档 (悬浮按钮 > ?)"
+          ]
+        },
+        {
+          "name": "优化",
+          "descs": ["增加底部空间避免悬浮按钮遮挡空间"]
+        },
+        {
+          "name": "感谢",
+          "descs": ["@chouchoui PR"]
+        }
+      ]
+    },
+    {
       "version": "0.7.77",
       "tags": ["beta"],
       "author": "@chavyleung",
@@ -24,7 +50,25 @@
         },
         {
           "name": "说明",
-          "descs": ["抹掉：所有缓存", "抹掉订阅及页面缓存，会导致所有订阅显示格式错误，双击底栏'订阅'菜单或更新订阅即可恢复", "", "抹掉：收藏应用", "抹掉所有收藏的应用，排序出现问题时可尝试抹掉", "", "抹掉：用户偏好", "抹掉头像、设置、收藏等个人相关的数据, 注意：不含会话、备份、缓存", "", "抹掉：所有会话", "抹掉所有应用下的会话, 注意：不会抹掉当前会话", "", "抹掉：所有备份", "抹掉所有全局备份, 注意：抹掉前可先把备份复制到其他文本类应用内", "", "抹掉：BoxJs", "抹掉所有由 BoxJs 管理的数据, 如：备份、会话、偏好、缓存等 (不包含当前会话)"]
+          "descs": [
+            "抹掉：所有缓存",
+            "抹掉订阅及页面缓存，会导致所有订阅显示格式错误，双击底栏'订阅'菜单或更新订阅即可恢复",
+            "",
+            "抹掉：收藏应用",
+            "抹掉所有收藏的应用，排序出现问题时可尝试抹掉",
+            "",
+            "抹掉：用户偏好",
+            "抹掉头像、设置、收藏等个人相关的数据, 注意：不含会话、备份、缓存",
+            "",
+            "抹掉：所有会话",
+            "抹掉所有应用下的会话, 注意：不会抹掉当前会话",
+            "",
+            "抹掉：所有备份",
+            "抹掉所有全局备份, 注意：抹掉前可先把备份复制到其他文本类应用内",
+            "",
+            "抹掉：BoxJs",
+            "抹掉所有由 BoxJs 管理的数据, 如：备份、会话、偏好、缓存等 (不包含当前会话)"
+          ]
         }
       ]
     },
@@ -104,7 +148,14 @@
       "notes": [
         {
           "name": "说明",
-          "descs": ["由于通过 gitee 访问部分仓库资源时出现 `根据相关法律政策,该内容无法显示`", "虽然我手动同步 github 代码后已经可以正常访问", "但为避免以后出现不可预知的情况：", "我们把全部 gitee 链接替换为 github raw 及 jsdelivr", "----", "大家只需正常更新订阅并重启代理即可"]
+          "descs": [
+            "由于通过 gitee 访问部分仓库资源时出现 `根据相关法律政策,该内容无法显示`",
+            "虽然我手动同步 github 代码后已经可以正常访问",
+            "但为避免以后出现不可预知的情况：",
+            "我们把全部 gitee 链接替换为 github raw 及 jsdelivr",
+            "----",
+            "大家只需正常更新订阅并重启代理即可"
+          ]
         },
         {
           "name": "感谢",
@@ -344,7 +395,10 @@
         },
         {
           "name": "说明",
-          "descs": ["背景图片清单中设置:无{换行} 跟随系统,跟随系统{换行} light,图片地址{换行} dark,图片地址{换行}", "如果不设置`跟随系统,跟随系统`,则默认跟随系统为无背景"]
+          "descs": [
+            "背景图片清单中设置:无{换行} 跟随系统,跟随系统{换行} light,图片地址{换行} dark,图片地址{换行}",
+            "如果不设置`跟随系统,跟随系统`,则默认跟随系统为无背景"
+          ]
         }
       ]
     },
@@ -540,7 +594,17 @@
         },
         {
           "name": "壁纸",
-          "descs": ["无背景,", "随机,https://uploadbeta.com/api/pictures/random", "推女郎,https://uploadbeta.com/api/pictures/random/?key=推女郎", "性感,https://uploadbeta.com/api/pictures/random/?key=性感", "车模,https://uploadbeta.com/api/pictures/random/?key=车模", "美腿,https://uploadbeta.com/api/pictures/random/?key=美腿", "美女,https://uploadbeta.com/api/pictures/random/?key=美女", "手机妹子,http://api.btstu.cn/sjbz/zsy.php", "手机美女,http://api.btstu.cn/sjbz/?m_lx=suiji"]
+          "descs": [
+            "无背景,",
+            "随机,https://uploadbeta.com/api/pictures/random",
+            "推女郎,https://uploadbeta.com/api/pictures/random/?key=推女郎",
+            "性感,https://uploadbeta.com/api/pictures/random/?key=性感",
+            "车模,https://uploadbeta.com/api/pictures/random/?key=车模",
+            "美腿,https://uploadbeta.com/api/pictures/random/?key=美腿",
+            "美女,https://uploadbeta.com/api/pictures/random/?key=美女",
+            "手机妹子,http://api.btstu.cn/sjbz/zsy.php",
+            "手机美女,http://api.btstu.cn/sjbz/?m_lx=suiji"
+          ]
         }
       ]
     },
@@ -756,7 +820,12 @@
         },
         {
           "name": "说明",
-          "descs": ["除了本机运行外", "可以使用 PC 连上 QuanX 的 HTTP Backend", "实现在 PC 上写代码然后发送到 QuanX 执行", "Surge、Loon 同理"]
+          "descs": [
+            "除了本机运行外",
+            "可以使用 PC 连上 QuanX 的 HTTP Backend",
+            "实现在 PC 上写代码然后发送到 QuanX 执行",
+            "Surge、Loon 同理"
+          ]
         }
       ]
     },
@@ -837,7 +906,12 @@
         },
         {
           "name": "操作",
-          "descs": ["可以修复全局备份的名字", "点击'应用'回到顶部，再次单击折叠面板", "点击'订阅'回到顶部，再次单击刷新订阅", "点击具体订阅可刷新"]
+          "descs": [
+            "可以修复全局备份的名字",
+            "点击'应用'回到顶部，再次单击折叠面板",
+            "点击'订阅'回到顶部，再次单击刷新订阅",
+            "点击具体订阅可刷新"
+          ]
         }
       ]
     },
@@ -896,7 +970,9 @@
         },
         {
           "name": "示例",
-          "descs": ["https://gist.githubusercontent.com/chavyleung/9d53fc4809eb41dca5f5923790ec5554/raw/09742d3473420d8e0bd7b02a910849f65af879fa/chavy.app.sub.simple.json"]
+          "descs": [
+            "https://gist.githubusercontent.com/chavyleung/9d53fc4809eb41dca5f5923790ec5554/raw/09742d3473420d8e0bd7b02a910849f65af879fa/chavy.app.sub.simple.json"
+          ]
         },
         {
           "name": "注意",
@@ -951,11 +1027,19 @@
         },
         {
           "name": "新的重写订阅",
-          "descs": ["Surge: https://raw.githubusercontent.com/chavyleung/scripts/master/box/rewrite/boxjs.rewrite.surge.sgmodule", "QuanX: https://raw.githubusercontent.com/chavyleung/scripts/master/box/rewrite/boxjs.rewrite.quanx.conf", "Loon: https://raw.githubusercontent.com/chavyleung/scripts/master/box/rewrite/boxjs.rewrite.loon.conf"]
+          "descs": [
+            "Surge: https://raw.githubusercontent.com/chavyleung/scripts/master/box/rewrite/boxjs.rewrite.surge.sgmodule",
+            "QuanX: https://raw.githubusercontent.com/chavyleung/scripts/master/box/rewrite/boxjs.rewrite.quanx.conf",
+            "Loon: https://raw.githubusercontent.com/chavyleung/scripts/master/box/rewrite/boxjs.rewrite.loon.conf"
+          ]
         },
         {
           "name": "注意",
-          "descs": ["新的重写订阅只有 boxjs.com", "旧的重写订阅仍然保留 8888 1111 和新增的 boxjs.com", "可以直接访问 http://boxjs.com 不加/home"]
+          "descs": [
+            "新的重写订阅只有 boxjs.com",
+            "旧的重写订阅仍然保留 8888 1111 和新增的 boxjs.com",
+            "可以直接访问 http://boxjs.com 不加/home"
+          ]
         }
       ]
     },
@@ -968,7 +1052,13 @@
       "notes": [
         {
           "name": "优化",
-          "descs": ["双击底栏'应用'可以收缩面板并回到顶部", "双击底栏'订阅'可以刷新订阅并回到顶部", "双击'BoxJs'按钮可以刷新页面", "保存应用设置、清存会话数据能马上生效 (不用刷新页面)", "可以隐藏刷新按钮"]
+          "descs": [
+            "双击底栏'应用'可以收缩面板并回到顶部",
+            "双击底栏'订阅'可以刷新订阅并回到顶部",
+            "双击'BoxJs'按钮可以刷新页面",
+            "保存应用设置、清存会话数据能马上生效 (不用刷新页面)",
+            "可以隐藏刷新按钮"
+          ]
         },
         {
           "name": "主题",
@@ -976,7 +1066,12 @@
         },
         {
           "name": "重写",
-          "descs": ["BoxJs 的重写已经去除代码级依赖", "意味着仅通过修改正则和主机名即可替换 BoxJs 的访问地址", "同时征集一个比较理想的国内域名作为 BoxJs 的免翻墙访问地址", "iOS14 Surge TF 下提示私密连接的问题, 可以找一个 http 的域名来试试"]
+          "descs": [
+            "BoxJs 的重写已经去除代码级依赖",
+            "意味着仅通过修改正则和主机名即可替换 BoxJs 的访问地址",
+            "同时征集一个比较理想的国内域名作为 BoxJs 的免翻墙访问地址",
+            "iOS14 Surge TF 下提示私密连接的问题, 可以找一个 http 的域名来试试"
+          ]
         }
       ]
     },
@@ -1044,7 +1139,11 @@
         },
         {
           "name": "新增",
-          "descs": ["可以显示当前切换至哪个会话", "应用可以设定多个运行脚本 scripts: {name: '', script: ''}", "示例: https://gist.githubusercontent.com/chavyleung/9d53fc4809eb41dca5f5923790ec5554/raw/4d8b140ba149c33aa1fc622e93c4035ae74a73bb/chavy.app.sub.simple.json"]
+          "descs": [
+            "可以显示当前切换至哪个会话",
+            "应用可以设定多个运行脚本 scripts: {name: '', script: ''}",
+            "示例: https://gist.githubusercontent.com/chavyleung/9d53fc4809eb41dca5f5923790ec5554/raw/4d8b140ba149c33aa1fc622e93c4035ae74a73bb/chavy.app.sub.simple.json"
+          ]
         }
       ]
     },
@@ -1061,7 +1160,10 @@
         },
         {
           "name": "调整",
-          "descs": ["迁移 吾爱破解、爱奇艺 至原作者订阅: @NobyDa (野比)", "https://raw.githubusercontent.com/NobyDa/Script/master/NobyDa_BoxJs.json"]
+          "descs": [
+            "迁移 吾爱破解、爱奇艺 至原作者订阅: @NobyDa (野比)",
+            "https://raw.githubusercontent.com/NobyDa/Script/master/NobyDa_BoxJs.json"
+          ]
         }
       ]
     },
@@ -1091,7 +1193,11 @@
         },
         {
           "name": "说明",
-          "descs": ["手动运行脚本采用 eval() 方案", "Surge 在配置了 http-api 参数下会使用 http-api 方案运行脚本", "因为手法有点特殊, 不保证所有脚本都能良好"]
+          "descs": [
+            "手动运行脚本采用 eval() 方案",
+            "Surge 在配置了 http-api 参数下会使用 http-api 方案运行脚本",
+            "因为手法有点特殊, 不保证所有脚本都能良好"
+          ]
         },
         {
           "name": "感谢",
@@ -1163,7 +1269,13 @@
         },
         {
           "name": "注意",
-          "descs": ["目前仅支持 Surge iOS TF & Surge mac 4.x", "需要在 Surge配置文件中指定 http-api", "然后在 BoxJs 侧栏中设置 http-api 路径", "目前内置应用和 chavy.boxjs.json 内的应用都可以手动运行, 其他订阅需订阅作者更新订阅", "资料: https://community.nssurge.com/d/327-http-api"]
+          "descs": [
+            "目前仅支持 Surge iOS TF & Surge mac 4.x",
+            "需要在 Surge配置文件中指定 http-api",
+            "然后在 BoxJs 侧栏中设置 http-api 路径",
+            "目前内置应用和 chavy.boxjs.json 内的应用都可以手动运行, 其他订阅需订阅作者更新订阅",
+            "资料: https://community.nssurge.com/d/327-http-api"
+          ]
         }
       ]
     },
@@ -1262,7 +1374,9 @@
         },
         {
           "name": "调整",
-          "descs": ["迁移内置应用至订阅: https://raw.githubusercontent.com/chavyleung/scripts/master/box/chavy.boxjs.json (需要手动更新订阅)"]
+          "descs": [
+            "迁移内置应用至订阅: https://raw.githubusercontent.com/chavyleung/scripts/master/box/chavy.boxjs.json (需要手动更新订阅)"
+          ]
         }
       ]
     },
@@ -1641,7 +1755,12 @@
       "notes": [
         {
           "name": "优化",
-          "descs": ["刷新窗口增加 3 秒倒数自动刷新", "添加订阅能马上刷新订阅", "刷新窗口弹出时会顺便发起更新应用订阅", "可以隐藏手动更新订阅的提示"]
+          "descs": [
+            "刷新窗口增加 3 秒倒数自动刷新",
+            "添加订阅能马上刷新订阅",
+            "刷新窗口弹出时会顺便发起更新应用订阅",
+            "可以隐藏手动更新订阅的提示"
+          ]
         }
       ]
     },

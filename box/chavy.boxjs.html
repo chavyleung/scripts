@@ -87,6 +87,9 @@
         margin-bottom: calc(48px + constant(safe-area-inset-bottom));
         margin-bottom: calc(48px + env(safe-area-inset-bottom));
       }
+      .container.container--fluid{
+        padding-bottom: 68px;
+      }
     </style>
   </head>
   <body>
@@ -1840,12 +1843,6 @@
           )
         },
         created() {
-          // 如果 url 参数中指定的 baseURL, 则后续的请求都请求到指定的域
-          if (window.location.search) {
-            const [, baseURL] = /baseURL=(.*?)(&|$)/.exec(window.location.search)
-            axios.defaults.baseURL = baseURL || ''
-            this.ui.isCors = true
-          }
           // 根据路径跳转视图
           const defview = '/'
           if (!this.isCors) {
@@ -1862,6 +1859,18 @@
           } else {
             axios.get('/query/boxdata').then((resp) => (this.box = resp.data))
           }
+          // 如果是Quantumult X环境并且配置了HTTP Backend，将axios请求指向到HTTP Backend
+          if (this.box.syscfgs.env === 'QuanX' && this.box.usercfgs.http_backend) {
+            axios.defaults.baseURL = this.box.usercfgs.http_backend
+            this.ui.isCors = true
+          }
+          // 如果 url 参数中指定的 baseURL, 则后续的请求都请求到指定的域
+          if (window.location.search) {
+            const [, baseURL] = /baseURL=(.*?)(&|$)/.exec(window.location.search)
+            axios.defaults.baseURL = baseURL || ''
+            this.ui.isCors = true
+          }
+
           // 获取全局备份
           if (this.view === 'bak') {
             this.loadGlobalBak()
@@ -2121,6 +2130,13 @@
                 delete resp.data.usercfgs
               }
               Object.assign(this.box, resp.data)
+
+              if (this.curapp.id === 'BoxSetting') {
+                if (this.box.syscfgs.env === 'QuanX') {
+                  axios.defaults.baseURL = this.box.usercfgs.http_backend || ''
+                  this.ui.isCors = true
+                }
+              }
             })
           },
           // 保存应用会话

@@ -3,7 +3,7 @@ const $ = new Env('BoxJs')
 // 为 eval 准备的上下文环境
 const $eval_env = {}
 
-$.version = '0.7.77'
+$.version = '0.7.78'
 $.versionType = 'beta'
 
 // 发出的请求需要需要 Surge、QuanX 的 rewrite
@@ -302,6 +302,7 @@ function getSystemApps() {
       keys: [
         '@chavy_boxjs_userCfgs.httpapi',
         '@chavy_boxjs_userCfgs.bgimg',
+        '@chavy_boxjs_userCfgs.http_backend',
         '@chavy_boxjs_userCfgs.color_dark_primary',
         '@chavy_boxjs_userCfgs.color_light_primary'
       ],
@@ -313,7 +314,8 @@ function getSystemApps() {
         { id: '@chavy_boxjs_userCfgs.changeBgImgEnterDefault', name: '手势进入壁纸模式默认背景图片', val: '', type: 'text', placeholder: '填写上面背景图片清单的值', persistentHint:true, desc: '' },
         { id: '@chavy_boxjs_userCfgs.changeBgImgOutDefault', name: '手势退出壁纸模式默认背景图片', val: '', type: 'text', placeholder: '填写上面背景图片清单的值', persistentHint:true, desc: '' },
         { id: '@chavy_boxjs_userCfgs.color_light_primary', name: '明亮色调', canvas: true, val: '#F7BB0E', type: 'colorpicker', desc: '' },
-        { id: '@chavy_boxjs_userCfgs.color_dark_primary', name: '暗黑色调', canvas: true, val: '#2196F3', type: 'colorpicker', desc: '' }
+        { id: '@chavy_boxjs_userCfgs.color_dark_primary', name: '暗黑色调', canvas: true, val: '#2196F3', type: 'colorpicker', desc: '' },
+        { id: '@chavy_boxjs_userCfgs.http_backend', name: 'HTTP Backend (Quantumult X)', val: '', type: 'text',placeholder: 'http://127.0.0.1:9999', persistentHint:true, desc: '示例: http://127.0.0.1:9999 ! 注意: 必须是以 http 开头的完整路径, 不能是 / 结尾' },
       ],
       scripts: [
         {
@@ -370,7 +372,13 @@ function getSystemApps() {
  * 获取用户配置
  */
 function getUserCfgs() {
-  const defcfgs = { favapps: [], appsubs: [], isPinedSearchBar: true, httpapi: 'examplekey@127.0.0.1:6166' }
+  const defcfgs = {
+    favapps: [],
+    appsubs: [],
+    isPinedSearchBar: true,
+    httpapi: 'examplekey@127.0.0.1:6166',
+    http_backend: ''
+  }
   const usercfgs = Object.assign(defcfgs, $.getjson($.KEY_usercfgs, {}))
 
   // 处理异常数据：删除所有为 null 的订阅
