@@ -1868,8 +1868,10 @@
             this.box = this.boxServerData
             this.setHttpBackend()
           } else {
-            axios.get('/query/boxdata').then((resp) => (this.box = resp.data))
-            this.setHttpBackend()
+            axios.get('/query/boxdata').then((resp) => {
+              this.box = resp.data
+              this.setHttpBackend()
+            })
           }
           // 获取全局备份
           if (this.view === 'bak') {
