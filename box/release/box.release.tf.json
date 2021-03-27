@@ -1,6 +1,18 @@
 {
   "releases": [
     {
+      "version": "0.7.82",
+      "tags": ["beta"],
+      "author": "@chouchoui",
+      "msg": "更新[BoxJs]: 格式不正确的HTTP Backend不会生效",
+      "notes": [
+        {
+          "name": "优化",
+          "descs": ["格式不正确的HTTP Backend不会生效"]
+        }
+      ]
+    },
+    {
       "version": "0.7.81",
       "tags": ["beta"],
       "author": "@chavyleung",
