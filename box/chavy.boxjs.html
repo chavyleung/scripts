@@ -88,8 +88,12 @@
         margin-bottom: calc(48px + constant(safe-area-inset-bottom));
         margin-bottom: calc(48px + env(safe-area-inset-bottom));
       }
-      .container.container--fluid{
+      .container.container--fluid {
         padding-bottom: 68px;
+      }
+      .appicon {
+        user-select: none;
+        -webkit-user-select: none;
       }
     </style>
   </head>
@@ -521,7 +525,7 @@
           >
             <v-row no-gutters v-show="!isHidedAppIcons" class="align-self-start" id="appList">
               <v-col cols="3" md="2" v-for="(app, appIdx) in favApps" :key="app.id" class="d-flex justify-space-around">
-                <div class="ma-2" @click="switchAppView(app.id)">
+                <div class="ma-2 appicon" @click="switchAppView(app.id)">
                   <v-card v-if="isDarkMode" style="border-radius: 12px">
                     <v-img style="border-radius: 12px" :aspect-ratio="1" width="54" height="54" contain v-ripple :src="app.icon"></v-img>
                   </v-card>
@@ -1609,7 +1613,7 @@
             return this.box.sessions
           },
           // 获取`收藏`应用
-          favApps(){
+          favApps() {
             const favapps = []
             const favAppIds = this.box.usercfgs.favapps || []
             if (favAppIds) {

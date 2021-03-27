@@ -1,6 +1,18 @@
 {
   "releases": [
     {
+      "version": "0.7.81",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "msg": "更新[BoxJs]: 修复拖拽图标的时候出现文本选择光标问题",
+      "notes": [
+        {
+          "name": "修复",
+          "descs": ["拖拽图标的时候出现文本选择光标问题"]
+        }
+      ]
+    },
+    {
       "version": "0.7.80",
       "tags": ["beta"],
       "author": "@Senku",
