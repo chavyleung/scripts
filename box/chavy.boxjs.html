@@ -1847,6 +1847,12 @@
           )
         },
         created() {
+          // 如果 url 参数中指定的 baseURL, 则后续的请求都请求到指定的域
+          if (window.location.search) {
+            const [, baseURL] = /baseURL=(.*?)(&|$)/.exec(window.location.search)
+            axios.defaults.baseURL = baseURL || ''
+            this.ui.isCors = true
+          }
           // 根据路径跳转视图
           const defview = '/'
           if (!this.isCors) {
@@ -1860,21 +1866,13 @@
           // 如果后端没有渲染数据, 则发出请求获取数据
           if (this.boxServerData) {
             this.box = this.boxServerData
+            this.setHttpBackend()
           } else {
-            axios.get('/query/boxdata').then((resp) => (this.box = resp.data))
+            axios.get('/query/boxdata').then((resp) => {
+              this.box = resp.data
+              this.setHttpBackend()
+            })
           }
-          // 如果是Quantumult X环境并且配置了HTTP Backend，将axios请求指向到HTTP Backend
-          if (this.box.syscfgs.env === 'QuanX' && this.box.usercfgs.http_backend) {
-            axios.defaults.baseURL = this.box.usercfgs.http_backend
-            this.ui.isCors = true
-          }
-          // 如果 url 参数中指定的 baseURL, 则后续的请求都请求到指定的域
-          if (window.location.search) {
-            const [, baseURL] = /baseURL=(.*?)(&|$)/.exec(window.location.search)
-            axios.defaults.baseURL = baseURL || ''
-            this.ui.isCors = true
-          }
-
           // 获取全局备份
           if (this.view === 'bak') {
             this.loadGlobalBak()
@@ -2151,10 +2149,7 @@
               Object.assign(this.box, resp.data)
 
               if (this.curapp.id === 'BoxSetting') {
-                if (this.box.syscfgs.env === 'QuanX') {
-                  axios.defaults.baseURL = this.box.usercfgs.http_backend || ''
-                  this.ui.isCors = true
-                }
+                this.setHttpBackend()
               }
             })
           },
@@ -2395,6 +2390,24 @@
               _v2 = v2.split('.'),
               _r = _v1[0] - _v2[0]
             return _r == 0 && v1 != v2 ? this.compareVersion(_v1.splice(1).join('.'), _v2.splice(1).join('.')) : _r
+          },
+          // 设置HTTP Backend
+          setHttpBackend() {
+            // 目前HTTP Backend不能修改端口号
+            var regex = /^http:\/\/(.*):9999$/
+            if (this.box.syscfgs.env === 'QuanX') {
+              if (regex.test(window.location.origin)) {
+                axios.defaults.baseURL = ''
+                return
+              }
+              // 如果是Quantumult X环境并且配置了正确格式的HTTP Backend，将axios请求指向到HTTP Backend
+              if (this.box.usercfgs.http_backend && regex.test(this.box.usercfgs.http_backend)) {
+                axios.defaults.baseURL = this.box.usercfgs.http_backend
+                this.ui.isCors = true
+              } else {
+                axios.defaults.baseURL = ''
+              }
+            }
           }
         }
       })
