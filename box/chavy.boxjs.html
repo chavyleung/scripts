@@ -12,6 +12,7 @@
     <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/@mdi/font@5.x/css/materialdesignicons.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/vuetify@2.4.x/dist/vuetify.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
     <style>
       #BG {
         position: fixed;
@@ -518,7 +519,7 @@
               }
             }"
           >
-            <v-row no-gutters v-show="!isHidedAppIcons" class="align-self-start">
+            <v-row no-gutters v-show="!isHidedAppIcons" class="align-self-start" id="appList">
               <v-col cols="3" md="2" v-for="(app, appIdx) in favApps" :key="app.id" class="d-flex justify-space-around">
                 <div class="ma-2" @click="switchAppView(app.id)">
                   <v-card v-if="isDarkMode" style="border-radius: 12px">
@@ -1250,7 +1251,6 @@
     <script>
       Vue.prototype.timeago = timeago
       Vue.prototype.dayjs = dayjs
-
       new Vue({
         el: '#app',
         vuetify: new Vuetify(),
@@ -1609,7 +1609,7 @@
             return this.box.sessions
           },
           // 获取`收藏`应用
-          favApps() {
+          favApps(){
             const favapps = []
             const favAppIds = this.box.usercfgs.favapps || []
             if (favAppIds) {
@@ -1877,6 +1877,18 @@
           }
           this.getVersions()
           this.loadTheme()
+        },
+        mounted() {
+          const el = document.getElementById('appList')
+          const _this = this
+          const sortable = Sortable.create(el, {
+            onEnd(evt) {
+              const favApps = _this.box.usercfgs.favapps
+              const oldIdx = evt.oldIndex
+              const newIdx = evt.newIndex
+              favApps[oldIdx] = favApps.splice(newIdx, 1, favApps[oldIdx])[0]
+            }
+          })
         },
         methods: {
           reload() {
