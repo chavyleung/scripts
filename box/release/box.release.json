@@ -1,6 +1,18 @@
 {
   "releases": [
     {
+      "version": "0.7.80",
+      "tags": ["beta"],
+      "author": "@Senku",
+      "msg": "更新[BoxJs]: 调整拖拽延迟",
+      "notes": [
+        {
+          "name": "修复",
+          "descs": ["降低首页图标拖拽灵敏度，长按拖动"]
+        }
+      ]
+    },
+    {
       "version": "0.7.79",
       "tags": ["beta"],
       "author": "@Senku",
