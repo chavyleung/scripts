@@ -1,6 +1,18 @@
 {
   "releases": [
     {
+      "version": "0.7.79",
+      "tags": ["beta"],
+      "author": "@Senku",
+      "msg": "更新[BoxJs]: 首页图标可自定义顺序",
+      "notes": [
+        {
+          "name": "新增",
+          "descs": ["首页图标可拖拽自定义顺序"]
+        }
+      ]
+    },
+    {
       "version": "0.7.78",
       "tags": ["beta"],
       "author": "@chouchoui",
