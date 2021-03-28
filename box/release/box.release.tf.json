@@ -1,6 +1,18 @@
 {
   "releases": [
     {
+      "version": "0.7.83",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "msg": "更新[BoxJs]: 增加图标拖拽动画",
+      "notes": [
+        {
+          "name": "优化",
+          "descs": ["增加图标拖拽动画"]
+        }
+      ]
+    },
+    {
       "version": "0.7.82",
       "tags": ["beta"],
       "author": "@chouchoui",

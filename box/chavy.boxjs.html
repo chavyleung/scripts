@@ -1884,6 +1884,7 @@
           const el = document.getElementById('appList')
           const _this = this
           const sortable = Sortable.create(el, {
+            animation: 600,
             delay: 200,
             onEnd(evt) {
               const favApps = _this.box.usercfgs.favapps
