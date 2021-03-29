@@ -67,8 +67,7 @@ function getToken() {
   return token
 }
 
-function getAppSign() {
-  const t = new Date().getTime()
+function getAppSign(t) {
   const sign = 'f=android&sk=1&time=' + t + '&token=' + getToken() + '&v=10.0&weixin=0&key=apr1$AwP!wRRT$gJ/q.X24poeBInlUJC'
   return $.CryptoJS.MD5(sign).toString().toUpperCase()
 }
@@ -76,7 +75,7 @@ function getAppSign() {
 function getBody() {
   const t = new Date().getTime()
   const token = getToken()
-  const sign = getAppSign()
+  const sign = getAppSign(t)
   return 'touchstone_event=&v=10.0&sign=' + sign + '&weixin=0&time=' + t + '&sk=1&token=' + token + '&f=android&captcha='
 }
 
@@ -84,8 +83,6 @@ function showmsg() {
   return new Promise((resolve) => {
     $.subt = ''
     $.desc = []
-    console.log($.web)
-    console.log($.app)
     $.subt = $.web.error_code === 0 ? 'PC: 成功' : $.web.error_code === 99 ? 'PC: 未登录' : 'PC: 失败'
     if ($.web.error_code === 0 && $.web.data) {
       $.desc.push(`累计: ${$.web.data.checkin_num}次, 经验: ${$.web.data.exp}, 金币: ${$.web.data.gold}, 积分: ${$.web.data.point}`)
