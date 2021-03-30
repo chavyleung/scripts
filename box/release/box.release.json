@@ -1,6 +1,22 @@
 {
   "releases": [
     {
+      "version": "0.7.84",
+      "tags": ["beta"],
+      "author": "@lowking",
+      "msg": "更新[BoxJs]: 修复部分情况下壁纸模式上滑手势失效问题",
+      "notes": [
+        {
+          "name": "修复",
+          "descs": ["部分情况下壁纸模式上滑手势失效问题"]
+        },
+        {
+          "name": "感谢",
+          "descs": ["@lowking PR"]
+        }
+      ]
+    },
+    {
       "version": "0.7.83",
       "tags": ["beta"],
       "author": "@chavyleung",
