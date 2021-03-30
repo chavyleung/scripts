@@ -420,7 +420,7 @@
     {
       "id": "feng",
       "name": "威锋网",
-      "keys": ["chavy_login_feng"],
+      "keys": ["@wangfei021325, chavy_login_feng"],
       "author": "@chavyleung",
       "repo": "https://github.com/chavyleung/scripts/tree/master/feng",
       "script": "https://raw.githubusercontent.com/chavyleung/scripts/master/feng/feng.js",
