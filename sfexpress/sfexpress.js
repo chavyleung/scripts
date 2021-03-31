@@ -2,8 +2,6 @@ const $ = new Env('顺丰速运')
 $.KEY_login = 'chavy_login_sfexpress'
 
 !(async () => {
-  $.CryptoJS = $.isNode() ? require('crypto-js') : CryptoJS
-
   await loginapp()
   await $.wait('1000')
   await loginweb()
