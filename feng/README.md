@@ -18,7 +18,7 @@ cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scr
 49.234.36.200:9091
 
 [rewrite_local]
-^http:\/\/49.234.36.200:9091\/v1\/auth\/signin url script-response-body https://raw.githubusercontent.com/chavyleung/scripts/master/feng/feng.cookie.js
+^http:\/\/49.234.36.200:9091\/v1\/auth\/signin url script-request-body https://raw.githubusercontent.com/chavyleung/scripts/master/feng/feng.cookie.js
 
 [task_local]
 1 0 * * * https://raw.githubusercontent.com/chavyleung/scripts/master/feng/feng.js
