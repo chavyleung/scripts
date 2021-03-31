@@ -282,8 +282,8 @@
     {
       "id": "sfexpress",
       "name": "顺丰速运",
-      "keys": ["chavy_loginurl_sfexpress", "chavy_loginheader_sfexpress"],
-      "author": "@chavyleung",
+      "keys": ["chavy_login_sfexpress"],
+      "author": "@wangfei021325, @chavyleung",
       "repo": "https://github.com/chavyleung/scripts/blob/master/sfexpress",
       "script": "https://raw.githubusercontent.com/chavyleung/scripts/master/sfexpress/sfexpress.js",
       "icons": [
