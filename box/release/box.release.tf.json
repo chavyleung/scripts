@@ -1,6 +1,22 @@
 {
   "releases": [
     {
+      "version": "0.7.85",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "msg": "feat(boxjs): add languages (zh-CN & en-US)",
+      "notes": [
+        {
+          "name": "多语言 (beta)",
+          "descs": ["增加语言: 简中、英文 "]
+        },
+        {
+          "name": "Languages (beta)",
+          "descs": ["add zh-CN & en-US"]
+        }
+      ]
+    },
+    {
       "version": "0.7.84",
       "tags": ["beta"],
       "author": "@lowking",

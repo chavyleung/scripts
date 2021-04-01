@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html>
   <head>
     <title>BoxJs</title>
     <meta charset="utf-8" />
@@ -238,11 +238,23 @@
             <v-list-item>
               <v-list-item-content>
                 <v-select
+                  :items="[{text: 'English', value: 'en-US'}, {text: '简体中文', value: 'zh-CN'}]"
+                  autofocus
+                  hide-details
+                  label="Language"
+                  v-model="box.usercfgs.lang"
+                >
+                </v-select>
+              </v-list-item-content>
+            </v-list-item>
+            <v-list-item>
+              <v-list-item-content>
+                <v-select
+                  :items="[{text: $t('prefs.appearances.auto'), value: 'auto'}, {text: $t('prefs.appearances.dark'), value: 'dark'}, {text: $t('prefs.appearances.light'), value: 'light'}]"
+                  :label="$t('prefs.appearance')"
                   autofocus
                   hide-details
                   v-model="box.usercfgs.theme"
-                  :items="[{text: '跟随系统', value: 'auto'}, {text: '暗黑', value: 'dark'}, {text: '明亮', value: 'light'}]"
-                  label="颜色主题"
                 >
                 </v-select>
               </v-list-item-content>
@@ -250,27 +262,27 @@
             <v-list-item class="mt-4" v-show="box.usercfgs.bgimgs">
               <v-list-item-content>
                 <v-select
-                  hide-details
-                  v-model="box.usercfgs.bgimg"
                   :items="bgimgs"
+                  :label="$t('prefs.background')"
+                  @change="saveUserCfgs"
+                  hide-details
                   item-text="name"
                   item-value="url"
-                  @change="saveUserCfgs"
-                  label="背景图片"
+                  v-model="box.usercfgs.bgimg"
                 >
                 </v-select>
               </v-list-item-content>
             </v-list-item>
             <v-list-item class="mt-4">
               <v-switch
-                dense
-                class="mt-0"
-                label="透明图标"
-                v-model="box.usercfgs.isTransparentIcons"
-                @change="saveUserCfgs"
                 :hide-details="isDarkMode"
+                :hint="$t('prefs.iconDesc')"
+                :label="$t('prefs.icon')"
                 :persistent-hint="true"
-                hint="明亮主题下强制使用彩色图标"
+                @change="saveUserCfgs"
+                class="mt-0"
+                dense
+                v-model="box.usercfgs.isTransparentIcons"
               >
               </v-switch>
               <v-spacer></v-spacer>
@@ -280,13 +292,13 @@
             </v-list-item>
             <v-list-item class="mt-4">
               <v-switch
-                dense
-                class="mt-0"
-                label="壁纸模式"
-                v-model="isWallpaperMode"
-                @change="saveUserCfgs"
+                :hint="$t('prefs.bgModeDesc')"
+                :label="$t('prefs.bgMode')"
                 :persistent-hint="true"
-                hint="同时隐藏顶栏、底栏、图标"
+                @change="saveUserCfgs"
+                class="mt-0"
+                dense
+                v-model="isWallpaperMode"
               >
               </v-switch>
               <v-spacer></v-spacer>
@@ -296,13 +308,13 @@
             </v-list-item>
             <v-list-item class="mt-4">
               <v-switch
-                dense
-                class="mt-0"
-                label="隐藏顶栏"
-                v-model="box.usercfgs.isHidedSearchBar"
-                @change="saveUserCfgs"
+                :hint="$t('prefs.hideTopBarDesc')"
+                :label="$t('prefs.hideTopBar')"
                 :persistent-hint="true"
-                hint="主屏幕下滑可恢复显示"
+                @change="saveUserCfgs"
+                class="mt-0"
+                dense
+                v-model="box.usercfgs.isHidedSearchBar"
               >
               </v-switch>
               <v-spacer></v-spacer>
@@ -312,13 +324,13 @@
             </v-list-item>
             <v-list-item class="mt-4">
               <v-switch
-                dense
-                class="mt-0"
-                label="自动顶栏"
-                v-model="isAutoSearchBar"
-                @change="saveUserCfgs"
+                :hint="$t('prefs.autoTopBarDesc')"
+                :label="$t('prefs.autoTopBar')"
                 :persistent-hint="true"
-                hint="顶栏跟随主屏滚动"
+                @change="saveUserCfgs"
+                class="mt-0"
+                dense
+                v-model="isAutoSearchBar"
               >
               </v-switch>
               <v-spacer></v-spacer>
@@ -328,13 +340,13 @@
             </v-list-item>
             <v-list-item class="mt-4">
               <v-switch
-                dense
-                class="mt-0"
-                label="隐藏底栏"
-                v-model="box.usercfgs.isHidedNaviBottom"
-                @change="saveUserCfgs"
+                :hint="$t('prefs.hideBottomBarDesc')"
+                :label="$t('prefs.hideBottomBar')"
                 :persistent-hint="true"
-                hint="隐藏后只能在侧栏恢复"
+                @change="saveUserCfgs"
+                class="mt-0"
+                dense
+                v-model="box.usercfgs.isHidedNaviBottom"
               >
               </v-switch>
               <v-spacer></v-spacer>
@@ -344,13 +356,13 @@
             </v-list-item>
             <v-list-item class="mt-4">
               <v-switch
-                dense
-                class="mt-0"
-                label="自动底栏"
-                v-model="isAutoNaviBottom"
-                @change="saveUserCfgs"
+                :hint="$t('prefs.autoBottomBarDesc')"
+                :label="$t('prefs.autoBottomBar')"
                 :persistent-hint="true"
-                hint="底栏跟随主屏滚动"
+                @change="saveUserCfgs"
+                class="mt-0"
+                dense
+                v-model="isAutoNaviBottom"
               >
               </v-switch>
               <v-spacer></v-spacer>
@@ -376,13 +388,13 @@
             </v-list-item> -->
             <v-list-item class="mt-4">
               <v-switch
-                dense
+                :hint="$t('prefs.muteModeDesc')"
+                :label="$t('prefs.muteMode')"
+                @change="saveUserCfgs"
                 class="mt-0"
-                label="勿扰模式"
-                hint="不再发出系统通知 (仍记日志)"
+                dense
                 persistent-hint
                 v-model="box.usercfgs.isMute"
-                @change="saveUserCfgs"
               ></v-switch>
               <v-spacer></v-spacer>
               <v-btn fab small text>
@@ -391,13 +403,13 @@
             </v-list-item>
             <v-list-item class="mt-4">
               <v-switch
-                dense
+                :hint="$t('prefs.hideHelpDesc')"
+                :label="$t('prefs.hideHelp')"
+                @change="saveUserCfgs"
                 class="mt-0"
-                label="隐藏帮助按钮"
-                hint="隐藏悬浮按钮中的帮忙"
+                dense
                 persistent-hint
                 v-model="box.usercfgs.isHideHelp"
-                @change="saveUserCfgs"
               ></v-switch>
               <v-spacer></v-spacer>
               <v-btn fab small text @click="open(box.syscfgs.boxjs.repo)">
@@ -406,13 +418,13 @@
             </v-list-item>
             <v-list-item class="mt-4">
               <v-switch
-                dense
+                :hint="$t('prefs.hideBoxJsDesc')"
+                :label="$t('prefs.hideBoxJs')"
+                @change="saveUserCfgs"
                 class="mt-0"
-                label="隐藏悬浮按钮"
-                hint="右下角悬浮按钮"
+                dense
                 persistent-hint
                 v-model="box.usercfgs.isHideBoxIcon"
-                @change="saveUserCfgs"
               ></v-switch>
               <v-spacer></v-spacer>
               <v-btn fab small text @click="open(box.syscfgs.boxjs.repo)">
@@ -423,13 +435,13 @@
             </v-list-item>
             <v-list-item class="mt-4">
               <v-switch
-                dense
+                :hint="$t('prefs.hideProfileTitleDesc')"
+                :label="$t('prefs.hideProfileTitle')"
+                @change="saveUserCfgs"
                 class="mt-0"
-                label="隐藏我的标题"
-                hint="底栏`我的`二字 (只显示图标)"
+                dense
                 persistent-hint
                 v-model="box.usercfgs.isHideMyTitle"
-                @change="saveUserCfgs"
               ></v-switch>
               <v-spacer></v-spacer>
               <v-btn fab small text>
@@ -441,10 +453,10 @@
             </v-list-item>
             <v-list-item class="mt-4">
               <v-switch
+                :hint="$t('prefs.hideCoddingDesc')"
+                :label="$t('prefs.hideCodding')"
                 dense
                 class="mt-0"
-                label="隐藏编码按钮"
-                hint="脚本编辑器的入口"
                 persistent-hint
                 v-model="box.usercfgs.isHideCoding"
                 @change="saveUserCfgs"
@@ -456,13 +468,13 @@
             </v-list-item>
             <v-list-item class="mt-4">
               <v-switch
-                dense
+                :hint="$t('prefs.hideReloadDesc')"
+                :label="$t('prefs.hideReload')"
+                @change="saveUserCfgs"
                 class="mt-0"
-                label="隐藏刷新按钮"
-                hint="双击悬浮按钮也可刷新页面"
+                dense
                 persistent-hint
                 v-model="box.usercfgs.isHideRefresh"
-                @change="saveUserCfgs"
               ></v-switch>
               <v-spacer></v-spacer>
               <v-btn fab small text>
@@ -471,13 +483,13 @@
             </v-list-item>
             <v-list-item class="mt-4">
               <v-switch
-                dense
+                :hint="$t('prefs.debugModeDesc')"
+                :label="$t('prefs.debugMode')"
+                @change="saveUserCfgs"
                 class="mt-0"
-                label="调试模式 (页面)"
-                hint="每次访问都获取最新的页面"
+                dense
                 persistent-hint
                 v-model="box.usercfgs.isDebugWeb"
-                @change="saveUserCfgs"
               ></v-switch>
               <v-spacer></v-spacer>
               <v-btn fab small text>
@@ -487,13 +499,13 @@
             <v-list-item v-if="box.usercfgs.isDebugWeb">
               <v-list-item-content>
                 <v-text-field
-                  clearable
-                  label="调试页面地址"
-                  v-model="box.usercfgs.debugger_web"
-                  hint="设置页面源码的获取地址"
-                  placeholder="http://ip:port/boxjs.html"
-                  persistent-hint
+                  :hint="$t('prefs.debugPageDesc')"
+                  :label="$t('prefs.debugPage')"
                   @change="saveUserCfgs"
+                  clearable
+                  persistent-hint
+                  placeholder="http://ip:port/boxjs.html"
+                  v-model="box.usercfgs.debugger_web"
                 >
                 </v-text-field>
               </v-list-item-content>
@@ -552,7 +564,7 @@
             <!-- 收藏应用 -->
             <v-expansion-panels multiple class="mb-4" v-if="favApps.length > 0" v-model="box.usercfgs.favapppanel">
               <v-expansion-panel>
-                <v-expansion-panel-header> 收藏应用 ({{favApps.length}}) </v-expansion-panel-header>
+                <v-expansion-panel-header> {{ $t('apps.fav') }} ({{favApps.length}}) </v-expansion-panel-header>
                 <v-expansion-panel-content>
                   <v-list dense nav class="ma-n4">
                     <template v-for="(app, appIdx) in favApps">
@@ -570,14 +582,14 @@
                             </template>
                             <v-list>
                               <v-list-item dense v-if="appIdx > 0" @click="moveFav(appIdx, -1)">
-                                <v-list-item-title>上移</v-list-item-title>
+                                <v-list-item-title>{{ $t('base.sort.up') }}</v-list-item-title>
                               </v-list-item>
                               <v-list-item dense v-if="appIdx + 1 < favApps.length" @click="moveFav(appIdx, 1)">
-                                <v-list-item-title>下移</v-list-item-title>
+                                <v-list-item-title>{{ $t('base.sort.dn') }}</v-list-item-title>
                               </v-list-item>
                               <v-divider v-if="favApps.length > 1"></v-divider>
                               <v-list-item dense @click="favApp(app.id)">
-                                <v-list-item-title>取消收藏</v-list-item-title>
+                                <v-list-item-title>{{ $t('base.sort.unStar') }}</v-list-item-title>
                               </v-list-item>
                             </v-list>
                           </v-menu>
@@ -618,7 +630,7 @@
             <!-- 内置应用 -->
             <v-expansion-panels multiplev-if="sysApps.length > 0" v-model="box.usercfgs.sysapppanel">
               <v-expansion-panel>
-                <v-expansion-panel-header> 内置应用 ({{sysApps.length}}) </v-expansion-panel-header>
+                <v-expansion-panel-header> {{ $t('apps.sysApps') }} ({{sysApps.length}}) </v-expansion-panel-header>
                 <v-expansion-panel-content>
                   <v-list dense nav class="ma-n4">
                     <template v-for="(app, appIdx) in sysApps">
@@ -645,15 +657,15 @@
           <!-- 订阅列表 -->
           <v-container fluid v-show="view === 'sub'">
             <template v-if="appSubs.length === 0">
-              <v-btn block class="primary" @click="addAppSubDialog = true">添加订阅</v-btn>
+              <v-btn block class="primary" @click="addAppSubDialog = true">{{ $t('subs.add') }}</v-btn>
               <v-btn block class="primary" @click="open('https://chavyleung.gitbook.io/boxjs/awesome/subscriptions')">
-                <v-icon class="mr-2">mdi-cloud</v-icon>进来看看
+                <v-icon class="mr-2">mdi-cloud</v-icon>{{ $t('subs.moreSubs') }}
               </v-btn>
             </template>
             <v-card v-else>
               <v-list dense nav>
                 <v-subheader inset dense>
-                  应用订阅 ({{appSubs.length}})
+                  {{ $t('subs.appSubs') }} ({{appSubs.length}})
                   <v-spacer></v-spacer>
                   <v-btn icon @click="open('https://chavyleung.gitbook.io/boxjs/awesome/subscriptions')">
                     <v-icon>mdi-cloud-circle</v-icon>
@@ -672,11 +684,13 @@
                     <v-list-item-content>
                       <v-list-item-title>
                         {{sub.name}} ({{sub.apps.length}})
-                        <v-chip v-if="sub.isErr" color="pink" dark x-small class="ml-1 mb-1">格式错误</v-chip>
+                        <v-chip v-if="sub.isErr" color="pink" dark x-small class="ml-1 mb-1">{{ $t('subs.errData') }}</v-chip>
                       </v-list-item-title>
                       <v-list-item-subtitle>{{sub.repo ? sub.repo : sub.url}}</v-list-item-subtitle>
                       <v-list-item-subtitle>{{sub.author ? sub.author : '@anonymous'}}</v-list-item-subtitle>
-                      <v-list-item-subtitle> 更新于: {{timeago.format(sub.updateTime, 'zh_CN')}} </v-list-item-subtitle>
+                      <v-list-item-subtitle>
+                        {{ $t('subs.updated') }}: {{timeago.format(sub.updateTime, $i18n.locale)}}
+                      </v-list-item-subtitle>
                     </v-list-item-content>
                     <v-list-item-action>
                       <v-menu bottom left>
@@ -685,21 +699,21 @@
                         </template>
                         <v-list dense>
                           <v-list-item @click="open(sub.repo)">
-                            <v-list-item-title>仓库</v-list-item-title>
+                            <v-list-item-title>{{ $t('subs.repo') }}</v-list-item-title>
                           </v-list-item>
                           <v-list-item @click="copy(sub.url)">
-                            <v-list-item-title>复制</v-list-item-title>
+                            <v-list-item-title>{{ $t('base.cmd.cp') }}</v-list-item-title>
                           </v-list-item>
                           <v-divider></v-divider>
                           <v-list-item v-if="subIdx > 0" @click="moveSub(subIdx, -1)">
-                            <v-list-item-title>上移</v-list-item-title>
+                            <v-list-item-title>{{ $t('base.sort.up') }}</v-list-item-title>
                           </v-list-item>
                           <v-list-item v-if="subIdx + 1 < appSubs.length" @click="moveSub(subIdx, 1)">
-                            <v-list-item-title>下移</v-list-item-title>
+                            <v-list-item-title>{{ $t('base.sort.dn') }}</v-list-item-title>
                           </v-list-item>
                           <v-divider></v-divider>
                           <v-list-item @click="delSub(subIdx)">
-                            <v-list-item-title>删除</v-list-item-title>
+                            <v-list-item-title class="text-uppercase red--text">{{ $t('base.cmd.del') }}</v-list-item-title>
                           </v-list-item>
                         </v-list>
                       </v-menu>
@@ -711,24 +725,26 @@
             </v-card>
             <v-dialog v-model="addAppSubDialog" scrollable>
               <v-card>
-                <v-card-title>添加订阅</v-card-title>
+                <v-card-title>{{ $t('subs.addDialog.title') }}</v-card-title>
                 <v-divider></v-divider>
                 <v-card-text>
                   <v-textarea
-                    rows="3"
-                    clearable
+                    :label="$t('subs.addDialog.url')"
+                    :hint="$t('subs.addDialog.urlDesc')"
                     autofocus
+                    clearable
                     persistent-hint
+                    rows="3"
                     v-model="ui.addAppSubDialog.url"
-                    label="订阅地址 (URL)"
-                    hint="请粘贴 URL 格式的订阅地址!"
                   ></v-textarea>
                 </v-card-text>
                 <v-divider></v-divider>
                 <v-card-actions>
                   <v-spacer></v-spacer>
-                  <v-btn text small color="grey" @click="addAppSubDialog = false">取消</v-btn>
-                  <v-btn text small color="primary" @click="addAppSub(ui.addAppSubDialog.url)" :loading="isLoading">添加</v-btn>
+                  <v-btn text small color="grey" @click="addAppSubDialog = false"> {{$t('base.dialog.close')}} </v-btn>
+                  <v-btn text small color="primary" @click="addAppSub(ui.addAppSubDialog.url)" :loading="isLoading">
+                    {{$t('base.dialog.save')}}
+                  </v-btn>
                 </v-card-actions>
               </v-card>
             </v-dialog>
@@ -737,35 +753,45 @@
           <v-container fluid v-show="view === 'my'">
             <v-card class="mx-auto">
               <v-card-title class="headline">
-                {{box.usercfgs.name ? box.usercfgs.name : '大侠, 留个名字吧!'}}
+                {{box.usercfgs.name ? box.usercfgs.name : $t('profile.leaveName')}}
                 <v-spacer></v-spacer>
                 <v-dialog v-model="ui.editProfileDialog.show">
                   <template #activator="{ on }">
                     <v-btn icon v-on="on"><v-icon>mdi-cog-outline</v-icon></v-btn>
                   </template>
                   <v-card>
-                    <v-card-title>个人资料</v-card-title>
+                    <v-card-title>{{ $t('profile.editor.title') }}</v-card-title>
                     <v-divider></v-divider>
                     <v-card-text>
-                      <v-text-field label="昵称" v-model="box.usercfgs.name" hint="少侠请留名!"></v-text-field>
-                      <v-text-field label="头像 (选填)" v-model="box.usercfgs.icon" hint="头像链接, 建议直接从 GitHub 获取!"></v-text-field>
+                      <v-text-field
+                        :hint="$t('profile.editor.nameDesc')"
+                        :label="$t('profile.editor.name')"
+                        v-model="box.usercfgs.name"
+                      ></v-text-field>
+                      <v-text-field
+                        :hint="$t('profile.editor.avatarDesc')"
+                        :label="$t('profile.editor.avatar')"
+                        v-model="box.usercfgs.icon"
+                      ></v-text-field>
                     </v-card-text>
                     <v-divider></v-divider>
                     <v-card-actions>
                       <v-spacer></v-spacer>
-                      <v-btn text small color="grey" @click="ui.editProfileDialog.show = false">取消</v-btn>
-                      <v-btn text small color="primary" @click="ui.editProfileDialog.show = false" :loading="isLoading">保存</v-btn>
+                      <v-btn text small color="grey" @click="ui.editProfileDialog.show = false">{{ $t('base.dialog.close') }}</v-btn>
+                      <v-btn text small color="primary" @click="ui.editProfileDialog.show = false" :loading="isLoading">
+                        {{ $t('base.dialog.save') }}
+                      </v-btn>
                     </v-card-actions>
                   </v-card>
                 </v-dialog>
               </v-card-title>
               <v-divider class="mx-4"></v-divider>
               <v-card-text>
-                <span class="subheading">我的数据</span>
+                <span class="subheading">{{ $t('profile.datas') }}</span>
                 <v-chip-group>
-                  <v-chip small>应用: {{this.apps.length}}</v-chip>
-                  <v-chip small>订阅: {{this.appSubs.length}}</v-chip>
-                  <v-chip small>会话: {{this.sessions.length}}</v-chip>
+                  <v-chip small>{{ $t('profile.apps') }}: {{this.apps.length}}</v-chip>
+                  <v-chip small>{{ $t('profile.subs') }}: {{this.appSubs.length}}</v-chip>
+                  <v-chip small>{{ $t('profile.sessions') }}: {{this.sessions.length}}</v-chip>
                 </v-chip-group>
               </v-card-text>
               <v-card-actions>
@@ -773,30 +799,30 @@
                 <v-spacer></v-spacer>
                 <v-dialog v-model="ui.impGlobalBakDialog.show">
                   <template #activator="{ on }">
-                    <v-btn small v-on="on">导入</v-btn>
+                    <v-btn small v-on="on">{{ $t('profile.imp') }}</v-btn>
                   </template>
                   <v-card>
-                    <v-card-title> 导入备份 </v-card-title>
+                    <v-card-title> {{ $t('profile.impDialog.title') }} </v-card-title>
                     <v-divider></v-divider>
                     <v-card-text>
                       <v-textarea
-                        rows="3"
-                        clearable
+                        :hint="$t('profile.impDialog.impDataDesc')"
+                        :label="$t('profile.impDialog.impData')"
                         autofocus
+                        clearable
+                        rows="3"
                         v-model="ui.impGlobalBakDialog.impval"
-                        label="备份内容"
-                        hint="请粘贴全局备份内容!"
                       ></v-textarea>
                     </v-card-text>
                     <v-divider></v-divider>
                     <v-card-actions>
                       <v-spacer></v-spacer>
-                      <v-btn text small color="grey" text @click="ui.impGlobalBakDialog.show = false">取消</v-btn>
-                      <v-btn text small color="primary" text @click="impGlobalBak" :loading="isLoading">导入</v-btn>
+                      <v-btn text small color="grey" text @click="ui.impGlobalBakDialog.show = false">{{ $t('base.dialog.close') }}</v-btn>
+                      <v-btn text small color="primary" text @click="impGlobalBak" :loading="isLoading">{{ $t('profile.imp') }}</v-btn>
                     </v-card-actions>
                   </v-card>
                 </v-dialog>
-                <v-btn small @click="saveGlobalBak">备份</v-btn>
+                <v-btn small @click="saveGlobalBak">{{ $t('profile.bak') }}</v-btn>
               </v-card-actions>
             </v-card>
             <v-card class="mt-4" v-if="box.globalbaks">
@@ -821,7 +847,7 @@
           <v-container fluid v-show="view === 'coding'">
             <v-card rounded="0" flat style="width: inherit">
               <v-subheader>
-                <h2>脚本编辑器</h2>
+                <h2>{{ $t('codding.title') }}</h2>
                 <v-spacer></v-spacer>
                 <v-btn icon @click="runTxtScript" :loading="isLoading">
                   <v-icon color="primary">mdi-play-circle</v-icon>
@@ -853,7 +879,7 @@
             </v-card>
             <v-card class="mb-4">
               <template v-if="curapp.scripts">
-                <v-subheader> 应用脚本 ({{curapp.scripts.length}}) </v-subheader>
+                <v-subheader> {{ $t('appDetail.scripts') }} ({{curapp.scripts.length}}) </v-subheader>
                 <v-list dense>
                   <v-list-item v-for="(script, scriptIdx) in curapp.scripts" :key="scriptIdx">
                     <v-list-item-title> {{scriptIdx + 1}}. {{script.name}} </v-list-item-title>
@@ -866,7 +892,7 @@
             </v-card>
             <v-card class="mb-4">
               <template v-if="curapp.settings">
-                <v-subheader> 应用设置 ({{curapp.settings.length}}) </v-subheader>
+                <v-subheader> {{ $t('appDetail.settings') }} ({{curapp.settings.length}}) </v-subheader>
                 <v-form class="pl-4 pr-4 pb-4">
                   <template v-for="(setting, settingIdx) in curapp.settings">
                     <v-slider
@@ -963,13 +989,13 @@
                 <v-divider></v-divider>
                 <v-card-actions>
                   <v-spacer></v-spacer>
-                  <v-btn small text color="primary" @click="saveAppSettings">保存设置</v-btn>
+                  <v-btn small text color="primary" @click="saveAppSettings">{{ $t('base.dialog.save') }}</v-btn>
                 </v-card-actions>
               </template>
             </v-card>
             <v-card class="mx-auto" v-if="curapp.datas && curapp.datas.length > 0">
               <v-subheader>
-                当前会话
+                {{ $t('appDetail.curSession') }}
                 <a class="ml-2">{{curapp.curSession ? curapp.curSession.name : ''}}</a>
                 <v-spacer></v-spacer>
                 <v-menu bottom left>
@@ -978,16 +1004,16 @@
                   </template>
                   <v-list dense>
                     <v-list-item @click="copy(JSON.stringify(curapp))">
-                      <v-list-item-title>复制会话</v-list-item-title>
+                      <v-list-item-title>{{ $t('base.cmd.cp') }}</v-list-item-title>
                     </v-list-item>
                     <v-dialog v-model="ui.impAppDatasDialog.show">
                       <template #activator="{ on }">
                         <v-list-item v-on="on">
-                          <v-list-item-title>导入会话</v-list-item-title>
+                          <v-list-item-title>{{ $t('base.cmd.imp') }}</v-list-item-title>
                         </v-list-item>
                       </template>
                       <v-card>
-                        <v-card-title> 导入会话 </v-card-title>
+                        <v-card-title> {{ $t('appDetail.impDialog.title') }} </v-card-title>
                         <v-divider></v-divider>
                         <v-card-text>
                           <v-textarea
@@ -995,24 +1021,28 @@
                             rows="3"
                             clearable
                             autofocus
-                            label="会话数据 (JSON)"
-                            hint="请粘贴 JSON 格式的会话数据! 你可以通过 复制会话 获得数据."
+                            :label="$t('appDetail.impDialog.data')"
+                            :hint="$t('appDetail.impDialog.dataDesc')"
                           ></v-textarea>
                         </v-card-text>
                         <v-divider></v-divider>
                         <v-card-actions>
                           <v-spacer></v-spacer>
-                          <v-btn text small color="grey" text @click="ui.impAppDatasDialog.show = false">取消</v-btn>
-                          <v-btn text small color="primary" text @click="impAppDatas()" :loading="isLoading">导入</v-btn>
+                          <v-btn text small color="grey" text @click="ui.impAppDatasDialog.show = false">
+                            {{ $t('base.dialog.close') }}
+                          </v-btn>
+                          <v-btn text small color="primary" text @click="impAppDatas()" :loading="isLoading">
+                            {{ $t('base.cmd.imp') }}
+                          </v-btn>
                         </v-card-actions>
                       </v-card>
                     </v-dialog>
                     <v-list-item @click="copyData(curapp)">
-                      <v-list-item-title>复制数据</v-list-item-title>
+                      <v-list-item-title>{{ $t('appDetail.copyDatas') }}</v-list-item-title>
                     </v-list-item>
                     <v-divider></v-divider>
                     <v-list-item @click="clearAppDatas()">
-                      <v-list-item-title>清空数据</v-list-item-title>
+                      <v-list-item-title class="text-uppercase red--text">{{ $t('appDetail.clearDatas') }}</v-list-item-title>
                     </v-list-item>
                   </v-list>
                 </v-menu>
@@ -1020,7 +1050,7 @@
               <v-list-item two-line dense v-for="(data, dataIdx) in curapp.datas" :key="dataIdx">
                 <v-list-item-content>
                   <v-list-item-title>{{data.key}}</v-list-item-title>
-                  <v-list-item-subtitle>{{data.val ? data.val : '无数据!'}}</v-list-item-subtitle>
+                  <v-list-item-subtitle>{{data.val ? data.val : $t('appDetail.noDatas')}}</v-list-item-subtitle>
                 </v-list-item-content>
                 <v-list-item-action>
                   <v-btn icon @click.stop="clearAppDatas(data.key)">
@@ -1031,7 +1061,7 @@
               <v-divider></v-divider>
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn small text color="primary" @click="saveAppSession">保存会话</v-btn>
+                <v-btn small text color="primary" @click="saveAppSession">{{ $t('base.cmd.duplicate') }}</v-btn>
               </v-card-actions>
             </v-card>
             <v-card :id="session.id" class="ml-10 mt-4" v-for="(session, sessionIdx) in curapp.sessions" :key="session.id">
@@ -1047,14 +1077,14 @@
                     <v-dialog v-model="ui.modSessionDialog.show">
                       <template #activator="{ on }">
                         <v-list-item v-on="on">
-                          <v-list-item-title>修改会话</v-list-item-title>
+                          <v-list-item-title>{{ $t('base.cmd.mod') }}</v-list-item-title>
                         </v-list-item>
                       </template>
                       <v-card>
-                        <v-card-title>修改会话</v-card-title>
+                        <v-card-title>{{ $t('appDetail.sessionEditor.title') }}</v-card-title>
                         <v-divider></v-divider>
                         <v-card-text>
-                          <v-text-field class="mt-4" label="会话名称" v-model="session.name"></v-text-field>
+                          <v-text-field class="mt-4" :label="$t('appDetail.sessionEditor.name')" v-model="session.name"></v-text-field>
                           <v-text-field
                             v-for="(data, dataIdx) in session.datas"
                             :key="dataIdx"
@@ -1065,14 +1095,18 @@
                         <v-divider></v-divider>
                         <v-card-actions>
                           <v-spacer></v-spacer>
-                          <v-btn text small color="grey" text @click="ui.modSessionDialog.show = false">取消 </v-btn>
-                          <v-btn text small color="primary" text @click="updateAppSession(session)" :loading="isLoading">保存</v-btn>
+                          <v-btn text small color="grey" text @click="ui.modSessionDialog.show = false"
+                            >{{ $t('base.dialog.close') }}</v-btn
+                          >
+                          <v-btn text small color="primary" text @click="updateAppSession(session)" :loading="isLoading"
+                            >{{ $t('base.dialog.save') }}</v-btn
+                          >
                         </v-card-actions>
                       </v-card>
                     </v-dialog>
                     <v-divider></v-divider>
                     <v-list-item @click="delAppSession(session.id)">
-                      <v-list-item-title>删除会话</v-list-item-title>
+                      <v-list-item-title>{{ $t('base.cmd.del') }}</v-list-item-title>
                     </v-list-item>
                   </v-list>
                 </v-menu>
@@ -1080,14 +1114,14 @@
               <v-list-item two-line dense v-for="(data, dataIdx) in session.datas" :key="dataIdx">
                 <v-list-item-content>
                   <v-list-item-title>{{data.key}}</v-list-item-title>
-                  <v-list-item-subtitle>{{data.val ? data.val : '无数据!'}}</v-list-item-subtitle>
+                  <v-list-item-subtitle>{{data.val ? data.val : $t('appDetail.noDatas')}}</v-list-item-subtitle>
                 </v-list-item-content>
               </v-list-item>
               <v-divider></v-divider>
               <v-card-actions>
                 <v-btn small text color="grey">{{dayjs(session.createTime).format('YYYY-MM-DD HH:mm:ss')}}</v-btn>
                 <v-spacer></v-spacer>
-                <v-btn small text color="primary" @click="useAppSession(session.id)">应用</v-btn>
+                <v-btn small text color="primary" @click="useAppSession(session.id)">{{ $t('base.dialog.apply') }}</v-btn>
               </v-card-actions>
             </v-card>
           </v-container>
@@ -1096,33 +1130,21 @@
             <v-subheader>
               <h2 :style="appTitleStyle">{{curbak.name}}</h2>
               <v-spacer></v-spacer>
-              <v-btn icon color="primary" @click="revertGlobalBak">
-                <v-icon>mdi-share-circle</v-icon>
-              </v-btn>
+              <v-btn color="primary" small @click="revertGlobalBak"> {{ $t('base.cmd.recovery') }} </v-btn>
             </v-subheader>
             <v-card class="mb-4">
-              <v-card-subtitle>
-                <p class="my-0">说明:</p>
-                <p class="my-0">1. 点击右上角 <v-icon color="primary" small>mdi-share-circle</v-icon> 按钮还原!</p>
-                <p class="my-0">2. 点击 <v-icon color="primary" small>mdi-clipboard-text-multiple</v-icon> 按钮可复制备份.</p>
-                <p class="my-0">3. 修改名称为实时保存</p>
-              </v-card-subtitle>
-            </v-card>
-            <v-card class="mb-4">
               <v-subheader>
-                备份信息
+                {{ $t('bakDetail.title') }}
                 <v-spacer></v-spacer>
-                <v-btn color="primary" icon @click="copy(JSON.stringify(curbak.bak))">
-                  <v-icon size="20">mdi-clipboard-text-multiple</v-icon>
-                </v-btn>
+                <v-btn color="primary" small @click="copy(JSON.stringify(curbak.bak))"> {{ $t('base.cmd.cp') }} </v-btn>
               </v-subheader>
               <v-card-text>
-                <v-text-field label="备份名称" v-model="curbak.name" @change="updateGlobalBak"> </v-text-field>
+                <v-text-field :label="$t('bakDetail.name')" v-model="curbak.name" @change="updateGlobalBak"> </v-text-field>
               </v-card-text>
               <v-divider></v-divider>
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn small text color="error" @click="delGlobalBak">删除备份</v-btn>
+                <v-btn small text color="error" @click="delGlobalBak">{{ $t('base.cmd.del') }}</v-btn>
               </v-card-actions>
             </v-card>
           </v-container>
@@ -1130,16 +1152,16 @@
         <!-- 底部 -->
         <v-bottom-navigation ref="naviBar" v-bind="naviBarBind" v-touch="{ down: () => isHidedNaviBottom = true }">
           <v-progress-linear :active="isLoading" height="2" absolute top indeterminate></v-progress-linear>
-          <v-btn @click="switchView('')" value="">首页<v-icon>mdi-home</v-icon></v-btn>
-          <v-btn @click="switchView('app')" value="app">应用<v-icon>mdi-application</v-icon></v-btn>
-          <v-btn @click="switchView('sub')" value="sub">订阅<v-icon>mdi-database</v-icon></v-btn>
+          <v-btn @click="switchView('')" value="">{{ $t('menus.home') }}<v-icon>mdi-home</v-icon></v-btn>
+          <v-btn @click="switchView('app')" value="app">{{ $t('menus.apps') }}<v-icon>mdi-application</v-icon></v-btn>
+          <v-btn @click="switchView('sub')" value="sub">{{ $t('menus.subs') }}<v-icon>mdi-database</v-icon></v-btn>
           <v-btn @click="switchView('my')" value="my">
             <template v-if="myIcon">
-              <span v-if="!isHideMyTitle">我的</span>
+              <span v-if="!isHideMyTitle">{{ $t('menus.profile') }}</span>
               <v-avatar :size="isHideMyTitle ? 36 : 24"><v-img :src="myIcon" /></v-avatar>
             </template>
             <template v-else>
-              <span v-if="!isHideMyTitle">我的</span>
+              <span v-if="!isHideMyTitle">{{ $t('menus.profile') }}</span>
               <v-icon :size="isHideMyTitle ? 36 : 24">mdi-face-profile</v-icon>
             </template>
           </v-btn>
@@ -1244,6 +1266,7 @@
       </v-app>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue-i18n@8.x/dist/vue-i18n.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vuetify@2.4.x/dist/vuetify.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/lodash@4.x/lodash.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios@0.x/dist/axios.min.js"></script>
@@ -1258,6 +1281,276 @@
       new Vue({
         el: '#app',
         vuetify: new Vuetify(),
+        i18n: new VueI18n({
+          locale: 'zh-CN',
+          messages: {
+            'en-US': {
+              base: {
+                dialog: {
+                  apply: 'Apply',
+                  save: 'Save',
+                  close: 'Close'
+                },
+                sort: {
+                  up: 'Up',
+                  dn: 'Down'
+                },
+                cmd: {
+                  cp: 'Copy',
+                  del: 'Delete',
+                  imp: 'Import',
+                  exp: 'Export',
+                  mod: 'Modify',
+                  recovery: 'Recovery',
+                  duplicate: 'Duplicate'
+                }
+              },
+              menus: {
+                home: 'Home',
+                apps: 'Applications',
+                subs: 'Subscriptions',
+                profile: 'Profile'
+              },
+              apps: {
+                fav: 'Favorites',
+                unStar: 'Unstar',
+                sysApps: 'System Applications'
+              },
+              appDetail: {
+                scripts: 'Scripts',
+                settings: 'Settings',
+                curSession: 'Current Session',
+                copyDatas: 'Copy Datas',
+                clearDatas: 'Clear Datas',
+                noDatas: 'No datas',
+                impDialog: {
+                  title: 'Import Session',
+                  data: 'Session Data (JSON)',
+                  dataDesc: 'You can get session data via `Current Session` more > Copy'
+                }
+              },
+              subs: {
+                addDialog: {
+                  title: 'Add Subscription',
+                  name: 'Session Name',
+                  url: 'Subscription url',
+                  urlDesc: 'https://raw.githubusercontent.com/chavyleung/scripts/master/box/chavy.boxjs.json'
+                },
+
+                sessionEditor: {
+                  title: 'Modify Session',
+                  name: 'Name',
+                  nameDesc: 'Leave your name',
+                  avatar: 'Avatar (Optional)',
+                  avatarDesc: 'Your avatar link'
+                },
+                add: 'Add Subscription',
+                subs: 'More Subscriptions',
+                appSubs: 'Application Subscriptions',
+                errData: 'Error Data',
+                updated: 'Updated',
+                repo: 'Repository'
+              },
+              prefs: {
+                appearance: 'Appearance',
+                appearances: {
+                  auto: 'Auto',
+                  dark: 'Dark',
+                  light: 'Light'
+                },
+                background: 'Background',
+                icon: 'Dark icon',
+                iconDesc: 'Available in dark mode',
+                bgMode: 'Backgroud Mode',
+                bgModeDesc: 'Hides bars & icons',
+                hideTopBar: 'Hide TopBar',
+                hideTopBarDesc: 'Restore via sidebar',
+                autoTopBar: 'Auto TopBar',
+                autoTopBarDesc: 'Hides when scrolling',
+                hideBottomBar: 'Hide BottomBar',
+                hideBottomBarDesc: 'Restore via sidebar',
+                autoBottomBar: 'Auto BottomBar',
+                autoBottomBarDesc: 'Hides when scrolling',
+                muteMode: 'Do Not Disturb',
+                muteModeDesc: 'Disable notifications',
+                hideHelp: 'Hide Help',
+                hideHelpDesc: 'Hides help button',
+                hideBoxJs: 'Hide BoxJs',
+                hideBoxJsDesc: 'Hides BoxJs button',
+                hideProfileTitle: 'Hide Profile Title',
+                hideProfileTitleDesc: 'Show avatar only',
+                hideCodding: 'Hide Codding',
+                hideCoddingDesc: 'Hides codding button',
+                hideReload: 'Hide Reload',
+                hideReloadDesc: 'Reload by double tap BoxJs',
+                debugMode: 'Debug Mode',
+                debugModeDesc: 'No page caches',
+                debugPage: 'Debug Page Addr',
+                debugPageDesc: 'Load page from...'
+              },
+              profile: {
+                leaveName: 'Leave a name',
+                editor: {
+                  title: 'Profile',
+                  name: 'Name',
+                  nameDesc: 'Leave your name',
+                  avatar: 'Avatar (Optional)',
+                  avatarDesc: 'Your avatar link'
+                },
+                impDialog: {
+                  title: 'Import Backup',
+                  impData: 'Backup Data',
+                  impDataDesc: ''
+                },
+                datas: 'Datas',
+                apps: 'Apps',
+                subs: 'Subs',
+                sessions: 'Sessions',
+                imp: 'Import',
+                bak: 'Backup',
+                bakName: 'Global Backup'
+              },
+              bakDetail: {
+                note: 'Note: ',
+                name: 'Backup Name',
+                title: 'Backup Informations'
+              },
+              codding: {
+                title: 'Script Editor'
+              }
+            },
+            'zh-CN': {
+              base: {
+                dialog: {
+                  apply: '应用',
+                  save: '保存',
+                  close: '关闭'
+                },
+                sort: {
+                  up: '上移',
+                  dn: '下移'
+                },
+                cmd: {
+                  cp: '复制',
+                  del: '删除',
+                  imp: '导入',
+                  mod: '修改',
+                  recovery: '恢复',
+                  duplicate: '克隆'
+                }
+              },
+              menus: {
+                home: '主页',
+                apps: '应用',
+                subs: '订阅',
+                profile: '我的'
+              },
+              apps: {
+                fav: '收藏应用',
+                unStar: '取消收藏',
+                sysApps: '内置应用'
+              },
+              appDetail: {
+                scripts: '应用脚本',
+                settings: '应用设置',
+                curSession: '当前会话',
+                copyDatas: '复制数据',
+                clearDatas: '清除数据',
+                noDatas: '无数据',
+                impDialog: {
+                  title: '导入会话',
+                  data: '会话数据 (JSON)',
+                  dataDesc: '你可通过 `当前会话` 更多 > 复制 来获得会话数据'
+                }
+              },
+              subs: {
+                addDialog: {
+                  title: '添加订阅',
+                  name: 'Session Name',
+                  url: '订阅地址',
+                  urlDesc: 'https://raw.githubusercontent.com/chavyleung/scripts/master/box/chavy.boxjs.json'
+                },
+
+                sessionEditor: {
+                  title: '修改会话',
+                  name: '会话名称'
+                },
+                add: '添加订阅',
+                moreSubs: '更多订阅',
+                appSubs: '应用订阅',
+                errData: '格式错误',
+                updated: '更新于',
+                repo: '仓库'
+              },
+              prefs: {
+                appearance: '外观',
+                appearances: {
+                  auto: '自动',
+                  dark: '暗黑',
+                  light: '明亮'
+                },
+                background: '背景图标',
+                icon: '透明图标',
+                iconDesc: '明亮主题下强制使用彩色图标',
+                bgMode: '壁纸模式',
+                bgModeDesc: '同时隐藏顶栏、底栏、图标',
+                hideTopBar: '隐藏顶栏',
+                hideTopBarDesc: '通过侧栏恢复',
+                autoTopBar: '自动顶栏',
+                autoTopBarDesc: '滚动时自动隐藏',
+                hideBottomBar: '隐藏底栏',
+                hideBottomBarDesc: '通过侧栏恢复',
+                autoBottomBar: '自动底栏',
+                autoBottomBarDesc: '滚动时自动隐藏',
+                muteMode: '勿扰模式',
+                muteModeDesc: '不发出通知 (仍记日志)',
+                hideHelp: '隐藏帮助按钮',
+                hideHelpDesc: '隐藏帮助按钮',
+                hideBoxJs: '隐藏悬浮按钮',
+                hideBoxJsDesc: '隐藏右下角 BoxJs 悬浮按钮',
+                hideProfileTitle: '隐藏我的标题',
+                hideProfileTitleDesc: '只显示头像',
+                hideCodding: '隐藏编码按钮',
+                hideCoddingDesc: 'Hides script editor entrance',
+                hideReload: '隐藏刷新按钮',
+                hideReloadDesc: '仍可双击悬浮按钮刷新页面',
+                debugMode: '调试模式',
+                debugModeDesc: '每次请求都获取最新的页面',
+                debugPage: '调试页面地址',
+                debugPageDesc: '页面源码的获取地址'
+              },
+              profile: {
+                leaveName: '大侠, 请留名!',
+                editor: {
+                  title: '个人资源',
+                  name: '昵称',
+                  nameDesc: '大侠, 请留名!',
+                  avatar: '头像 (可选)',
+                  avatarDesc: '头像链接, 建议从 Github 获取'
+                },
+                impDialog: {
+                  title: 'Import Backup',
+                  impData: 'Backup Data',
+                  impDataDesc: ''
+                },
+                datas: '我的数据',
+                apps: '应用',
+                subs: '订阅',
+                sessions: '会话',
+                imp: '导入',
+                bak: '备份',
+                bakName: '全局备份'
+              },
+              bakDetail: {
+                name: '备份名称',
+                title: '备份信息'
+              },
+              codding: {
+                title: '脚本编辑器'
+              }
+            }
+          }
+        }),
         data() {
           return {
             ui: {
@@ -1895,6 +2188,16 @@
               favApps.splice(newIdx, 0, moveItem)
             }
           })
+
+          debugger
+          const lang = this.box.usercfgs.lang
+          if (!this.box.usercfgs.lang) {
+            const locale = this.$i18n.locale
+            this.box.usercfgs.lang = locale === 'zh-CN' ? locale : 'en-US'
+            this.saveUserCfgs()
+          } else {
+            this.$i18n.locale = lang
+          }
         },
         methods: {
           reload() {
@@ -1932,11 +2235,15 @@
               const darkbgimg = hasdark ? hasdark.url : ``
               const lightbgimg = haslight ? haslight.url : ``
               this.isDarkMode ? (bgimg = darkbgimg) : (bgimg = lightbgimg)
-              const bgStyle = [`background-image: linear-gradient(to bottom,rgba(0,0,0,.2) 0,transparent 76px), url(${bgimg}?_=${Math.random()})`]
+              const bgStyle = [
+                `background-image: linear-gradient(to bottom,rgba(0,0,0,.2) 0,transparent 76px), url(${bgimg}?_=${Math.random()})`
+              ]
               document.querySelector('#BG').setAttribute('style', bgStyle.join('; '))
             } else {
               const bgStyle = [
-                `background-image: linear-gradient(to bottom,rgba(0,0,0,.2) 0,transparent 76px), url(${this.box.usercfgs.bgimg}?_=${Math.random()})`
+                `background-image: linear-gradient(to bottom,rgba(0,0,0,.2) 0,transparent 76px), url(${
+                  this.box.usercfgs.bgimg
+                }?_=${Math.random()})`
               ]
               document.querySelector('#BG').setAttribute('style', bgStyle.join('; '))
             }
@@ -2313,7 +2620,7 @@
             const impval = this.ui.impGlobalBakDialog.impval
             const bak = {
               id: uuidv4(),
-              name: '全局备份 ' + (this.box.globalbaks.length + 1),
+              name: `${this.$t('profile.bakName')} ` + (this.box.globalbaks.length + 1),
               env: this.box.syscfgs.env,
               version: this.box.syscfgs.version,
               versionType: this.box.syscfgs.versionType,
@@ -2336,7 +2643,7 @@
           saveGlobalBak() {
             const bak = {
               id: uuidv4(),
-              name: '全局备份 ' + (this.box.globalbaks.length + 1),
+              name: `${this.$t('profile.bakName')} ` + (this.box.globalbaks.length + 1),
               env: this.box.syscfgs.env,
               version: this.box.syscfgs.version,
               versionType: this.box.syscfgs.versionType,
