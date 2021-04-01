@@ -1,7 +1,7 @@
 {
   "releases": [
     {
-      "version": "0.7.86",
+      "version": "0.7.87",
       "tags": ["beta"],
       "author": "@chavyleung",
       "msg": "fix(boxjs): language switching bug",

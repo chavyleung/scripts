@@ -689,7 +689,7 @@
                       <v-list-item-subtitle>{{sub.repo ? sub.repo : sub.url}}</v-list-item-subtitle>
                       <v-list-item-subtitle>{{sub.author ? sub.author : '@anonymous'}}</v-list-item-subtitle>
                       <v-list-item-subtitle>
-                        {{ $t('subs.updated') }}: {{timeago.format(sub.updateTime, box.usercfgs.lang.replace('-', '_'))}}
+                        {{ $t('subs.updated') }}: {{ timeago.format(sub.updateTime, timeagoLang.replace('-', '_')) }}
                       </v-list-item-subtitle>
                     </v-list-item-content>
                     <v-list-item-action>
@@ -1621,6 +1621,10 @@
               return this.compareVersion(lastestVer, curver) > 0
             }
           },
+          timeagoLang() {
+            const lang = this.box.usercfgs.lang
+            return lang ? lang.replace('-', '_') : 'zh_CN'
+          },
           // 判断是否需要跨域请求
           isCors() {
             return this.ui.isCors
@@ -2194,14 +2198,12 @@
             }
           })
 
-          debugger
-          const lang = this.box.usercfgs.lang
           if (!this.box.usercfgs.lang) {
             const locale = this.$i18n.locale
             this.box.usercfgs.lang = locale === 'zh-CN' ? locale : 'en-US'
             this.saveUserCfgs()
           } else {
-            this.$i18n.locale = lang
+            this.$i18n.locale = this.box.usercfgs.lang
           }
         },
         methods: {
