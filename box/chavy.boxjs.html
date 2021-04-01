@@ -689,7 +689,7 @@
                       <v-list-item-subtitle>{{sub.repo ? sub.repo : sub.url}}</v-list-item-subtitle>
                       <v-list-item-subtitle>{{sub.author ? sub.author : '@anonymous'}}</v-list-item-subtitle>
                       <v-list-item-subtitle>
-                        {{ $t('subs.updated') }}: {{timeago.format(sub.updateTime, $i18n.locale)}}
+                        {{ $t('subs.updated') }}: {{timeago.format(sub.updateTime, box.usercfgs.lang.replace('-', '_'))}}
                       </v-list-item-subtitle>
                     </v-list-item-content>
                     <v-list-item-action>
@@ -2105,6 +2105,11 @@
                 this.saveUserCfgs()
               }
               this.isSaveUserCfgs = true
+            }
+          },
+          'box.usercfgs.lang': {
+            handler(newval) {
+              this.$i18n.locale = newval
             }
           },
           'box.usercfgs.theme': {

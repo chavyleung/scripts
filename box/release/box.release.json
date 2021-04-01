@@ -1,6 +1,18 @@
 {
   "releases": [
     {
+      "version": "0.7.86",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "msg": "fix(boxjs): language switching bug",
+      "notes": [
+        {
+          "name": "修复",
+          "descs": ["语言切换问题"]
+        }
+      ]
+    },
+    {
       "version": "0.7.85",
       "tags": ["beta"],
       "author": "@chavyleung",
