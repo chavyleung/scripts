@@ -1,6 +1,18 @@
 {
   "releases": [
     {
+      "version": "0.7.90",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "msg": "fix(boxjs): backup data display bug",
+      "notes": [
+        {
+          "name": "修复",
+          "descs": ["备份数据太大导致无法进入备份详情"]
+        }
+      ]
+    },
+    {
       "version": "0.7.89",
       "tags": ["beta"],
       "author": "@chavyleung",
