@@ -1139,6 +1139,7 @@
                 <v-btn color="primary" small @click="copy(JSON.stringify(curbak.bak))"> {{ $t('base.cmd.cp') }} </v-btn>
               </v-subheader>
               <v-card-text>
+                <v-text-field :label="$t('bakDetail.id')" v-model="curbak.id" readonly> </v-text-field>
                 <v-text-field :label="$t('bakDetail.name')" v-model="curbak.name" @change="updateGlobalBak"> </v-text-field>
               </v-card-text>
               <v-divider></v-divider>
@@ -1412,6 +1413,7 @@
               },
               bakDetail: {
                 note: 'Note: ',
+                id: 'Backup Index',
                 name: 'Backup Name',
                 title: 'Backup Informations'
               },
@@ -1542,6 +1544,7 @@
                 bakName: '全局备份'
               },
               bakDetail: {
+                id: '备份索引',
                 name: '备份名称',
                 title: '备份信息'
               },
@@ -2175,11 +2178,9 @@
               this.setHttpBackend()
             })
           }
-          // 获取全局备份
-          if (this.view === 'bak') {
-            this.loadGlobalBak()
-          }
-          this.getVersions()
+
+          // 延时执行, 避免多个请求抢占资源
+          setTimeout(this.getVersions, 3000)
           this.loadTheme()
         },
         mounted() {
@@ -2204,6 +2205,11 @@
             this.saveUserCfgs()
           } else {
             this.$i18n.locale = this.box.usercfgs.lang
+          }
+
+          if (this.path.includes('/#/bak/')) {
+            const [, backupId] = this.path.split('/#/bak/')
+            this.loadGlobalBak(backupId)
           }
         },
         methods: {
@@ -2307,9 +2313,9 @@
             this.handleHistory(this.path)
           },
           // 切换备份视图
-          switchBakView(bakId) {
-            const path = `/#/bak/${bakId}`
-            this.loadGlobalBak().then((resp) => {
+          switchBakView(backupId) {
+            const path = `/#/bak/${backupId}`
+            this.loadGlobalBak(backupId).then((resp) => {
               this.path = path
               this.handleHistory(path)
             })
@@ -2599,10 +2605,10 @@
             })
           },
           // 加载完整的全局备份 (页面渲染时加载只是备份列表)
-          loadGlobalBak() {
-            return axios.get('/query/baks').then((resp) => {
-              delete resp.data.usercfgs
-              Object.assign(this.box, resp.data)
+          loadGlobalBak(backupId) {
+            return axios.get(`/query/baks/${backupId}`).then((resp) => {
+              const backup = this.box.globalbaks.find((backup) => backup.id === backupId)
+              backup.bak = resp.data
             })
           },
           // 删除全局备份

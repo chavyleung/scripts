@@ -1,6 +1,18 @@
 {
   "releases": [
     {
+      "version": "0.7.88",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "msg": "feat(boxjs): store each backup separately",
+      "notes": [
+        {
+          "name": "优化",
+          "descs": ["独立存储每份备份数据, 避免备份数据过大问题"]
+        }
+      ]
+    },
+    {
       "version": "0.7.87",
       "tags": ["beta"],
       "author": "@chavyleung",

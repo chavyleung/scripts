@@ -1,7 +1,12 @@
 const $ = new Env('BoxJs - 抹掉备份')
 
 $.KEY_globalBaks = 'chavy_boxjs_globalBaks'
+$.KEY_backups = 'chavy_boxjs_backups'
 
+const backups = $.getjson($.KEY_backups, [])
+backups.forEach((backup) => $.setdata('', backup.id))
+
+$.setdata('', $.KEY_backups)
 $.setdata('', $.KEY_globalBaks)
 $.done()
 
