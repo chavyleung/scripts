@@ -205,10 +205,16 @@ async function handleQuery() {
     $.json = getBoxData()
   } else if (/^\/baks/.test(query)) {
     const [, backupId] = query.split('/baks/')
-    console.log(backupId)
     $.json = $.getjson(backupId)
   } else if (/^\/versions$/.test(query)) {
     await getVersions(true)
+  } else if (/^\/data/.test(query)) {
+    // TODO 记录每次查询的 key 至 usercfgs.viewkeys
+    const [, dataKey] = query.split('/data/')
+    $.json = {
+      key: dataKey,
+      val: $.getdata(dataKey)
+    }
   }
 }
 
@@ -236,6 +242,8 @@ async function handleApi() {
     await apiRevertGlobalBak()
   } else if (api === '/runScript') {
     await apiRunScript()
+  } else if (api === '/saveData') {
+    await apiSaveData()
   }
 }
 
@@ -314,13 +322,13 @@ function getSystemApps() {
       settings: [
         { id: '@chavy_boxjs_userCfgs.httpapis', name: 'HTTP-API (Surge)', val: '', type: 'textarea', placeholder: ',examplekey@127.0.0.1:6166', autoGrow: true, rows: 2, persistentHint:true, desc: '示例: ,examplekey@127.0.0.1:6166! 注意: 以逗号开头, 逗号分隔多个地址, 可加回车' },
         { id: '@chavy_boxjs_userCfgs.httpapi_timeout', name: 'HTTP-API Timeout (Surge)', val: 20, type: 'number', persistentHint:true, desc: '如果脚本作者指定了超时时间, 会优先使用脚本指定的超时时间.' },
+        { id: '@chavy_boxjs_userCfgs.http_backend', name: 'HTTP Backend (Quantumult X)', val: '', type: 'text',placeholder: 'http://127.0.0.1:9999', persistentHint:true, desc: '示例: http://127.0.0.1:9999 ! 注意: 必须是以 http 开头的完整路径, 不能是 / 结尾' },
         { id: '@chavy_boxjs_userCfgs.bgimgs', name: '背景图片清单', val: '无,\n跟随系统,跟随系统\nlight,http://api.btstu.cn/sjbz/zsy.php\ndark,https://uploadbeta.com/api/pictures/random\n妹子,http://api.btstu.cn/sjbz/zsy.php', type: 'textarea', placeholder: '无,{回车} 跟随系统,跟随系统{回车} light,图片地址{回车} dark,图片地址{回车} 妹子,图片地址', persistentHint:true, autoGrow: true, rows: 2, desc: '逗号分隔名字和链接, 回车分隔多个地址' },
         { id: '@chavy_boxjs_userCfgs.bgimg', name: '背景图片', val: '', type: 'text', placeholder: 'http://api.btstu.cn/sjbz/zsy.php', persistentHint:true, desc: '输入背景图标的在线链接' },
         { id: '@chavy_boxjs_userCfgs.changeBgImgEnterDefault', name: '手势进入壁纸模式默认背景图片', val: '', type: 'text', placeholder: '填写上面背景图片清单的值', persistentHint:true, desc: '' },
         { id: '@chavy_boxjs_userCfgs.changeBgImgOutDefault', name: '手势退出壁纸模式默认背景图片', val: '', type: 'text', placeholder: '填写上面背景图片清单的值', persistentHint:true, desc: '' },
         { id: '@chavy_boxjs_userCfgs.color_light_primary', name: '明亮色调', canvas: true, val: '#F7BB0E', type: 'colorpicker', desc: '' },
-        { id: '@chavy_boxjs_userCfgs.color_dark_primary', name: '暗黑色调', canvas: true, val: '#2196F3', type: 'colorpicker', desc: '' },
-        { id: '@chavy_boxjs_userCfgs.http_backend', name: 'HTTP Backend (Quantumult X)', val: '', type: 'text',placeholder: 'http://127.0.0.1:9999', persistentHint:true, desc: '示例: http://127.0.0.1:9999 ! 注意: 必须是以 http 开头的完整路径, 不能是 / 结尾' },
+        { id: '@chavy_boxjs_userCfgs.color_dark_primary', name: '暗黑色调', canvas: true, val: '#2196F3', type: 'colorpicker', desc: '' }
       ],
       scripts: [
         {
@@ -380,6 +388,7 @@ function getUserCfgs() {
   const defcfgs = {
     favapps: [],
     appsubs: [],
+    viewkeys: [],
     isPinedSearchBar: true,
     httpapi: 'examplekey@127.0.0.1:6166',
     http_backend: ''
@@ -633,6 +642,15 @@ async function apiRunScript() {
       result: '',
       output: $.cached_logs.join('\n')
     }
+  }
+}
+
+async function apiSaveData() {
+  const { key: dataKey, val: dataVal } = $.toObj($request.body)
+  $.setdata(dataVal, dataKey)
+  $.json = {
+    key: dataKey,
+    val: $.getdata(dataKey)
   }
 }
 

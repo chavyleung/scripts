@@ -1,6 +1,18 @@
 {
   "releases": [
     {
+      "version": "0.7.89",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "msg": "feat(boxjs): add data viewer",
+      "notes": [
+        {
+          "name": "新增",
+          "descs": ["数据编辑 & 查看器"]
+        }
+      ]
+    },
+    {
       "version": "0.7.88",
       "tags": ["beta"],
       "author": "@chavyleung",

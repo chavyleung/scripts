@@ -239,7 +239,6 @@
               <v-list-item-content>
                 <v-select
                   :items="[{text: 'English', value: 'en-US'}, {text: '简体中文', value: 'zh-CN'}]"
-                  autofocus
                   hide-details
                   label="Language"
                   v-model="box.usercfgs.lang"
@@ -252,7 +251,6 @@
                 <v-select
                   :items="[{text: $t('prefs.appearances.auto'), value: 'auto'}, {text: $t('prefs.appearances.dark'), value: 'dark'}, {text: $t('prefs.appearances.light'), value: 'light'}]"
                   :label="$t('prefs.appearance')"
-                  autofocus
                   hide-details
                   v-model="box.usercfgs.theme"
                 >
@@ -589,7 +587,7 @@
                               </v-list-item>
                               <v-divider v-if="favApps.length > 1"></v-divider>
                               <v-list-item dense @click="favApp(app.id)">
-                                <v-list-item-title>{{ $t('base.sort.unStar') }}</v-list-item-title>
+                                <v-list-item-title>{{ $t('apps.unStar') }}</v-list-item-title>
                               </v-list-item>
                             </v-list>
                           </v-menu>
@@ -795,8 +793,8 @@
                 </v-chip-group>
               </v-card-text>
               <v-card-actions>
-                <!-- <v-btn text small color="red" @click="">抹掉数据</v-btn> -->
                 <v-spacer></v-spacer>
+                <v-btn small class="mr-2" @click="switchView('viewer')"> {{ $t('profile.dataviewer')}} </v-btn>
                 <v-dialog v-model="ui.impGlobalBakDialog.show">
                   <template #activator="{ on }">
                     <v-btn small v-on="on">{{ $t('profile.imp') }}</v-btn>
@@ -841,6 +839,47 @@
                   </v-list-item-action>
                 </v-list-item>
               </template>
+            </v-card>
+          </v-container>
+          <!-- 数据查看 -->
+          <v-container fluid v-show="view === 'viewer'">
+            <v-card class="mb-4">
+              <v-subheader>
+                {{ $t('viewer.dataViewer') }}
+                <v-spacer></v-spacer>
+                <v-btn color="primary" small @click="copy(ui.viewer.key)"> {{ $t('base.cmd.cp') }} </v-btn>
+              </v-subheader>
+              <v-card-text>
+                <v-text-field
+                  :hint="$t('viewer.dataKeyDesc')"
+                  :label="$t('viewer.dataKey')"
+                  persistent-hint
+                  placeholder="boxjs_host"
+                  v-model="ui.viewer.key"
+                >
+                </v-text-field>
+              </v-card-text>
+              <v-divider></v-divider>
+              <v-card-actions>
+                <!-- TODO 列出最近查询过的 key -->
+                <v-spacer></v-spacer>
+                <v-btn small text color="primary" @click="queryData">{{ $t('base.dialog.view') }}</v-btn>
+              </v-card-actions>
+            </v-card>
+            <v-card class="mb-4">
+              <v-subheader>
+                {{ $t('viewer.dataEditor') }}
+                <v-spacer></v-spacer>
+                <v-btn color="primary" small @click="copy(ui.viewer.val)"> {{ $t('base.cmd.cp') }} </v-btn>
+              </v-subheader>
+              <v-card-text>
+                <v-textarea v-model="ui.viewer.val" :row="3" :label="$t('viewer.dataVal')"> </v-textarea>
+              </v-card-text>
+              <v-divider></v-divider>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn small text color="primary" @click="saveData">{{ $t('base.dialog.save') }}</v-btn>
+              </v-card-actions>
             </v-card>
           </v-container>
           <!-- 代码编辑 -->
@@ -1133,11 +1172,7 @@
               <v-btn color="primary" small @click="revertGlobalBak"> {{ $t('base.cmd.recovery') }} </v-btn>
             </v-subheader>
             <v-card class="mb-4">
-              <v-subheader>
-                {{ $t('bakDetail.title') }}
-                <v-spacer></v-spacer>
-                <v-btn color="primary" small @click="copy(JSON.stringify(curbak.bak))"> {{ $t('base.cmd.cp') }} </v-btn>
-              </v-subheader>
+              <v-subheader> {{ $t('bakDetail.title') }} </v-subheader>
               <v-card-text>
                 <v-text-field :label="$t('bakDetail.id')" v-model="curbak.id" readonly> </v-text-field>
                 <v-text-field :label="$t('bakDetail.name')" v-model="curbak.name" @change="updateGlobalBak"> </v-text-field>
@@ -1147,6 +1182,14 @@
                 <v-spacer></v-spacer>
                 <v-btn small text color="error" @click="delGlobalBak">{{ $t('base.cmd.del') }}</v-btn>
               </v-card-actions>
+            </v-card>
+            <v-card class="mb-4">
+              <v-subheader>
+                {{ $t('bakDetail.dataTitle') }}
+                <v-spacer></v-spacer>
+                <v-btn color="primary" small @click="copy(JSON.stringify(curbak.bak))"> {{ $t('base.cmd.cp') }} </v-btn>
+              </v-subheader>
+              <v-card-text> {{curbak.bak}} </v-card-text>
             </v-card>
           </v-container>
         </v-main>
@@ -1290,6 +1333,7 @@
                 dialog: {
                   apply: 'Apply',
                   save: 'Save',
+                  view: 'View',
                   close: 'Close'
                 },
                 sort: {
@@ -1391,6 +1435,7 @@
               },
               profile: {
                 leaveName: 'Leave a name',
+                dataviewer: 'Data Viewer',
                 editor: {
                   title: 'Profile',
                   name: 'Name',
@@ -1415,10 +1460,18 @@
                 note: 'Note: ',
                 id: 'Backup Index',
                 name: 'Backup Name',
-                title: 'Backup Informations'
+                title: 'Backup Informations',
+                dataTitle: 'Backup Datas'
               },
               codding: {
                 title: 'Script Editor'
+              },
+              viewer: {
+                dataViewer: 'Data Viewer',
+                dataKey: 'Data Key',
+                dataKeyDesc: 'Input the data key',
+                dataEditor: 'Data Editor',
+                dataVal: 'Data Value'
               }
             },
             'zh-CN': {
@@ -1523,6 +1576,7 @@
               },
               profile: {
                 leaveName: '大侠, 请留名!',
+                dataviewer: '数据查看器',
                 editor: {
                   title: '个人资源',
                   name: '昵称',
@@ -1546,10 +1600,18 @@
               bakDetail: {
                 id: '备份索引',
                 name: '备份名称',
-                title: '备份信息'
+                title: '备份信息',
+                dataTitle: '备份数据'
               },
               codding: {
                 title: '脚本编辑器'
+              },
+              viewer: {
+                dataViewer: '数据查看器',
+                dataKey: '数据键 (Key)',
+                dataKeyDesc: '输入要查询的数据键, 如: boxjs_host',
+                dataEditor: '数据编辑器',
+                dataVal: '数据内容'
               }
             }
           }
@@ -1583,6 +1645,10 @@
                 hideNoData: true,
                 hideDetails: true,
                 solo: true
+              },
+              viewer: {
+                key: '',
+                val: ''
               },
               searchDialog: { show: false },
               versionsheet: { show: false },
@@ -2704,6 +2770,24 @@
                 }
               }
             })
+          },
+          // 查询数据
+          queryData() {
+            const key = this.ui.viewer.key
+            this.ui.viewer.key = key ? key : 'boxjs_host'
+            axios.get(`/query/data/${this.ui.viewer.key}`).then((resp) => {
+              this.ui.viewer.val = resp.data.val
+              this.box.usercfgs.viewkeys.unshift(this.ui.viewer.key)
+            })
+          },
+          saveData() {
+            const key = this.ui.viewer.key
+            const val = this.ui.viewer.val
+            if (key) {
+              axios.post('/api/saveData/', { key, val }).then((resp) => {
+                this.ui.viewer.val = resp.data.val
+              })
+            }
           },
           // 对比版本号
           compareVersion(v1, v2) {
