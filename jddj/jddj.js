@@ -25,6 +25,7 @@ function sign() {
         subTitle = `未知错误,截图日志`
       }
       chen.msg(title, subTitle, detail)
+      chen.done()
     })
   }
 
