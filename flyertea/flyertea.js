@@ -10,14 +10,13 @@ sign()
 function sign() {
   const token = JSON.parse(tokenVal)
   let url = {
-    url: `https://www.flyertea.com/plugin.php?id=k_misign:sign&operation=qiandao&from=insign&version=${token.version}&appcan=appcan&appkey=${token.appkey}&appversion=${token.appversion}&formhash=${token.formhash}&token=${token.token}`,
+    url: `https://www.flyert.com/plugin.php?id=k_misign:sign&operation=qiandao&from=insign&version=${token.version}&appcan=appcan&appkey=${token.appkey}&appversion=${token.appversion}&formhash=${token.formhash}&token=${token.token}`,
     headers: { Cookie: cookieVal }
   }
   url.headers['Accept'] = `*/*`
-  url.headers['Accept-Language'] = `zh-Hans-CN;q=1, en-US;q=0.9`
-  url.headers['Host'] = `www.flyertea.com`
-  url.headers['User-Agent'] = `FKForum/7.14.0 (iPhone10,1; iOS 13.3; Scale/2.00)`
-  url.headers['Referer'] = `https://www.flyertea.com/home.php`
+  url.headers['Accept-Language'] = `zh-Hans-CN;q=1`
+  url.headers['Host'] = `www.flyert.com`
+  url.headers['User-Agent'] = `FKForum/7.28.3 (iPhone 12; iOS 14.5; Scale/3.00)`
   url.headers['Accept-Encoding'] = `gzip, deflate, br`
   url.headers['Connection'] = `keep-alive`
   $.get(url, (error, response, data) => {
