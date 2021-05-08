@@ -8,10 +8,10 @@
 
 ```properties
 [MITM]
-www.flyertea.com
+www.flyert.com
 
 [Script]
-http-request ^https:\/\/www\.flyertea\.com\/source\/plugin\/mobile\/mobile\.php\?module=getdata&.* script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/flyertea/flyertea.cookie.js
+http-request ^https:\/\/www\.flyert\.com\/source\/plugin\/mobile\/mobile\.php\?module=getdata&.* script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/flyertea/flyertea.cookie.js
 cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/flyertea/flyertea.js
 ```
 
@@ -19,13 +19,13 @@ cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scr
 
 ```properties
 [MITM]
-www.flyertea.com
+www.flyert.com
 
 [rewrite_local]
 # 189及以前版本
-^https:\/\/www\.flyertea\.com\/source\/plugin\/mobile\/mobile\.php\?module=getdata&.* url script-response-body flyertea.cookie.js
+^https:\/\/www\.flyert\.com\/source\/plugin\/mobile\/mobile\.php\?module=getdata&.* url script-response-body flyertea.cookie.js
 # 190及以后版本
-^https:\/\/www\.flyertea\.com\/source\/plugin\/mobile\/mobile\.php\?module=getdata&.* url script-request-header flyertea.cookie.js
+^https:\/\/www\.flyert\.com\/source\/plugin\/mobile\/mobile\.php\?module=getdata&.* url script-request-header flyertea.cookie.js
 
 [task_local]
 1 0 * * * flyertea.js
@@ -33,7 +33,7 @@ www.flyertea.com
 
 ## 说明
 
-1. 先把`www.flyertea.com`加到`[MITM]`
+1. 先把`www.flyert.com`加到`[MITM]`
 2. 再配置重写规则:
    - Surge: 把两条远程脚本放到`[Script]`
    - QuanX: 把`flyertea.cookie.js`和`flyertea.js`传到`On My iPhone - Quantumult X - Scripts` (传到 iCloud 相同目录也可, 注意要打开 quanx 的 iCloud 开关)
