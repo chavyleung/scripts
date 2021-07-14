@@ -1,6 +1,22 @@
 {
   "releases": [
     {
+      "version": "0.7.91",
+      "tags": ["beta"],
+      "author": "@NobyDa",
+      "msg": "修复(BoxJs): 部分情况手动运行脚本异常",
+      "notes": [
+        {
+          "name": "修复",
+          "descs": ["部分情况手动运行脚本异常"]
+        },
+        {
+          "name": "感谢",
+          "descs": ["@NobyDa PR"]
+        }
+      ]
+    },
+    {
       "version": "0.7.90",
       "tags": ["beta"],
       "author": "@chavyleung",
