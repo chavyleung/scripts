@@ -31,16 +31,12 @@ Rewrite: 京东到家 = type=http-request,pattern=^https:\/\/daojia.jd.com/clien
 Rewrite: 加油广东 = type=http-request,pattern=^https:\/\/m.gdoil.cn\/webapi\/usersign\/addusersign,script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/gdoil/gdoil.cookie.js
 Rewrite: 猫咪音乐网 = type=http-request,pattern=https:\/\/www.maomicd.com\/plugin.php\?id=k_misign:sign&operation=qiandao,script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/maomicd/maomicd.cookie.js
 Rewrite: 米游社 = type=http-request,pattern=^https:\/\/api-takumi.mihoyo.com\/apihub\/api\/getGameList,script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/mihoyo/mihoyo.cookie.js
-Rewrite: 米读 = type=http-request,pattern=^https:\/\/apiwz\.midukanshu\.com,script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/midu/midu.cookie.js,requires-body=true
 Rewrite: 美团 = type=http-request,pattern=^https:\/\/i.meituan.com\/evolve\/signin\/signpost\/,script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/meituan/meituan.cookie.js,requires-body=true
 Rewrite: 美团外卖 = type=http-request,pattern=^https:\/\/promotion.waimai.meituan.com\/playcenter\/signIn\/doaction url script-request-body https://raw.githubusercontent.com/chavyleung/scripts/master/wmmeituan/wmmeituan.cookie.js
 Rewrite: 美团外卖 = type=http-request,pattern=^https:\/\/promotion.waimai.meituan.com\/playcenter\/signIn\/entry,script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/wmmeituan/wmmeituan.cookie.js
 Rewrite: 芒果TV = type=http-request,pattern=^https:\/\/credits.bz.mgtv.com\/user\/creditsTake,script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/mgtv/mgtv.cookie.js
 Rewrite: 全民K歌 = type=http-request,pattern=^https://node\.kg\.qq\.com/webapp/proxy?,script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/qmkg/qmkg.cookie.js,requires-body=true
 Rewrite: 去哪儿 = type=http-request,pattern=^https:\/\/user.qunar.com\/webapi\/member\/signIndexV2.htm,script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/qunar/qunar.cookie.js
-Rewrite: 趣头条 = type=http-request,pattern=^https:\/\/api\.1sapp\.com\/content\/readV2?,script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/qtt/qtt.cookie.js
-Rewrite: 趣头条 = type=http-request,pattern=^https:\/\/api\.1sapp\.com\/sign\/info?,script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/qtt/qtt.cookie.js
-Rewrite: 趣头条 = type=http-request,pattern=^https:\/\/api\.1sapp\.com\/x\/feed\/getReward?,script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/qtt/qtt.cookie.js
 Rewrite: 人人视频 = type=http-request,pattern=^https:\/\/api\.rr\.tv\/user\/profile,script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/rrtv/rrtv.cookie.js
 Rewrite: 什么值得买 = type=http-request,pattern=^https:\/\/www\.smzdm\.com\/?.?,script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/smzdm/smzdm.cookie.js
 Rewrite: 时光相册 = type=http-request,pattern=^https:\/\/api.everphoto.cn\/users\/self\/checkin\/v2,script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/everphoto/everphoto.cookie.js

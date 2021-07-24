@@ -244,18 +244,6 @@
       ]
     },
     {
-      "id": "qtt",
-      "name": "趣头条",
-      "keys": ["senku_signKey_qtt", "senku_signXTK_qtt", "senku_readKey_qtt", "senku_navCoinKey_qtt"],
-      "author": "@GideonSenku",
-      "repo": "https://github.com/chavyleung/scripts/tree/master/qtt",
-      "script": "https://raw.githubusercontent.com/chavyleung/scripts/master/qtt/qtt.js",
-      "icons": [
-        "https://raw.githubusercontent.com/Orz-3/mini/master/Alpha/qtt.png",
-        "https://raw.githubusercontent.com/Orz-3/mini/master/Color/qtt.png"
-      ]
-    },
-    {
       "id": "qmkg",
       "name": "全民K歌",
       "keys": ["senku_signurl_qmkg", "senku_signheader_qmkg", "senku_signbody_qmkg"],
