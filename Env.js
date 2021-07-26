@@ -310,22 +310,12 @@ function Env(name, opts) {
           })
           .then(
             (resp) => {
-              if (this.encoding !== 'utf-8') {
-                const { statusCode: status, statusCode, headers, rawBody } = resp
-                callback(null, { status, statusCode, headers, rawBody }, iconv.decode(rawBody,this.encoding))
-              } else {
-                const { statusCode: status, statusCode, headers, body } = resp
-                callback(null, { status, statusCode, headers, body }, body)
-              }
+              const { statusCode: status, statusCode, headers, rawBody } = resp
+              callback(null, { status, statusCode, headers, rawBody }, iconv.decode(rawBody,this.encoding))
             },
             (err) => {
-              if (this.encoding !== 'utf-8') {
-                const { message: error, response: resp } = err
-                callback(error, resp, resp && iconv.decode(resp.rawBody,this.encoding))
-              } else {
-                const { message: error, response: resp } = err
-                callback(error, resp, resp && resp.body)
-              }
+              const { message: error, response: resp } = err
+              callback(error, resp, resp && iconv.decode(resp.rawBody,this.encoding))
             }
           )
       }
@@ -369,22 +359,12 @@ function Env(name, opts) {
         const { url, ..._opts } = opts
         this.got[method](url, _opts).then(
           (resp) => {
-            if (this.encoding !== 'utf-8') {
-              const { statusCode: status, statusCode, headers, rawBody } = resp
-              callback(null, { status, statusCode, headers, rawBody }, iconv.decode(rawBody,this.encoding))
-            } else {
-              const { statusCode: status, statusCode, headers, body } = resp
-              callback(null, { status, statusCode, headers, body }, body)
-            }
+            const { statusCode: status, statusCode, headers, rawBody } = resp
+            callback(null, { status, statusCode, headers, rawBody }, iconv.decode(rawBody,this.encoding))
           },
           (err) => {
-            if (this.encoding !== 'utf-8') {
-              const { message: error, response: resp } = err
-              callback(error, resp, resp && iconv.decode(resp.rawBody,this.encoding))
-            } else {
-              const { message: error, response: resp } = err
-              callback(error, resp, resp && resp.body)
-            }
+            const { message: error, response: resp } = err
+            callback(error, resp, resp && iconv.decode(resp.rawBody,this.encoding))
           }
         )
       }
