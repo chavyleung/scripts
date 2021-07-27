@@ -311,11 +311,11 @@ function Env(name, opts) {
           .then(
             (resp) => {
               const { statusCode: status, statusCode, headers, rawBody } = resp
-              callback(null, { status, statusCode, headers, rawBody }, iconv.decode(rawBody,this.encoding))
+              callback(null, { status, statusCode, headers, rawBody }, iconv.decode(rawBody, this.encoding))
             },
             (err) => {
               const { message: error, response: resp } = err
-              callback(error, resp, resp && iconv.decode(resp.rawBody,this.encoding))
+              callback(error, resp, resp && iconv.decode(resp.rawBody, this.encoding))
             }
           )
       }
@@ -360,11 +360,11 @@ function Env(name, opts) {
         this.got[method](url, _opts).then(
           (resp) => {
             const { statusCode: status, statusCode, headers, rawBody } = resp
-            callback(null, { status, statusCode, headers, rawBody }, iconv.decode(rawBody,this.encoding))
+            callback(null, { status, statusCode, headers, rawBody }, iconv.decode(rawBody, this.encoding))
           },
           (err) => {
             const { message: error, response: resp } = err
-            callback(error, resp, resp && iconv.decode(resp.rawBody,this.encoding))
+            callback(error, resp, resp && iconv.decode(resp.rawBody, this.encoding))
           }
         )
       }
