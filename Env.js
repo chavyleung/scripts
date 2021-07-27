@@ -37,6 +37,7 @@ function Env(name, opts) {
       this.isMute = false
       this.isNeedRewrite = false
       this.logSeparator = '\n'
+      this.encoding = 'utf-8'
       this.startTime = new Date().getTime()
       Object.assign(this, opts)
       this.log('', `🔔${this.name}, 开始!`)
@@ -290,6 +291,7 @@ function Env(name, opts) {
           (err) => callback(err)
         )
       } else if (this.isNode()) {
+        let iconv = require('iconv-lite')
         this.initGotEnv(opts)
         this.got(opts)
           .on('redirect', (resp, nextOpts) => {
@@ -308,12 +310,12 @@ function Env(name, opts) {
           })
           .then(
             (resp) => {
-              const { statusCode: status, statusCode, headers, body } = resp
-              callback(null, { status, statusCode, headers, body }, body)
+              const { statusCode: status, statusCode, headers, rawBody } = resp
+              callback(null, { status, statusCode, headers, rawBody }, iconv.decode(rawBody, this.encoding))
             },
             (err) => {
               const { message: error, response: resp } = err
-              callback(error, resp, resp && resp.body)
+              callback(error, resp, resp && iconv.decode(resp.rawBody, this.encoding))
             }
           )
       }
@@ -352,16 +354,17 @@ function Env(name, opts) {
           (err) => callback(err)
         )
       } else if (this.isNode()) {
+        let iconv = require('iconv-lite')
         this.initGotEnv(opts)
         const { url, ..._opts } = opts
         this.got[method](url, _opts).then(
           (resp) => {
-            const { statusCode: status, statusCode, headers, body } = resp
-            callback(null, { status, statusCode, headers, body }, body)
+            const { statusCode: status, statusCode, headers, rawBody } = resp
+            callback(null, { status, statusCode, headers, rawBody }, iconv.decode(rawBody, this.encoding))
           },
           (err) => {
             const { message: error, response: resp } = err
-            callback(error, resp, resp && resp.body)
+            callback(error, resp, resp && iconv.decode(resp.rawBody, this.encoding))
           }
         )
       }
