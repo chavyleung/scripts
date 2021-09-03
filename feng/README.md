@@ -4,10 +4,10 @@
 
 ```properties
 [MITM]
-49.234.36.200:9091
+api.wfdata.club
 
 [Script]
-Rewrite: feng = type=http-request,pattern=^http:\/\/49.234.36.200:9091\/v1\/auth\/signin,script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/feng/feng.cookie.js,requires-body=true
+Rewrite: feng = type=http-request,pattern=^https?:\/\/api.wfdata.club\/v1\/auth\/signin,script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/feng/feng.cookie.js,requires-body=true
 cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/feng/feng.js
 ```
 
@@ -15,10 +15,10 @@ cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scr
 
 ```properties
 [MITM]
-49.234.36.200:9091
+api.wfdata.club
 
 [rewrite_local]
-^http:\/\/49.234.36.200:9091\/v1\/auth\/signin url script-request-body https://raw.githubusercontent.com/chavyleung/scripts/master/feng/feng.cookie.js
+^https?:\/\/api.wfdata.club\/v1\/auth\/signin url script-request-body https://raw.githubusercontent.com/chavyleung/scripts/master/feng/feng.cookie.js
 
 [task_local]
 1 0 * * * https://raw.githubusercontent.com/chavyleung/scripts/master/feng/feng.js
@@ -28,10 +28,10 @@ cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scr
 
 ```properties
 [MITM]
-49.234.36.200:9091
+api.wfdata.club
 
 [rewrite_local]
-http-request ^http:\/\/49.234.36.200:9091\/v1\/auth\/signin script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/feng/feng.cookie.js, requires-body=true, tag=Rewrite: feng
+http-request ^https?:\/\/api.wfdata.club\/v1\/auth\/signin script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/feng/feng.cookie.js, requires-body=true, tag=Rewrite: feng
 
 [task_local]
 cron "1 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/feng/feng.js

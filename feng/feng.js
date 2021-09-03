@@ -22,7 +22,7 @@ $.KEY_login = 'chavy_login_feng'
 function login() {
   const loginOpts = $.getjson($.KEY_login)
   const url = {
-    url: `http://49.234.36.200:9091/v1/auth/signin`,
+    url: `https://api.wfdata.club/v1/auth/signin`,
     body: loginOpts['body'],
     headers: {
       'X-Request-Id': encrypt(`url=/v1/auth/signin$time=${new Date().getTime()}`),
@@ -37,7 +37,7 @@ function login() {
 function sign() {
   const loginOpts = $.getjson($.KEY_login)
   const url = {
-    url: `http://49.234.36.200:9091/v1/attendance/userSignIn`,
+    url: `https://api.wfdata.club/v1/attendance/userSignIn`,
     body: '',
     headers: {
       'Content-Type': `application/x-www-form-urlencoded`,
