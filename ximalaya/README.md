@@ -14,10 +14,10 @@
 
 ```properties
 [MITM]
-mobwsa.ximalaya.com
+113.96.156.178, *.ximalaya.com
 
 [Script]
-http-request ^https?:\/\/.*\/mobile\-user\/homePage\/.* script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/ximalaya/ximalaya.cookie.js
+http-request ^https?:\/\/.*\/mobile\-user\/(v1\/)?homePage\/.* script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/ximalaya/ximalaya.cookie.js
 cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/ximalaya/ximalaya.js
 ```
 
@@ -25,13 +25,10 @@ cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scr
 
 ```properties
 [MITM]
-mobwsa.ximalaya.com
+113.96.156.178, *.ximalaya.com
 
 [rewrite_local]
-# 189及以前版本
-^https?:\/\/.*\/mobile\-user\/homePage\/.* url script-response-body ximalaya.cookie.js
-# 190及以后版本
-^https?:\/\/.*\/mobile\-user\/homePage\/.* url script-request-header ximalaya.cookie.js
+^https?:\/\/.*\/mobile\-user\/(v1\/)?homePage\/.* url script-request-header ximalaya.cookie.js
 
 [task_local]
 1 0 * * * ximalaya.js
@@ -39,7 +36,7 @@ mobwsa.ximalaya.com
 
 ## 说明
 
-1. 先把`mobwsa.ximalaya.com`加到`[MITM]`
+1. 先把`113.96.156.178, *.ximalaya.com`加到`[MITM]`
 2. 再配置重写规则:
    - Surge: 把两条远程脚本放到`[Script]`
    - QuanX: 把`ximalaya.cookie.js`和`ximalaya.js`传到`On My iPhone - Quantumult X - Scripts` (传到 iCloud 相同目录也可, 注意要打开 quanx 的 iCloud 开关)
