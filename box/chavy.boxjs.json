@@ -8,7 +8,7 @@
     {
       "id": "10000",
       "name": "10000",
-      "keys": [],
+      "keys": ["chavy_signheader_10000"],
       "settings": [
         {
           "id": "chavy_mobile_10000",
