@@ -429,7 +429,9 @@ function Env(name, opts) {
           } else if (this.isQuanX()) {
             let openUrl = rawopts['open-url'] || rawopts.url || rawopts.openUrl
             let mediaUrl = rawopts['media-url'] || rawopts.mediaUrl
-            return { 'open-url': openUrl, 'media-url': mediaUrl }
+            let updatePasteboard =
+              rawOpts['update-pasteboard'] || rawOpts.updatePasteboard
+            return { 'open-url': openUrl, 'media-url': mediaUrl, 'update-pasteboard': updatePasteboard }
           } else if (this.isSurge()) {
             let openUrl = rawopts.url || rawopts.openUrl || rawopts['open-url']
             return { url: openUrl }
