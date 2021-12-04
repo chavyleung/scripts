@@ -430,7 +430,7 @@ function Env(name, opts) {
             let openUrl = rawopts['open-url'] || rawopts.url || rawopts.openUrl
             let mediaUrl = rawopts['media-url'] || rawopts.mediaUrl
             let updatePasteboard =
-              rawOpts['update-pasteboard'] || rawOpts.updatePasteboard
+              rawopts['update-pasteboard'] || rawopts.updatePasteboard
             return { 'open-url': openUrl, 'media-url': mediaUrl, 'update-pasteboard': updatePasteboard }
           } else if (this.isSurge()) {
             let openUrl = rawopts.url || rawopts.openUrl || rawopts['open-url']
