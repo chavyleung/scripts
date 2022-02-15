@@ -1,6 +1,22 @@
 {
   "releases": [
     {
+      "version": "0.7.92",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "msg": "新增(BoxJs): 内置 Gist 备份及还原脚本. @dompling",
+      "notes": [
+        {
+          "name": "新增",
+          "descs": ["内置 Gist 备份及还原脚本. @dompling"]
+        },
+        {
+          "name": "感谢",
+          "descs": ["@dompling"]
+        }
+      ]
+    },
+    {
       "version": "0.7.91",
       "tags": ["beta"],
       "author": "@NobyDa",

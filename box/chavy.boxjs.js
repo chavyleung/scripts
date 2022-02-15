@@ -3,7 +3,7 @@ const $ = new Env('BoxJs')
 // 为 eval 准备的上下文环境
 const $eval_env = {}
 
-$.version = '0.7.91'
+$.version = '0.7.92'
 $.versionType = 'beta'
 
 // 发出的请求需要需要 Surge、QuanX 的 rewrite
@@ -359,7 +359,7 @@ function getSystemApps() {
       author: '@chavyleung',
       repo: 'https://github.com/chavyleung/scripts/blob/master/box/switcher/box.switcher.js',
       icons: [
-        'https://raw.githubusercontent.com/chavyleung/scripts/master/box/icons/BoxSetting.mini.png', 
+        'https://raw.githubusercontent.com/chavyleung/scripts/master/box/icons/BoxSetting.mini.png',
         'https://raw.githubusercontent.com/chavyleung/scripts/master/box/icons/BoxSetting.png'
       ]
     },
@@ -372,10 +372,60 @@ function getSystemApps() {
       author: '@chavyleung',
       repo: 'https://github.com/chavyleung/scripts/blob/master/box/switcher/box.switcher.js',
       icons: [
-        'https://raw.githubusercontent.com/chavyleung/scripts/master/box/icons/BoxSwitcher.mini.png', 
+        'https://raw.githubusercontent.com/chavyleung/scripts/master/box/icons/BoxSwitcher.mini.png',
         'https://raw.githubusercontent.com/chavyleung/scripts/master/box/icons/BoxSwitcher.png'
       ],
       script: 'https://raw.githubusercontent.com/chavyleung/scripts/master/box/switcher/box.switcher.js'
+    },
+    {
+      "id": "BoxGist",
+      "name": "Gist备份",
+      "keys": ["@gist.token", "@gist.username"],
+      "author": "@dompling",
+      "repo": "https://github.com/dompling/Script/tree/master/gist",
+      "icons": [
+        "https://raw.githubusercontent.com/Former-Years/icon/master/github-bf.png",
+        "https://raw.githubusercontent.com/Former-Years/icon/master/github-bf.png"
+      ],
+      "descs_html": [
+        "脚本由 <a href='https://github.com/dompling' target='_blank'>@dompling</a> 提供, 感谢!",
+        "<br />",
+        "<b>Token</b> 获取方式:",
+        "<span style='margin-left: 40px'>头像菜单 -></span>",
+        "<span style='margin-left: 40px'>Settings -></span>",
+        "<span style='margin-left: 40px'>Developer settings -></span>",
+        "<span style='margin-left: 40px'>Personal access tokens -></span>",
+        "<span style='margin-left: 40px'>Generate new token -></span>",
+        "<span style='margin-left: 40px'>在里面找到 gist 勾选提交</span>"
+      ],
+      "scripts": [
+        {
+          "name": "备份 Gist",
+          "script": "https://raw.githubusercontent.com/dompling/Script/master/gist/backup.js"
+        },
+        {
+          "name": "从 Gist 恢复",
+          "script": "https://raw.githubusercontent.com/dompling/Script/master/gist/restore.js"
+        }
+      ],
+      "settings": [
+        {
+          "id": "@gist.username",
+          "name": "用户名",
+          "val": null,
+          "type": "text",
+          "placeholder": "github 用户名",
+          "desc": "必填"
+        },
+        {
+          "id": "@gist.token",
+          "name": "Personal access tokens",
+          "val": null,
+          "type": "text",
+          "placeholder": "github personal access tokens",
+          "desc": "必填"
+        }
+      ]
     }
   ]
   return sysapps
