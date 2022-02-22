@@ -1,7 +1,7 @@
 {
   "releases": [
     {
-      "version": "0.7.93",
+      "version": "0.8.0",
       "tags": ["beta"],
       "author": "@chavyleung",
       "msg": "新增(BoxJs): selects (下拉) 控件",
