@@ -1,6 +1,18 @@
 {
   "releases": [
     {
+      "version": "0.7.93",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "msg": "新增(BoxJs): selects (下拉) 控件",
+      "notes": [
+        {
+          "name": "新增",
+          "descs": ["新增 selects (下拉) 控件", "type: 'selects'", "items: [{key: '', label: ''}]"]
+        }
+      ]
+    },
+    {
       "version": "0.7.92",
       "tags": ["beta"],
       "author": "@chavyleung",

@@ -1020,6 +1020,19 @@
                         :hint="setting.desc"
                       ></v-text-field>
                     </div>
+                    <div class="mt-4" v-else-if="setting.type === 'selects'">
+                      <v-select
+                        v-model="setting.val"
+                        v-bind="setting"
+                        persistent-hint
+                        type="number"
+                        item-text="label"
+                        item-value="key"
+                        :items="setting.items"
+                        :label="setting.name"
+                        :hint="setting.desc"
+                      ></v-select>
+                    </div>
                     <div class="mt-4" v-else>
                       <v-text-field v-model="setting.val" v-bind="setting" :label="setting.name" :hint="setting.desc"></v-text-field>
                     </div>
