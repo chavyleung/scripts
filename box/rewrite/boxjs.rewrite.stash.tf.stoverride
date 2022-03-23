@@ -1,0 +1,17 @@
+#!name=BoxJs.net
+#!desc=http://boxjs.net
+
+http:
+  mitm:
+    - "boxjs.com"
+  script:
+    - match: ^https?:\/\/boxjs\.net
+      name: BoxJs
+      type: request
+      require-body: true
+      timeout: 120
+
+script-providers:
+  BoxJs:
+    url: https://raw.githubusercontent.com/chavyleung/scripts/master/chavy.box.js
+    interval: 86400
