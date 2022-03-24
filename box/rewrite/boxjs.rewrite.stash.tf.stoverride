@@ -1,9 +1,9 @@
-#!name=BoxJs.net
-#!desc=http://boxjs.net
+name: BoxJs.net
+desc: http://boxjs.net
 
 http:
   mitm:
-    - "boxjs.com"
+    - "boxjs.net"
   script:
     - match: ^https?:\/\/boxjs\.net
       name: BoxJs

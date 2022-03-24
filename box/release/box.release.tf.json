@@ -1,6 +1,18 @@
 {
   "releases": [
     {
+      "version": "0.9.0",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "msg": "新增(BoxJs): 支持 Stash",
+      "notes": [
+        {
+          "name": "新增",
+          "descs": ["支持 Stash TF (v1.5.0 Build 203+)", "https://chavyleung.gitbook.io/boxjs/#stash"]
+        }
+      ]
+    },
+    {
       "version": "0.8.0",
       "tags": ["beta"],
       "author": "@chavyleung",

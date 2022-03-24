@@ -63,6 +63,10 @@ function Env(name, opts) {
       return 'undefined' !== typeof $rocket
     }
 
+    isStash() {
+      return 'undefined' !== typeof $environment && $environment['stash-version']
+    }
+
     toObj(str, defaultValue = null) {
       try {
         return JSON.parse(str)
@@ -429,8 +433,7 @@ function Env(name, opts) {
           } else if (this.isQuanX()) {
             let openUrl = rawopts['open-url'] || rawopts.url || rawopts.openUrl
             let mediaUrl = rawopts['media-url'] || rawopts.mediaUrl
-            let updatePasteboard =
-              rawopts['update-pasteboard'] || rawopts.updatePasteboard
+            let updatePasteboard = rawopts['update-pasteboard'] || rawopts.updatePasteboard
             return { 'open-url': openUrl, 'media-url': mediaUrl, 'update-pasteboard': updatePasteboard }
           } else if (this.isSurge()) {
             let openUrl = rawopts.url || rawopts.openUrl || rawopts['open-url']
