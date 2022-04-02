@@ -2,6 +2,8 @@ name: BoxJs
 desc: http://boxjs.com
 
 http:
+  force-http-engine:
+    - "boxjs.com:80"
   mitm:
     - "boxjs.com"
   script:
