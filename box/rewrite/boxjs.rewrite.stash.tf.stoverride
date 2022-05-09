@@ -17,5 +17,5 @@ http:
 
 script-providers:
   BoxJs:
-    url: https://raw.githubusercontent.com/chavyleung/scripts/master/chavy.box.js
+    url: https://raw.githubusercontent.com/chavyleung/scripts/master/box/chavy.boxjs.js
     interval: 86400
