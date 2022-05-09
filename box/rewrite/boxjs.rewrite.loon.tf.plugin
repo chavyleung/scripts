@@ -1,6 +1,6 @@
 #!name=BoxJs (TestFlight)
-#!desc=http://boxjs.net
-#!openUrl=https://github.com/chavyleung/scripts/blob/master/box/rewrite/boxjs.rewrite.loon.tf.plugin
+#!desc=Data manager
+#!openUrl=http://boxjs.net
 #!author=chavyleung
 #!homepage=https://chavyleung.gitbook.io/boxjs/
 #!icon= https://raw.githubusercontent.com/chavyleung/scripts/master/box/icons/BoxJs.png

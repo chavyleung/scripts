@@ -1,6 +1,6 @@
 #!name=BoxJs
-#!desc=http://boxjs.com
-#!openUrl=https://github.com/chavyleung/scripts/blob/master/box/rewrite/boxjs.rewrite.loon.plugin
+#!desc=Data manager
+#!openUrl=http://boxjs.com
 #!author=chavyleung
 #!homepage=https://chavyleung.gitbook.io/boxjs/
 #!icon= https://raw.githubusercontent.com/chavyleung/scripts/master/box/icons/BoxJs.png
