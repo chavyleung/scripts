@@ -1,0 +1,21 @@
+{
+  "id": "chavyleung.app.test.sub",
+  "name": "测试一键订阅 (请自行删除)",
+  "author": "@chavyleung",
+  "icon": "https://avatars3.githubusercontent.com/u/29748519?s=460&u=392a19e85465abbcb1791c9b8b32184a16e6795e&v=4",
+  "repo": "https://github.com/chavyleung/scripts",
+  "apps": [
+    {
+      "id": "chavy_test_sub",
+      "name": "测试应用 (请删除)",
+      "keys": [],
+      "settings": [],
+      "author": "@chavyleung",
+      "repo": "https://github.com/chavyleung/scripts",
+      "icons": [
+        "https://raw.githubusercontent.com/chavyleung/scripts/master/box/icons/BoxSetting.mini.png",
+        "https://raw.githubusercontent.com/chavyleung/scripts/master/box/icons/BoxSetting.png"
+      ]
+    }
+  ]
+}

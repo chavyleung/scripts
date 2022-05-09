@@ -702,6 +702,9 @@
                           <v-list-item @click="copy(sub.url)">
                             <v-list-item-title>{{ $t('base.cmd.cp') }}</v-list-item-title>
                           </v-list-item>
+                          <v-list-item @click="share(sub.url)">
+                            <v-list-item-title>{{ $t('base.cmd.share') }}</v-list-item-title>
+                          </v-list-item>
                           <v-divider></v-divider>
                           <v-list-item v-if="subIdx > 0" @click="moveSub(subIdx, -1)">
                             <v-list-item-title>{{ $t('base.sort.up') }}</v-list-item-title>
@@ -1358,6 +1361,7 @@
                   imp: 'Import',
                   exp: 'Export',
                   mod: 'Modify',
+                  share: 'Share',
                   recovery: 'Recovery',
                   duplicate: 'Duplicate'
                 }
@@ -1502,6 +1506,7 @@
                   del: '删除',
                   imp: '导入',
                   mod: '修改',
+                  share: '分享',
                   recovery: '恢复',
                   duplicate: '克隆'
                 }
@@ -2288,6 +2293,9 @@
           if (this.path.includes('/#/bak/')) {
             const [, backupId] = this.path.split('/#/bak/')
             this.loadGlobalBak(backupId)
+          } else if (this.path.includes('/#/sub/add/')) {
+            const [, url] = this.path.split('/#/sub/add/')
+            this.addAppSub(decodeURIComponent(url), true)
           }
         },
         methods: {
@@ -2418,6 +2426,11 @@
                 this.ui.snackbar.color = 'error'
               }
             )
+          },
+          // 复制文本
+          share(str) {
+            const url = `http://boxjs.com/#/sub/add/${encodeURIComponent(str)}`
+            this.copy(url)
           },
           // 移动收藏
           moveFav(favIdx, moveCnt) {
@@ -2665,13 +2678,20 @@
               })
           },
           // 添加应用订阅
-          addAppSub(url) {
+          addAppSub(url, isRedirect) {
             const sub = { d: uuidv4(), url, enable: true }
             axios
               .post('/api/addAppSub', sub)
               .then((resp) => {
                 this.isSaveUserCfgs = false
                 Object.assign(this.box, resp.data)
+
+                if (isRedirect) {
+                  this.switchView('sub')
+                  this.ui.snackbar.show = true
+                  this.ui.snackbar.msg = '一键订阅: 成功!'
+                  this.ui.snackbar.color = 'success'
+                }
               })
               .finally(() => (this.addAppSubDialog = false))
           },

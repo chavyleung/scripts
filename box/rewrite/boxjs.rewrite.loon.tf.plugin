@@ -1,9 +1,9 @@
-#!name=BoxJs (TestFlight)
+#!name=BoxJs
 #!desc=Data manager
-#!openUrl=http://boxjs.net
+#!openUrl=http://boxjs.com
 #!author=chavyleung
 #!homepage=https://chavyleung.gitbook.io/boxjs/
 #!icon= https://raw.githubusercontent.com/chavyleung/scripts/master/box/icons/BoxJs.png
 
 [Script]
-http-request ^https?:\/\/boxjs\.net script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/box/chavy.boxjs.js, requires-body=true, timeout=120, tag=BoxJs.net
+http-request ^https?:\/\/boxjs\.(com|net) script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/chavy.box.js, requires-body=true, timeout=120, tag=BoxJs

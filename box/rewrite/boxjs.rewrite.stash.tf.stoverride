@@ -1,13 +1,15 @@
-name: BoxJs.net
-desc: http://boxjs.net
+name: BoxJs
+desc: http://boxjs.com
 
 http:
   force-http-engine:
+    - "boxjs.com:80"
     - "boxjs.net:80"
   mitm:
+    - "boxjs.com"
     - "boxjs.net"
   script:
-    - match: ^https?:\/\/boxjs\.net
+    - match: https?:\/\/boxjs\.(com|net)
       name: BoxJs
       type: request
       require-body: true

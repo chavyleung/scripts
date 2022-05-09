@@ -1,6 +1,41 @@
 {
   "releases": [
     {
+      "version": "0.10.0",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "msg": "feat(boxjs): 一键订阅",
+      "notes": [
+        {
+          "name": "新增",
+          "descs": [
+            "一键订阅",
+            "点击链接就可以自动添加订阅, 免去手动添加的麻烦",
+            "制作一键订阅地址: ",
+            "http://boxjs.com/#/sub/add/经过encodeURIComponent()订阅地址",
+            "如: http://boxjs.com/#/sub/add/https%3A%2F%2Fraw.githubusercontent.com%2Fchavyleung%2Fscripts%2Fmaster%2Fbox%2Fchavy.boxjs.json"
+          ]
+        },
+        {
+          "name": "新增",
+          "descs": [
+            "可以`分享`订阅",
+            "复制与分享的区别: ",
+            "复制: 仅复制订阅地址",
+            "分享: 生成并复制一键订阅地址, 别人仅需点击该地址则可自动添加订阅"
+          ]
+        },
+        {
+          "name": "QX 用户注意",
+          "descs": ["仅配置 httpbackend 的 QX 用户无法使用一键订阅", "需要配置 `重写` 或同时配置 `重写` 及 `httpbackend` 才能使用一键订阅"]
+        },
+        {
+          "name": "其他",
+          "descs": ["合并了稳定版和测试版, 两个版本已经没有区别"]
+        }
+      ]
+    },
+    {
       "version": "0.9.0",
       "tags": ["beta"],
       "author": "@chavyleung",
