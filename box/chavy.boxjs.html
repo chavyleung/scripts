@@ -713,7 +713,7 @@
                             <v-list-item-title>{{ $t('base.sort.dn') }}</v-list-item-title>
                           </v-list-item>
                           <v-divider></v-divider>
-                          <v-list-item @click="delSub(subIdx)">
+                          <v-list-item @click="delSub(sub.id)">
                             <v-list-item-title class="text-uppercase red--text">{{ $t('base.cmd.del') }}</v-list-item-title>
                           </v-list-item>
                         </v-list>
@@ -2048,7 +2048,7 @@
               sub.author = sub.author ? sub.author : '@anonymous'
               sub.repo = sub.repo ? sub.repo : sub.url
             })
-            return subs
+            return subs.sort((a, b) => b.updateTime > a.updateTime)
           },
           // 获取`订阅`缓存
           appSubCaches() {
@@ -2447,8 +2447,11 @@
             appsubs.splice(fromIdx, 1, ...appsubs.splice(toIdx, 1, appsubs[fromIdx]))
           },
           // 删除订阅
-          delSub(subIdx) {
-            this.box.usercfgs.appsubs.splice(subIdx, 1)
+          delSub(subId) {
+            debugger
+            const subs = this.box.usercfgs.appsubs
+            const subIdx = subs.findIndex((sub) => sub.id === subId)
+            subs.splice(subIdx, 1)
           },
           // 收藏应用
           favApp(appId) {

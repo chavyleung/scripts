@@ -1,6 +1,22 @@
 {
   "releases": [
     {
+      "version": "0.10.1",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "msg": "fix(boxjs): 尝试修复删除订阅问题",
+      "notes": [
+        {
+          "name": "优化",
+          "descs": ["订阅列表按最后更新时间倒序排序"]
+        },
+        {
+          "name": "修复",
+          "descs": ["部分情况删除订阅引发的问题"]
+        }
+      ]
+    },
+    {
       "version": "0.10.0",
       "tags": ["beta"],
       "author": "@chavyleung",
