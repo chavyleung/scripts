@@ -1,7 +1,7 @@
 {
   "releases": [
     {
-      "version": "0.11.1",
+      "version": "0.11.2",
       "tags": ["beta"],
       "author": "@chavyleung",
       "msg": "feat(boxjs): 发现新版本时可跳转至 app 内触发资源更新",
