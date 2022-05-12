@@ -1748,7 +1748,7 @@
             const vers = this.box.versions
             if (curver && vers && vers.length > 0) {
               const lastestVer = vers[0].version
-              return this.compareVersion(lastestVer, curver) >= 0
+              return this.compareVersion(lastestVer, curver) > 0
             }
           },
           timeagoLang() {

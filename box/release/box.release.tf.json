@@ -1,15 +1,15 @@
 {
   "releases": [
     {
-      "version": "0.11.0",
+      "version": "0.11.1",
       "tags": ["beta"],
       "author": "@chavyleung",
-      "msg": "feat(boxjs): 发现新版本时可导航至 App 的资源更新页面",
+      "msg": "feat(boxjs): 发现新版本时可跳转至 app 内触发资源更新",
       "notes": [
         {
           "name": "新增",
           "descs": [
-            "发现新版本时可导航至 App 的资源更新页面",
+            "发现新版本时可跳转至 app 内触发资源更新",
             "目前支持 (TestFlight):",
             "1. Loon: v2.1.19 (386) 及以上",
             "2. Quantumult X: v1.0.29 (670) 及以上"
