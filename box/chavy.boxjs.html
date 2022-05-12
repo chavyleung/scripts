@@ -2728,7 +2728,7 @@
           },
           // 添加应用订阅
           addAppSub(url, isRedirect) {
-            const sub = { d: uuidv4(), url, enable: true }
+            const sub = { id: uuidv4(), url, enable: true }
             axios
               .post('/api/addAppSub', sub)
               .then((resp) => {

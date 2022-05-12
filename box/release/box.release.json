@@ -1,6 +1,18 @@
 {
   "releases": [
     {
+      "version": "0.11.3",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "msg": "typo(boxjs): 修复一处拼写错误",
+      "notes": [
+        {
+          "name": "修复",
+          "descs": ["一处拼写错误"]
+        }
+      ]
+    },
+    {
       "version": "0.11.2",
       "tags": ["beta"],
       "author": "@chavyleung",
