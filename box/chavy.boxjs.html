@@ -1259,7 +1259,7 @@
             <v-btn dark v-if="!box.usercfgs.isHideHelp" fab small color="grey" @click="open('https://chavyleung.gitbook.io/boxjs')">
               <v-icon>mdi-help</v-icon>
             </v-btn>
-            <v-btn dark v-if="!box.usercfgs.isHideHelp" fab small color="purple" @click="ui.versionsheet.show = true">
+            <v-btn dark v-if="!box.usercfgs.isHideHelp" fab small color="purple" @click="ui.versionSheet.show = true">
               <v-icon>mdi-new-box</v-icon>
             </v-btn>
             <v-btn dark fab small color="pink" @click="box.usercfgs.isLeftBoxIcon = !box.usercfgs.isLeftBoxIcon">
@@ -1276,16 +1276,30 @@
             </v-btn>
           </v-speed-dial>
         </v-fab-transition>
-        <v-bottom-sheet v-model="ui.versionsheet.show" scrollable fullscreen>
+        <v-bottom-sheet v-model="ui.versionSheet.show" scrollable fullscreen>
           <v-card v-if="box.versions">
-            <v-subheader v-touch="{ down: () => ui.versionsheet.show = false }">
+            <v-subheader v-touch="{ down: () => ui.versionSheet.show = false }">
               <v-btn icon small @click="open('https://chavyleung.gitbook.io/boxjs/base/upgrade')">
                 <v-icon>mdi-help-circle</v-icon>
               </v-btn>
               <v-spacer></v-spacer>
-              <v-btn text small v-if="hasNewVersion">新版本</v-btn>
+              <template v-if="hasNewVersion">
+                <v-btn text small v-if="env.id === 'Loon'" @click="update('loon://update?sub=all')"
+                  >{{ $t('versionSheet.updateButton') }}</v-btn
+                >
+                <v-btn
+                  text
+                  small
+                  v-else-if="env.id === 'QuanX'"
+                  @click="update('quantumult-x:///add-resource?remote-resource=%7B%22rewrite_remote%22%3A%5B%22https%3A%2F%2Fgithub.com%2Fchavyleung%2Fscripts%2Fraw%2Fmaster%2Fbox%2Frewrite%2Fboxjs.rewrite.quanx.conf%2Ctag%3Dboxjs%22%5D%7D')"
+                  >{{ $t('versionSheet.updateButton') }}</v-btn
+                >
+              </template>
+              <template v-else>
+                <v-btn text small>{{ $t('versionSheet.versionButton') }}</v-btn>
+              </template>
               <v-spacer></v-spacer>
-              <v-btn icon small @click="ui.versionsheet.show = false">
+              <v-btn icon small @click="ui.versionSheet.show = false">
                 <v-icon>mdi-chevron-double-down</v-icon>
               </v-btn>
             </v-subheader>
@@ -1301,6 +1315,17 @@
                 </div>
               </div>
             </v-card-text>
+            <v-dialog persistent v-model="ui.reloadDialog.show">
+              <v-card>
+                <v-card-title>{{ $t('reloadDialog.title') }}</v-card-title>
+                <v-card-text>{{ $t('reloadDialog.text') }}</v-card-text>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn text small color="grey" @click="ui.reloadDialog.show = false">{{ $t('base.dialog.close') }}</v-btn>
+                  <v-btn text small color="primary" @click="reload()" :loading="isLoading">{{ $t('reloadDialog.reload') }}</v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
           </v-card>
         </v-bottom-sheet>
         <v-bottom-sheet v-model="ui.exeScriptSheet.show" scrollable fullscreen>
@@ -1488,6 +1513,15 @@
                 dataKeyDesc: 'Input the data key',
                 dataEditor: 'Data Editor',
                 dataVal: 'Data Value'
+              },
+              reloadDialog: {
+                title: 'Next',
+                text: 'Reload page?',
+                reload: 'GO'
+              },
+              versionSheet: {
+                updateButton: 'UPDATE NOW',
+                versionButton: 'NEW VERSION'
               }
             },
             'zh-CN': {
@@ -1629,6 +1663,15 @@
                 dataKeyDesc: '输入要查询的数据键, 如: boxjs_host',
                 dataEditor: '数据编辑器',
                 dataVal: '数据内容'
+              },
+              reloadDialog: {
+                title: '接下来',
+                text: '更新完成, 需要刷新页面吗?',
+                reload: '马上刷新'
+              },
+              versionSheet: {
+                updateButton: ' 立即更新',
+                versionButton: '新版本'
               }
             }
           }
@@ -1668,10 +1711,11 @@
                 val: ''
               },
               searchDialog: { show: false },
-              versionsheet: { show: false },
+              versionSheet: { show: false },
               updatesheet: { show: false },
               exeScriptSheet: { show: false, resp: null },
               naviDrawer: { show: false },
+              reloadDialog: { show: false },
               modSessionDialog: { show: false },
               editProfileDialog: { show: false },
               impGlobalBakDialog: { show: false, impval: '' },
@@ -1704,7 +1748,7 @@
             const vers = this.box.versions
             if (curver && vers && vers.length > 0) {
               const lastestVer = vers[0].version
-              return this.compareVersion(lastestVer, curver) > 0
+              return this.compareVersion(lastestVer, curver) >= 0
             }
           },
           timeagoLang() {
@@ -2306,6 +2350,11 @@
           open(url) {
             window.open(url)
           },
+          update(url) {
+            this.open(url)
+            this.ui.versionSheet.show = false
+            this.ui.reloadDialog.show = true
+          },
           // 记录每个页面的滚动值
           onScroll(event) {
             const currentY = event.currentTarget.scrollY
@@ -2798,7 +2847,7 @@
               if (resp.data && resp.data.releases) {
                 Object.assign(this.box, { versions: resp.data.releases })
                 if (this.hasNewVersion) {
-                  this.ui.versionsheet.show = true
+                  this.ui.versionSheet.show = true
                 }
               }
             })
