@@ -35,24 +35,14 @@ Telegram讨论组:[Chavy Scripts Group](https://t.me/chavyscripts)
 A SPA Appliction be used for scripts utils
 
 ## 使用方式
-  * 安装对应模块/插件后，浏览器访问
-    * 正式版:[boxjs.com](http://boxjs.com "BoxJs")
-    * 测试版:[boxjs.net](http://boxjs.net "BoxJs")
+安装对应模块/插件后，浏览器访问: [boxjs.com](http://boxjs.com "BoxJs")
 
 ## 安装链接
-### 正式版
   * Shadowrocket: [boxjs.rewrite.surge.sgmodule](https://github.com/chavyleung/scripts/raw/master/box/rewrite/boxjs.rewrite.surge.sgmodule "BoxJs")
   * Loon: [boxjs.rewrite.loon.plugin](https://github.com/chavyleung/scripts/raw/master/box/rewrite/boxjs.rewrite.loon.plugin "BoxJs")
   * Quantumult X: [boxjs.rewrite.quanx.conf](https://github.com/chavyleung/scripts/raw/master/box/rewrite/boxjs.rewrite.quanx.conf "BoxJs")
   * Surge: [boxjs.rewrite.surge.sgmodule](https://github.com/chavyleung/scripts/raw/master/box/rewrite/boxjs.rewrite.surge.sgmodule "BoxJs")
   * Stash: [boxjs.rewrite.stash.stoverride](https://github.com/chavyleung/scripts/raw/master/box/rewrite/boxjs.rewrite.stash.stoverride "BoxJs")
-
-### 🧪测试版
-  * Shadowrocket: [boxjs.rewrite.surge.tf.sgmodule](https://github.com/chavyleung/scripts/raw/master/box/rewrite/boxjs.rewrite.surge.tf.sgmodule "BoxJs.net")
-  * Loon: [boxjs.rewrite.loon.tf.plugin](https://github.com/chavyleung/scripts/raw/master/box/rewrite/boxjs.rewrite.loon.tf.plugin "BoxJs.net")
-  * Quantumult X: [boxjs.rewrite.quanx.tf.conf](https://github.com/chavyleung/scripts/raw/master/box/rewrite/boxjs.rewrite.quanx.tf.conf "BoxJs.net")
-  * Surge: [boxjs.rewrite.surge.tf.sgmodule](https://github.com/chavyleung/scripts/raw/master/box/rewrite/boxjs.rewrite.surge.tf.sgmodule "BoxJs.net")
-  * Stash: [boxjs.rewrite.stash.tf.stoverride](https://github.com/chavyleung/scripts/raw/master/box/rewrite/boxjs.rewrite.stash.tf.stoverride "BoxJs.net")
 
 ---
 
