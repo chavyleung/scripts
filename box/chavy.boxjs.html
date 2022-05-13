@@ -696,6 +696,12 @@
                           <v-btn icon v-on="on"><v-icon>mdi-dots-vertical</v-icon></v-btn>
                         </template>
                         <v-list dense>
+                          <template v-if="sub.onInstall">
+                            <v-list-item @click="openInstall(sub.raw.id)">
+                              <v-list-item-title>{{ $t('subs.install') }}</v-list-item-title>
+                            </v-list-item>
+                            <v-divider></v-divider>
+                          </template>
                           <v-list-item @click="open(sub.repo)">
                             <v-list-item-title>{{ $t('subs.repo') }}</v-list-item-title>
                           </v-list-item>
@@ -745,6 +751,19 @@
                   <v-btn text small color="grey" @click="addAppSubDialog = false"> {{$t('base.dialog.close')}} </v-btn>
                   <v-btn text small color="primary" @click="addAppSub(ui.addAppSubDialog.url)" :loading="isLoading">
                     {{$t('base.dialog.save')}}
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+            <v-dialog persistent v-model="ui.installConfirmDialog.show">
+              <v-card>
+                <v-card-title>{{ ui.installConfirmDialog.title }}</v-card-title>
+                <v-card-text> {{ ui.installConfirmDialog.message }}</v-card-text>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn text small color="grey" @click="ui.installConfirmDialog.show = false"> {{$t('base.dialog.close')}} </v-btn>
+                  <v-btn text small color="primary" @click="install(ui.installConfirmDialog.url)" :loading="isLoading">
+                    {{$t('base.dialog.ok')}}
                   </v-btn>
                 </v-card-actions>
               </v-card>
@@ -1374,7 +1393,8 @@
                   apply: 'Apply',
                   save: 'Save',
                   view: 'View',
-                  close: 'Close'
+                  close: 'Close',
+                  ok: 'OK'
                 },
                 sort: {
                   up: 'Up',
@@ -1430,6 +1450,7 @@
                   avatar: 'Avatar (Optional)',
                   avatarDesc: 'Your avatar link'
                 },
+                install: 'Install',
                 add: 'Add Subscription',
                 subs: 'More Subscriptions',
                 appSubs: 'App Subscriptions',
@@ -1529,7 +1550,8 @@
                 dialog: {
                   apply: '应用',
                   save: '保存',
-                  close: '关闭'
+                  close: '关闭',
+                  ok: '好'
                 },
                 sort: {
                   up: '上移',
@@ -1581,6 +1603,7 @@
                   title: '修改会话',
                   name: '会话名称'
                 },
+                install: '安装',
                 add: '添加订阅',
                 moreSubs: '更多订阅',
                 appSubs: '应用订阅',
@@ -1721,6 +1744,7 @@
               impGlobalBakDialog: { show: false, impval: '' },
               impAppDatasDialog: { show: false, impval: '' },
               addAppSubDialog: { show: false, url: '' },
+              installConfirmDialog: { show: false, title: '安装确认', message: '是否自动安装外部资源?' },
               defaultIcons: [
                 'https://raw.githubusercontent.com/Orz-3/mini/master/appstore.png',
                 'https://raw.githubusercontent.com/Orz-3/task/master/appstore.png'
@@ -2079,6 +2103,7 @@
             // 深拷贝一份数据, 避免污染`usercfgs`
             const subs = JSON.parse(JSON.stringify(this.box.usercfgs.appsubs))
             subs.forEach((sub) => {
+              const raw = JSON.parse(JSON.stringify(sub))
               const cacheSub = this.appSubCaches[sub.url]
               const isValidSub = cacheSub && Array.isArray(cacheSub.apps) && cacheSub.apps.length > 0
               const isValidSubApps = isValidSub && !cacheSub.apps.find((app) => !app.id)
@@ -2091,6 +2116,7 @@
               sub.name = sub.name ? sub.name : '匿名订阅'
               sub.author = sub.author ? sub.author : '@anonymous'
               sub.repo = sub.repo ? sub.repo : sub.url
+              sub.raw = raw
             })
             return subs
           },
@@ -2294,7 +2320,7 @@
             this.path = defview
           }
           // 监听浏览器后退事件
-          window.addEventListener('popstate', (e) => (this.path = e.state.url), false)
+          window.addEventListener('popstate', (e) => (this.path = e.state ? e.state.url : '/'), false)
           // 如果后端没有渲染数据, 则发出请求获取数据
           if (this.boxServerData) {
             this.box = this.boxServerData
@@ -2307,7 +2333,7 @@
           }
 
           // 延时执行, 避免多个请求抢占资源
-          setTimeout(this.getVersions, 3000)
+          this.getVersions()
           this.loadTheme()
         },
         mounted() {
@@ -2354,6 +2380,23 @@
             this.open(url)
             this.ui.versionSheet.show = false
             this.ui.reloadDialog.show = true
+          },
+          openInstall(subId) {
+            const newsub = this.appSubs.find((s) => s.raw.id === subId)
+            const event = newsub.onInstall
+            if (event) {
+              const install = event.install
+              const redirect = install[this.env.id]
+              if (!redirect) return
+              this.ui.installConfirmDialog.show = true
+              this.ui.installConfirmDialog.title = event.title
+              this.ui.installConfirmDialog.message = event.message
+              this.ui.installConfirmDialog.url = redirect
+            }
+          },
+          install(url) {
+            this.open(url)
+            this.ui.installConfirmDialog.show = false
           },
           // 记录每个页面的滚动值
           onScroll(event) {
@@ -2741,6 +2784,8 @@
                   this.ui.snackbar.msg = '一键订阅: 成功!'
                   this.ui.snackbar.color = 'success'
                 }
+
+                this.openInstall(sub.id)
               })
               .finally(() => (this.addAppSubDialog = false))
           },

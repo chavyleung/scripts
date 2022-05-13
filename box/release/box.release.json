@@ -1,6 +1,28 @@
 {
   "releases": [
     {
+      "version": "0.12.0",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "msg": "feat(boxjs): 添加订阅事件 onInstall",
+      "notes": [
+        {
+          "name": "新增 (本次更新主要面向开发者)",
+          "descs": [
+            "添加订阅时, 可自动触发资源安装, 如: 自动安装重写等)",
+            "订阅列表中, 可通过`更多 > 安装`来手动触发安装",
+            "",
+            "开发文档:",
+            "https://docs.boxjs.app/dev/configure#scenes-oninstall",
+            "",
+            "目前支持 (TestFlight):",
+            "1. Loon: v2.1.19 (386) 及以上",
+            "2. Quantumult X: v1.0.29 (670) 及以上"
+          ]
+        }
+      ]
+    },
+    {
       "version": "0.11.3",
       "tags": ["beta"],
       "author": "@chavyleung",
