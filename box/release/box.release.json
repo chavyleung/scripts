@@ -1,6 +1,18 @@
 {
   "releases": [
     {
+      "version": "0.12.1",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "msg": "fix(boxjs): 还原 gist 可能导致的白屏",
+      "notes": [
+        {
+          "name": "修复",
+          "descs": ["还原 gist 可能导致的白屏"]
+        }
+      ]
+    },
+    {
       "version": "0.12.0",
       "tags": ["beta"],
       "author": "@chavyleung",

@@ -3,8 +3,8 @@ const $ = new Env('BoxJs - 抹掉会话')
 $.KEY_sessions = 'chavy_boxjs_sessions'
 $.KEY_cursessions = 'chavy_boxjs_cur_sessions'
 
-$.setjson([], $.KEY_sessions)
-$.setjson({}, $.chavy_boxjs_cur_sessions)
+$.setdata('[]', $.KEY_sessions)
+$.setdata('{}', $.chavy_boxjs_cur_sessions)
 $.done()
 
 /**
