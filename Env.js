@@ -487,6 +487,8 @@ function Env(name, opts) {
       this.log()
       if (this.isSurge() || this.isQuanX() || this.isLoon()) {
         $done(val)
+      } else if (this.isNode()) {
+        process.exit(1)
       }
     }
   })(name, opts)
