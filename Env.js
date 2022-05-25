@@ -315,7 +315,8 @@ function Env(name, opts) {
           .then(
             (resp) => {
               const { statusCode: status, statusCode, headers, rawBody } = resp
-              callback(null, { status, statusCode, headers, rawBody }, iconv.decode(rawBody, this.encoding))
+              const body = iconv.decode(rawBody, this.encoding)
+              callback(null, { status, statusCode, headers, rawBody, body }, body)
             },
             (err) => {
               const { message: error, response: resp } = err
@@ -364,7 +365,8 @@ function Env(name, opts) {
         this.got[method](url, _opts).then(
           (resp) => {
             const { statusCode: status, statusCode, headers, rawBody } = resp
-            callback(null, { status, statusCode, headers, rawBody }, iconv.decode(rawBody, this.encoding))
+            const body = iconv.decode(rawBody, this.encoding)
+            callback(null, { status, statusCode, headers, rawBody, body }, body)
           },
           (err) => {
             const { message: error, response: resp } = err
