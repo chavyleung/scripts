@@ -278,7 +278,8 @@ function Env(name, opts) {
         $httpClient.get(opts, (err, resp, body) => {
           if (!err && resp) {
             resp.body = body
-            resp.statusCode = resp.status
+            resp.statusCode = resp.status ? resp.status : resp.statusCode
+            resp.status = resp.statusCode
           }
           callback(err, resp, body)
         })
@@ -341,7 +342,8 @@ function Env(name, opts) {
         $httpClient[method](opts, (err, resp, body) => {
           if (!err && resp) {
             resp.body = body
-            resp.statusCode = resp.status
+            resp.statusCode = resp.status ? resp.status : resp.statusCode
+            resp.status = resp.statusCode
           }
           callback(err, resp, body)
         })
