@@ -293,7 +293,7 @@ function Env(name, opts) {
             const { statusCode: status, statusCode, headers, body } = resp
             callback(null, { status, statusCode, headers, body }, body)
           },
-          (err) => callback(err)
+          (err) => callback((err && err.error) || 'UndefinedError')
         )
       } else if (this.isNode()) {
         let iconv = require('iconv-lite')
@@ -358,7 +358,7 @@ function Env(name, opts) {
             const { statusCode: status, statusCode, headers, body } = resp
             callback(null, { status, statusCode, headers, body }, body)
           },
-          (err) => callback(err)
+          (err) => callback((err && err.error) || 'UndefinedError')
         )
       } else if (this.isNode()) {
         let iconv = require('iconv-lite')
