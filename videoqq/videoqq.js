@@ -42,9 +42,9 @@ function login() {
 function signapp() {
   return new Promise((resolve, reject) => {
     const timestamp = Math.round(new Date().getTime() / 1000).toString()
-    const VAL_signurl = `https://vip.video.qq.com/fcgi-bin/comm_cgi?name=hierarchical_task_system&cmd=2&_=${timestamp}`
+    const VAL_signurl = `https://vip.video.qq.com/fcgi-bin/comm_cgi?name=hierarchical_task_checkin&cmd=2&_=${timestamp}`
     let url = { url: VAL_signurl, headers: {} }
-    url.headers['User-Agent'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_2) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.4 Safari/605.1.15'
+    url.headers['User-Agent'] = 'Mozilla/5.0 (iPhone; CPU iPhone OS 15_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.5 Mobile/15E148 Safari/604.1'
     chavy.get(url, (error, response, data) => {
       try {
         signinfo.signapp = JSON.parse(data.match(/\((.*)\);/)[1])
@@ -62,9 +62,9 @@ function signapp() {
 function getexp() {
   return new Promise((resolve, reject) => {
     const timestamp = Math.round(new Date().getTime() / 1000).toString()
-    const VAL_getexpurl = `https://vip.video.qq.com/fcgi-bin/comm_cgi?name=spp_PropertyNum&cmd=1&growth_value=1&otype=json&_=${timestamp}`
+    const VAL_getexpurl = `https://vip.video.qq.com/fcgi-bin/comm_cgi?name=spp_vscore_user_mashup&type=1&_=${timestamp}`
     let url = { url: VAL_getexpurl, headers: {} }
-    url.headers['User-Agent'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_2) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.4 Safari/605.1.15'
+    url.headers['User-Agent'] = 'Mozilla/5.0 (iPhone; CPU iPhone OS 15_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.5 Mobile/15E148 Safari/604.1'
     chavy.get(url, (error, response, data) => {
       try {
         signinfo.expinfo = JSON.parse(data.match(/\((.*)\);/)[1])
@@ -85,8 +85,9 @@ function showmsg() {
     if (signinfo.signapp.ret == 0) {
       subTitle = '签到结果: 成功'
       if (signinfo.expinfo) {
-        subTitle += !signinfo.signapp.checkin_score ? ' (重复签到)' : ''
-        detail = `V力值: ${signinfo.expinfo.GrowthValue.num} (+${signinfo.signapp.checkin_score}), 观影券: ${signinfo.expinfo.MovieTicket.num}, 赠片资格: ${signinfo.expinfo.GiveMovie.num}`
+        subTitle += !
+Number(signinfo.signapp.checkin_score) ? ' (重复签到)' : ''
+        detail = `V力值: ${signinfo.expinfo.lscore_info.score} (+${signinfo.signapp.checkin_score}), 积分: ${signinfo.expinfo.cscore_info.vip_score_total}`
       }
     } else if (signinfo.signapp.ret == -10006) {
       subTitle = '签到结果: 失败'
@@ -99,6 +100,8 @@ function showmsg() {
       detail = `编码: ${signinfo.signapp.ret}, 说明: ${signinfo.signapp.msg}`
     }
     chavy.msg(cookieName, subTitle, detail)
+    chavy.log(subTitle)
+    chavy.log(detail)
   }
 }
 
