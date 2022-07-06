@@ -406,6 +406,28 @@ function Env(name, opts) {
     }
 
     /**
+     * 
+     * @param {Object} options 
+     * @returns {String} 将 Object 对象 转换成 queryStr: key=val&name=senku
+     */
+    queryStr(options) {
+      let queryString = ''
+
+      for (const key in options) {
+        let value = options[key]
+        if (value != null && value !== '') {
+          if (typeof value === 'object') {
+            value = JSON.stringify(value)
+          }
+          queryString += `${key}=${value}&`
+        }
+      }
+      queryString = queryString.substring(0, queryString.length - 1)
+    
+      return queryString
+    }
+
+    /**
      * 系统通知
      *
      * > 通知参数: 同时支持 QuanX 和 Loon 两种格式, EnvJs根据运行环境自动转换, Surge 环境不支持多媒体通知
