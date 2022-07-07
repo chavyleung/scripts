@@ -8,6 +8,7 @@
 
 > 2020.3.16 添加银瓜子转硬币脚本 感谢[@lcandy2](https://github.com/lcandy2) PR
 
+> 2022.7.7 添加粉丝牌升级任务
 ## 配置 (Surge)
 
 ```properties
