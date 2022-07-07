@@ -1,146 +1,183 @@
-/*
-Regex: ^https:\/\/mwegame\.qq\.com\/ams\/sign\/doSign\/month
-Host: mwegame.qq.com
-*/
-var appName = '掌上飞车'
-var speed = init()
-var URL = speed.getdata("UrlFC")
-var KEY = speed.getdata("CookieFC")
-
-let isGetCookie = typeof $request !== 'undefined'
-
-if (isGetCookie) {
-   getcookie()
-} else {
-   sign()
+const $ = new Env(`🏎️ 掌上飞车`)
+const date = new Date()
+const illustrate = `掌上飞车APP => 发现 => 每日签到 => 点击签到`
+typeof $request !== `undefined` ? start() : main()
+ 
+function start () {
+  if ($request.url && $request.headers) {
+    try {userId = $request.url.match(/userId=([^&]+)/)[1]} catch {userId = ``}
+    try {areaId = $request.url.match(/areaId=([^&]+)/)[1]} catch {areaId = ``}
+    try {roleId = $request.url.match(/roleId=([^&]+)/)[1]} catch {roleId = ``}
+    try {token = $request.url.match(/token=([^&]+)/)[1]} catch {token = ``}
+    try {uin = $request.url.match(/uin=([^&]+)/)[1]} catch {uin = ``}
+    $.write($request.url.replace(/&gift_id=\d+/, ""), `zsfc_url`)
+    $.write($.toStr($request.headers), `zsfc_headers`)
+    $.write(`userId=${userId}&areaId=${areaId}&roleId=${roleId}&token=${token}&uin=${uin}`, `zsfc_query`)
+    $.notice($.name, `✅ 获取签到数据成功！`, `请不要再次打开掌上飞车APP, 否则 Cookie 将失效！`)
+  } else {
+    $.notice($.name, ``, `⭕ 无法读取请求头, 请检查配置`)
+  }
+  $.done()
 }
 
-function getcookie() {
-  var url = $request.url;
-  if (url) {
-     var UrlKeyFC = "UrlFC";
-     var UrlValueFC = url;
-     if (speed.getdata(UrlKeyFC) != (undefined || null)) {
-        if (speed.getdata(UrlKeyFC) != UrlValueFC) {
-           var url = speed.setdata(UrlValueFC, UrlKeyFC);
-           if (!url) {
-              speed.msg("更新" + appName + "Url失败‼️", "", "");
-              } else {
-              speed.msg("更新" + appName + "Url成功🎉", "", "");
-              }
-           } else {
-           speed.msg(appName + "Url未变化❗️", "", "");
-           }
-        } else {
-        var url = speed.setdata(UrlValueFC, UrlKeyFC);
-        if (!url) {
-           speed.msg("首次写入" + appName + "Url失败‼️", "", "");
-           } else {
-           speed.msg("首次写入" + appName + "Url成功🎉", "", "");
-           }
-        }
-     } else {
-     speed.msg("写入" + appName + "Url失败‼️", "", "配置错误, 无法读取URL, ");
-     }
-  if ($request.headers) {
-     var CookieKeyFC = "CookieFC";
-     var CookieValueFC = JSON.stringify($request.headers);
-     if (speed.getdata(CookieKeyFC) != (undefined || null)) {
-        if (speed.getdata(CookieKeyFC) != CookieValueFC) {
-           var cookie = speed.setdata(CookieValueFC, CookieKeyFC);
-           if (!cookie) {
-              speed.msg("更新" + appName + "Cookie失败‼️", "", "");
-              } else {
-              speed.msg("更新" + appName + "Cookie成功🎉", "", "");
-              }
-           } else {
-           speed.msg(appName + "Cookie未变化❗️", "", "");
-           }
-        } else {
-        var cookie = speed.setdata(CookieValueFC, CookieKeyFC);
-        if (!cookie) {
-           speed.msg("首次写入" + appName + "Cookie失败‼️", "", "");
-           } else {
-           speed.msg("首次写入" + appName + "Cookie成功🎉", "", "");
-           }
-        }
-     } else {
-     speed.msg("写入" + appName + "Cookie失败‼️", "", "配置错误, 无法读取请求头, ");
-     }
-  speed.done()
-}
-   
-function sign() {
-  const url = { url: URL, headers: JSON.parse(KEY) }
-  speed.get(url, (error, response, data) => {
-    speed.log(`${appName}, data: ${data}`)
-    const title = `${appName}`
-    let subTitle = ''
-    let detail = ''
-    const obj = JSON.parse(data)
-    if (obj.status == 1 && obj.data == 1) {
-      subTitle = `签到结果: 成功`
-    } else if (obj.status == 11 && obj.data == false) {
-      subTitle = `签到结果: 成功(重复)`
-      detail = `说明: ${obj.message}`
+async function main () {
+  if (!$.read(`zsfc_url`)) {
+    $.log(`❌ 当前 Cookie 为空, 请先获取`)
+    $.notice($.name, `❌ 当前 Cookie 为空, 请先获取`, illustrate)
+  } else if ($.read(`zsfc_query`).indexOf(`&token=&`) != -1) {
+    $.log(`❌ 当前 Cookie 错误, 请重新获取`)
+    $.notice($.name, `❌ 当前 Cookie 错误, 请重新获取`, illustrate)
+  } else {
+    await sign(await index())
+    if ($.expired != 0) {
+      await speed()
+      if ($.giftid) await handle($.giftid, `第 ${$.day_award } 天奖励`)
+      if ($.giftdays) await handle($.giftdays, ` ${$.day_welfare} 特别福利`)
     } else {
-      subTitle = `签到结果: 失败`
-      detail = `说明: ${obj.message}`
+      $.notice($.name, `❌ 当前Cookie 已失效, 请重新获取`, illustrate)
     }
-    speed.msg(title, subTitle, detail)
-    speed.done()
-  })
+  }
+  $.done()
 }
 
-function init() {
-  isSurge = () => {
-    return undefined === this.$httpClient ? false : true
+function index() {
+  return new Promise(resolve => {
+    const options = {
+      url: `https://mwegame.qq.com/ams/sign/month/speed?${$.read(`zsfc_query`)}`,
+      headers: $.toObj($.read(`zsfc_headers`))
+    }
+    $.get(options, (error, response, data) => {
+      if (data) {
+        successive = data.match(/giftid="([^"]+)"/g)[0].match(/(\d+)/)[1]
+      } else if (error) {
+        $.log(`❌ 获取签到页面信息时发生错误`)
+        $.log($.toStr(error))
+      }
+      resolve(successive)
+    })
   }
-  isQuanX = () => {
-    return undefined === this.$task ? false : true
+  )
+}
+
+function sign (_id) {
+  return new Promise(resolve => {
+    const options = {
+      url: `${$.read("zsfc_url")}&gift_id=${_id}`,
+      headers: $.toObj($.read(`zsfc_headers`))
+    }
+    $.log(`🧑‍💻 开始检查 Cookie 并进行每日签到`)
+    $.get(options, (error, response, data) => {
+      if (data) {
+        let result = $.toObj(data.replace(/\r|\n/ig, ``))
+        let message = result.message
+        if (message.indexOf(`重试`) > -1) {
+          $.expired = 0
+          $.log(`❌ 当前 Cookie 已失效, 请重新获取`)
+        } else if (message.indexOf(`已经`) > -1) {
+          $.log(`✅ 检查结果: 当前 Cookie 有效`)
+          $.log(`⭕ 签到结果: ${message}`)
+        } else {
+          sMsg = result.send_result.sMsg
+          $.log(`✅ 检查结果: 当前 Cookie 有效`)
+          $.log(`✅ ${sMsg}`)
+          $.notice($.name, `✅ ${message}`, sMsg, ``)
+        }
+      } else if (error) {
+        $.log(`❌ 无法完成每日签到`)
+        $.log(error)
+      }
+      resolve()
+    })
   }
-  getdata = (key) => {
-    if (isSurge()) return $persistentStore.read(key)
-    if (isQuanX()) return $prefs.valueForKey(key)
+  )
+}
+
+function speed() {
+  return new Promise(resolve => {
+    const options = {
+      url: `https://mwegame.qq.com/ams/sign/month/speed?${$.read(`zsfc_query`)}`,
+      headers: $.toObj($.read(`zsfc_headers`))
+    }
+    $.log(`🧑‍💻 开始获取累计签到天数`)
+    $.get(options, (error, response, data) => {
+      if (data) {
+        let arr = [0,1,2,3,0,4,0,5,0,6,7,8,0,9,0,10,11,0,12,13,0,14,15,0,0,16]
+        $.day_award = data.match(/<span id="my_count">(\d+)<\/span> 天/)[1] * 1
+        $.log(`✅ 当前 ${date.getMonth() + 1} 月累计签到 ${$.day_award} 天`)
+        if (arr[$.day_award] != 0) {
+          $.giftid = data.match(/giftid="([^"]+)"/g)[arr[$.day_award]].match(/(\d+)/)[1]
+        }
+        try {
+          if (data.match(/月(\d+)日/g)[0].match(/(\d+)/)[1] * 1 == date.getDate()) {
+            $.day_welfare = `${date.getMonth() + 1}月${date.getDate()}日`
+            $.giftdays = data.match(/"giftdays([^"]+)"/g)[0].match(/(\d+)/)[1]
+          }
+        } catch {}
+      } else if (error) {
+        $.log(`❌ 获取累计签到天数时发生错误`)
+        $.log($.toStr(error))
+      }
+      resolve()
+    })
   }
-  setdata = (key, val) => {
-    if (isSurge()) return $persistentStore.write(key, val)
-    if (isQuanX()) return $prefs.setValueForKey(key, val)
+  )
+}
+
+function handle (_id, _award) {
+  return new Promise(resolve => {
+    const options = {
+      url: `https://mwegame.qq.com/ams/send/handle`,
+      headers: $.toObj($.read(`zsfc_headers`)),
+      body: `${$.read(`zsfc_query`)}&gift_id=${_id}`
+    }
+    $.log(`🧑‍💻 开始领取${_award}`)
+    $.post(options, (error, response, data) => {
+      if (data) {
+        let result = $.toObj(data.replace(/\r|\n/ig, ``))
+        if (result.data.indexOf(`成功`) != -1) {
+          sPackageName = result.send_result.sPackageName
+          $.log(`✅ 领取结果: 获得${sPackageName}`)
+        } else {
+          $.log(`⭕ 领取结果: ${result.message}`)
+        }
+      } else if (error) {
+        $.log(`❌ 领取${_award}时发生错误`)
+        $.log($.toStr(error))
+      }
+      resolve()
+    })
   }
-  msg = (title, subtitle, body) => {
-    if (isSurge()) $notification.post(title, subtitle, body)
-    if (isQuanX()) $notify(title, subtitle, body)
+  )
+}
+ 
+function Env(name) {
+  LN = typeof $loon != `undefined`
+  SG = typeof $httpClient != `undefined` && !LN
+  QX = typeof $task != `undefined`
+  read = (key) => {
+    if (LN || SG) return $persistentStore.read(key)
+    if (QX) return $prefs.valueForKey(key)
   }
-  log = (message) => console.log(message)
+  write = (key, val) => {
+    if (LN || SG) return $persistentStore.write(key, val); 
+    if (QX) return $prefs.setValueForKey(key, val)
+  }
+  notice = (title, subtitle, message, url) => {
+    if (LN) $notification.post(title, subtitle, message, url)
+    if (SG) $notification.post(title, subtitle, message, { url: url })
+    if (QX) $notify(title, subtitle, message, { 'open-url': url })
+  }
   get = (url, cb) => {
-    if (isSurge()) {
-      $httpClient.get(url, cb)
-    }
-    if (isQuanX()) {
-      url.method = 'GET'
-      $task.fetch(url).then((resp) => cb(null, {}, resp.body))
-    }
+    if (LN || SG) {$httpClient.get(url, cb)}
+    if (QX) {url.method = `GET`; $task.fetch(url).then((resp) => cb(null, {}, resp.body))}
   }
   post = (url, cb) => {
-    if (isSurge()) {
-      $httpClient.post(url, cb)
-    }
-    if (isQuanX()) {
-      url.method = 'POST'
-      $task.fetch(url).then((resp) => cb(null, {}, resp.body))
-    }
+    if (LN || SG) {$httpClient.post(url, cb)}
+    if (QX) {url.method = `POST`; $task.fetch(url).then((resp) => cb(null, {}, resp.body))}
   }
-  put = (url, cb) => {
-    if (isSurge()) {
-      $httpClient.put(url, cb)
-    }
-    if (isQuanX()) {
-      url.method = 'PUT'
-      $task.fetch(url).then((resp) => cb(null, {}, resp.body))
-    }
-  }
-  done = (value = {}) => {
-    $done(value)
-  }
-  return { isSurge, isQuanX, msg, log, getdata, setdata, get, post, put, done }
+  toObj = (str) => JSON.parse(str)
+  toStr = (obj) => JSON.stringify(obj)
+  log = (message) => console.log(message)
+  done = (value = {}) => {$done(value)}
+  return { name, read, write, notice, get, post, toObj, toStr, log, done }
 }
