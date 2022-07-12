@@ -52,8 +52,10 @@ function sign() {
       try {
         $.sign = JSON.parse(data)
         const result = JSON.parse(data)
-        if (result && result.code == 0) {
+        if (result?.code == 0) {
           $.desc.push(`本月累计: ${result.data.hadSignDays}/${result.data.allDays}次, 说明: ${result.data.text}`)
+        } else if (result?.code == -101) {
+          $.desc.push('Cookie已过期, 请重新获取Cookie')
         }
       } catch (e) {
         $.logErr(e, resp)
@@ -104,13 +106,13 @@ function getMedalList() {
     $.get(url, (err, resp, data) => {
       try {
         const res = JSON.parse(data)
-        $.medalList = res.data.special_list.map((e) => {
+        const items = [...res.data.list, ...res.data.special_list]
+        $.medalList = items.filter(e => e?.medal?.level < 21).map((e) => {
           return {
             roomId: e?.room_info?.room_id,
             nickname: e?.medal?.medal_name,
           }
         })
-        console.log('getMedalList', $.medalList)
       } catch (e) {
         $.logErr(e, resp)
       } finally {
