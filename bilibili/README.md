@@ -22,6 +22,9 @@ bilibili = type=cron,cronexp=10 0 0 * * *,wake-system=1,timeout=100,script-path=
 
 # 如需银瓜子转硬币，添加以下内容 
 cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/bilibili/bilibili.silver2coin.js
+
+# 如需抽直播红包，添加以下内容
+bilibili = type=cron,cronexp=10 10 0 * * *,wake-system=1,timeout=100,script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/bilibili/redpocket.js
 ```
 
 ## 配置 (QuanX)
