@@ -1,0 +1,8 @@
+#!name=embyUnlock
+#!desc=embyUnlock
+
+[Script]
+emby.js = type=http-response,pattern=^https?:\/\/mb3admin.com\/admin\/service\/registration\/validateDevice,requires-body=1,max-size=0,script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/emby/emby.js
+
+[MITM]
+hostname = %APPEND% mb3admin.com
