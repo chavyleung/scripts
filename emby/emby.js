@@ -1,7 +1,7 @@
 const CHECK_URL = 'mb3admin.com/admin/service/registration/validateDevice'
 
 const url = $request.url
-const isCheckURL = (url) => url.includes(CHECK_URL)
+const isCheckUrl = (url) => url.includes(CHECK_URL)
 
 if (isCheckUrl(url) && $response.status != 200) {
   const unlock = {
