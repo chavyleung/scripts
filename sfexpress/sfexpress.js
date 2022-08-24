@@ -66,11 +66,6 @@ function queryDailyTask() {
 async function signDailyTasks() {
   await queryDailyTask()
 
-  // 移除参与积分活动 手动参加活动
-  // 移除完成每月任务 因需要手动完成每月积分活动
-//   const skipTitles = ['参与积分活动', '完成每月任务']
-//   $.tasks = $.tasks.filter((t) => !skipTitles.includes(t.title))
-
   for (let i = 0; i < $.tasks.length; i++) {
     const task = $.tasks[i]
     if (task.status === 1) {
