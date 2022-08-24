@@ -38,8 +38,8 @@ function loginweb() {
 
 function sign() {
   const signOpts = {
-    url: `https://mcs-mimp-web.sf-express.com/mcs-mimp/appTask/signFetchPoint`,
-    body: `{"channel": "SFAPP","pageType": "sign","from": "APP_MINE_TASK"}`,
+    url: `https://mcs-mimp-web.sf-express.com/mcs-mimp/integralTaskSignPlusService/automaticSignFetchPackage`,
+    body: `{"comeFrom": "vioin", "channelFrom": "SFAPP"}`,
     headers: {
       'Content-Type': 'application/json'
     }
@@ -52,8 +52,8 @@ function sign() {
 function queryDailyTask() {
   return $.http
     .post({
-      url: `https://mcs-mimp-web.sf-express.com/mcs-mimp/appTask/queryPointTaskAndSign`,
-      body: `{"channel":"SFAPP","pageType": "APP_MINE_TASK"}`,
+      url: `https://mcs-mimp-web.sf-express.com/mcs-mimp/commonPost/~memberNonactivity~integralTaskStrategyService~queryPointTaskAndSignFromES`,
+      body: `{"channelType":"1"}`,
       headers: {
         'Content-Type': 'application/json'
       }
@@ -66,13 +66,11 @@ function queryDailyTask() {
 async function signDailyTasks() {
   await queryDailyTask()
 
-  // 移除每日签到
-  const skipType = ['sign', 'mailPerMonThan3']
-  $.tasks = $.tasks.filter((t) => !skipType.includes(t.pageType))
-
   for (let i = 0; i < $.tasks.length; i++) {
     const task = $.tasks[i]
-    if (task.status === 2) {
+    if (task.status === 1) {
+      await getPoint(task)
+    } else if (task.status === 2) {
       await doTask(task)
       await getPoint(task)
     } else if (task.status === 3) {
@@ -84,20 +82,18 @@ async function signDailyTasks() {
 }
 
 function doTask(task) {
-  return $.http.post({
-    url: `https://mcs-mimp-web.sf-express.com/mcs-mimp/appTask/scanPageToRecord`,
-    body: `{"channel":"SFAPP","pageType": "${task.pageType}"}`,
-    headers: {
-      'Content-Type': 'application/json'
-    }
+  return $.http.get({
+    url: `https://mcs-mimp-web.sf-express.com/mcs-mimp/task/finishTask?id=${task.taskCode}`,
+    body: ``,
+    headers: {}
   })
 }
 
 function getPoint(task) {
   return $.http
     .post({
-      url: 'https://mcs-mimp-web.sf-express.com/mcs-mimp/appTask/fetchPoint',
-      body: `{"channel": "SFAPP","pageType": "${task.pageType}"}`,
+      url: 'https://mcs-mimp-web.sf-express.com/mcs-mimp/commonPost/~memberNonactivity~integralTaskStrategyService~fetchIntegral',
+      body: `{"strategyId":${task.strategyId},"taskId":"${task.taskId}","taskCode":"${task.taskCode}"}`,
       headers: {
         'Content-Type': 'application/json'
       }
@@ -105,7 +101,6 @@ function getPoint(task) {
     .then((resp) => {
       const data = JSON.parse(resp.body)
       task.result = data.success ? '成功' : data.errorMessage
-      console.log(task)
     })
 }
 
@@ -114,16 +109,17 @@ function showmsg() {
   $.subt = `签到: `
   $.desc = []
   if (success) {
-    $.subt += `成功`
-    $.desc.push(`说明: +${$.sign.obj} 积分`)
+    if ($.sign.obj.hasFinishSign){
+      $.subt += `重复`
+      $.desc.push(`说明: 连续签到${$.sign.obj.countDay}天`)
+    } else {
+      $.subt += `成功`
+      $.desc.push(`说明: 连续签到${$.sign.obj.countDay}天`)
+    }
   } else {
     const errmsg = $.sign.errorMessage
-    if (errmsg === '已经发送过积分') {
-      $.subt += `重复`
-      $.desc.push(`说明: ${errmsg}`)
-    } else {
-      $.subt += `失败`
-    }
+    $.subt += `失败`
+    $.desc.push(`说明: ${errmsg}`)
   }
 
   $.desc.push('', `每日任务: `)
