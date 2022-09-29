@@ -1,0 +1,52 @@
+component: scf
+name: boxapp-tencent-crons
+
+inputs:
+  type: event
+  name: ${name}
+  description: Crons server
+
+  runtime: Nodejs16.13
+  region: ap-hongkong
+
+  handler: index.execute
+  timeout: 300
+
+  src:
+    bucket: boxapp
+    src: ./
+    dist: ./dist
+    hook: npm run build
+    exclude:
+      - '.env'
+      - '*.js.map'
+
+  layers:
+    - name: boxapp-tencent-layer
+      version: 22
+
+  events:
+    - timer:
+        parameters:
+          name: v2ex
+          enable: ${env:v2ex}
+          cronExpression: ${env:v2ex_cron}
+          argument: ${env:v2ex_http}
+    - timer:
+        parameters:
+          name: tieba
+          enable: ${env:tieba}
+          cronExpression: ${env:tieba_cron}
+          argument: ${env:tieba_http}
+    - timer:
+        parameters:
+          name: sfexpress
+          enable: ${env:sfexpress}
+          cronExpression: ${env:sfexpress_cron}
+          argument: ${env:sfexpress_http}
+    - timer:
+        parameters:
+          name: everphoto
+          enable: ${env:everphoto}
+          cronExpression: ${env:everphoto_cron}
+          argument: ${env:everphoto_http}

@@ -1,0 +1,16 @@
+app: boxapp
+stage: dev
+
+component: layer
+name: boxapp-tencent-layer
+
+inputs:
+  name: ${name}
+  region: ap-hongkong
+
+  src:
+    bucket: boxapp
+    src: ../../../node_modules
+
+  runtimes:
+    - Nodejs16.13

@@ -1,0 +1,9 @@
+{
+  "name": "@boxapp/tencent-crons",
+  "version": "4.0.0-alpha.1",
+  "license": "MIT",
+  "scripts": {
+    "build": "npx rollup -c",
+    "sls-deploy": "sls deploy"
+  }
+}

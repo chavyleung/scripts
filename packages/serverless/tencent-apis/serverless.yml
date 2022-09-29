@@ -1,0 +1,47 @@
+component: scf
+name: boxapp-tencent-apis
+
+inputs:
+  type: web
+  name: ${name}
+  description: Apis server (apis.boxjs.app)
+
+  region: ap-hongkong
+  runtime: Nodejs16.13
+
+  entryFile: index.js
+  timeout: 300
+
+  environment:
+    variables:
+      tg_bot_id: ${env:tg_bot_id}
+
+  src:
+    bucket: boxapp
+    src: ./
+    dist: ./dist
+    hook: npm run build
+    exclude:
+      - '.env'
+      - '*.js.map'
+
+  layers:
+    - name: boxapp-tencent-layer
+      version: 22
+
+  events:
+    - apigw:
+        parameters:
+          serviceId: service-as6vtk88
+          serviceName: boxapp_tencent_apis
+          description: apis.boxjs.app
+
+          protocols:
+            - http
+            - https
+
+          endpoints:
+            - path: /
+              apiName: index
+              method: ANY
+              serviceTimeout: 300

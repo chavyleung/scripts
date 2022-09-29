@@ -1,0 +1,27 @@
+{
+  "name": "@boxapp/tencent-apis",
+  "version": "4.0.0-alpha.1",
+  "license": "MIT",
+  "scripts": {
+    "build": "npx rollup -c",
+    "dev": "npx rollup -wc",
+    "dev-serv": "npx nodemon --watch 'dist' --ext js --delay 2000ms --exec 'node -r dotenv/config ./dist/index.js'",
+    "sls-deploy": "sls deploy"
+  },
+  "dependencies": {
+    "@grammyjs/menu": "^1.1.2",
+    "@grammyjs/stateless-question": "^3.0.1",
+    "@koa/router": "^12.0.0",
+    "currency.js": "^2.0.4",
+    "grammy": "^1.11.1",
+    "koa": "^2.13.4",
+    "koa-json": "^2.0.2",
+    "koa-mount": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/koa": "^2.13.5",
+    "@types/koa-json": "^2.0.20",
+    "@types/koa-mount": "^4.0.1",
+    "@types/koa__router": "^12.0.0"
+  }
+}

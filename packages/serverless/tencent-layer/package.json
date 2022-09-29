@@ -1,0 +1,9 @@
+{
+  "name": "@boxapp/tencent-layer",
+  "version": "4.0.0-alpha.1",
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "sls-deploy": "sls deploy"
+  }
+}

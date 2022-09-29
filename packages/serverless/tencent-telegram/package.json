@@ -1,0 +1,13 @@
+{
+  "name": "@boxapp/tencent-telegram",
+  "version": "4.0.0-alpha.1",
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "build": "npx rollup -c",
+    "sls-deploy": "sls deploy"
+  },
+  "dependencies": {
+    "express": "^4.18.1"
+  }
+}

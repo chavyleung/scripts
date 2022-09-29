@@ -1,0 +1,48 @@
+component: scf
+name: boxapp-tencent-telegram
+
+inputs:
+  type: web
+  name: ${name}
+  description: Telegram server (t.boxjs.app)
+
+  region: ap-hongkong
+  runtime: Nodejs16.13
+
+  entryFile: index.js
+  timeout: 300
+
+  environment:
+    variables:
+      tg_bot_token: ${env:tg_bot_token}
+      tg_bot_info: ${env:tg_bot_info}
+      tg_chat_id: ${env:tg_chat_id}
+
+  src:
+    bucket: boxapp
+    src: ./
+    dist: ./dist
+    hook: npm run build
+    exclude:
+      - '.env'
+
+  layers:
+    - name: boxapp-tencent-layer
+      version: 22
+
+  events:
+    - apigw:
+        parameters:
+          serviceId: service-lz6x5g7a
+          serviceName: boxapp_tencent_telegram
+          description: t.boxjs.app
+
+          protocols:
+            - http
+            - https
+
+          endpoints:
+            - path: /
+              apiName: index
+              method: ANY
+              serviceTimeout: 300
