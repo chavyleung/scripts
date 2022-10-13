@@ -27,7 +27,7 @@ inputs:
 
   layers:
     - name: boxapp-tencent-layer
-      version: 22
+      version: 25
 
   events:
     - apigw:
