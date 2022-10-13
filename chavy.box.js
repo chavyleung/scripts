@@ -3,7 +3,7 @@ const $ = new Env('BoxJs')
 // 为 eval 准备的上下文环境
 const $eval_env = {}
 
-$.version = '0.12.1'
+$.version = '0.12.2'
 $.versionType = 'beta'
 
 // 发出的请求需要需要 Surge、QuanX 的 rewrite
@@ -44,7 +44,9 @@ $.json = $.name // `接口`类请求的响应体
 $.html = $.name // `页面`类请求的响应体
 
 // 页面源码地址
-$.web = `https://cdn.jsdelivr.net/gh/chavyleung/scripts@${$.version}/box/chavy.boxjs.html?_=${new Date().getTime()}`
+$.web = `https://cdn.jsdelivr.net/gh/chavyleung/scripts@${
+  $.version
+}/box/chavy.boxjs.html?_=${new Date().getTime()}`
 // 版本说明地址 (Release Note)
 $.ver = `https://raw.githubusercontent.com/chavyleung/scripts/master/box/release/box.release.json`
 
@@ -135,7 +137,9 @@ async function handlePage() {
   boxdata.syscfgs.isDebugMode = false
 
   // 调试模式: 是否每次都获取新的页面
-  const isDebugWeb = [true, 'true'].includes($.getdata('@chavy_boxjs_userCfgs.isDebugWeb'))
+  const isDebugWeb = [true, 'true'].includes(
+    $.getdata('@chavy_boxjs_userCfgs.isDebugWeb')
+  )
   const debugger_web = $.getdata('@chavy_boxjs_userCfgs.debugger_web')
   const cache = $.getjson($.KEY_web_cache, null)
 
@@ -148,7 +152,9 @@ async function handlePage() {
     if (isDebugWeb && debugger_web) {
       // 调试地址后面拼时间缀, 避免 GET 缓存
       const isQueryUrl = debugger_web.includes('?')
-      $.web = `${debugger_web}${isQueryUrl ? '&' : '?'}_=${new Date().getTime()}`
+      $.web = `${debugger_web}${
+        isQueryUrl ? '&' : '?'
+      }_=${new Date().getTime()}`
       boxdata.syscfgs.isDebugMode = true
       console.log(`[WARN] 调试模式: $.web = : ${$.web}`)
     }
@@ -187,7 +193,10 @@ async function handlePage() {
    * 如果直接渲染到 box: null 会出现双向绑定问题
    * 所以先渲染到 `boxServerData: null` 再由前端 `this.box = this.boxServerData` 实现双向绑定
    */
-  $.html = $.html.replace('boxServerData: null', 'boxServerData:' + JSON.stringify(boxdata))
+  $.html = $.html.replace(
+    'boxServerData: null',
+    'boxServerData:' + JSON.stringify(boxdata)
+  )
 
   // 调试模式支持 vue Devtools (只有在同时开启调试模式和指定了调试地址才生效)
   // vue.min.js 生效时, 会导致 @click="window.open()" 报 "window" is not defined 错误
@@ -274,7 +283,16 @@ function getBoxData() {
     }
   })
 
-  const box = { datas, usercfgs, sessions, curSessions, sysapps, syscfgs, appSubCaches, globalbaks }
+  const box = {
+    datas,
+    usercfgs,
+    sessions,
+    curSessions,
+    sysapps,
+    syscfgs,
+    appSubCaches,
+    globalbaks
+  }
   return box
 }
 
@@ -611,8 +629,11 @@ async function apiRevertGlobalBak() {
     $.setdata(JSON.stringify(chavy_boxjs_userCfgs), $.KEY_usercfgs)
     $.setdata(JSON.stringify(chavy_boxjs_cur_sessions), $.KEY_cursessions)
     $.setdata(JSON.stringify(chavy_boxjs_app_subCaches), $.KEY_app_subCaches)
-    const isNull = (val) => [undefined, null, 'null', 'undefined', ''].includes(val)
-    Object.keys(datas).forEach((datkey) => $.setdata(isNull(datas[datkey]) ? '' : `${datas[datkey]}`, datkey))
+    const isNull = (val) =>
+      [undefined, null, 'null', 'undefined', ''].includes(val)
+    Object.keys(datas).forEach((datkey) =>
+      $.setdata(isNull(datas[datkey]) ? '' : `${datas[datkey]}`, datkey)
+    )
   }
   const boxdata = getBoxData()
   $.json = boxdata
@@ -657,9 +678,17 @@ async function apiRunScript() {
   } else {
     script_text = opts.script
   }
-  if ($.isSurge() && !$.isLoon() && !$.isShadowrocket() && ishttpapi) {
+  if (
+    $.isSurge() &&
+    !$.isLoon() &&
+    !$.isShadowrocket() &&
+    !$.isStash() &&
+    ishttpapi
+  ) {
     const runOpts = { timeout: opts.timeout }
-    await $.runScript(script_text, runOpts).then((resp) => ($.json = JSON.parse(resp)))
+    await $.runScript(script_text, runOpts).then(
+      (resp) => ($.json = JSON.parse(resp))
+    )
   } else {
     await new Promise((resolve) => {
       $eval_env.resolve = resolve
