@@ -1,15 +1,17 @@
-import { CssVarsProvider, extendTheme } from '@mui/joy/styles'
 import Typography from '@mui/joy/Typography'
+import { NextPage } from 'next'
+import { MainLayout } from '../layouts/MainLayout'
 
-const App = () => {
-  const theme = extendTheme({})
+const App: NextPage = () => {
   return (
     <>
-      <CssVarsProvider theme={theme}>
-        <Typography>Hello world!</Typography>
-      </CssVarsProvider>
+      <Typography>Hello world!</Typography>
     </>
   )
+}
+
+App.getLayout = (page) => {
+  return <MainLayout>{page}</MainLayout>
 }
 
 export default App
