@@ -14,7 +14,7 @@ inputs:
 
   environment:
     variables:
-      tg_bot_token: ${env:tg_bot_token}
+      tg_bot_id: ${env:tg_bot_id}
       tg_bot_info: ${env:tg_bot_info}
       tg_chat_id: ${env:tg_chat_id}
 

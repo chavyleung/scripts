@@ -4,7 +4,7 @@ import { Bot, webhookCallback } from 'grammy'
 import { createKeyBoard } from './KeyBoard'
 import { createMessageMenus } from './MessageMenus'
 
-const bot_token = process.env.tg_bot_token!
+const bot_token = process.env.tg_bot_id!
 const bot_info = process.env.tg_bot_info!
 const notify_chat_id = process.env.tg_chat_id!
 
@@ -42,5 +42,5 @@ app.use(App.json())
 app.use(`/${bot_token}`, webhookCallback(bot, 'express'))
 
 app.listen(9000, () => {
-  bot.api.sendMessage(notify_chat_id, `🔔 服务启动 🔔`)
+  return bot.api.sendMessage(notify_chat_id, `🔔 服务启动 🔔`)
 })
