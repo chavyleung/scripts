@@ -1,30 +1,45 @@
 import Box, { BoxProps } from '@mui/joy/Box'
+import { PropsWithChildren } from 'react'
 import { Header } from './Header'
 import { Navigation } from './Navigation'
 
-export const MainLayout = () => {
+export const MainLayout = ({ children }: PropsWithChildren) => {
   return (
     <Root
       sx={{
         display: 'grid',
         minHeight: '100vh',
         gridTemplateRows: '64px 1fr',
-        gridTemplateColumns: '220px 1fr',
-        gridTemplateAreas: `
-          "header header"
-          "navigation main"
-        `
+        gridTemplateColumns: {
+          xs: '1fr',
+          md: '220px 1fr'
+        },
+        gridTemplateAreas: {
+          xs: `
+            "header"
+            "main"
+          `,
+          md: `
+            "header header"
+            "navigation main"
+          `
+        }
       }}
     >
       <HeaderRoot children={<Header />} />
       <NavigationRoot children={<Navigation />} />
-      <MainRoot children={<></>} />
+      <MainRoot children={children} />
     </Root>
   )
 }
 
 const Root = (props: BoxProps) => {
-  return <Box {...props} />
+  return (
+    <Box
+      {...props}
+      sx={[{}, ...(Array.isArray(props.sx) ? props.sx : [props.sx])]}
+    />
+  )
 }
 
 const HeaderRoot = (props: BoxProps) => {
@@ -35,9 +50,7 @@ const HeaderRoot = (props: BoxProps) => {
         {
           borderBottom: '1px solid',
           borderColor: 'divider',
-          gap: 2,
           gridArea: 'header',
-          p: 2,
           position: 'sticky'
         },
         ...(Array.isArray(props.sx) ? props.sx : [props.sx])
@@ -52,10 +65,13 @@ const NavigationRoot = (props: BoxProps) => {
       {...props}
       sx={[
         {
+          display: {
+            xs: 'none',
+            md: 'initial'
+          },
           borderRight: '1px solid',
           borderColor: 'divider',
-          gridArea: 'navigation',
-          p: 2
+          gridArea: 'navigation'
         },
         ...(Array.isArray(props.sx) ? props.sx : [props.sx])
       ]}

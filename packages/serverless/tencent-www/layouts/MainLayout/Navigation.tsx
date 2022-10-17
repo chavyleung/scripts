@@ -1,7 +1,12 @@
 import Box, { BoxProps } from '@mui/joy/Box'
+import List from '@mui/joy/List'
 
 export const Navigation = () => {
-  return <Root></Root>
+  return (
+    <Root>
+      <List size="sm"></List>
+    </Root>
+  )
 }
 
 const Root = (props: BoxProps) => {

@@ -26,7 +26,13 @@ const Root = (props: StackProps) => {
   return (
     <Row
       {...props}
-      sx={[{}, ...(Array.isArray(props.sx) ? props.sx : [props.sx])]}
+      sx={[
+        {
+          gap: 2,
+          p: 2
+        },
+        ...(Array.isArray(props.sx) ? props.sx : [props.sx])
+      ]}
     />
   )
 }
@@ -38,7 +44,7 @@ const Left = (props: BoxProps) => {
         <IconButton
           size="sm"
           variant="outlined"
-          sx={{ display: { xs: 'inline-flex', sm: 'none' } }}
+          sx={{ display: { xs: 'inline-flex', md: 'none' } }}
         >
           <MenuIcon />
         </IconButton>
@@ -46,7 +52,7 @@ const Left = (props: BoxProps) => {
         <IconButton
           size="sm"
           variant="solid"
-          sx={{ display: { xs: 'none', sm: 'inline-flex' } }}
+          sx={{ display: { xs: 'none', md: 'inline-flex' } }}
         >
           <MailRoundedIcon />
         </IconButton>
