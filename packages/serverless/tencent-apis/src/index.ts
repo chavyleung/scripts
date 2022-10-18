@@ -4,7 +4,7 @@ import json from 'koa-json'
 
 import { notifyTelegram } from './Notify'
 import { router } from './Router'
-import { store } from './Store'
+import { wrapStore } from './Store'
 
 const server = new Koa()
 
@@ -36,7 +36,7 @@ bot.command('view', (ctx) => ctx.reply(`聊天标识: ${ctx.msg.chat.id}`))
 server
   .use(json())
   .use(beforeAll())
-  .use(store())
+  .use(wrapStore())
   .use(router.routes())
   .use(router.allowedMethods())
   .use(notifyTelegram())

@@ -1,7 +1,7 @@
 import { createHttp } from '@boxapp/core-runtime'
 import Koa from 'koa'
 
-export const store = () => async (ctx: Koa.Context, next: Koa.Next) => {
+export const wrapStore = () => async (ctx: Koa.Context, next: Koa.Next) => {
   console.log(`Url: ${ctx.url}`)
 
   // 1. get store from query
