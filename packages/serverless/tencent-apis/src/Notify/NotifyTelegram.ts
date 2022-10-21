@@ -21,6 +21,4 @@ export const notifyTelegram = async (ctx: Koa.Context, next: Koa.Next) => {
       await bot.api.sendMessage(tg_chat_id, messages.join('\n'))
     }
   }
-
-  await next()
 }
