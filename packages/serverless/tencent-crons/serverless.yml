@@ -56,3 +56,9 @@ inputs:
           enable: ${env:hhanclub}
           cronExpression: ${env:hhanclub_cron}
           argument: ${env:hhanclub_http}
+    - timer:
+        parameters:
+          name: audiences
+          enable: ${env:audiences}
+          cronExpression: ${env:audiences_cron}
+          argument: ${env:audiences_http}

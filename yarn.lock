@@ -1313,6 +1313,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@boxapp/script-audiences@workspace:packages/scripts/audiences":
+  version: 0.0.0-use.local
+  resolution: "@boxapp/script-audiences@workspace:packages/scripts/audiences"
+  languageName: unknown
+  linkType: soft
+
 "@boxapp/script-everphoto@workspace:packages/scripts/everphoto":
   version: 0.0.0-use.local
   resolution: "@boxapp/script-everphoto@workspace:packages/scripts/everphoto"
