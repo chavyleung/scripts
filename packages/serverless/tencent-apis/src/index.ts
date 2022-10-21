@@ -2,7 +2,7 @@ import { Bot } from 'grammy'
 import Koa from 'koa'
 import json from 'koa-json'
 
-import { notifyTelegram } from './Notify'
+import { notifyAll } from './Notify'
 import { router } from './Router'
 import { wrapStore } from './Store'
 
@@ -35,10 +35,17 @@ bot.command('view', (ctx) => ctx.reply(`聊天标识: ${ctx.msg.chat.id}`))
 
 server
   .use(json())
+
+  // 1. 前置处理
   .use(beforeAll())
   .use(wrapStore())
+
+  // 2. 路由处理
   .use(router.routes())
   .use(router.allowedMethods())
-  .use(notifyTelegram())
+
+  // 3. 后置处理
+  .use(notifyAll())
   .use(afterAll())
+
   .listen(9000)

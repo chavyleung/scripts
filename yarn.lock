@@ -1319,6 +1319,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@boxapp/script-hhanclub@workspace:packages/scripts/hhanclub":
+  version: 0.0.0-use.local
+  resolution: "@boxapp/script-hhanclub@workspace:packages/scripts/hhanclub"
+  languageName: unknown
+  linkType: soft
+
 "@boxapp/script-sfexpress@workspace:packages/scripts/sfexpress":
   version: 0.0.0-use.local
   resolution: "@boxapp/script-sfexpress@workspace:packages/scripts/sfexpress"

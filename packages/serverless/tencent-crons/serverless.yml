@@ -50,3 +50,9 @@ inputs:
           enable: ${env:everphoto}
           cronExpression: ${env:everphoto_cron}
           argument: ${env:everphoto_http}
+    - timer:
+        parameters:
+          name: hhanclub
+          enable: ${env:hhanclub}
+          cronExpression: ${env:hhanclub_cron}
+          argument: ${env:hhanclub_http}

@@ -1,4 +1,5 @@
 import { everphoto } from '@boxapp/script-everphoto'
+import { hhanclub } from '@boxapp/script-hhanclub'
 import { sfexpress } from '@boxapp/script-sfexpress'
 import { surgeNodesFilter } from '@boxapp/script-surge-nodes-filter'
 import { surgeNodesUsage } from '@boxapp/script-surge-nodes-usage'
@@ -8,6 +9,7 @@ import Router from '@koa/router'
 
 export const SCRIPT_ROUTES = [
   { route: '/everphoto', script: everphoto },
+  { route: '/hhanclub', script: hhanclub },
   { route: '/sfexpress', script: sfexpress },
   { route: '/surge-nodes-filter', script: surgeNodesFilter },
   { route: '/surge-nodes-usage', script: surgeNodesUsage },
