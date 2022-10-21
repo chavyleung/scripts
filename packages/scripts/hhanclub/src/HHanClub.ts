@@ -21,10 +21,7 @@ export const hhanclub = async (store: HHanClub) => {
 }
 
 const attendance = async (http: Http, har: HHanClubHar) => {
-  console.log(har)
-
   return http(har).then((resp) => {
-    console.log(resp)
     return resp.data.includes('签到成功')
   })
 }
