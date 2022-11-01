@@ -9,25 +9,26 @@
     "sls-deploy": "yarn workspaces foreach -p --include '@boxapp/tencent-*' --exclude '@boxapp/tencent-layer' run sls-deploy"
   },
   "dependencies": {
+    "next": "^13.0.0",
     "typescript": "^4.8.4"
   },
   "devDependencies": {
-    "@babel/core": "^7.18.13",
-    "@babel/preset-env": "^7.18.10",
+    "@babel/core": "^7.19.6",
+    "@babel/preset-env": "^7.19.4",
     "@babel/preset-typescript": "^7.18.6",
-    "@rollup/plugin-alias": "^3.1.9",
-    "@rollup/plugin-babel": "^5.3.1",
-    "@rollup/plugin-commonjs": "^22.0.2",
-    "@rollup/plugin-json": "^4.1.0",
-    "@rollup/plugin-node-resolve": "^13.3.0",
-    "@rollup/plugin-typescript": "^8.4.0",
-    "dotenv": "^16.0.1",
+    "@rollup/plugin-alias": "^4.0.2",
+    "@rollup/plugin-babel": "^6.0.2",
+    "@rollup/plugin-commonjs": "^23.0.2",
+    "@rollup/plugin-json": "^5.0.1",
+    "@rollup/plugin-node-resolve": "^15.0.1",
+    "@rollup/plugin-typescript": "^9.0.2",
+    "dotenv": "^16.0.3",
     "husky": "^8.0.1",
-    "lerna": "^5.5.0",
+    "lerna": "^5.6.2",
     "lint-staged": "^13.0.3",
     "nodemon": "^2.0.20",
     "prettier": "^2.7.1",
-    "rollup": "^2.79.0",
+    "rollup": "^2.79.1",
     "rollup-plugin-terser": "^7.0.2"
   }
 }
