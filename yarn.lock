@@ -1419,6 +1419,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@boxapp/script-mallcoo@workspace:packages/scripts/mallcoo":
+  version: 0.0.0-use.local
+  resolution: "@boxapp/script-mallcoo@workspace:packages/scripts/mallcoo"
+  languageName: unknown
+  linkType: soft
+
 "@boxapp/script-sfexpress@workspace:packages/scripts/sfexpress":
   version: 0.0.0-use.local
   resolution: "@boxapp/script-sfexpress@workspace:packages/scripts/sfexpress"

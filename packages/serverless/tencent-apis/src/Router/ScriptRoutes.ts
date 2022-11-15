@@ -1,6 +1,7 @@
 import { audiences } from '@boxapp/script-audiences'
 import { everphoto } from '@boxapp/script-everphoto'
 import { hhanclub } from '@boxapp/script-hhanclub'
+import { mallcoo } from '@boxapp/script-mallcoo'
 import { sfexpress } from '@boxapp/script-sfexpress'
 import { surgeNodesFilter } from '@boxapp/script-surge-nodes-filter'
 import { surgeNodesUsage } from '@boxapp/script-surge-nodes-usage'
@@ -9,9 +10,10 @@ import { v2ex } from '@boxapp/script-v2ex'
 import Router from '@koa/router'
 
 export const SCRIPT_ROUTES = [
-  { route: '/everphoto', script: everphoto },
   { route: '/audiences', script: audiences },
+  { route: '/everphoto', script: everphoto },
   { route: '/hhanclub', script: hhanclub },
+  { route: '/mallcoo', script: mallcoo },
   { route: '/sfexpress', script: sfexpress },
   { route: '/surge-nodes-filter', script: surgeNodesFilter },
   { route: '/surge-nodes-usage', script: surgeNodesUsage },

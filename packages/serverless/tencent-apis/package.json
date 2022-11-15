@@ -6,7 +6,7 @@
     "build": "npx rollup -c",
     "dev": "npx rollup -wc",
     "dev-serv": "npx nodemon --watch 'dist' --ext js --delay 2000ms --exec 'node -r dotenv/config ./dist/index.js'",
-    "sls-deploy": "cp ./../../../.env . && sls deploy"
+    "scf-deploy": "cp ./../../../.env . && scf deploy"
   },
   "dependencies": {
     "@grammyjs/menu": "^1.1.2",
