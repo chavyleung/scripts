@@ -6,7 +6,7 @@
     "packages/*/*"
   ],
   "scripts": {
-    "sls-deploy": "yarn workspaces foreach -p --include '@boxapp/tencent-*' --exclude '@boxapp/tencent-layer' run sls-deploy"
+    "scf-deploy": "yarn workspaces foreach -p --include '@boxapp/tencent-*' --exclude '@boxapp/tencent-layer' run scf-deploy"
   },
   "dependencies": {
     "next": "^13.0.0",

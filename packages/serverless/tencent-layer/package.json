@@ -4,6 +4,6 @@
   "private": true,
   "license": "MIT",
   "scripts": {
-    "sls-deploy": "sls deploy"
+    "scf-deploy": "scf deploy"
   }
 }

@@ -62,3 +62,9 @@ inputs:
           enable: ${env:audiences}
           cronExpression: ${env:audiences_cron}
           argument: ${env:audiences_http}
+    - timer:
+        parameters:
+          name: mallcoo
+          enable: ${env:mallcoo}
+          cronExpression: ${env:mallcoo_cron}
+          argument: ${env:mallcoo_http}

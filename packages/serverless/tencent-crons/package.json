@@ -4,6 +4,6 @@
   "license": "MIT",
   "scripts": {
     "build": "npx rollup -c",
-    "sls-deploy": "cp ./../../../.env . && sls deploy"
+    "scf-deploy": "cp ./../../../.env . && scf deploy"
   }
 }
