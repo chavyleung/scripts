@@ -11,6 +11,13 @@ inputs:
   src:
     bucket: boxapp
     src: ../../../node_modules
+    exclude:
+      - '@babel'
+      - '@mui'
+      - '@next'
+      - 'next'
+      - 'prettier'
+      - 'typescript'
 
   runtimes:
     - Nodejs16.13
