@@ -13,11 +13,11 @@ const bot = new Bot(bot_token, { botInfo })
 const keyboard = createKeyBoard()
 
 bot.command('start', (ctx) =>
-  ctx.reply(`聊天标识: ${ctx.chat.id}`, { reply_markup: keyboard })
+  ctx.reply(`用户标识: ${ctx.chat.id}`, { reply_markup: keyboard })
 )
 
 bot.command('view', (ctx) =>
-  ctx.reply(`聊天标识: ${ctx.chat.id}`, { reply_markup: keyboard })
+  ctx.reply(`用户标识: ${ctx.chat.id}`, { reply_markup: keyboard })
 )
 
 const messageMenus = createMessageMenus()
