@@ -93,7 +93,7 @@ export const loginWeb = (http: Http, sign: string) => {
  * 执行: 每日签到
  */
 export const executeSign = (http: Http) => {
-  const url = `https://mcs-mimp-web.sf-express.com/mcs-mimp/integralTaskSignPlusService/automaticSignFetchPackage`
+  const url = `https://mcs-mimp-web.sf-express.com/mcs-mimp/commonPost/~memberNonactivity~integralTaskSignPlusService~automaticSignFetchPackage`
   const data = `{"comeFrom": "vioin", "channelFrom": "SFAPP"}`
   const headers: HttpRequestConfig['headers'] = {
     'Content-Type': 'application/json'
