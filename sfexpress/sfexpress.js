@@ -38,7 +38,7 @@ function loginweb() {
 
 function sign() {
   const signOpts = {
-    url: `https://mcs-mimp-web.sf-express.com/mcs-mimp/integralTaskSignPlusService/automaticSignFetchPackage`,
+    url: `https://mcs-mimp-web.sf-express.com/mcs-mimp/commonPost/~memberNonactivity~integralTaskSignPlusService~automaticSignFetchPackage`,
     body: `{"comeFrom": "vioin", "channelFrom": "SFAPP"}`,
     headers: {
       'Content-Type': 'application/json'
