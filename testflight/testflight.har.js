@@ -4,7 +4,7 @@ const $ = new Env('TestFlight')
   const KEY = 'boxapp_testflight_har'
   const har = { url: $request.url, headers: $request.headers }
   $.setjson(har, KEY)
-  console.log(har)
+  $.msg($.name, '获取 TestFlight 账户成功')
 })()
   .catch((e) => $.logErr(e))
   .finally(() => $.done())
