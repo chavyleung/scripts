@@ -11,7 +11,7 @@
     2. 与 `TestFlight账户管理` 冲突, 使用前请先临时关闭
 
 2. [testflight.sgmodule](https://raw.githubusercontent.com/chavyleung/scripts/master/testflight/rewrite/testflight.sgmodule)
-    1. 定时任务, 每 `1分钟` 运行一次尝试加入 `TF`
+    1. 定时任务, 每 `1秒` 运行一次尝试加入 `TF`
 
 ### 使用:
 1. 安装远程 [testflight.har.sgmodule](https://raw.githubusercontent.com/chavyleung/scripts/master/testflight/rewrite/testflight.har.sgmodule) 模块

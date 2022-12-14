@@ -7,7 +7,7 @@ const $ = new Env('TestFlight')
   const appIds = $.getdata(KEY_app)
 
   if (!appIds) {
-    $.msg($.name, '请先指定需要加入测试的应用')
+    console.log('请先指定需要加入测试的应用')
     return
   }
 
