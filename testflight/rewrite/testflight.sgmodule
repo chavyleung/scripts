@@ -1,0 +1,5 @@
+#!name=@boxapp/script-testflight
+#!desc=Auto Join TestFlight
+
+[Script]
+TestFlight = type=cron,cronexp=*/1 * * * * *,script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/testflight/testflight.js,wake-system=0,timeout=180

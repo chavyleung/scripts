@@ -43,8 +43,20 @@
         "chavy_findlotteryheader_10010"
       ],
       "settings": [
-        { "id": "chavy_golottery_10010", "name": "天天抽奖", "val": true, "type": "boolean", "desc": "天天抽奖开关" },
-        { "id": "chavy_gosign_10010", "name": "签到", "val": true, "type": "boolean", "desc": "签到开关" }
+        {
+          "id": "chavy_golottery_10010",
+          "name": "天天抽奖",
+          "val": true,
+          "type": "boolean",
+          "desc": "天天抽奖开关"
+        },
+        {
+          "id": "chavy_gosign_10010",
+          "name": "签到",
+          "val": true,
+          "type": "boolean",
+          "desc": "签到开关"
+        }
       ],
       "author": "@chavyleung",
       "repo": "https://github.com/chavyleung/scripts/tree/master/10010",
@@ -90,10 +102,34 @@
       "name": "百度签到",
       "keys": ["chavy_cookie_tieba"],
       "settings": [
-        { "id": "CFG_tieba_isOrderBars", "name": "按连签排序", "val": false, "type": "boolean", "desc": "默认按经验排序" },
-        { "id": "CFG_tieba_maxShowBars", "name": "每页显示数", "val": 15, "type": "number", "desc": "每页最显示多少个吧信息" },
-        { "id": "CFG_tieba_maxSignBars", "name": "每次并发", "val": 5, "type": "number", "desc": "每次并发签到多少个吧" },
-        { "id": "CFG_tieba_signWaitTime", "name": "并发间隔 (毫秒)", "val": 2000, "type": "number", "desc": "每次并发间隔时间" }
+        {
+          "id": "CFG_tieba_isOrderBars",
+          "name": "按连签排序",
+          "val": false,
+          "type": "boolean",
+          "desc": "默认按经验排序"
+        },
+        {
+          "id": "CFG_tieba_maxShowBars",
+          "name": "每页显示数",
+          "val": 15,
+          "type": "number",
+          "desc": "每页最显示多少个吧信息"
+        },
+        {
+          "id": "CFG_tieba_maxSignBars",
+          "name": "每次并发",
+          "val": 5,
+          "type": "number",
+          "desc": "每次并发签到多少个吧"
+        },
+        {
+          "id": "CFG_tieba_signWaitTime",
+          "name": "并发间隔 (毫秒)",
+          "val": 2000,
+          "type": "number",
+          "desc": "每次并发间隔时间"
+        }
       ],
       "author": "@chavyleung",
       "repo": "https://github.com/chavyleung/scripts/tree/master/tieba",
@@ -118,7 +154,11 @@
     {
       "id": "dbsj",
       "name": "豆瓣时间",
-      "keys": ["senku_signurl_dbsj", "senku_signheader_dbsj", "senku_signbody_dbsj"],
+      "keys": [
+        "senku_signurl_dbsj",
+        "senku_signheader_dbsj",
+        "senku_signbody_dbsj"
+      ],
       "author": "@GideonSenku",
       "repo": "https://github.com/chavyleung/scripts/tree/master/dbsj",
       "script": "https://raw.githubusercontent.com/chavyleung/scripts/master/dbsj/dbsj.js",
@@ -130,7 +170,11 @@
     {
       "id": "fandeng",
       "name": "樊登读书",
-      "keys": ["senku_signurl_pandeng", "senku_signheader_pandeng", "senku_signbody_pandeng"],
+      "keys": [
+        "senku_signurl_pandeng",
+        "senku_signheader_pandeng",
+        "senku_signbody_pandeng"
+      ],
       "author": "@GideonSenku",
       "repo": "https://github.com/chavyleung/scripts/tree/master/fandeng",
       "script": "https://raw.githubusercontent.com/chavyleung/scripts/master/fandeng/fandeng.js",
@@ -202,8 +246,20 @@
           "type": "boolean",
           "desc": "25 个品牌, 会自动加入品牌会员! 默认: true"
         },
-        { "id": "CFG_BOOM_times_JD618", "name": "炸弹次数", "val": 1, "type": "text", "desc": "总共发送多少次炸弹! 默认: 1" },
-        { "id": "CFG_BOOM_interval_JD618", "name": "炸弹间隔 (毫秒)", "val": 100, "type": "text", "desc": "每次间隔多少毫秒! 默认: 100" }
+        {
+          "id": "CFG_BOOM_times_JD618",
+          "name": "炸弹次数",
+          "val": 1,
+          "type": "text",
+          "desc": "总共发送多少次炸弹! 默认: 1"
+        },
+        {
+          "id": "CFG_BOOM_interval_JD618",
+          "name": "炸弹间隔 (毫秒)",
+          "val": 100,
+          "type": "text",
+          "desc": "每次间隔多少毫秒! 默认: 100"
+        }
       ],
       "author": "@chavyleung",
       "repo": "https://github.com/chavyleung/scripts/tree/master/jd",
@@ -246,7 +302,11 @@
     {
       "id": "qmkg",
       "name": "全民K歌",
-      "keys": ["senku_signurl_qmkg", "senku_signheader_qmkg", "senku_signbody_qmkg"],
+      "keys": [
+        "senku_signurl_qmkg",
+        "senku_signheader_qmkg",
+        "senku_signbody_qmkg"
+      ],
       "author": "@GideonSenku",
       "repo": "https://github.com/chavyleung/scripts/tree/master/qmkg",
       "script": "https://raw.githubusercontent.com/chavyleung/scripts/master/qmkg/qmkg.js",
@@ -294,7 +354,15 @@
     {
       "id": "chavyleung.suning",
       "name": "苏宁易购",
-      "settings": [{ "id": "chavy_logflag_suning", "name": "响应日志", "val": false, "type": "boolean", "desc": "是否输出响应返回体" }],
+      "settings": [
+        {
+          "id": "chavy_logflag_suning",
+          "name": "响应日志",
+          "val": false,
+          "type": "boolean",
+          "desc": "是否输出响应返回体"
+        }
+      ],
       "keys": [
         "chavy_login_url_suning",
         "chavy_login_body_suning",
@@ -388,7 +456,13 @@
       "name": "网易云音乐",
       "keys": ["chavy_cookie_neteasemusic"],
       "settings": [
-        { "id": "CFG_neteasemusic_retryCnt", "name": "重试次数", "val": 10, "type": "text", "desc": "一直尝试签到直至出现“重复签到”标识!" },
+        {
+          "id": "CFG_neteasemusic_retryCnt",
+          "name": "重试次数",
+          "val": 10,
+          "type": "text",
+          "desc": "一直尝试签到直至出现“重复签到”标识!"
+        },
         {
           "id": "CFG_neteasemusic_retryInterval",
           "name": "重试间隔 (毫秒)",
@@ -420,7 +494,11 @@
     {
       "id": "NoteYoudao",
       "name": "有道云笔记",
-      "keys": ["chavy_signurl_noteyoudao", "chavy_signbody_noteyoudao", "chavy_signheaders_noteyoudao"],
+      "keys": [
+        "chavy_signurl_noteyoudao",
+        "chavy_signbody_noteyoudao",
+        "chavy_signheaders_noteyoudao"
+      ],
       "author": "@chavyleung",
       "repo": "https://github.com/chavyleung/scripts/tree/master/noteyoudao",
       "url": "https://apps.apple.com/cn/app/有道云笔记-扫描王版/id450748070",
@@ -442,7 +520,11 @@
     {
       "id": "zxhc",
       "name": "智行火车票",
-      "keys": ["senku_signurl_zxhc", "senku_signheader_zxhc", "senku_signbody_zxhc"],
+      "keys": [
+        "senku_signurl_zxhc",
+        "senku_signheader_zxhc",
+        "senku_signbody_zxhc"
+      ],
       "author": "@GideonSenku",
       "repo": "https://github.com/chavyleung/scripts/tree/master/zxhc",
       "script": "https://raw.githubusercontent.com/chavyleung/scripts/master/zxhc/zxhc.js",
@@ -489,7 +571,12 @@
       ],
       "tasks": [{ "cron": "3 0 * * *", "script": "apktw.js" }],
       "rewrites": [
-        { "type": "request", "pattern": "^https://apk.tw/member.php(.*?)action=login", "script": "apktw.cookie.js", "body": true }
+        {
+          "type": "request",
+          "pattern": "^https://apk.tw/member.php(.*?)action=login",
+          "script": "apktw.cookie.js",
+          "body": true
+        }
       ]
     },
     {
@@ -520,7 +607,15 @@
       "id": "WPS",
       "name": "WPS",
       "keys": ["chavy_signhomeurl_wps", "chavy_signhomeheader_wps"],
-      "settings": [{ "id": "CFG_wps_inviteTime", "name": "邀请间隔 (毫秒)", "val": 2000, "type": "number", "desc": "每次邀请间隔时间" }],
+      "settings": [
+        {
+          "id": "CFG_wps_inviteTime",
+          "name": "邀请间隔 (毫秒)",
+          "val": 2000,
+          "type": "number",
+          "desc": "每次邀请间隔时间"
+        }
+      ],
       "author": "@chavyleung",
       "repo": "https://github.com/chavyleung/scripts/tree/master/wps",
       "script": "https://raw.githubusercontent.com/chavyleung/scripts/master/wps/wps.js",
@@ -564,6 +659,30 @@
         "https://raw.githubusercontent.com/Orz-3/mini/master/Color/everphoto.png"
       ],
       "script": "https://raw.githubusercontent.com/chavyleung/scripts/master/everphoto/everphoto.js"
+    },
+    {
+      "id": "testflight",
+      "name": "TestFlight",
+      "keys": ["boxapp_testflight_har"],
+      "settings": [
+        {
+          "id": "boxapp_testflight_app",
+          "name": "应用编号",
+          "val": "",
+          "type": "textarea",
+          "placeholder": "McBV96Wi,lNmLTx8d,ZfyeFB1S,srPJRks9,uEXBDwt2",
+          "autoGrow": true,
+          "rows": 5,
+          "desc": "以英文逗号分隔多个号码"
+        }
+      ],
+      "author": "@chavyleung",
+      "repo": "https://github.com/chavyleung/scripts/blob/master/testflight",
+      "script": "https://raw.githubusercontent.com/chavyleung/scripts/master/testflight/testflight.js",
+      "icons": [
+        "https://raw.githubusercontent.com/githubdulong/Script/master/Images/testflight.png",
+        "https://raw.githubusercontent.com/githubdulong/Script/master/Images/testflight.png"
+      ]
     }
   ]
 }

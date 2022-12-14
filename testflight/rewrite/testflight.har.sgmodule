@@ -1,0 +1,8 @@
+#!name=@boxapp/script-testflight
+#!desc=Get TestFlight Har
+
+[Script]
+TestFlight HAR = type=http-request,pattern=^https:\/\/testflight\.apple\.com\/v3\/accounts/.*\/apps$,requires-body=0,script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/testflight/testflight.har.js
+
+[MITM]
+hostname = testflight.apple.com
