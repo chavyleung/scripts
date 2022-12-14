@@ -1,4 +1,5 @@
 const $ = new Env('TestFlight')
+$.isDisableModule = false
 
 !(async () => {
   const KEY_har = 'boxapp_testflight_har'
@@ -7,7 +8,8 @@ const $ = new Env('TestFlight')
   const appIds = $.getdata(KEY_app)
 
   if (!appIds) {
-    console.log('请先指定需要加入测试的应用')
+    $.isDisableModule = true
+    $.msg($.name, '请先指定需要加入测试的应用, 并重新打开模块')
     return
   }
 
@@ -39,7 +41,23 @@ const $ = new Env('TestFlight')
   }
 })()
   .catch((e) => $.logErr(e))
-  .finally(() => $.done())
+  .finally(() => {
+    if (
+      $.isDisableModule &&
+      $.isSurge() &&
+      !$.isLoon() &&
+      !$.isShadowrocket() &&
+      !$.isStash()
+    ) {
+      $.done(
+        $httpAPI('POST', '/v1/modules', {
+          '@boxapp/script-testflight': 'false'
+        })
+      )
+    } else {
+      $.done()
+    }
+  })
 
 function join(id, har) {
   const key = har.url.replace(/(.*accounts\/)(.*)(\/apps)/, '$2')
