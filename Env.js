@@ -52,7 +52,7 @@ function Env(name, opts) {
     }
 
     isSurge() {
-      return 'undefined' !== typeof $httpClient && 'undefined' === typeof $loon
+      return 'undefined' !== typeof $environment && $environment['surge-version']
     }
 
     isLoon() {
@@ -226,7 +226,7 @@ function Env(name, opts) {
     }
 
     getval(key) {
-      if (this.isSurge() || this.isLoon()) {
+      if (this.isSurge() || this.isLoon() || this.isStash()) {
         return $persistentStore.read(key)
       } else if (this.isQuanX()) {
         return $prefs.valueForKey(key)
@@ -239,7 +239,7 @@ function Env(name, opts) {
     }
 
     setval(val, key) {
-      if (this.isSurge() || this.isLoon()) {
+      if (this.isSurge() || this.isLoon() || this.isStash()) {
         return $persistentStore.write(val, key)
       } else if (this.isQuanX()) {
         return $prefs.setValueForKey(val, key)
@@ -270,8 +270,8 @@ function Env(name, opts) {
         delete opts.headers['Content-Type']
         delete opts.headers['Content-Length']
       }
-      if (this.isSurge() || this.isLoon()) {
-        if (this.isSurge() && this.isNeedRewrite) {
+      if (this.isSurge() || this.isLoon() || this.isStash()) {
+        if ((this.isSurge() || this.isStash()) && this.isNeedRewrite) {
           opts.headers = opts.headers || {}
           Object.assign(opts.headers, { 'X-Surge-Skip-Scripting': false })
         }
@@ -334,7 +334,7 @@ function Env(name, opts) {
         opts.headers['Content-Type'] = 'application/x-www-form-urlencoded'
       }
       if (opts.headers) delete opts.headers['Content-Length']
-      if (this.isSurge() || this.isLoon()) {
+      if (this.isSurge() || this.isLoon() || this.isStash()) {
         if (this.isSurge() && this.isNeedRewrite) {
           opts.headers = opts.headers || {}
           Object.assign(opts.headers, { 'X-Surge-Skip-Scripting': false })
@@ -449,7 +449,7 @@ function Env(name, opts) {
         if (typeof rawopts === 'string') {
           if (this.isLoon()) return rawopts
           else if (this.isQuanX()) return { 'open-url': rawopts }
-          else if (this.isSurge()) return { url: rawopts }
+          else if (this.isSurge() || this.isStash()) return { url: rawopts }
           else return undefined
         } else if (typeof rawopts === 'object') {
           if (this.isLoon()) {
@@ -461,7 +461,7 @@ function Env(name, opts) {
             let mediaUrl = rawopts['media-url'] || rawopts.mediaUrl
             let updatePasteboard = rawopts['update-pasteboard'] || rawopts.updatePasteboard
             return { 'open-url': openUrl, 'media-url': mediaUrl, 'update-pasteboard': updatePasteboard }
-          } else if (this.isSurge()) {
+          } else if (this.isSurge() || this.isStash()) {
             let openUrl = rawopts.url || rawopts.openUrl || rawopts['open-url']
             return { url: openUrl }
           }
@@ -470,7 +470,7 @@ function Env(name, opts) {
         }
       }
       if (!this.isMute) {
-        if (this.isSurge() || this.isLoon()) {
+        if (this.isSurge() || this.isLoon()|| this.isStash()) {
           $notification.post(title, subt, desc, toEnvOpts(opts))
         } else if (this.isQuanX()) {
           $notify(title, subt, desc, toEnvOpts(opts))
@@ -494,7 +494,7 @@ function Env(name, opts) {
     }
 
     logErr(err, msg) {
-      const isPrintSack = !this.isSurge() && !this.isQuanX() && !this.isLoon()
+      const isPrintSack = !this.isSurge() && !this.isQuanX() && !this.isLoon()&& !this.isStash()
       if (!isPrintSack) {
         this.log('', `❗️${this.name}, 错误!`, err)
       } else {
@@ -511,7 +511,7 @@ function Env(name, opts) {
       const costTime = (endTime - this.startTime) / 1000
       this.log('', `🔔${this.name}, 结束! 🕛 ${costTime} 秒`)
       this.log()
-      if (this.isSurge() || this.isQuanX() || this.isLoon()) {
+      if (this.isSurge() || this.isQuanX() || this.isLoon() || this.isStash()) {
         $done(val)
       } else if (this.isNode()) {
         process.exit(1)
