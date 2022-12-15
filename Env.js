@@ -271,7 +271,7 @@ function Env(name, opts) {
         delete opts.headers['Content-Length']
       }
       if (this.isSurge() || this.isLoon() || this.isStash()) {
-        if ((this.isSurge() || this.isStash()) && this.isNeedRewrite) {
+        if (this.isSurge() && this.isNeedRewrite) {
           opts.headers = opts.headers || {}
           Object.assign(opts.headers, { 'X-Surge-Skip-Scripting': false })
         }
