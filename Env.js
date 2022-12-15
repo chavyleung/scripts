@@ -52,7 +52,7 @@ function Env(name, opts) {
     }
 
     isSurge() {
-      return 'undefined' !== typeof $httpClient && 'undefined' === typeof $loon
+      return 'undefined' !== typeof $environment && $environment['surge-version']
     }
 
     isLoon() {
