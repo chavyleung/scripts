@@ -22,3 +22,8 @@
     1. 请使用`英文逗号`分隔`应用编号`
 5. 关闭 [testflight.har.sgmodule](https://raw.githubusercontent.com/chavyleung/scripts/master/testflight/rewrite/testflight.har.sgmodule) 模块
 6. 安装 [testflight.sgmodule](https://raw.githubusercontent.com/chavyleung/scripts/master/testflight/rewrite/testflight.sgmodule) 模块
+
+## 感谢
+[@githubdulong](https://github.com/githubdulong)
+
+[@DecoAri](https://github.com/DecoAri)
