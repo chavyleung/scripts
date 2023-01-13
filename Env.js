@@ -226,7 +226,12 @@ function Env(name, opts) {
     }
 
     getval(key) {
-      if (this.isSurge() || this.isLoon() || this.isStash()) {
+      if (
+        this.isSurge() ||
+        this.isShadowrocket() ||
+        this.isLoon() ||
+        this.isStash()
+      ) {
         return $persistentStore.read(key)
       } else if (this.isQuanX()) {
         return $prefs.valueForKey(key)
@@ -239,7 +244,12 @@ function Env(name, opts) {
     }
 
     setval(val, key) {
-      if (this.isSurge() || this.isLoon() || this.isStash()) {
+      if (
+        this.isSurge() ||
+        this.isShadowrocket() ||
+        this.isLoon() ||
+        this.isStash()
+      ) {
         return $persistentStore.write(val, key)
       } else if (this.isQuanX()) {
         return $prefs.setValueForKey(val, key)
@@ -270,7 +280,12 @@ function Env(name, opts) {
         delete opts.headers['Content-Type']
         delete opts.headers['Content-Length']
       }
-      if (this.isSurge() || this.isLoon() || this.isStash()) {
+      if (
+        this.isSurge() ||
+        this.isShadowrocket() ||
+        this.isLoon() ||
+        this.isStash()
+      ) {
         if (this.isSurge() && this.isNeedRewrite) {
           opts.headers = opts.headers || {}
           Object.assign(opts.headers, { 'X-Surge-Skip-Scripting': false })
@@ -302,7 +317,9 @@ function Env(name, opts) {
           .on('redirect', (resp, nextOpts) => {
             try {
               if (resp.headers['set-cookie']) {
-                const ck = resp.headers['set-cookie'].map(this.cktough.Cookie.parse).toString()
+                const ck = resp.headers['set-cookie']
+                  .map(this.cktough.Cookie.parse)
+                  .toString()
                 if (ck) {
                   this.ckjar.setCookieSync(ck, null)
                 }
@@ -314,15 +331,23 @@ function Env(name, opts) {
             // this.ckjar.setCookieSync(resp.headers['set-cookie'].map(Cookie.parse).toString())
           })
           .then(
-            (resp) => {
+            ;(resp) => {
               const { statusCode: status, statusCode, headers, rawBody } = resp
               const body = iconv.decode(rawBody, this.encoding)
-              callback(null, { status, statusCode, headers, rawBody, body }, body)
+              callback(
+                null,
+                { status, statusCode, headers, rawBody, body },
+                body
+              )
             },
-            (err) => {
-              const { message: error, response: resp } = err
-              callback(error, resp, resp && iconv.decode(resp.rawBody, this.encoding))
-            }
+              (err) => {
+                const { message: error, response: resp } = err
+                callback(
+                  error,
+                  resp,
+                  resp && iconv.decode(resp.rawBody, this.encoding)
+                )
+              }
           )
       }
     }
@@ -334,7 +359,12 @@ function Env(name, opts) {
         opts.headers['Content-Type'] = 'application/x-www-form-urlencoded'
       }
       if (opts.headers) delete opts.headers['Content-Length']
-      if (this.isSurge() || this.isLoon() || this.isStash()) {
+      if (
+        this.isSurge() ||
+        this.isShadowrocket() ||
+        this.isLoon() ||
+        this.isStash()
+      ) {
         if (this.isSurge() && this.isNeedRewrite) {
           opts.headers = opts.headers || {}
           Object.assign(opts.headers, { 'X-Surge-Skip-Scripting': false })
@@ -372,7 +402,11 @@ function Env(name, opts) {
           },
           (err) => {
             const { message: error, response: resp } = err
-            callback(error, resp, resp && iconv.decode(resp.rawBody, this.encoding))
+            callback(
+              error,
+              resp,
+              resp && iconv.decode(resp.rawBody, this.encoding)
+            )
           }
         )
       }
@@ -449,7 +483,8 @@ function Env(name, opts) {
         if (typeof rawopts === 'string') {
           if (this.isLoon()) return rawopts
           else if (this.isQuanX()) return { 'open-url': rawopts }
-          else if (this.isSurge() || this.isStash()) return { url: rawopts }
+          else if (this.isSurge() || this.isShadowrocket() || this.isStash())
+            return { url: rawopts }
           else return undefined
         } else if (typeof rawopts === 'object') {
           if (this.isLoon()) {
@@ -459,9 +494,18 @@ function Env(name, opts) {
           } else if (this.isQuanX()) {
             let openUrl = rawopts['open-url'] || rawopts.url || rawopts.openUrl
             let mediaUrl = rawopts['media-url'] || rawopts.mediaUrl
-            let updatePasteboard = rawopts['update-pasteboard'] || rawopts.updatePasteboard
-            return { 'open-url': openUrl, 'media-url': mediaUrl, 'update-pasteboard': updatePasteboard }
-          } else if (this.isSurge() || this.isStash()) {
+            let updatePasteboard =
+              rawopts['update-pasteboard'] || rawopts.updatePasteboard
+            return {
+              'open-url': openUrl,
+              'media-url': mediaUrl,
+              'update-pasteboard': updatePasteboard
+            }
+          } else if (
+            this.isSurge() ||
+            this.isShadowrocket() ||
+            this.isStash()
+          ) {
             let openUrl = rawopts.url || rawopts.openUrl || rawopts['open-url']
             return { url: openUrl }
           }
@@ -470,7 +514,12 @@ function Env(name, opts) {
         }
       }
       if (!this.isMute) {
-        if (this.isSurge() || this.isLoon()|| this.isStash()) {
+        if (
+          this.isSurge() ||
+          this.isShadowrocket() ||
+          this.isLoon() ||
+          this.isStash()
+        ) {
           $notification.post(title, subt, desc, toEnvOpts(opts))
         } else if (this.isQuanX()) {
           $notify(title, subt, desc, toEnvOpts(opts))
@@ -494,7 +543,12 @@ function Env(name, opts) {
     }
 
     logErr(err, msg) {
-      const isPrintSack = !this.isSurge() && !this.isQuanX() && !this.isLoon()&& !this.isStash()
+      const isPrintSack =
+        !this.isSurge() &&
+        !this.isShadowrocket() &&
+        !this.isQuanX() &&
+        !this.isLoon() &&
+        !this.isStash()
       if (!isPrintSack) {
         this.log('', `❗️${this.name}, 错误!`, err)
       } else {
@@ -511,7 +565,13 @@ function Env(name, opts) {
       const costTime = (endTime - this.startTime) / 1000
       this.log('', `🔔${this.name}, 结束! 🕛 ${costTime} 秒`)
       this.log()
-      if (this.isSurge() || this.isQuanX() || this.isLoon() || this.isStash()) {
+      if (
+        this.isSurge() ||
+        this.isShadowrocket() ||
+        this.isQuanX() ||
+        this.isLoon() ||
+        this.isStash()
+      ) {
         $done(val)
       } else if (this.isNode()) {
         process.exit(1)
