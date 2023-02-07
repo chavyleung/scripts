@@ -1,9 +1,12 @@
 #!name=BoxJs
-#!desc=Data manager
-#!openUrl=http://boxjs.com
+#!desc=(TF)Data manager
+#!openUrl=http://boxjs.net
 #!author=chavyleung
 #!homepage=https://chavyleung.gitbook.io/boxjs/
-#!icon= https://raw.githubusercontent.com/chavyleung/scripts/master/box/icons/BoxJs.png
+#!icon=https://raw.githubusercontent.com/chavyleung/scripts/master/box/icons/BoxJs.png
+
+[Rule]
+DOMAIN-SUFFIX,jsdelivr.net,PROXY
 
 [Script]
 http-request ^https?:\/\/boxjs\.(com|net) script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/box/chavy.boxjs.js, requires-body=true, timeout=120, tag=BoxJs
