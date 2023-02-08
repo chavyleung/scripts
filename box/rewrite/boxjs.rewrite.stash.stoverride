@@ -5,11 +5,15 @@ http:
   force-http-engine:
     - "boxjs.com:80"
     - "boxjs.net:80"
+    - "*.boxjs.com:80"
+    - "*.boxjs.net:80"
   mitm:
     - "boxjs.com"
     - "boxjs.net"
+    - "*.boxjs.com"
+    - "*.boxjs.net"
   script:
-    - match: https?:\/\/boxjs\.(com|net)
+    - match: ^https?:\/\/(.+\.)?boxjs\.(com|net)
       name: BoxJs
       type: request
       require-body: true
