@@ -12,4 +12,4 @@ DOMAIN-SUFFIX,jsdelivr.net,PROXY
 http-request ^https?:\/\/boxjs\.(com|net) script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/box/chavy.boxjs.js, requires-body=true, timeout=120, tag=BoxJs
 
 [MITM]
-hostname = %INSERT%, boxjs.com, boxjs.net
+hostname = %INSERT% boxjs.com, boxjs.net
