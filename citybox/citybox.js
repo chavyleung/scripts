@@ -13,6 +13,8 @@ const $ = new Env('魔盒')
     $.msg($.name, '签到失败')
   }
 })()
+.catch((e) => $.logErr(e))
+.finally(() => $.done())
 
 function sign(headers) {
   return new Promise((resolve) => {
