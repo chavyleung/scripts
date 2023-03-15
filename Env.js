@@ -119,7 +119,8 @@ function Env(name, opts) {
         const opts = {
           url: `http://${addr}/v1/scripting/evaluate`,
           body: { script_text: script, mock_type: 'cron', timeout: httpapi_timeout },
-          headers: { 'X-Key': key, 'Accept': '*/*' }
+          headers: { 'X-Key': key, 'Accept': '*/*' },
+          timeout: httpapi_timeout
         }
         this.post(opts, (err, resp, body) => resolve(body))
       }).catch((e) => this.logErr(e))
