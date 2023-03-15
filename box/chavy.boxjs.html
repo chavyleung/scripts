@@ -2576,12 +2576,14 @@
                 const key = setting.id
                 const datval = this.datas[key]
                 if (setting.type === 'boolean') {
-                  setting.val = datval === null ? setting.val : datval === 'true'
+                  setting.val = _.isEmpty(datval) ? setting.val : (datval === 'true' || datval === true)
                 } else if (setting.type === 'int') {
                   setting.val = datval * 1 || setting.val
                 } else if (setting.type === 'checkboxes') {
-                  if (!_.isNil(datval)) {
+                  if (!_.isEmpty(datval)) {
                     setting.val = datval ? datval.split(',') : []
+                  } else {
+                    setting.val = Array.isArray(setting.val) ? setting.val : setting.val.split(',')
                   }
                 } else {
                   setting.val = datval || setting.val

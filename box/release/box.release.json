@@ -1,6 +1,18 @@
 {
   "releases": [
     {
+      "version": "0.12.3",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "msg": "fix(boxjs): 修复 开关控件 及 多选控件 不正确显示默认值问题",
+      "notes": [
+        {
+          "name": "修复",
+          "descs": ["开关控件 及 多选控件 不正确显示默认值问题"]
+        }
+      ]
+    },
+    {
       "version": "0.12.2",
       "tags": ["beta"],
       "author": "@chavyleung",
