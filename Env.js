@@ -52,7 +52,9 @@ function Env(name, opts) {
     }
 
     isSurge() {
-      return 'undefined' !== typeof $environment && $environment['surge-version']
+      return (
+        'undefined' !== typeof $environment && $environment['surge-version']
+      )
     }
 
     isLoon() {
@@ -64,7 +66,9 @@ function Env(name, opts) {
     }
 
     isStash() {
-      return 'undefined' !== typeof $environment && $environment['stash-version']
+      return (
+        'undefined' !== typeof $environment && $environment['stash-version']
+      )
     }
 
     toObj(str, defaultValue = null) {
@@ -112,14 +116,22 @@ function Env(name, opts) {
       return new Promise((resolve) => {
         let httpapi = this.getdata('@chavy_boxjs_userCfgs.httpapi')
         httpapi = httpapi ? httpapi.replace(/\n/g, '').trim() : httpapi
-        let httpapi_timeout = this.getdata('@chavy_boxjs_userCfgs.httpapi_timeout')
+        let httpapi_timeout = this.getdata(
+          '@chavy_boxjs_userCfgs.httpapi_timeout'
+        )
         httpapi_timeout = httpapi_timeout ? httpapi_timeout * 1 : 20
-        httpapi_timeout = runOpts && runOpts.timeout ? runOpts.timeout : httpapi_timeout
+        httpapi_timeout =
+          runOpts && runOpts.timeout ? runOpts.timeout : httpapi_timeout
         const [key, addr] = httpapi.split('@')
         const opts = {
           url: `http://${addr}/v1/scripting/evaluate`,
-          body: { script_text: script, mock_type: 'cron', timeout: httpapi_timeout },
-          headers: { 'X-Key': key, 'Accept': '*/*' }
+          body: {
+            script_text: script,
+            mock_type: 'cron',
+            timeout: httpapi_timeout
+          },
+          headers: { 'X-Key': key, 'Accept': '*/*' },
+          timeout: httpapi_timeout
         }
         this.post(opts, (err, resp, body) => resolve(body))
       }).catch((e) => this.logErr(e))
@@ -130,11 +142,17 @@ function Env(name, opts) {
         this.fs = this.fs ? this.fs : require('fs')
         this.path = this.path ? this.path : require('path')
         const curDirDataFilePath = this.path.resolve(this.dataFile)
-        const rootDirDataFilePath = this.path.resolve(process.cwd(), this.dataFile)
+        const rootDirDataFilePath = this.path.resolve(
+          process.cwd(),
+          this.dataFile
+        )
         const isCurDirDataFile = this.fs.existsSync(curDirDataFilePath)
-        const isRootDirDataFile = !isCurDirDataFile && this.fs.existsSync(rootDirDataFilePath)
+        const isRootDirDataFile =
+          !isCurDirDataFile && this.fs.existsSync(rootDirDataFilePath)
         if (isCurDirDataFile || isRootDirDataFile) {
-          const datPath = isCurDirDataFile ? curDirDataFilePath : rootDirDataFilePath
+          const datPath = isCurDirDataFile
+            ? curDirDataFilePath
+            : rootDirDataFilePath
           try {
             return JSON.parse(this.fs.readFileSync(datPath))
           } catch (e) {
@@ -149,9 +167,13 @@ function Env(name, opts) {
         this.fs = this.fs ? this.fs : require('fs')
         this.path = this.path ? this.path : require('path')
         const curDirDataFilePath = this.path.resolve(this.dataFile)
-        const rootDirDataFilePath = this.path.resolve(process.cwd(), this.dataFile)
+        const rootDirDataFilePath = this.path.resolve(
+          process.cwd(),
+          this.dataFile
+        )
         const isCurDirDataFile = this.fs.existsSync(curDirDataFilePath)
-        const isRootDirDataFile = !isCurDirDataFile && this.fs.existsSync(rootDirDataFilePath)
+        const isRootDirDataFile =
+          !isCurDirDataFile && this.fs.existsSync(rootDirDataFilePath)
         const jsondata = JSON.stringify(this.data)
         if (isCurDirDataFile) {
           this.fs.writeFileSync(curDirDataFilePath, jsondata)
@@ -180,9 +202,13 @@ function Env(name, opts) {
       if (!Array.isArray(path)) path = path.toString().match(/[^.[\]]+/g) || []
       path
         .slice(0, -1)
-        .reduce((a, c, i) => (Object(a[c]) === a[c] ? a[c] : (a[c] = Math.abs(path[i + 1]) >> 0 === +path[i + 1] ? [] : {})), obj)[
-        path[path.length - 1]
-      ] = value
+        .reduce(
+          (a, c, i) =>
+            Object(a[c]) === a[c]
+              ? a[c]
+              : (a[c] = Math.abs(path[i + 1]) >> 0 === +path[i + 1] ? [] : {}),
+          obj
+        )[path[path.length - 1]] = value
       return obj
     }
 
@@ -209,7 +235,11 @@ function Env(name, opts) {
       if (/^@/.test(key)) {
         const [, objkey, paths] = /^@(.*?)\.(.*?)$/.exec(key)
         const objdat = this.getval(objkey)
-        const objval = objkey ? (objdat === 'null' ? null : objdat || '{}') : '{}'
+        const objval = objkey
+          ? objdat === 'null'
+            ? null
+            : objdat || '{}'
+          : '{}'
         try {
           const objedval = JSON.parse(objval)
           this.lodash_set(objedval, paths, val)
@@ -331,7 +361,7 @@ function Env(name, opts) {
             // this.ckjar.setCookieSync(resp.headers['set-cookie'].map(Cookie.parse).toString())
           })
           .then(
-            ;(resp) => {
+            (resp) => {
               const { statusCode: status, statusCode, headers, rawBody } = resp
               const body = iconv.decode(rawBody, this.encoding)
               callback(
@@ -340,14 +370,14 @@ function Env(name, opts) {
                 body
               )
             },
-              (err) => {
-                const { message: error, response: resp } = err
-                callback(
-                  error,
-                  resp,
-                  resp && iconv.decode(resp.rawBody, this.encoding)
-                )
-              }
+            (err) => {
+              const { message: error, response: resp } = err
+              callback(
+                error,
+                resp,
+                resp && iconv.decode(resp.rawBody, this.encoding)
+              )
+            }
           )
       }
     }
@@ -432,16 +462,25 @@ function Env(name, opts) {
         'q+': Math.floor((date.getMonth() + 3) / 3),
         'S': date.getMilliseconds()
       }
-      if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (date.getFullYear() + '').substr(4 - RegExp.$1.length))
+      if (/(y+)/.test(fmt))
+        fmt = fmt.replace(
+          RegExp.$1,
+          (date.getFullYear() + '').substr(4 - RegExp.$1.length)
+        )
       for (let k in o)
         if (new RegExp('(' + k + ')').test(fmt))
-          fmt = fmt.replace(RegExp.$1, RegExp.$1.length == 1 ? o[k] : ('00' + o[k]).substr(('' + o[k]).length))
+          fmt = fmt.replace(
+            RegExp.$1,
+            RegExp.$1.length == 1
+              ? o[k]
+              : ('00' + o[k]).substr(('' + o[k]).length)
+          )
       return fmt
     }
 
     /**
-     * 
-     * @param {Object} options 
+     *
+     * @param {Object} options
      * @returns {String} 将 Object 对象 转换成 queryStr: key=val&name=senku
      */
     queryStr(options) {
@@ -457,7 +496,7 @@ function Env(name, opts) {
         }
       }
       queryString = queryString.substring(0, queryString.length - 1)
-    
+
       return queryString
     }
 
