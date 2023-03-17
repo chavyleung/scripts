@@ -894,8 +894,6 @@ function doneApi() {
   const headers = getJsonDoneHeaders()
   if ($.isQuanX()) $.done({ status: 'HTTP/1.1 200', headers, body: $.json })
   else $.done({ response: { status: 200, headers, body: $.json } })
-    
-  }
 }
 
 /**
