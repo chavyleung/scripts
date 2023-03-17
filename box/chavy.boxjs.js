@@ -872,39 +872,29 @@ function getJsonDoneHeaders() {
 
 function doneOptions() {
   const headers = getBaseDoneHeaders()
-  if ($.isSurge() || $.isLoon()) {
-    $.done({ response: { headers } })
-  } else if ($.isQuanX()) {
-    $.done({ headers })
-  }
+  if ($.isQuanX()) $.done({ headers })
+  else $.done({ response: { headers } })
 }
 
 function donePage() {
   const headers = getHtmlDoneHeaders()
-  if ($.isSurge() || $.isLoon()) {
-    $.done({ response: { status: 200, headers, body: $.html } })
-  } else if ($.isQuanX()) {
-    $.done({ status: 'HTTP/1.1 200', headers, body: $.html })
-  }
+  if ($.isQuanX()) $.done({ status: 'HTTP/1.1 200', headers, body: $.html })
+  else $.done({ response: { status: 200, headers, body: $.html } })
 }
 
 function doneQuery() {
   $.json = $.toStr($.json)
   const headers = getJsonDoneHeaders()
-  if ($.isSurge() || $.isLoon()) {
-    $.done({ response: { status: 200, headers, body: $.json } })
-  } else if ($.isQuanX()) {
-    $.done({ status: 'HTTP/1.1 200', headers, body: $.json })
-  }
+  if ($.isQuanX()) $.done({ status: 'HTTP/1.1 200', headers, body: $.json })
+  else $.done({ response: { status: 200, headers, body: $.json } })
 }
 
 function doneApi() {
   $.json = $.toStr($.json)
   const headers = getJsonDoneHeaders()
-  if ($.isSurge() || $.isLoon()) {
-    $.done({ response: { status: 200, headers, body: $.json } })
-  } else if ($.isQuanX()) {
-    $.done({ status: 'HTTP/1.1 200', headers, body: $.json })
+  if ($.isQuanX()) $.done({ status: 'HTTP/1.1 200', headers, body: $.json })
+  else $.done({ response: { status: 200, headers, body: $.json } })
+    
   }
 }
 
