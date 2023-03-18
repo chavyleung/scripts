@@ -1,6 +1,22 @@
 {
   "releases": [
     {
+      "version": "0.12.5",
+      "tags": ["beta"],
+      "author": "@VirgilClyne",
+      "msg": "fix(boxjs): 修复 Stash & ShadowRocket 报错问题",
+      "notes": [
+        {
+          "name": "修复",
+          "descs": ["修复 Stash & ShadowRocket 报错问题"]
+        },
+        {
+          "name": "感谢",
+          "descs": ["@VirgilClyne PR", "Stash 团队反馈及协助定位问题"]
+        }
+      ]
+    },
+    {
       "version": "0.12.4",
       "tags": ["beta"],
       "author": "@lowking",
