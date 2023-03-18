@@ -3,7 +3,7 @@ const $ = new Env('BoxJs')
 // 为 eval 准备的上下文环境
 const $eval_env = {}
 
-$.version = '0.12.4'
+$.version = '0.12.5'
 $.versionType = 'beta'
 
 // 发出的请求需要需要 Surge、QuanX 的 rewrite
@@ -872,40 +872,28 @@ function getJsonDoneHeaders() {
 
 function doneOptions() {
   const headers = getBaseDoneHeaders()
-  if ($.isSurge() || $.isLoon()) {
-    $.done({ response: { headers } })
-  } else if ($.isQuanX()) {
-    $.done({ headers })
-  }
+  if ($.isQuanX()) $.done({ headers })
+  else $.done({ response: { headers } })
 }
 
 function donePage() {
   const headers = getHtmlDoneHeaders()
-  if ($.isSurge() || $.isLoon()) {
-    $.done({ response: { status: 200, headers, body: $.html } })
-  } else if ($.isQuanX()) {
-    $.done({ status: 'HTTP/1.1 200', headers, body: $.html })
-  }
+  if ($.isQuanX()) $.done({ status: 'HTTP/1.1 200', headers, body: $.html })
+  else $.done({ response: { status: 200, headers, body: $.html } })
 }
 
 function doneQuery() {
   $.json = $.toStr($.json)
   const headers = getJsonDoneHeaders()
-  if ($.isSurge() || $.isLoon()) {
-    $.done({ response: { status: 200, headers, body: $.json } })
-  } else if ($.isQuanX()) {
-    $.done({ status: 'HTTP/1.1 200', headers, body: $.json })
-  }
+  if ($.isQuanX()) $.done({ status: 'HTTP/1.1 200', headers, body: $.json })
+  else $.done({ response: { status: 200, headers, body: $.json } })
 }
 
 function doneApi() {
   $.json = $.toStr($.json)
   const headers = getJsonDoneHeaders()
-  if ($.isSurge() || $.isLoon()) {
-    $.done({ response: { status: 200, headers, body: $.json } })
-  } else if ($.isQuanX()) {
-    $.done({ status: 'HTTP/1.1 200', headers, body: $.json })
-  }
+  if ($.isQuanX()) $.done({ status: 'HTTP/1.1 200', headers, body: $.json })
+  else $.done({ response: { status: 200, headers, body: $.json } })
 }
 
 /**
