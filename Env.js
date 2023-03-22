@@ -520,10 +520,9 @@ function Env(name, opts) {
       const toEnvOpts = (rawopts) => {
         if (!rawopts) return rawopts
         if (typeof rawopts === 'string') {
-          if (this.isLoon()) return rawopts
+          if (this.isLoon() || this.isShadowrocket()) return rawopts
           else if (this.isQuanX()) return { 'open-url': rawopts }
-          else if (this.isSurge() || this.isShadowrocket() || this.isStash())
-            return { url: rawopts }
+          else if (this.isSurge() || this.isStash()) return { url: rawopts }
           else return undefined
         } else if (typeof rawopts === 'object') {
           if (this.isLoon()) {

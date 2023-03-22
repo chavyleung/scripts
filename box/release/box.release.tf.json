@@ -1,6 +1,22 @@
 {
   "releases": [
     {
+      "version": "0.12.6",
+      "tags": ["beta"],
+      "author": "@VirgilClyne",
+      "msg": "fix(boxjs): msg() on Shadowrocket",
+      "notes": [
+        {
+          "name": "修复",
+          "descs": ["小火箭环境下消息提示问题"]
+        },
+        {
+          "name": "感谢",
+          "descs": ["@VirgilClyne PR"]
+        }
+      ]
+    },
+    {
       "version": "0.12.5",
       "tags": ["beta"],
       "author": "@VirgilClyne",
