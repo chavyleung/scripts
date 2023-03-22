@@ -1,7 +1,7 @@
 {
   "releases": [
     {
-      "version": "0.12.8",
+      "version": "0.12.9",
       "tags": ["beta"],
       "author": "@GideonSenku",
       "msg": "让 openAI 写了个 Surge 费用计算器",
