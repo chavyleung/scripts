@@ -43,32 +43,39 @@ function Env(name, opts) {
       this.log('', `🔔${this.name}, 开始!`)
     }
 
+    getEnv() {
+      if ('undefined' !== typeof $environment && $environment['surge-version'])
+        return 'Surge'
+      if ('undefined' !== typeof $environment && $environment['stash-version'])
+        return 'Stash'
+      if ('undefined' !== typeof module && !!module.exports) return 'Node.js'
+      if ('undefined' !== typeof $task) return 'Quantumult X'
+      if ('undefined' !== typeof $loon) return 'Loon'
+      if ('undefined' !== typeof $rocket) return 'Shadowrocket'
+    }
+
     isNode() {
-      return 'undefined' !== typeof module && !!module.exports
+      return 'Node.js' === this.getEnv()
     }
 
     isQuanX() {
-      return 'undefined' !== typeof $task
+      return 'Quantumult X' === this.getEnv()
     }
 
     isSurge() {
-      return (
-        'undefined' !== typeof $environment && $environment['surge-version']
-      )
+      return 'Surge' === this.getEnv()
     }
 
     isLoon() {
-      return 'undefined' !== typeof $loon
+      return 'Loon' === this.getEnv()
     }
 
     isShadowrocket() {
-      return 'undefined' !== typeof $rocket
+      return 'Shadowrocket' === this.getEnv()
     }
 
     isStash() {
-      return (
-        'undefined' !== typeof $environment && $environment['stash-version']
-      )
+      return 'Stash' === this.getEnv()
     }
 
     toObj(str, defaultValue = null) {
@@ -309,6 +316,10 @@ function Env(name, opts) {
       if (opts.headers) {
         delete opts.headers['Content-Type']
         delete opts.headers['Content-Length']
+
+        // HTTP/2 全是小写
+        delete opts.headers['content-type']
+        delete opts.headers['content-length']
       }
       if (
         this.isSurge() ||
@@ -384,11 +395,22 @@ function Env(name, opts) {
 
     post(opts, callback = () => {}) {
       const method = opts.method ? opts.method.toLocaleLowerCase() : 'post'
-      // 如果指定了请求体, 但没指定`Content-Type`, 则自动生成
-      if (opts.body && opts.headers && !opts.headers['Content-Type']) {
-        opts.headers['Content-Type'] = 'application/x-www-form-urlencoded'
+
+      // 如果指定了请求体, 但没指定 `Content-Type`、`content-type`, 则自动生成。
+      if (
+        opts.body &&
+        opts.headers &&
+        !opts.headers['Content-Type'] &&
+        !opts.headers['content-type']
+      ) {
+        // HTTP/1、HTTP/2 都支持小写 headers
+        opts.headers['content-type'] = 'application/x-www-form-urlencoded'
       }
-      if (opts.headers) delete opts.headers['Content-Length']
+      // 为避免指定错误 `content-length` 这里删除该属性，由工具端 (HttpClient) 负责重新计算并赋值
+      if (opts.headers) {
+        delete opts.headers['Content-Length']
+        delete opts.headers['content-length']
+      }
       if (
         this.isSurge() ||
         this.isShadowrocket() ||
