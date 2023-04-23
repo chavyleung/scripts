@@ -312,14 +312,14 @@ function Env(name, opts) {
       }
     }
 
-    get(opts, callback = () => {}) {
-      if (opts.headers) {
-        delete opts.headers['Content-Type']
-        delete opts.headers['Content-Length']
+    get(request, callback = () => {}) {
+      if (request.headers) {
+        delete request.headers['Content-Type']
+        delete request.headers['Content-Length']
 
         // HTTP/2 全是小写
-        delete opts.headers['content-type']
-        delete opts.headers['content-length']
+        delete request.headers['content-type']
+        delete request.headers['content-length']
       }
       if (
         this.isSurge() ||
@@ -328,10 +328,10 @@ function Env(name, opts) {
         this.isStash()
       ) {
         if (this.isSurge() && this.isNeedRewrite) {
-          opts.headers = opts.headers || {}
-          Object.assign(opts.headers, { 'X-Surge-Skip-Scripting': false })
+          request.headers = request.headers || {}
+          Object.assign(request.headers, { 'X-Surge-Skip-Scripting': false })
         }
-        $httpClient.get(opts, (err, resp, body) => {
+        $httpClient.get(request, (err, resp, body) => {
           if (!err && resp) {
             resp.body = body
             resp.statusCode = resp.status ? resp.status : resp.statusCode
@@ -341,20 +341,20 @@ function Env(name, opts) {
         })
       } else if (this.isQuanX()) {
         if (this.isNeedRewrite) {
-          opts.opts = opts.opts || {}
-          Object.assign(opts.opts, { hints: false })
+          request.opts = request.opts || {}
+          Object.assign(request.opts, { hints: false })
         }
-        $task.fetch(opts).then(
+        $task.fetch(request).then(
           (resp) => {
-            const { statusCode: status, statusCode, headers, body } = resp
-            callback(null, { status, statusCode, headers, body }, body)
+            const { statusCode: status, statusCode, headers, body, bodyBytes } = resp
+            callback(null, { status, statusCode, headers, body, bodyBytes }, body, bodyBytes)
           },
           (err) => callback((err && err.error) || 'UndefinedError')
         )
       } else if (this.isNode()) {
         let iconv = require('iconv-lite')
-        this.initGotEnv(opts)
-        this.got(opts)
+        this.initGotEnv(request)
+        this.got(request)
           .on('redirect', (resp, nextOpts) => {
             try {
               if (resp.headers['set-cookie']) {
@@ -393,23 +393,23 @@ function Env(name, opts) {
       }
     }
 
-    post(opts, callback = () => {}) {
-      const method = opts.method ? opts.method.toLocaleLowerCase() : 'post'
+    post(request, callback = () => {}) {
+      const method = request.method ? request.method.toLocaleLowerCase() : 'post'
 
       // 如果指定了请求体, 但没指定 `Content-Type`、`content-type`, 则自动生成。
       if (
-        opts.body &&
-        opts.headers &&
-        !opts.headers['Content-Type'] &&
-        !opts.headers['content-type']
+        request.body &&
+        request.headers &&
+        !request.headers['Content-Type'] &&
+        !request.headers['content-type']
       ) {
         // HTTP/1、HTTP/2 都支持小写 headers
-        opts.headers['content-type'] = 'application/x-www-form-urlencoded'
+        request.headers['content-type'] = 'application/x-www-form-urlencoded'
       }
       // 为避免指定错误 `content-length` 这里删除该属性，由工具端 (HttpClient) 负责重新计算并赋值
-      if (opts.headers) {
-        delete opts.headers['Content-Length']
-        delete opts.headers['content-length']
+      if (request.headers) {
+        delete request.headers['Content-Length']
+        delete request.headers['content-length']
       }
       if (
         this.isSurge() ||
@@ -418,10 +418,10 @@ function Env(name, opts) {
         this.isStash()
       ) {
         if (this.isSurge() && this.isNeedRewrite) {
-          opts.headers = opts.headers || {}
-          Object.assign(opts.headers, { 'X-Surge-Skip-Scripting': false })
+          request.headers = request.headers || {}
+          Object.assign(request.headers, { 'X-Surge-Skip-Scripting': false })
         }
-        $httpClient[method](opts, (err, resp, body) => {
+        $httpClient[method](request, (err, resp, body) => {
           if (!err && resp) {
             resp.body = body
             resp.statusCode = resp.status ? resp.status : resp.statusCode
@@ -430,23 +430,23 @@ function Env(name, opts) {
           callback(err, resp, body)
         })
       } else if (this.isQuanX()) {
-        opts.method = method
+        request.method = method
         if (this.isNeedRewrite) {
-          opts.opts = opts.opts || {}
-          Object.assign(opts.opts, { hints: false })
+          request.opts = request.opts || {}
+          Object.assign(request.opts, { hints: false })
         }
-        $task.fetch(opts).then(
+        $task.fetch(request).then(
           (resp) => {
-            const { statusCode: status, statusCode, headers, body } = resp
-            callback(null, { status, statusCode, headers, body }, body)
+            const { statusCode: status, statusCode, headers, body, bodyBytes } = resp
+            callback(null, { status, statusCode, headers, body, bodyBytes }, body, bodyBytes)
           },
           (err) => callback((err && err.error) || 'UndefinedError')
         )
       } else if (this.isNode()) {
         let iconv = require('iconv-lite')
-        this.initGotEnv(opts)
-        const { url, ..._opts } = opts
-        this.got[method](url, _opts).then(
+        this.initGotEnv(request)
+        const { url, ..._request } = request
+        this.got[method](url, _request).then(
           (resp) => {
             const { statusCode: status, statusCode, headers, rawBody } = resp
             const body = iconv.decode(rawBody, this.encoding)
