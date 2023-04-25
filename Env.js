@@ -337,7 +337,7 @@ function Env(name, opts) {
             }
             callback(err, resp, body)
           })
-          break;
+          break
         case 'Quantumult X':
           if (this.isNeedRewrite) {
             request.opts = request.opts || {}
@@ -345,12 +345,23 @@ function Env(name, opts) {
           }
           $task.fetch(request).then(
             (resp) => {
-              const { statusCode: status, statusCode, headers, body, bodyBytes } = resp
-              callback(null, { status, statusCode, headers, body, bodyBytes }, body, bodyBytes)
+              const {
+                statusCode: status,
+                statusCode,
+                headers,
+                body,
+                bodyBytes
+              } = resp
+              callback(
+                null,
+                { status, statusCode, headers, body, bodyBytes },
+                body,
+                bodyBytes
+              )
             },
             (err) => callback((err && err.error) || 'UndefinedError')
           )
-          break;
+          break
         case 'Node.js':
           let iconv = require('iconv-lite')
           this.initGotEnv(request)
@@ -373,7 +384,12 @@ function Env(name, opts) {
             })
             .then(
               (resp) => {
-                const { statusCode: status, statusCode, headers, rawBody } = resp
+                const {
+                  statusCode: status,
+                  statusCode,
+                  headers,
+                  rawBody
+                } = resp
                 const body = iconv.decode(rawBody, this.encoding)
                 callback(
                   null,
@@ -390,12 +406,14 @@ function Env(name, opts) {
                 )
               }
             )
-          break;
+          break
       }
     }
 
     post(request, callback = () => {}) {
-      const method = request.method ? request.method.toLocaleLowerCase() : 'post'
+      const method = request.method
+        ? request.method.toLocaleLowerCase()
+        : 'post'
 
       // 如果指定了请求体, 但没指定 `Content-Type`、`content-type`, 则自动生成。
       if (
@@ -430,7 +448,7 @@ function Env(name, opts) {
             }
             callback(err, resp, body)
           })
-          break;
+          break
         case 'Quantumult X':
           request.method = method
           if (this.isNeedRewrite) {
@@ -439,12 +457,23 @@ function Env(name, opts) {
           }
           $task.fetch(request).then(
             (resp) => {
-              const { statusCode: status, statusCode, headers, body, bodyBytes } = resp
-              callback(null, { status, statusCode, headers, body, bodyBytes }, body, bodyBytes)
+              const {
+                statusCode: status,
+                statusCode,
+                headers,
+                body,
+                bodyBytes
+              } = resp
+              callback(
+                null,
+                { status, statusCode, headers, body, bodyBytes },
+                body,
+                bodyBytes
+              )
             },
             (err) => callback((err && err.error) || 'UndefinedError')
           )
-          break;
+          break
         case 'Node.js':
           let iconv = require('iconv-lite')
           this.initGotEnv(request)
@@ -453,7 +482,11 @@ function Env(name, opts) {
             (resp) => {
               const { statusCode: status, statusCode, headers, rawBody } = resp
               const body = iconv.decode(rawBody, this.encoding)
-              callback(null, { status, statusCode, headers, rawBody, body }, body)
+              callback(
+                null,
+                { status, statusCode, headers, rawBody, body },
+                body
+              )
             },
             (err) => {
               const { message: error, response: resp } = err
@@ -464,7 +497,7 @@ function Env(name, opts) {
               )
             }
           )
-          break;
+          break
       }
     }
     /**
@@ -567,16 +600,19 @@ function Env(name, opts) {
               case 'Stash':
               case 'Shadowrocket':
               default: {
-                let openUrl = rawopts.url || rawopts.openUrl || rawopts['open-url']
+                let openUrl =
+                  rawopts.url || rawopts.openUrl || rawopts['open-url']
                 return { url: openUrl }
               }
               case 'Loon': {
-                let openUrl = rawopts.openUrl || rawopts.url || rawopts['open-url']
+                let openUrl =
+                  rawopts.openUrl || rawopts.url || rawopts['open-url']
                 let mediaUrl = rawopts.mediaUrl || rawopts['media-url']
                 return { openUrl, mediaUrl }
               }
               case 'Quantumult X': {
-                let openUrl = rawopts['open-url'] || rawopts.url || rawopts.openUrl
+                let openUrl =
+                  rawopts['open-url'] || rawopts.url || rawopts.openUrl
                 let mediaUrl = rawopts['media-url'] || rawopts.mediaUrl
                 let updatePasteboard =
                   rawopts['update-pasteboard'] || rawopts.updatePasteboard
@@ -601,11 +637,12 @@ function Env(name, opts) {
           case 'Shadowrocket':
           default:
             $notification.post(title, subt, desc, toEnvOpts(opts))
+            break
           case 'Quantumult X':
             $notify(title, subt, desc, toEnvOpts(opts))
-            break;
+            break
           case 'Node.js':
-            break;
+            break
         }
       }
       if (!this.isMuteLog) {
@@ -634,10 +671,10 @@ function Env(name, opts) {
         case 'Quantumult X':
         default:
           this.log('', `❗️${this.name}, 错误!`, err)
-          break;
+          break
         case 'Node.js':
           this.log('', `❗️${this.name}, 错误!`, err.stack)
-          break;
+          break
       }
     }
 
@@ -658,10 +695,10 @@ function Env(name, opts) {
         case 'Quantumult X':
         default:
           $done(val)
-          break;
+          break
         case 'Node.js':
           process.exit(1)
-          break;
+          break
       }
     }
   })(name, opts)
