@@ -253,6 +253,8 @@ async function handleApi() {
     await apiRunScript()
   } else if (api === '/saveData') {
     await apiSaveData()
+  } else if (api === '/surge') {
+    await apiSurge()
   }
 }
 
@@ -588,6 +590,32 @@ async function apiSave() {
     }
   }
   $.json = getBoxData()
+}
+
+async function apiSurge() {
+  const opts = $.toObj($request.body)
+  const httpapi = $.getdata('@chavy_boxjs_userCfgs.httpapi')
+  const ishttpapi = /.*?@.*?:[0-9]+/.test(httpapi)
+  if (
+    $.isSurge() &&
+    !$.isLoon() &&
+    !$.isShadowrocket() &&
+    !$.isStash() &&
+    ishttpapi
+  ) {
+    const [key, prefix] = httpapi.split('@')
+    opts.url = `http://${prefix}/${opts.url}`
+    opts.headers = {
+      'X-Key': key,
+      'Accept': 'application/json, text/plain, */*'
+    }
+    await new Promise((resolve) => {
+      $[opts.method.toLowerCase()](opts, (_, __, resp) => {
+        $.json = JSON.parse(resp)
+        resolve($.json)
+      })
+    })
+  }
 }
 
 async function apiAddAppSub() {
