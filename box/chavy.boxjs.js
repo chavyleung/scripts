@@ -558,12 +558,34 @@ function getAppDatas(app) {
   return datas
 }
 
+function dealKey(str) {
+  const [rootKey, delIndex] = str.split('.')
+  if (rootKey && rootKey.indexOf('@') > -1 && delIndex !== undefined) {
+    const key = rootKey.replace('@', '')
+    const datas = JSON.parse($.getdata(key))
+    if (Array.isArray(datas) && delIndex <= datas.length - 1) {
+      datas.splice(delIndex, 1)
+      $.setdata(JSON.stringify(datas), key)
+    }
+  }
+}
+
 async function apiSave() {
   const data = $.toObj($request.body)
   if (Array.isArray(data)) {
-    data.forEach((dat) => $.setdata(dat.val, dat.key))
+    data.forEach((dat) => {
+      if (dat.val === null) {
+        dealKey(dat.key)
+      } else {
+        $.setdata(dat.val, dat.key)
+      }
+    })
   } else {
-    $.setdata(data.val, data.key)
+    if (data.val === null) {
+      dealKey(data.key)
+    } else {
+      $.setdata(data.val, data.key)
+    }
   }
   $.json = getBoxData()
 }
