@@ -1,13 +1,13 @@
-const $ = new Env('BoxJs')
+const $ = new Env("BoxJs");
 
 // 为 eval 准备的上下文环境
-const $eval_env = {}
+const $eval_env = {};
 
-$.version = '0.12.9'
-$.versionType = 'beta'
+$.version = "0.12.9";
+$.versionType = "beta";
 
 // 发出的请求需要需要 Surge、QuanX 的 rewrite
-$.isNeedRewrite = true
+$.isNeedRewrite = true;
 
 /**
  * ===================================
@@ -16,19 +16,19 @@ $.isNeedRewrite = true
  */
 
 // 存储`用户偏好`
-$.KEY_usercfgs = 'chavy_boxjs_userCfgs'
+$.KEY_usercfgs = "chavy_boxjs_userCfgs";
 // 存储`应用会话`
-$.KEY_sessions = 'chavy_boxjs_sessions'
+$.KEY_sessions = "chavy_boxjs_sessions";
 // 存储`页面缓存`
-$.KEY_web_cache = 'chavy_boxjs_web_cache'
+$.KEY_web_cache = "chavy_boxjs_web_cache";
 // 存储`应用订阅缓存`
-$.KEY_app_subCaches = 'chavy_boxjs_app_subCaches'
+$.KEY_app_subCaches = "chavy_boxjs_app_subCaches";
 // 存储`全局备份` (弃用, 改用 `chavy_boxjs_backups`)
-$.KEY_globalBaks = 'chavy_boxjs_globalBaks'
+$.KEY_globalBaks = "chavy_boxjs_globalBaks";
 // 存储`备份索引`
-$.KEY_backups = 'chavy_boxjs_backups'
+$.KEY_backups = "chavy_boxjs_backups";
 // 存储`当前会话` (配合切换会话, 记录当前切换到哪个会话)
-$.KEY_cursessions = 'chavy_boxjs_cur_sessions'
+$.KEY_cursessions = "chavy_boxjs_cur_sessions";
 
 /**
  * ===================================
@@ -37,77 +37,77 @@ $.KEY_cursessions = 'chavy_boxjs_cur_sessions'
  */
 
 // 存储用户访问`BoxJs`时使用的域名
-$.KEY_boxjs_host = 'boxjs_host'
+$.KEY_boxjs_host = "boxjs_host";
 
 // 请求响应体 (返回至页面的结果)
-$.json = $.name // `接口`类请求的响应体
-$.html = $.name // `页面`类请求的响应体
+$.json = $.name; // `接口`类请求的响应体
+$.html = $.name; // `页面`类请求的响应体
 
 // 页面源码地址
 $.web = `https://cdn.jsdelivr.net/gh/chavyleung/scripts@${
   $.version
-}/box/chavy.boxjs.html?_=${new Date().getTime()}`
+}/box/chavy.boxjs.html?_=${new Date().getTime()}`;
 // 版本说明地址 (Release Note)
-$.ver = `https://raw.githubusercontent.com/chavyleung/scripts/master/box/release/box.release.json`
+$.ver = `https://raw.githubusercontent.com/chavyleung/scripts/master/box/release/box.release.json`;
 
 !(async () => {
   // 勿扰模式
-  $.isMute = [true, 'true'].includes($.getdata('@chavy_boxjs_userCfgs.isMute'))
+  $.isMute = [true, "true"].includes($.getdata("@chavy_boxjs_userCfgs.isMute"));
 
   // 请求路径
-  $.path = getPath($request.url)
+  $.path = getPath($request.url);
 
   // 请求类型: GET
-  $.isGet = $request.method === 'GET'
+  $.isGet = $request.method === "GET";
   // 请求类型: POST
-  $.isPost = $request.method === 'POST'
+  $.isPost = $request.method === "POST";
   // 请求类型: OPTIONS
-  $.isOptions = $request.method === 'OPTIONS'
+  $.isOptions = $request.method === "OPTIONS";
 
   // 请求类型: page、api、query
-  $.type = 'page'
+  $.type = "page";
   // 查询请求: /query/xxx
-  $.isQuery = $.isGet && /^\/query\/.*?/.test($.path)
+  $.isQuery = $.isGet && /^\/query\/.*?/.test($.path);
   // 接口请求: /api/xxx
-  $.isApi = $.isPost && /^\/api\/.*?/.test($.path)
+  $.isApi = $.isPost && /^\/api\/.*?/.test($.path);
   // 页面请求: /xxx
-  $.isPage = $.isGet && !$.isQuery && !$.isApi
+  $.isPage = $.isGet && !$.isQuery && !$.isApi;
 
   // 升级用户数据
-  upgradeUserData()
+  upgradeUserData();
   // 升级备份数据
-  upgradeGlobalBaks()
+  upgradeGlobalBaks();
 
   // 处理预检请求
   if ($.isOptions) {
-    $.type = 'options'
-    await handleOptions()
+    $.type = "options";
+    await handleOptions();
   }
   // 处理`页面`请求
   else if ($.isPage) {
-    $.type = 'page'
-    await handlePage()
+    $.type = "page";
+    await handlePage();
   }
   // 处理`查询`请求
   else if ($.isQuery) {
-    $.type = 'query'
-    await handleQuery()
+    $.type = "query";
+    await handleQuery();
   }
   // 处理`接口`请求
   else if ($.isApi) {
-    $.type = 'api'
-    await handleApi()
+    $.type = "api";
+    await handleApi();
   }
 })()
   .catch((e) => $.logErr(e))
-  .finally(() => doneBox())
+  .finally(() => doneBox());
 
 /**
  * http://boxjs.com/ => `http://boxjs.com`
  * http://boxjs.com/app/jd => `http://boxjs.com`
  */
 function getHost(url) {
-  return url.slice(0, url.indexOf('/', 8))
+  return url.slice(0, url.indexOf("/", 8));
 }
 
 /**
@@ -116,10 +116,10 @@ function getHost(url) {
  */
 function getPath(url) {
   // 如果以`/`结尾, 去掉最后一个`/`
-  const end = url.lastIndexOf('/') === url.length - 1 ? -1 : undefined
+  const end = url.lastIndexOf("/") === url.length - 1 ? -1 : undefined;
   // slice第二个参数传 undefined 会直接截到最后
   // indexOf第二个参数用来跳过前面的 "https://"
-  return url.slice(url.indexOf('/', 8), end)
+  return url.slice(url.indexOf("/", 8), end);
 }
 
 /**
@@ -133,59 +133,59 @@ function getPath(url) {
  */
 async function handlePage() {
   // 获取 BoxJs 数据
-  const boxdata = getBoxData()
-  boxdata.syscfgs.isDebugMode = false
+  const boxdata = getBoxData();
+  boxdata.syscfgs.isDebugMode = false;
 
   // 调试模式: 是否每次都获取新的页面
-  const isDebugWeb = [true, 'true'].includes(
-    $.getdata('@chavy_boxjs_userCfgs.isDebugWeb')
-  )
-  const debugger_web = $.getdata('@chavy_boxjs_userCfgs.debugger_web')
-  const cache = $.getjson($.KEY_web_cache, null)
+  const isDebugWeb = [true, "true"].includes(
+    $.getdata("@chavy_boxjs_userCfgs.isDebugWeb")
+  );
+  const debugger_web = $.getdata("@chavy_boxjs_userCfgs.debugger_web");
+  const cache = $.getjson($.KEY_web_cache, null);
 
   // 如果没有开启调试模式，且当前版本与缓存版本一致，且直接取缓存
   if (!isDebugWeb && cache && cache.version === $.version) {
-    $.html = cache.cache
+    $.html = cache.cache;
   }
   // 如果开启了调试模式，并指定了 `debugger_web` 则从指定的地址获取页面
   else {
     if (isDebugWeb && debugger_web) {
       // 调试地址后面拼时间缀, 避免 GET 缓存
-      const isQueryUrl = debugger_web.includes('?')
+      const isQueryUrl = debugger_web.includes("?");
       $.web = `${debugger_web}${
-        isQueryUrl ? '&' : '?'
-      }_=${new Date().getTime()}`
-      boxdata.syscfgs.isDebugMode = true
-      console.log(`[WARN] 调试模式: $.web = : ${$.web}`)
+        isQueryUrl ? "&" : "?"
+      }_=${new Date().getTime()}`;
+      boxdata.syscfgs.isDebugMode = true;
+      console.log(`[WARN] 调试模式: $.web = : ${$.web}`);
     }
     // 如果调用这个方法来获取缓存, 且标记为`非调试模式`
     const getcache = () => {
-      console.log(`[ERROR] 调试模式: 正在使用缓存的页面!`)
-      boxdata.syscfgs.isDebugMode = false
-      return $.getjson($.KEY_web_cache).cache
-    }
+      console.log(`[ERROR] 调试模式: 正在使用缓存的页面!`);
+      boxdata.syscfgs.isDebugMode = false;
+      return $.getjson($.KEY_web_cache).cache;
+    };
     await $.http.get($.web).then(
       (resp) => {
         if (/<title>BoxJs<\/title>/.test(resp.body)) {
           // 返回页面源码, 并马上存储到持久化仓库
-          $.html = resp.body
-          const cache = { version: $.version, cache: $.html }
-          $.setjson(cache, $.KEY_web_cache)
+          $.html = resp.body;
+          const cache = { version: $.version, cache: $.html };
+          $.setjson(cache, $.KEY_web_cache);
         } else {
           // 如果返回的页面源码不是预期的, 则从持久化仓库中获取
-          $.html = getcache()
+          $.html = getcache();
         }
       },
       // 如果获取页面源码失败, 则从持久化仓库中获取
       () => ($.html = getcache())
-    )
+    );
   }
   // 根据偏好设置, 替换首屏颜色 (如果是`auto`则交由页面自适应)
-  const theme = $.getdata('@chavy_boxjs_userCfgs.theme')
-  if (theme === 'light') {
-    $.html = $.html.replace('#121212', '#fff')
-  } else if (theme === 'dark') {
-    $.html = $.html.replace('#fff', '#121212')
+  const theme = $.getdata("@chavy_boxjs_userCfgs.theme");
+  if (theme === "light") {
+    $.html = $.html.replace("#121212", "#fff");
+  } else if (theme === "dark") {
+    $.html = $.html.replace("#fff", "#121212");
   }
   /**
    * 后端渲染数据, 感谢 https://t.me/eslint 提供帮助
@@ -194,14 +194,14 @@ async function handlePage() {
    * 所以先渲染到 `boxServerData: null` 再由前端 `this.box = this.boxServerData` 实现双向绑定
    */
   $.html = $.html.replace(
-    'boxServerData: null',
-    'boxServerData:' + JSON.stringify(boxdata)
-  )
+    "boxServerData: null",
+    "boxServerData:" + JSON.stringify(boxdata)
+  );
 
   // 调试模式支持 vue Devtools (只有在同时开启调试模式和指定了调试地址才生效)
   // vue.min.js 生效时, 会导致 @click="window.open()" 报 "window" is not defined 错误
   if (isDebugWeb && debugger_web) {
-    $.html = $.html.replace('vue.min.js', 'vue.js')
+    $.html = $.html.replace("vue.min.js", "vue.js");
   }
 }
 
@@ -209,21 +209,21 @@ async function handlePage() {
  * 处理`查询`请求
  */
 async function handleQuery() {
-  const [, query] = $.path.split('/query')
+  const [, query] = $.path.split("/query");
   if (/^\/boxdata/.test(query)) {
-    $.json = getBoxData()
+    $.json = getBoxData();
   } else if (/^\/baks/.test(query)) {
-    const [, backupId] = query.split('/baks/')
-    $.json = $.getjson(backupId)
+    const [, backupId] = query.split("/baks/");
+    $.json = $.getjson(backupId);
   } else if (/^\/versions$/.test(query)) {
-    await getVersions(true)
+    await getVersions(true);
   } else if (/^\/data/.test(query)) {
     // TODO 记录每次查询的 key 至 usercfgs.viewkeys
-    const [, dataKey] = query.split('/data/')
+    const [, dataKey] = query.split("/data/");
     $.json = {
       key: dataKey,
-      val: $.getdata(dataKey)
-    }
+      val: $.getdata(dataKey),
+    };
   }
 }
 
@@ -231,30 +231,30 @@ async function handleQuery() {
  * 处理 API 请求
  */
 async function handleApi() {
-  const [, api] = $.path.split('/api')
+  const [, api] = $.path.split("/api");
 
-  if (api === '/save') {
-    await apiSave()
-  } else if (api === '/addAppSub') {
-    await apiAddAppSub()
-  } else if (api === '/reloadAppSub') {
-    await apiReloadAppSub()
-  } else if (api === '/delGlobalBak') {
-    await apiDelGlobalBak()
-  } else if (api === '/updateGlobalBak') {
-    await apiUpdateGlobalBak()
-  } else if (api === '/saveGlobalBak') {
-    await apiSaveGlobalBak()
-  } else if (api === '/impGlobalBak') {
-    await apiImpGlobalBak()
-  } else if (api === '/revertGlobalBak') {
-    await apiRevertGlobalBak()
-  } else if (api === '/runScript') {
-    await apiRunScript()
-  } else if (api === '/saveData') {
-    await apiSaveData()
-  } else if (api === '/surge') {
-    await apiSurge()
+  if (api === "/save") {
+    await apiSave();
+  } else if (api === "/addAppSub") {
+    await apiAddAppSub();
+  } else if (api === "/reloadAppSub") {
+    await apiReloadAppSub();
+  } else if (api === "/delGlobalBak") {
+    await apiDelGlobalBak();
+  } else if (api === "/updateGlobalBak") {
+    await apiUpdateGlobalBak();
+  } else if (api === "/saveGlobalBak") {
+    await apiSaveGlobalBak();
+  } else if (api === "/impGlobalBak") {
+    await apiImpGlobalBak();
+  } else if (api === "/revertGlobalBak") {
+    await apiRevertGlobalBak();
+  } else if (api === "/runScript") {
+    await apiRunScript();
+  } else if (api === "/saveData") {
+    await apiSaveData();
+  } else if (api === "/surge") {
+    await apiSurge();
   }
 }
 
@@ -267,23 +267,23 @@ async function handleOptions() {}
  */
 
 function getBoxData() {
-  const datas = {}
-  const usercfgs = getUserCfgs()
-  const sessions = getAppSessions()
-  const curSessions = getCurSessions()
-  const sysapps = getSystemApps()
-  const syscfgs = getSystemCfgs()
-  const appSubCaches = getAppSubCaches()
-  const globalbaks = getGlobalBaks()
+  const datas = {};
+  const usercfgs = getUserCfgs();
+  const sessions = getAppSessions();
+  const curSessions = getCurSessions();
+  const sysapps = getSystemApps();
+  const syscfgs = getSystemCfgs();
+  const appSubCaches = getAppSubCaches();
+  const globalbaks = getGlobalBaks();
 
   // 把 `内置应用`和`订阅应用` 里需要持久化属性放到`datas`
-  sysapps.forEach((app) => Object.assign(datas, getAppDatas(app)))
+  sysapps.forEach((app) => Object.assign(datas, getAppDatas(app)));
   usercfgs.appsubs.forEach((sub) => {
-    const subcache = appSubCaches[sub.url]
+    const subcache = appSubCaches[sub.url];
     if (subcache && subcache.apps && Array.isArray(subcache.apps)) {
-      subcache.apps.forEach((app) => Object.assign(datas, getAppDatas(app)))
+      subcache.apps.forEach((app) => Object.assign(datas, getAppDatas(app)));
     }
-  })
+  });
 
   const box = {
     datas,
@@ -293,9 +293,10 @@ function getBoxData() {
     sysapps,
     syscfgs,
     appSubCaches,
-    globalbaks
-  }
-  return box
+    globalbaks,
+  };
+
+  return box;
 }
 
 /**
@@ -449,7 +450,7 @@ function getSystemApps() {
       ]
     }
   ]
-  return sysapps
+  return sysapps;
 }
 
 /**
@@ -461,40 +462,40 @@ function getUserCfgs() {
     appsubs: [],
     viewkeys: [],
     isPinedSearchBar: true,
-    httpapi: 'examplekey@127.0.0.1:6166',
-    http_backend: ''
-  }
-  const usercfgs = Object.assign(defcfgs, $.getjson($.KEY_usercfgs, {}))
+    httpapi: "examplekey@127.0.0.1:6166",
+    http_backend: "",
+  };
+  const usercfgs = Object.assign(defcfgs, $.getjson($.KEY_usercfgs, {}));
 
   // 处理异常数据：删除所有为 null 的订阅
   if (usercfgs.appsubs.includes(null)) {
-    usercfgs.appsubs = usercfgs.appsubs.filter((sub) => sub)
-    $.setjson(usercfgs, $.KEY_usercfgs)
+    usercfgs.appsubs = usercfgs.appsubs.filter((sub) => sub);
+    $.setjson(usercfgs, $.KEY_usercfgs);
   }
 
-  return usercfgs
+  return usercfgs;
 }
 
 /**
  * 获取`应用订阅`缓存
  */
 function getAppSubCaches() {
-  return $.getjson($.KEY_app_subCaches, {})
+  return $.getjson($.KEY_app_subCaches, {});
 }
 
 /**
  * 获取全局备份列表
  */
 function getGlobalBaks() {
-  let backups = $.getjson($.KEY_backups, [])
+  let backups = $.getjson($.KEY_backups, []);
 
   // 处理异常数据：删除所有为 null 的备份
   if (backups.includes(null)) {
-    backups = backups.filter((bak) => bak)
-    $.setjson(backups, $.KEY_backups)
+    backups = backups.filter((bak) => bak);
+    $.setjson(backups, $.KEY_backups);
   }
 
-  return backups
+  return backups;
 }
 
 /**
@@ -504,13 +505,13 @@ function getVersions() {
   return $.http.get($.ver).then(
     (resp) => {
       try {
-        $.json = $.toObj(resp.body)
+        $.json = $.toObj(resp.body);
       } catch {
-        $.json = {}
+        $.json = {};
       }
     },
     () => ($.json = {})
-  )
+  );
 }
 
 /**
@@ -518,21 +519,21 @@ function getVersions() {
  */
 function getUserApps() {
   // TODO 用户可在 BoxJs 中自定义应用, 格式与应用订阅一致
-  return []
+  return [];
 }
 
 /**
  * 获取应用会话
  */
 function getAppSessions() {
-  return $.getjson($.KEY_sessions, []) || []
+  return $.getjson($.KEY_sessions, []) || [];
 }
 
 /**
  * 获取当前切换到哪个会话
  */
 function getCurSessions() {
-  return $.getjson($.KEY_cursessions, {}) || {}
+  return $.getjson($.KEY_cursessions, {}) || {};
 }
 
 /**
@@ -542,129 +543,103 @@ function getCurSessions() {
  */
 
 function getAppDatas(app) {
-  const datas = {}
-  const nulls = [null, undefined, 'null', 'undefined']
+  const datas = {};
+  const nulls = [null, undefined, "null", "undefined"];
   if (app.keys && Array.isArray(app.keys)) {
     app.keys.forEach((key) => {
-      const val = $.getdata(key)
-      datas[key] = nulls.includes(val) ? null : val
-    })
+      const val = $.getdata(key);
+      datas[key] = nulls.includes(val) ? null : val;
+    });
   }
   if (app.settings && Array.isArray(app.settings)) {
     app.settings.forEach((setting) => {
-      const key = setting.id
-      const val = $.getdata(key)
-      datas[key] = nulls.includes(val) ? null : val
-    })
+      const key = setting.id;
+      const val = $.getdata(key);
+      datas[key] = nulls.includes(val) ? null : val;
+    });
   }
-  return datas
+  return datas;
 }
 
 function dealKey(str) {
-  const [rootKey, delIndex] = str.split('.')
-  if (rootKey && rootKey.indexOf('@') > -1 && delIndex !== undefined) {
-    const key = rootKey.replace('@', '')
-    const datas = JSON.parse($.getdata(key))
+  const [rootKey, delIndex] = str.split(".");
+  if (rootKey && rootKey.indexOf("@") > -1 && delIndex !== undefined) {
+    const key = rootKey.replace("@", "");
+    const datas = JSON.parse($.getdata(key));
     if (Array.isArray(datas) && delIndex <= datas.length - 1) {
-      datas.splice(delIndex, 1)
-      $.setdata(JSON.stringify(datas), key)
+      datas.splice(delIndex, 1);
+      $.setdata(JSON.stringify(datas), key);
     }
   }
 }
 
 async function apiSave() {
-  const data = $.toObj($request.body)
+  const data = $.toObj($request.body);
   if (Array.isArray(data)) {
     data.forEach((dat) => {
       if (dat.val === null) {
-        dealKey(dat.key)
+        dealKey(dat.key);
       } else {
-        $.setdata(dat.val, dat.key)
+        $.setdata(dat.val, dat.key);
       }
-    })
+    });
   } else {
     if (data.val === null) {
-      dealKey(data.key)
+      dealKey(data.key);
     } else {
-      $.setdata(data.val, data.key)
+      $.setdata(data.val, data.key);
     }
   }
-  $.json = getBoxData()
-}
-
-async function apiSurge() {
-  const opts = $.toObj($request.body)
-  const httpapi = $.getdata('@chavy_boxjs_userCfgs.httpapi')
-  const ishttpapi = /.*?@.*?:[0-9]+/.test(httpapi)
-  if (
-    $.isSurge() &&
-    !$.isLoon() &&
-    !$.isShadowrocket() &&
-    !$.isStash() &&
-    ishttpapi
-  ) {
-    const [key, prefix] = httpapi.split('@')
-    opts.url = `http://${prefix}/${opts.url}`
-    opts.headers = {
-      'X-Key': key,
-      'Accept': 'application/json, text/plain, */*'
-    }
-    await new Promise((resolve) => {
-      $[opts.method.toLowerCase()](opts, (_, __, resp) => {
-        $.json = JSON.parse(resp)
-        resolve($.json)
-      })
-    })
-  }
+  $.json = getBoxData();
 }
 
 async function apiAddAppSub() {
-  const sub = $.toObj($request.body)
+  const sub = $.toObj($request.body);
   // 添加订阅
-  const usercfgs = getUserCfgs()
-  usercfgs.appsubs.push(sub)
-  $.setjson(usercfgs, $.KEY_usercfgs)
+  const usercfgs = getUserCfgs();
+  usercfgs.appsubs.push(sub);
+  $.setjson(usercfgs, $.KEY_usercfgs);
   // 加载订阅缓存
-  await reloadAppSubCache(sub.url)
-  $.json = getBoxData()
+  await reloadAppSubCache(sub.url);
+  $.json = getBoxData();
 }
 
 async function apiReloadAppSub() {
-  const sub = $.toObj($request.body)
+  const sub = $.toObj($request.body);
   if (sub) {
-    await reloadAppSubCache(sub.url)
+    await reloadAppSubCache(sub.url);
   } else {
-    await reloadAppSubCaches()
+    await reloadAppSubCaches();
   }
-  $.json = getBoxData()
+  $.json = getBoxData();
 }
 
 async function apiDelGlobalBak() {
-  const backup = $.toObj($request.body)
-  const backups = $.getjson($.KEY_backups, [])
-  const bakIdx = backups.findIndex((b) => b.id === backup.id)
+  const backup = $.toObj($request.body);
+  const backups = $.getjson($.KEY_backups, []);
+  const bakIdx = backups.findIndex((b) => b.id === backup.id);
   if (bakIdx > -1) {
-    backups.splice(bakIdx, 1)
-    $.setdata('', backup.id)
-    $.setjson(backups, $.KEY_backups)
+    backups.splice(bakIdx, 1);
+    $.setdata("", backup.id);
+    $.setjson(backups, $.KEY_backups);
   }
-  $.json = getBoxData()
+  $.json = getBoxData();
 }
 
 async function apiUpdateGlobalBak() {
-  const { id: backupId, name: backupName } = $.toObj($request.body)
-  const backups = $.getjson($.KEY_backups, [])
-  const backup = backups.find((b) => b.id === backupId)
+  const { id: backupId, name: backupName } = $.toObj($request.body);
+  const backups = $.getjson($.KEY_backups, []);
+  const backup = backups.find((b) => b.id === backupId);
   if (backup) {
-    backup.name = backupName
-    $.setjson(backups, $.KEY_backups)
+    backup.name = backupName;
+    $.setjson(backups, $.KEY_backups);
   }
-  $.json = getBoxData()
+  $.json = getBoxData();
 }
 
 async function apiRevertGlobalBak() {
-  const { id: bakcupId } = $.toObj($request.body)
-  const backup = $.getjson(bakcupId)
+  const { id: bakcupId } = $.toObj($request.body);
+  const backup = $.getjson(bakcupId);
   if (backup) {
     const {
       chavy_boxjs_sysCfgs,
@@ -674,59 +649,59 @@ async function apiRevertGlobalBak() {
       chavy_boxjs_cur_sessions,
       chavy_boxjs_app_subCaches,
       ...datas
-    } = backup
-    $.setdata(JSON.stringify(chavy_boxjs_sessions), $.KEY_sessions)
-    $.setdata(JSON.stringify(chavy_boxjs_userCfgs), $.KEY_usercfgs)
-    $.setdata(JSON.stringify(chavy_boxjs_cur_sessions), $.KEY_cursessions)
-    $.setdata(JSON.stringify(chavy_boxjs_app_subCaches), $.KEY_app_subCaches)
+    } = backup;
+    $.setdata(JSON.stringify(chavy_boxjs_sessions), $.KEY_sessions);
+    $.setdata(JSON.stringify(chavy_boxjs_userCfgs), $.KEY_usercfgs);
+    $.setdata(JSON.stringify(chavy_boxjs_cur_sessions), $.KEY_cursessions);
+    $.setdata(JSON.stringify(chavy_boxjs_app_subCaches), $.KEY_app_subCaches);
     const isNull = (val) =>
-      [undefined, null, 'null', 'undefined', ''].includes(val)
+      [undefined, null, "null", "undefined", ""].includes(val);
     Object.keys(datas).forEach((datkey) =>
-      $.setdata(isNull(datas[datkey]) ? '' : `${datas[datkey]}`, datkey)
-    )
+      $.setdata(isNull(datas[datkey]) ? "" : `${datas[datkey]}`, datkey)
+    );
   }
-  const boxdata = getBoxData()
-  $.json = boxdata
+  const boxdata = getBoxData();
+  $.json = boxdata;
 }
 
 async function apiSaveGlobalBak() {
-  const backups = $.getjson($.KEY_backups, [])
-  const boxdata = getBoxData()
-  const backup = $.toObj($request.body)
-  const backupData = {}
-  backupData['chavy_boxjs_userCfgs'] = boxdata.usercfgs
-  backupData['chavy_boxjs_sessions'] = boxdata.sessions
-  backupData['chavy_boxjs_cur_sessions'] = boxdata.curSessions
-  backupData['chavy_boxjs_app_subCaches'] = boxdata.appSubCaches
-  Object.assign(backupData, boxdata.datas)
-  backups.push(backup)
-  $.setjson(backups, $.KEY_backups)
-  $.setjson(backupData, backup.id)
-  $.json = getBoxData()
+  const backups = $.getjson($.KEY_backups, []);
+  const boxdata = getBoxData();
+  const backup = $.toObj($request.body);
+  const backupData = {};
+  backupData["chavy_boxjs_userCfgs"] = boxdata.usercfgs;
+  backupData["chavy_boxjs_sessions"] = boxdata.sessions;
+  backupData["chavy_boxjs_cur_sessions"] = boxdata.curSessions;
+  backupData["chavy_boxjs_app_subCaches"] = boxdata.appSubCaches;
+  Object.assign(backupData, boxdata.datas);
+  backups.push(backup);
+  $.setjson(backups, $.KEY_backups);
+  $.setjson(backupData, backup.id);
+  $.json = getBoxData();
 }
 
 async function apiImpGlobalBak() {
-  const backups = $.getjson($.KEY_backups, [])
-  const backup = $.toObj($request.body)
-  const backupData = backup.bak
-  delete backup.bak
-  backups.push(backup)
-  $.setjson(backups, $.KEY_backups)
-  $.setjson(backupData, backup.id)
-  $.json = getBoxData()
+  const backups = $.getjson($.KEY_backups, []);
+  const backup = $.toObj($request.body);
+  const backupData = backup.bak;
+  delete backup.bak;
+  backups.push(backup);
+  $.setjson(backups, $.KEY_backups);
+  $.setjson(backupData, backup.id);
+  $.json = getBoxData();
 }
 
 async function apiRunScript() {
   // 取消勿扰模式
-  $.isMute = false
-  const opts = $.toObj($request.body)
-  const httpapi = $.getdata('@chavy_boxjs_userCfgs.httpapi')
-  const ishttpapi = /.*?@.*?:[0-9]+/.test(httpapi)
-  let script_text = null
+  $.isMute = false;
+  const opts = $.toObj($request.body);
+  const httpapi = $.getdata("@chavy_boxjs_userCfgs.httpapi");
+  const ishttpapi = /.*?@.*?:[0-9]+/.test(httpapi);
+  let script_text = null;
   if (opts.isRemote) {
-    await $.getScript(opts.url).then((script) => (script_text = script))
+    await $.getScript(opts.url).then((script) => (script_text = script));
   } else {
-    script_text = opts.script
+    script_text = opts.script;
   }
   if (
     $.isSurge() &&
@@ -735,53 +710,79 @@ async function apiRunScript() {
     !$.isStash() &&
     ishttpapi
   ) {
-    const runOpts = { timeout: opts.timeout }
+    const runOpts = { timeout: opts.timeout };
     await $.runScript(script_text, runOpts).then(
       (resp) => ($.json = JSON.parse(resp))
-    )
+    );
   } else {
     await new Promise((resolve) => {
-      $eval_env.resolve = resolve
+      $eval_env.resolve = resolve;
       // 避免被执行脚本误认为是 rewrite 环境
       // 所以需要 `$request = undefined`
-      $eval_env.request = $request
-      $request = undefined
+      $eval_env.request = $request;
+      $request = undefined;
       // 重写 console.log, 把日志记录到 $eval_env.cached_logs
-      $eval_env.cached_logs = []
-      console.cloned_log = console.log
+      $eval_env.cached_logs = [];
+      console.cloned_log = console.log;
       console.log = (l) => {
-        console.cloned_log(l)
-        $eval_env.cached_logs.push(l)
-      }
+        console.cloned_log(l);
+        $eval_env.cached_logs.push(l);
+      };
       // 重写脚本内的 $done, 调用 $done() 即是调用 $eval_env.resolve()
-      script_text = script_text.replace(/\$done/g, '$eval_env.resolve')
-      script_text = script_text.replace(/\$\.done/g, '$eval_env.resolve')
+      script_text = script_text.replace(/\$done/g, "$eval_env.resolve");
+      script_text = script_text.replace(/\$\.done/g, "$eval_env.resolve");
       try {
-        eval(script_text)
+        eval(script_text);
       } catch (e) {
-        $eval_env.cached_logs.push(e)
-        resolve()
+        $eval_env.cached_logs.push(e);
+        resolve();
       }
-    })
+    });
     // 还原 console.log
-    console.log = console.cloned_log
+    console.log = console.cloned_log;
     // 还原 $request
-    $request = $eval_env.request
+    $request = $eval_env.request;
     // 返回数据
     $.json = {
-      result: '',
-      output: $eval_env.cached_logs.join('\n')
-    }
+      result: "",
+      output: $eval_env.cached_logs.join("\n"),
+    };
+  }
+}
+
+async function apiSurge() {
+  const opts = $.toObj($request.body);
+  const httpapi = $.getdata("@chavy_boxjs_userCfgs.httpapi");
+  const ishttpapi = /.*?@.*?:[0-9]+/.test(httpapi);
+  if (
+    $.isSurge() &&
+    !$.isLoon() &&
+    !$.isShadowrocket() &&
+    !$.isStash() &&
+    ishttpapi
+  ) {
+    const [key, prefix] = httpapi.split("@");
+    opts.url = `http://${prefix}/${opts.url}`;
+    opts.headers = {
+      "X-Key": key,
+      Accept: "application/json, text/plain, */*",
+    };
+    await new Promise((resolve) => {
+      $[opts.method.toLowerCase()](opts, (_, __, resp) => {
+        $.json = JSON.parse(resp);
+        resolve($.json);
+      });
+    });
   }
 }
 
 async function apiSaveData() {
-  const { key: dataKey, val: dataVal } = $.toObj($request.body)
-  $.setdata(dataVal, dataKey)
+  const { key: dataKey, val: dataVal } = $.toObj($request.body);
+  $.setdata(dataVal, dataKey);
   $.json = {
     key: dataKey,
-    val: $.getdata(dataKey)
-  }
+    val: $.getdata(dataKey),
+  };
 }
 
 /**
@@ -793,54 +794,54 @@ async function apiSaveData() {
 function reloadAppSubCache(url) {
   // 地址后面拼时间缀, 避免 GET 缓存
   const requrl = `${url}${
-    url.includes('?') ? '&' : '?'
-  }_=${new Date().getTime()}`
+    url.includes("?") ? "&" : "?"
+  }_=${new Date().getTime()}`;
   return $.http.get(requrl).then((resp) => {
     try {
-      const subcaches = getAppSubCaches()
-      subcaches[url] = $.toObj(resp.body)
-      subcaches[url].updateTime = new Date()
-      $.setjson(subcaches, $.KEY_app_subCaches)
-      $.log(`更新订阅, 成功! ${url}`)
+      const subcaches = getAppSubCaches();
+      subcaches[url] = $.toObj(resp.body);
+      subcaches[url].updateTime = new Date();
+      $.setjson(subcaches, $.KEY_app_subCaches);
+      $.log(`更新订阅, 成功! ${url}`);
     } catch (e) {
-      $.logErr(e)
-      $.log(`更新订阅, 失败! ${url}`)
+      $.logErr(e);
+      $.log(`更新订阅, 失败! ${url}`);
     }
-  })
+  });
 }
 
 async function reloadAppSubCaches() {
-  $.msg($.name, '更新订阅: 开始!')
-  const reloadActs = []
-  const usercfgs = getUserCfgs()
+  $.msg($.name, "更新订阅: 开始!");
+  const reloadActs = [];
+  const usercfgs = getUserCfgs();
   usercfgs.appsubs.forEach((sub) => {
-    reloadActs.push(reloadAppSubCache(sub.url))
-  })
-  await Promise.all(reloadActs)
-  $.log(`全部订阅, 完成!`)
-  const endTime = new Date().getTime()
-  const costTime = (endTime - $.startTime) / 1000
-  $.msg($.name, `更新订阅: 完成! 🕛 ${costTime} 秒`)
+    reloadActs.push(reloadAppSubCache(sub.url));
+  });
+  await Promise.all(reloadActs);
+  $.log(`全部订阅, 完成!`);
+  const endTime = new Date().getTime();
+  const costTime = (endTime - $.startTime) / 1000;
+  $.msg($.name, `更新订阅: 完成! 🕛 ${costTime} 秒`);
 }
 
 function upgradeUserData() {
-  const usercfgs = getUserCfgs()
+  const usercfgs = getUserCfgs();
   // 如果存在`usercfgs.appsubCaches`则需要升级数据
-  const isNeedUpgrade = !!usercfgs.appsubCaches
+  const isNeedUpgrade = !!usercfgs.appsubCaches;
   if (isNeedUpgrade) {
     // 迁移订阅缓存至独立的持久化空间
-    $.setjson(usercfgs.appsubCaches, $.KEY_app_subCaches)
+    $.setjson(usercfgs.appsubCaches, $.KEY_app_subCaches);
     // 移除用户偏好中的订阅缓存
-    delete usercfgs.appsubCaches
+    delete usercfgs.appsubCaches;
     usercfgs.appsubs.forEach((sub) => {
-      delete sub._raw
-      delete sub.apps
-      delete sub.isErr
-      delete sub.updateTime
-    })
+      delete sub._raw;
+      delete sub.apps;
+      delete sub.isErr;
+      delete sub.updateTime;
+    });
   }
   if (isNeedUpgrade) {
-    $.setjson(usercfgs, $.KEY_usercfgs)
+    $.setjson(usercfgs, $.KEY_usercfgs);
   }
 }
 
@@ -851,35 +852,36 @@ function upgradeUserData() {
  * 升级后: 把每个备份都独立存到一个空间, `$.KEY_backups` 仅记录必要的数据索引
  */
 function upgradeGlobalBaks() {
-  let oldbaks = $.getdata($.KEY_globalBaks)
-  let newbaks = $.getjson($.KEY_backups, [])
-  const isEmpty = (bak) => [undefined, null, ''].includes(bak)
-  const isExistsInNew = (backupId) => newbaks.find((bak) => bak.id === backupId)
+  let oldbaks = $.getdata($.KEY_globalBaks);
+  let newbaks = $.getjson($.KEY_backups, []);
+  const isEmpty = (bak) => [undefined, null, ""].includes(bak);
+  const isExistsInNew = (backupId) =>
+    newbaks.find((bak) => bak.id === backupId);
 
   // 存在旧备份数据时, 升级备份数据格式
   if (!isEmpty(oldbaks)) {
-    oldbaks = JSON.parse(oldbaks)
+    oldbaks = JSON.parse(oldbaks);
     oldbaks.forEach((bak) => {
-      if (isEmpty(bak)) return
-      if (isEmpty(bak.bak)) return
-      if (isExistsInNew(bak.id)) return
+      if (isEmpty(bak)) return;
+      if (isEmpty(bak.bak)) return;
+      if (isExistsInNew(bak.id)) return;
 
-      console.log(`正在迁移: ${bak.name}`)
-      const backupId = bak.id
-      const backupData = bak.bak
+      console.log(`正在迁移: ${bak.name}`);
+      const backupId = bak.id;
+      const backupData = bak.bak;
 
       // 删除旧的备份数据, 仅保留索引信息
-      delete bak.bak
-      newbaks.push(bak)
+      delete bak.bak;
+      newbaks.push(bak);
 
       // 提取旧备份数据, 存入独立的持久化空间
-      $.setjson(backupData, backupId)
-    })
-    $.setjson(newbaks, $.KEY_backups)
+      $.setjson(backupData, backupId);
+    });
+    $.setjson(newbaks, $.KEY_backups);
   }
 
   // 清空所有旧备份的数据
-  $.setdata('', $.KEY_globalBaks)
+  $.setdata("", $.KEY_globalBaks);
 }
 
 /**
@@ -889,61 +891,61 @@ function upgradeGlobalBaks() {
  */
 function doneBox() {
   // 记录当前使用哪个域名访问
-  $.setdata(getHost($request.url), $.KEY_boxjs_host)
-  if ($.isOptions) doneOptions()
-  else if ($.isPage) donePage()
-  else if ($.isQuery) doneQuery()
-  else if ($.isApi) doneApi()
-  else $.done()
+  $.setdata(getHost($request.url), $.KEY_boxjs_host);
+  if ($.isOptions) doneOptions();
+  else if ($.isPage) donePage();
+  else if ($.isQuery) doneQuery();
+  else if ($.isApi) doneApi();
+  else $.done();
 }
 
 function getBaseDoneHeaders(mixHeaders = {}) {
   return Object.assign(
     {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'POST,GET,OPTIONS,PUT,DELETE',
-      'Access-Control-Allow-Headers':
-        'Origin, X-Requested-With, Content-Type, Accept'
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST,GET,OPTIONS,PUT,DELETE",
+      "Access-Control-Allow-Headers":
+        "Origin, X-Requested-With, Content-Type, Accept",
     },
     mixHeaders
-  )
+  );
 }
 
 function getHtmlDoneHeaders() {
   return getBaseDoneHeaders({
-    'Content-Type': 'text/html;charset=UTF-8'
-  })
+    "Content-Type": "text/html;charset=UTF-8",
+  });
 }
 function getJsonDoneHeaders() {
   return getBaseDoneHeaders({
-    'Content-Type': 'text/json; charset=utf-8'
-  })
+    "Content-Type": "text/json; charset=utf-8",
+  });
 }
 
 function doneOptions() {
-  const headers = getBaseDoneHeaders()
-  if ($.isQuanX()) $.done({ headers })
-  else $.done({ response: { headers } })
+  const headers = getBaseDoneHeaders();
+  if ($.isQuanX()) $.done({ headers });
+  else $.done({ response: { headers } });
 }
 
 function donePage() {
-  const headers = getHtmlDoneHeaders()
-  if ($.isQuanX()) $.done({ status: 'HTTP/1.1 200', headers, body: $.html })
-  else $.done({ response: { status: 200, headers, body: $.html } })
+  const headers = getHtmlDoneHeaders();
+  if ($.isQuanX()) $.done({ status: "HTTP/1.1 200", headers, body: $.html });
+  else $.done({ response: { status: 200, headers, body: $.html } });
 }
 
 function doneQuery() {
-  $.json = $.toStr($.json)
-  const headers = getJsonDoneHeaders()
-  if ($.isQuanX()) $.done({ status: 'HTTP/1.1 200', headers, body: $.json })
-  else $.done({ response: { status: 200, headers, body: $.json } })
+  $.json = $.toStr($.json);
+  const headers = getJsonDoneHeaders();
+  if ($.isQuanX()) $.done({ status: "HTTP/1.1 200", headers, body: $.json });
+  else $.done({ response: { status: 200, headers, body: $.json } });
 }
 
 function doneApi() {
-  $.json = $.toStr($.json)
-  const headers = getJsonDoneHeaders()
-  if ($.isQuanX()) $.done({ status: 'HTTP/1.1 200', headers, body: $.json })
-  else $.done({ response: { status: 200, headers, body: $.json } })
+  $.json = $.toStr($.json);
+  const headers = getJsonDoneHeaders();
+  if ($.isQuanX()) $.done({ status: "HTTP/1.1 200", headers, body: $.json });
+  else $.done({ response: { status: 200, headers, body: $.json } });
 }
 
 /**
