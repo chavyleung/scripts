@@ -98,6 +98,10 @@ A SPA Appliction be used for scripts utils
   * 便于阅读:[Env.js](./Env.js?raw=true "Env.js")
 
 ---
+  
+# 赞助
+  
+1. [CloudFlare](https://www.cloudflare.com/)
 
 # 📃LICENSE
 Copyright © 2019-present chavyleung. This project is [GPL](https://github.com/chavyleung/scripts/blob/master/LICENSE) licensed.
