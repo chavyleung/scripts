@@ -3,7 +3,7 @@ const $ = new Env('BoxJs')
 // 为 eval 准备的上下文环境
 const $eval_env = {}
 
-$.version = '0.12.9'
+$.version = '0.12.10'
 $.versionType = 'beta'
 
 // 发出的请求需要需要 Surge、QuanX 的 rewrite
@@ -253,6 +253,8 @@ async function handleApi() {
     await apiRunScript()
   } else if (api === '/saveData') {
     await apiSaveData()
+  } else if (api === '/surge') {
+    await apiSurge()
   }
 }
 
@@ -293,6 +295,7 @@ function getBoxData() {
     appSubCaches,
     globalbaks
   }
+
   return box
 }
 
@@ -558,12 +561,34 @@ function getAppDatas(app) {
   return datas
 }
 
+function dealKey(str) {
+  const [rootKey, delIndex] = str.split('.')
+  if (rootKey && rootKey.indexOf('@') > -1 && delIndex !== undefined) {
+    const key = rootKey.replace('@', '')
+    const datas = JSON.parse($.getdata(key))
+    if (Array.isArray(datas) && delIndex <= datas.length - 1) {
+      datas.splice(delIndex, 1)
+      $.setdata(JSON.stringify(datas), key)
+    }
+  }
+}
+
 async function apiSave() {
   const data = $.toObj($request.body)
   if (Array.isArray(data)) {
-    data.forEach((dat) => $.setdata(dat.val, dat.key))
+    data.forEach((dat) => {
+      if (dat.val === null) {
+        dealKey(dat.key)
+      } else {
+        $.setdata(dat.val, dat.key)
+      }
+    })
   } else {
-    $.setdata(data.val, data.key)
+    if (data.val === null) {
+      dealKey(data.key)
+    } else {
+      $.setdata(data.val, data.key)
+    }
   }
   $.json = getBoxData()
 }
@@ -722,6 +747,32 @@ async function apiRunScript() {
       result: '',
       output: $eval_env.cached_logs.join('\n')
     }
+  }
+}
+
+async function apiSurge() {
+  const opts = $.toObj($request.body)
+  const httpapi = $.getdata('@chavy_boxjs_userCfgs.httpapi')
+  const ishttpapi = /.*?@.*?:[0-9]+/.test(httpapi)
+  if (
+    $.isSurge() &&
+    !$.isLoon() &&
+    !$.isShadowrocket() &&
+    !$.isStash() &&
+    ishttpapi
+  ) {
+    const [key, prefix] = httpapi.split('@')
+    opts.url = `http://${prefix}/${opts.url}`
+    opts.headers = {
+      'X-Key': key,
+      'Accept': 'application/json, text/plain, */*'
+    }
+    await new Promise((resolve) => {
+      $[opts.method.toLowerCase()](opts, (_, __, resp) => {
+        $.json = JSON.parse(resp)
+        resolve($.json)
+      })
+    })
   }
 }
 
