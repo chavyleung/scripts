@@ -1,6 +1,18 @@
 {
   "releases": [
     {
+      "version": "0.12.10",
+      "tags": ["beta"],
+      "author": "@dompling",
+      "msg": "fix(chavy.box.js): 临时优化会话 JSON 过大，导致所有会话操作失效",
+      "notes": [
+        {
+          "name": "修复",
+          "descs": ["临时优化会话 JSON 过大，导致所有会话操作失效"]
+        }
+      ]
+    },
+    {
       "version": "0.12.9",
       "tags": ["beta"],
       "author": "@GideonSenku",
