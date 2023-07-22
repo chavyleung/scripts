@@ -319,6 +319,9 @@ function Env(name, opts) {
         delete request.headers['content-type']
         delete request.headers['content-length']
       }
+      if (request.params) {
+        request.url += '?' + this.queryStr(request.params)
+      }
       switch (this.getEnv()) {
         case 'Surge':
         case 'Loon':
@@ -698,7 +701,6 @@ function Env(name, opts) {
           break
         case 'Node.js':
           process.exit(1)
-          break
       }
     }
   })(name, opts)
