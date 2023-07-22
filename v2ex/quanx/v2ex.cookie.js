@@ -1,6 +1,6 @@
 const cookieName = 'V2EX'
 const cookieKey = 'chavy_cookie_v2ex'
-const cookieVal = $request.headers['Cookie']
+const cookieVal = $request.headers['Cookie'] || $request.headers['cookie']
 
 if (cookieVal) {
   let cookie = $prefs.setValueForKey(cookieVal, cookieKey)
