@@ -575,19 +575,20 @@ function dealKey(str) {
 
 async function apiSave() {
   const data = $.toObj($request.body)
+  const boxjsAppId = $request.headers.boxjsAppId
   if (Array.isArray(data)) {
     data.forEach((dat) => {
       if (dat.val === null) {
         dealKey(dat.key)
       } else {
-        $.setdata(dat.val, dat.key)
+        $.setdata(dat.val, dat.key, boxjsAppId)
       }
     })
   } else {
     if (data.val === null) {
       dealKey(data.key)
     } else {
-      $.setdata(data.val, data.key)
+      $.setdata(data.val, data.key, boxjsAppId)
     }
   }
   $.json = getBoxData()

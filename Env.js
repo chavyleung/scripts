@@ -40,6 +40,11 @@ function Env(name, opts) {
       this.encoding = 'utf-8'
       this.startTime = new Date().getTime()
       Object.assign(this, opts)
+
+      //boxjs相关
+      this.boxjsCurSessionKey = "chavy_boxjs_cur_sessions"
+      this.boxjsSessionsKey = "chavy_boxjs_sessions"
+
       this.log('', `🔔${this.name}, 开始!`)
     }
 
@@ -237,7 +242,7 @@ function Env(name, opts) {
       return val
     }
 
-    setdata(val, key) {
+    setdata(val, key, boxjsAppId = "") {
       let issuc = false
       if (/^@/.test(key)) {
         const [, objkey, paths] = /^@(.*?)\.(.*?)$/.exec(key)
@@ -250,43 +255,97 @@ function Env(name, opts) {
         try {
           const objedval = JSON.parse(objval)
           this.lodash_set(objedval, paths, val)
-          issuc = this.setval(JSON.stringify(objedval), objkey)
+          issuc = this.setval(JSON.stringify(objedval), objkey, boxjsAppId)
         } catch (e) {
           const objedval = {}
           this.lodash_set(objedval, paths, val)
-          issuc = this.setval(JSON.stringify(objedval), objkey)
+          issuc = this.setval(JSON.stringify(objedval), objkey, boxjsAppId)
         }
       } else {
-        issuc = this.setval(val, key)
+        issuc = this.setval(val, key, boxjsAppId)
       }
       return issuc
     }
 
-    getval(key) {
+    getval(key, defaultValue = "") {
+      let value
       switch (this.getEnv()) {
         case 'Surge':
         case 'Loon':
         case 'Stash':
         case 'Shadowrocket':
-          return $persistentStore.read(key)
+          value = $persistentStore.read(key)
+          break
         case 'Quantumult X':
-          return $prefs.valueForKey(key)
+          value = $prefs.valueForKey(key)
+          break
         case 'Node.js':
           this.data = this.loaddata()
-          return this.data[key]
+          value = this.data[key]
+          break
         default:
-          return (this.data && this.data[key]) || null
+          value = (this.data && this.data[key]) || null
       }
+      return !value ? defaultValue : value
     }
 
-    setval(val, key) {
+    updateBoxjsSessions(key, val, boxjsAppId = "") {
+      // 避免死循环
+      if (key === this.boxjsSessionsKey || boxjsAppId === "") {
+        return
+      }
+      // 先从当前会话中获取boxjs的会话id
+      let boxjsCurSession = JSON.parse(this.getval(this.boxjsCurSessionKey, "{}"))
+      if (!boxjsCurSession.hasOwnProperty(boxjsAppId)) {
+        return
+      }
+      let curSessionId = boxjsCurSession[boxjsAppId]
+      let boxjsSessions = JSON.parse(this.getval(this.boxjsSessionsKey, "[]"))
+      if (boxjsSessions.length === 0) {
+        return
+      }
+      let curSessionDatas = []
+      boxjsSessions.forEach((session) => {
+        if (session.id === curSessionId) {
+          curSessionDatas = session.datas
+        }
+      })
+      if (curSessionDatas.length === 0) {
+        return
+      }
+      // 再把修改的数据更新到对应会话中
+      let isExists = false
+      curSessionDatas.forEach((kv) => {
+        if (kv.key === key) {
+          kv.val = val
+          isExists = true
+        }
+      })
+      // 如果订阅更新，新增的字段不存在会话中则添加
+      if (!isExists) {
+        curSessionDatas.push({
+          "key": key,
+          "val": val
+        })
+      }
+      boxjsSessions.forEach((session) => {
+        if (session.id === curSessionId) {
+          session.datas = curSessionDatas
+        }
+      })
+      this.setval(JSON.stringify(boxjsSessions), this.boxjsSessionsKey)
+    }
+
+    setval(val, key, boxjsAppId = "") {
       switch (this.getEnv()) {
         case 'Surge':
         case 'Loon':
         case 'Stash':
         case 'Shadowrocket':
+          this.updateBoxjsSessions(key, val, boxjsAppId)
           return $persistentStore.write(val, key)
         case 'Quantumult X':
+          this.updateBoxjsSessions(key, val, boxjsAppId)
           return $prefs.setValueForKey(val, key)
         case 'Node.js':
           this.data = this.loaddata()

@@ -2664,7 +2664,11 @@
               const val = !isNilVal ? _.toString(setting.val) : ''
               datas.push({ key, val })
             })
-            axios.post('/api/save', datas).then((resp) => {
+            axios.post('/api/save', datas, {
+              headers: {
+                "boxjsAppId": this.curapp.id
+              }
+            }).then((resp) => {
               if (this.curapp.id === 'BoxSetting') {
                 this.isSaveUserCfgs = false
               } else {
