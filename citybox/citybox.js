@@ -1,12 +1,16 @@
 const $ = new Env('魔盒')
+const hostApi = 'https://api.icitybox.cn/index.php/api'
+const drawRes = []
 
 !(async () => {
   const KEY_har = 'boxapp_citybox_har'
   const har = $.getjson(KEY_har)
   const headers = har?.headers
   await sign(headers)
+  await draw(headers)
+  await draw(headers)
   if ($.sign?.signnum) {
-    $.msg($.name, `第${$.sign.signnum}天 签到成功`)
+    $.msg($.name, `第${$.sign.signnum}天 签到成功`, drawRes.join('\n'))
   } else if ($.sign?.message) {
     $.msg($.name, $.sign?.message)
   } else {
@@ -19,12 +23,31 @@ const $ = new Env('魔盒')
 function sign(headers) {
   return new Promise((resolve) => {
     const url = {
-      url: 'https://api.icitybox.cn/index.php/api/user/up_sign',
+      url: hostApi + '/user/up_sign',
       headers,
     }
     $.get(url, (err, resp, data) => {
       try {
         $.sign = JSON.parse(data)
+      } catch (e) {
+        $.logErr(e, resp)
+      } finally {
+        resolve()
+      }
+    })
+  })
+}
+
+function draw(headers) {
+  return new Promise((resolve) => {
+    const url = {
+      url: hostApi + '/roulette_draw/draw_results',
+      headers,
+    }
+    $.post(url, (err, resp, data) => {
+      try {
+        const data = JSON.parse(data)
+        drawRes.push(data.winning_desc)
       } catch (e) {
         $.logErr(e, resp)
       } finally {
