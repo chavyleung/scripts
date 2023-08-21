@@ -3,7 +3,7 @@ const $ = new Env('BoxJs')
 // 为 eval 准备的上下文环境
 const $eval_env = {}
 
-$.version = '0.12.10'
+$.version = '0.12.11'
 $.versionType = 'beta'
 
 // 发出的请求需要需要 Surge、QuanX 的 rewrite
@@ -56,6 +56,16 @@ $.ver = `https://raw.githubusercontent.com/chavyleung/scripts/master/box/release
 
   // 请求路径
   $.path = getPath($request.url)
+
+  // 请求参数 /api/save?id=xx&name=xx => {id: 'xx', name: 'xx'}
+  const [, query] = $.path.split('?')
+  $.queries = query
+    ? query.split('&').reduce((obj, cur) => {
+        const [key, val] = cur.split('=')
+        obj[key] = val
+        return obj
+      }, {})
+    : {}
 
   // 请求类型: GET
   $.isGet = $request.method === 'GET'
@@ -233,7 +243,7 @@ async function handleQuery() {
 async function handleApi() {
   const [, api] = $.path.split('/api')
 
-  if (api === '/save') {
+  if (api === '/save' || api.startsWith('/save')) {
     await apiSave()
   } else if (api === '/addAppSub') {
     await apiAddAppSub()
@@ -590,6 +600,12 @@ async function apiSave() {
       $.setdata(data.val, data.key)
     }
   }
+
+  const appId = $.queries['appid']
+  if (appId) {
+    updateCurSesssions(appId, data)
+  }
+
   $.json = getBoxData()
 }
 
@@ -881,6 +897,34 @@ function upgradeGlobalBaks() {
 
   // 清空所有旧备份的数据
   $.setdata('', $.KEY_globalBaks)
+}
+
+function updateCurSesssions(appId, data) {
+  if (!appId) {
+    console.log(`[updateCurSesssions] 跳过! 没有指定 appId!`)
+    return
+  }
+
+  const curSessions = getCurSessions()
+  const curSessionId = curSessions[appId]
+  if (!curSessionId) {
+    console.log(
+      `[updateCurSesssions] 跳过! 应用 [${appId}] 找不到当前会话, 请先应用会话!`
+    )
+    return
+  }
+
+  const sessions = getAppSessions()
+  const session = sessions.find((session) => session.id === curSessionId)
+  if (!session) {
+    console.log(
+      `[updateCurSesssions] 跳过! 应用 [${appId}] 找不到当前会话, 请先应用会话!`
+    )
+    return
+  }
+
+  session.datas = data
+  $.setjson(sessions, $.KEY_sessions)
 }
 
 /**
