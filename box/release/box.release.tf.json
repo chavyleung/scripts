@@ -1,6 +1,18 @@
 {
   "releases": [
     {
+      "version": "0.12.12",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "msg": "修复无法备份问题",
+      "notes": [
+        {
+          "name": "修复",
+          "descs": ["无法备份问题"]
+        }
+      ]
+    },
+    {
       "version": "0.12.11",
       "tags": ["beta"],
       "author": "@lowking",

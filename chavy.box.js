@@ -3,7 +3,7 @@ const $ = new Env('BoxJs')
 // 为 eval 准备的上下文环境
 const $eval_env = {}
 
-$.version = '0.12.11'
+$.version = '0.12.12'
 $.versionType = 'beta'
 
 // 发出的请求需要需要 Surge、QuanX 的 rewrite
@@ -243,7 +243,7 @@ async function handleQuery() {
 async function handleApi() {
   const [, api] = $.path.split('/api')
 
-  if (api === '/save' || api.startsWith('/save')) {
+  if (api === '/save' || api.startsWith('/save?')) {
     await apiSave()
   } else if (api === '/addAppSub') {
     await apiAddAppSub()
