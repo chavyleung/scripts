@@ -82,18 +82,21 @@ async function signDailyTasks() {
 }
 
 function doTask(task) {
-  return $.http.get({
-    url: `https://mcs-mimp-web.sf-express.com/mcs-mimp/task/finishTask?id=${task.taskCode}`,
-    body: ``,
+  return $.http.post({
+    url: `https://mcs-mimp-web.sf-express.com/mcs-mimp/commonRoutePost/memberEs/taskRecord/finishTask`,
+    body: `{"taskCode":"${task.taskCode}"}`,
     headers: {}
   })
 }
+
+
+
 
 function getPoint(task) {
   return $.http
     .post({
       url: 'https://mcs-mimp-web.sf-express.com/mcs-mimp/commonPost/~memberNonactivity~integralTaskStrategyService~fetchIntegral',
-      body: `{"strategyId":${task.strategyId},"taskId":"${task.taskId}","taskCode":"${task.taskCode}"}`,
+      body: `{"strategyId":${task.strategyId},"taskId":"${task.taskId}","taskCode":"${task.taskCode}","channelType":"1"}`,
       headers: {
         'Content-Type': 'application/json'
       }
