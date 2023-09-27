@@ -1,7 +1,7 @@
 const cookieName = '百度贴吧'
 const cookieKey = 'chavy_cookie_tieba'
 const chavy = init()
-const cookieVal = $request.headers['Cookie']
+const cookieVal = $request.headers['Cookie'] || $request.headers['cookie']
 
 if (cookieVal.indexOf('BDUSS') > 0) {
   let cookie = chavy.setdata(cookieVal, cookieKey)
