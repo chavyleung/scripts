@@ -12,7 +12,7 @@
  *
  * type: cron
  * cron: 0 10 0,21 * * *
- * script-path: https://raw.githubusercontent.com/chiupam/surge/main/scripts/javascripts/zsfc.v3.js
+ * script-path: https://raw.githubusercontent.com/chavyleung/scripts/master/zsfc/zsfc.js
  * 
  * =============== Surge ===============
  * 掌上飞车Cookie = type=http-request, pattern=^https?://comm\.ams\.game\.qq\.com/ams/ame/amesvr*, requires-body=1, max-size=-1, script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/zsfc/zsfc.js, script-update-interval=0, timeout=5
@@ -254,7 +254,7 @@ async function claimGift(giftId, giftName) {
     url: $.read(`zsfc_url`), headers: $.toObj($.read(`zsfc_headers`)),
     body: `${$.read(`zsfc_param`)}&iFlowId=${giftId}`
   };
-  $.log(`🧑‍💻 开始领取 ${giftName}`);
+  $.log(`🧑‍💻 开始领取${giftName}`);
   return new Promise(resolve => {
     $.post(options, (err, resp, data) => {
       if (data) {
@@ -266,7 +266,7 @@ async function claimGift(giftId, giftName) {
           const sPackageName = body.modRet.sPackageName;
           $.log(`✅ 领取结果: 获得${sPackageName}`);
           if ($.message) {
-            $.message += `, ${sPackageName}`;
+            $.message += `，${sPackageName}`;
           } else {
             $.message = `领取结果: 获得${sPackageName}`
           }
