@@ -1,5 +1,5 @@
 /**
- * 
+ *
  * 使用方法：打开掌上飞车APP, 点击咨询栏的签到（每日福利）即可，无需点击签到，否则脚本无法正确运行。
  * 注意事项：每月需手动打开一次掌上飞车APP并进入签到页面，以重新抓包更新礼包数据，为此需要每日运行两次脚本
  *
@@ -13,19 +13,19 @@
  * type: cron
  * cron: 0 10 0,21 * * *
  * script-path: https://raw.githubusercontent.com/chavyleung/scripts/master/zsfc/zsfc.js
- * 
+ *
  * =============== Surge ===============
- * 掌上飞车Cookie = type=http-request, pattern=^https?://comm\.ams\.game\.qq\.com/ams/ame/amesvr*, requires-body=1, max-size=-1, script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/zsfc/zsfc.js, script-update-interval=0, timeout=5
+ * 掌上飞车Cookie = type=http-request, pattern=^https?://comm\.ams\.game\.qq\.com/ams/ame/amesvr*, requires-body=true, max-size=-1, script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/zsfc/zsfc.js, script-update-interval=0, timeout=5
  * 掌上飞车 =type=cron, cronexp="0 10 0,21 * * *", wake-system=1, script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/zsfc/zsfc.js, script-update-interval=0, timeout=5
- * 
+ *
  * =============== Loon ===============
  * http-request ^https?://comm\.ams\.game\.qq\.com/ams/ame/amesvr* script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/zsfc/zsfc.js, requires-body=true, timeout=10, tag=掌上飞车Cookie
  * cron "0 10 0,21 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/zsfc/zsfc.js, tag=掌上飞车
- * 
+ *
  * =============== Quan X ===============
- * ^https?://comm\.ams\.game\.qq\.com/ams/ame/amesvr* url scripts-request-body https://raw.githubusercontent.com/chavyleung/scripts/master/zsfc/zsfc.js
+ * ^https?://comm\.ams\.game\.qq\.com/ams/ame/amesvr* url script-request-body https://raw.githubusercontent.com/chavyleung/scripts/master/zsfc/zsfc.js
  * 0 10 0,21 * * * https://raw.githubusercontent.com/chavyleung/scripts/master/zsfc/zsfc.js, tag=掌上飞车, enabled=true
- * 
+ *
 */
 
 /**

@@ -19,23 +19,33 @@
  * script-path: https://raw.githubusercontent.com/chavyleung/scripts/master/zsfc/zsfc.shop.js
  *
  * =============== Surge ===============
- * 掌飞购物Cookie = type=http-request, pattern=^https?://bang\.qq\.com/app/speed/mall/main2\?*, requires-body=1, max-size=-1, script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/zsfc/zsfc.shop.js, script-update-interval=0, timeout=5
+ * 掌飞购物Cookie = type=http-request, pattern=^https?://bang\.qq\.com/app/speed/mall/main2\?*, requires-body=1, max-size=-1, script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/zsfc/zsfc.shop.js, script-update-interval=0, timeout=10
  * 掌飞购物 =type=cron, cronexp="0 11 0,21 * * *", wake-system=1, script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/zsfc/zsfc.shop.js, script-update-interval=0, timeout=60
  *
  * =============== Loon ===============
- * http-request ^https?://bang\.qq\.com/app/speed/mall/main2\?* script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/zsfc/zsfc.shop.js, requires-body=true, timeout=5, tag=掌飞购物Cookie
+ * http-request ^https?://bang\.qq\.com/app/speed/mall/main2\?* script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/zsfc/zsfc.shop.js, requires-body=true, timeout=10, tag=掌飞购物Cookie
  * cron "0 11 0,21 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/zsfc/zsfc.shop.js, tag=掌飞购物
  *
  * =============== Quan X ===============
- * ^https?://bang\.qq\.com/app/speed/mall/main2\?* url scripts-request-body https://raw.githubusercontent.com/chavyleung/scripts/master/zsfc/zsfc.shop.js
+ * ^https?://bang\.qq\.com/app/speed/mall/main2\?* url script-request-body https://raw.githubusercontent.com/chavyleung/scripts/master/zsfc/zsfc.shop.js
  * 0 11 0,21 * * * https://raw.githubusercontent.com/chavyleung/scripts/master/zsfc/zsfc.shop.js, tag=掌飞购物, enabled=true
  *
  */
 
-const $ = new Env(`🏎️ 掌飞购物`);  // 创建名为 $ 的环境实例
 
-const isreq = typeof $request !== 'undefined';  // 检查是否存在请求对象
+/**
+ * 创建一个名为 $ 的环境变量实例，用于处理掌飞购物相关操作
+ */
+const $ = new Env(`🏎️ 掌飞购物`)
 
+/**
+ * 检查是否为请求阶段
+ */
+const isreq = typeof $request !== 'undefined';
+
+/**
+ * 主函数，用于执行打卡操作或设置请求数据
+ */
 (async () => {
   if (isreq) {
     // 处理请求阶段
@@ -90,7 +100,7 @@ const isreq = typeof $request !== 'undefined';  // 检查是否存在请求对�
 
     // 定义商品信息（目前只支持买着下面的东西，因为我懒得爬取了）
     const shopIdArray = {
-      "雷诺": {"itemId": "12720", "price_idx": {"180天": {"index": "0", "price": 12200}, "30天": {"index": "1", "price": 8500}}}, // 雷诺不购买30天的，有点浪费点券和消费券
+      "雷诺": {"itemId": "12720", "price_idx": {"180天": {"index": "0", "price": 12200}}}, // 雷诺不购买30天的，有点浪费点券和消费券
       "进气系统": {"itemId": "12377", "price_idx": {"10个": {"index": "0", "price": 3500}, "5个": {"index": "1", "price": 2000}, "1个": {"index": "2", "price": 500}, "50个": {"index": "3", "price": 17500}}},
       "燃料系统": {"itemId": "12378", "price_idx": {"10个": {"index": "0", "price": 3500}, "5个": {"index": "1", "price": 2000}, "1个": {"index": "2", "price": 500}, "50个": {"index": "3", "price": 17500}}},
       "点火系统": {"itemId": "12376", "price_idx": {"10个": {"index": "0", "price": 3500}, "5个": {"index": "1", "price": 2000}, "1个": {"index": "2", "price": 500}, "50个": {"index": "3", "price": 17500}}},
@@ -123,7 +133,8 @@ const isreq = typeof $request !== 'undefined';  // 检查是否存在请求对�
     $.subtitle = beforeLog;
 
     // 读取要购买的商品名称
-    const shopName = $.read(`zsfc_bang_shopname`);
+    shopName = $.read(`zsfc_bang_shopname`);
+    if (!shopName) shopName = autoGetGameItem();
 
     // 获取购物包
     const [shopArray, totalCount] = getShopItems(shopName, shopIdArray[shopName],
@@ -175,11 +186,11 @@ const isreq = typeof $request !== 'undefined';  // 检查是否存在请求对�
   .finally(() => $.done());
 
 /**
- * @description 从字符串中提取参数并返回指定键名的参数值
- * @param {string} str - 包含参数的字符串
- * @param {Array<string>} argument - 需要提取的参数键名
- * @returns {object} 包含提取的参数键值对的对象
- */
+  * @description 从字符串中提取参数并返回指定键名的参数值
+  * @param {string} str - 包含参数的字符串
+  * @param {Array<string>} argument - 需要提取的参数键名
+  * @returns {object} 包含提取的参数键值对的对象
+  */
 function extractParams(str, argument) {
   // 创建正则表达式，用于匹配参数键值对
   const regex = /([^&=]+)=([^&]+)/g;
@@ -214,7 +225,6 @@ function extractParams(str, argument) {
   // 返回包含筛选后的参数键值对的对象
   return filteredParams;
 }
-
 
 /**
  * @description 生成查询字符串
@@ -261,7 +271,7 @@ function autoGetGameItem() {
   // 定义游戏道具的列表，包括普通改装道具和进阶改装道具
   const gameItems = [
     "进气系统", "燃料系统", "点火系统", "引擎系统", // 普通改装道具
-    "普通粒子推进", "普通阿尔法离合" // 进阶改装道具
+    // "普通粒子推进", "普通阿尔法离合" // 进阶改装道具，我不需要，注释掉了
   ];
 
   // 获取当前月份（加1是因为月份从0开始）
