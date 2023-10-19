@@ -92,7 +92,7 @@ const isreq = typeof $request !== 'undefined';
 
       // 今天还能寻宝，继续寻宝
       if (treasureData.todaycanTimes) {
-        $.log(`还剩余${treasureData.todaycanTimes}次寻宝机会，继续寻宝`);
+        $.log(`💨 还剩余${treasureData.todaycanTimes}次寻宝机会，继续寻宝`);
         await performTreasureAction(`start`);
       }
     } else if (!treasureData.todaycanTimes) {
@@ -135,11 +135,11 @@ async function fetchMapData() {
   let mapData = {};
 
   return new Promise(resolve => {
-    $.get(url, (error, response, rawData) => {
-      if (rawData) {
+    $.get(url, (error, response, data) => {
+      if (data) {
         // 提取userInfo和mapInfo的数据
-        const userInfoMatch = rawData.match(/window\.userInfo\s*=\s*eval\('([^']+)'\);/);
-        const mapInfoMatch = rawData.match(/window\.mapInfo\s*=\s*eval\('([^']+)'\);/);
+        const userInfoMatch = data.match(/window\.userInfo\s*=\s*eval\('([^']+)'\);/);
+        const mapInfoMatch = data.match(/window\.mapInfo\s*=\s*eval\('([^']+)'\);/);
 
         if (userInfoMatch && mapInfoMatch) {
           const userInfoData = eval('(' + userInfoMatch[1] + ')');
@@ -152,7 +152,7 @@ async function fetchMapData() {
             .find(map => map.isdaji === 1);
 
           const mapArrRegex = new RegExp(`${highestUnlockedStarId} == i \\? \\(M\\.getLb\\((\\d+), e\\), B\\.getLb\\((\\d+), e\\)\\) :`, 'g');
-          const mapArrMatch = mapArrRegex.exec(rawData);
+          const mapArrMatch = mapArrRegex.exec(data);
           const mapArr = mapArrMatch ? [parseInt(mapArrMatch[1]), parseInt(mapArrMatch[2])] : [];
 
           mapData = {
@@ -180,7 +180,8 @@ async function fetchMapData() {
 async function performTreasureAction(action) {
   let isEnding = 0;
   let timeRemaining = 0;
-  let remainingTreasureAttempts = 0;
+  let remainingTreasureAttempts = 1;
+  let digTreasureData = {};
 
   const options = {
     url:`https://bang.qq.com/app/speed/treasure/ajax/${action}DigTreasure`,
@@ -202,12 +203,12 @@ async function performTreasureAction(action) {
   return new Promise(resolve => {
     $.post(options, (error, response, data) => {
       if (data) {
-        const treasureResponse = $.toObj(data);
+        const body = $.toObj(data);
         if (action === "start") {
-          if (treasureResponse.msg.includes(`用完`)) {
+          if (body.msg.includes(`用完`)) {
             remainingTreasureAttempts = 0;
           } else {
-            const targetTimestamp = new Date(treasureResponse.data.time).getTime();
+            const targetTimestamp = new Date(body.data.time).getTime();
             const tenMinutesLaterTimestamp = targetTimestamp + 10 * 60 * 1000;
             if (Date.now() > tenMinutesLaterTimestamp) {
               isEnding = 1;
@@ -215,19 +216,19 @@ async function performTreasureAction(action) {
               timeRemaining = parseInt((tenMinutesLaterTimestamp - Date.now()) / 1000);
             }
           }
-        } else {
-          remainingTreasureAttempts = treasureResponse.data.todaycanTimes - treasureResponse.data.todayTimes;
+
+          digTreasureData = {
+            ending: isEnding,
+            timeLeft: timeRemaining,
+            todaycanTimes: remainingTreasureAttempts
+          };
         }
       } else {
         $.log(`❌ 寻宝时发生错误`);
         $.log($.toStr(error));
       }
 
-      resolve({
-        "ending": isEnding,
-        "timeLeft": timeRemaining,
-        "todaycanTimes": remainingTreasureAttempts
-      });
+      resolve(digTreasureData);
     });
   });
 }
