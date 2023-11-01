@@ -59,23 +59,20 @@ const isreq = typeof $request !== 'undefined';
     }
 
     // 提取请求数据
-    const url = $.toStr($request.url);
-    const headers = $.toStr($request.headers);
-    const body = $.toStr($request.body);
+    const cookie = $request.headers.cookie;
+    const body = $request.body;
 
     // 定义 params 数组
     const params = ['appid', 'iActivityId', 'g_tk', 'e_code', 'g_code', 'eas_url', 'eas_refer', 'sServiceDepartment', 'sServiceType'];
     // 数组有空返回则程序终止
     if (params.find(param => !matchParam(body, param))) return;
-    // 用 & 将键值对拼接成一个长字符串
-    const param = params.map(param => `${param}=${matchParam(body, param)}`).join('&');
 
     // 初始化 dataToWrite 词典，填充待写入内存的键值对
     const dataToWrite = {
-      'zsfc_url': url.replace(/^"|"$/g, ''),
-      'zsfc_headers': headers.replace(/^"|"$/g, ''),
-      'zsfc_param': param.replace(/^"|"$/g, ''),
+      'zsfc_iActivityId': (matchParam(body, 'iActivityId')).toString(),
       'zsfc_iFlowId': (matchParam(body, 'iFlowId') - 1).toString(),
+      'zsfc_accessToken': matchParam(cookie, 'accessToken'),
+      'zsfc_openid': matchParam(cookie, 'openId'),
       'zsfc_timestamp': Date.now().toString(),
       'zsfc_time': new Date().toLocaleString().toString(),
       'zsfc_month': (new Date().getMonth() + 1).toString()
@@ -83,8 +80,13 @@ const isreq = typeof $request !== 'undefined';
     // 将请求数据写入内存
     Object.entries(dataToWrite).forEach(([key, value]) => $.write(value, key));
 
+    // 输出到日志只输出特定的键值对
+    // const { zsfc_iActivityId, zsfc_iFlowId, zsfc_accessToken, zsfc_openid } = dataToWrite;
+    // $.log({ zsfc_iActivityId, zsfc_iFlowId, zsfc_accessToken, zsfc_openid });
+    $.log(dataToWrite)
+
     // 显示签到结果通知
-    $.notice($.name, '✅ 获取签到数据成功！', `${interval}秒后请不要再点击本页面中的任何按钮，否则脚本会失效！`);
+    $.notice($.name, `✅ 获取签到数据成功（${dataToWrite.zsfc_iFlowId}/${dataToWrite.zsfc_iActivityId}）`, `${interval}秒后请不要再点击本页面中的任何按钮，否则脚本会失效！`);
 
   } else {
     /**
@@ -99,14 +101,26 @@ const isreq = typeof $request !== 'undefined';
       return;
     }
 
+    const option = {
+      url: `https://comm.ams.game.qq.com/ams/ame/amesvr?iActivityId=${$.read(`zsfc_iActivityId`)}`,
+      headers: {
+        "Cookie": `access_token=${$.read(`zsfc_accessToken`)}; acctype=qc; appid=1105330667; openid=${$.read(`zsfc_openid`)}`
+    },
+      body: $.queryStr({
+        "iActivityId": $.read(`zsfc_iActivityId`),
+        "g_tk": "1842395457",
+        "sServiceType": "speed"
+      })
+    };
+
     // 获取本月签到礼物列表
-    const signInGifts = await getSignInGifts()
+    const signInGifts = await getSignInGifts(option);
 
     // 进行每日签到
-    await dailyCheckin(signInGifts['每日签到'])
+    await dailyCheckin(option, signInGifts['每日签到']);
 
     // 获取本月累签天数
-    const totalSignInDay = await getTotalSignInDays()
+    const totalSignInDay = await getTotalSignInDays(option);
 
     // 初始化 signInInfoArray 数组
     let signInInfoArray = [];
@@ -123,13 +137,13 @@ const isreq = typeof $request !== 'undefined';
     }
 
     if (signInInfoArray.length) {
-      $.log(`🎉 共有 ${signInInfoArray.length} 个礼包待领取`)
+      $.log(`🎉 共有 ${signInInfoArray.length} 个礼包待领取`);
     }
 
     // 遍历礼包数组，领取奖励
     for (let signInInfo of signInInfoArray) {
       let { code, title } = signInInfo;
-      await claimGift(code, title);
+      await claimGift(option, code, title);
     }
 
     // 显示签到结果通知
@@ -146,8 +160,10 @@ const isreq = typeof $request !== 'undefined';
  * @param {string} key - 参数名
  * @returns {string}
  */
-function matchParam(body, key) {
-  const match = body.match(new RegExp(`${key}=([^&]+)`));
+function matchParam(input, key) {
+  const separator = input.includes("&") ? "&" : ";";
+  const pattern = new RegExp(`${key}=([^${separator}]+)`);
+  const match = input.match(pattern);
   return match ? match[1] : '';
 }
 
@@ -155,11 +171,9 @@ function matchParam(body, key) {
  * @description 获取签到信息，并返回签到礼物列表
  * @returns {Promise<Array>} 返回一个包含本月礼物的数组的 Promise。
  */
-async function getSignInGifts() {
-  const options = {
-    url: $.read(`zsfc_url`), headers: $.toObj($.read(`zsfc_headers`)),
-    body: `${$.read(`zsfc_param`)}&iFlowId=${$.read(`zsfc_iFlowId`)}`
-  };
+async function getSignInGifts(option) {
+  const options = option;
+  options.body += `&iFlowId=${$.read(`zsfc_iFlowId`)}`;
   $.log(`🧑‍💻 开始获取本月礼物列表`);
   let giftsDictionary = {};
   return new Promise(resolve => {
@@ -173,7 +187,7 @@ async function getSignInGifts() {
           const flowName = match[3].replace(/累计签到|领取/g, '');
           giftsDictionary[flowName] = flowId;
         }
-        $.log(`✅ 本月共有 ${Object.keys(giftsDictionary).length} 个礼包`)
+        $.log(`✅ 本月共有 ${Object.keys(giftsDictionary).length} 个礼包`);
       } else {
         $.log(`❌ 获取本月礼物列表时发生错误`);
         $.log($.toStr(err));
@@ -188,11 +202,9 @@ async function getSignInGifts() {
  * @param {string} iFlowId - 每日签到礼包的 iFlowId
  * @returns {Promise<Array>} 返回一个包含本月礼物的数组的 Promise。
  */
-async function dailyCheckin(iFlowId) {
-  const options = {
-    url: $.read(`zsfc_url`), headers: $.toObj($.read(`zsfc_headers`)),
-    body: `${$.read(`zsfc_param`)}&iFlowId=${iFlowId}`
-  };
+async function dailyCheckin(option, iFlowId) {
+  const options = option;
+  options.body += `&iFlowId=${iFlowId}`;
   $.log(`🧑‍💻 开始进行每日签到`);
   return new Promise(resolve => {
     $.post(options, (err, resp, data) => {
@@ -205,7 +217,7 @@ async function dailyCheckin(iFlowId) {
         } else {
           const sPackageName = body.modRet.sPackageName;
           $.log(`✅ 领取结果: 获得${sPackageName}`);
-          $.message = `恭喜获得：${sPackageName}`
+          $.message = `恭喜获得：${sPackageName}`;
         }
       } else {
         $.log(`❌ 进行每日签到时发生错误`);
@@ -220,12 +232,10 @@ async function dailyCheckin(iFlowId) {
  * @description 获取累签天数的情况
  * @returns {Promise<string>} 返回累签天数
  */
-async function getTotalSignInDays() {
+async function getTotalSignInDays(option) {
+  const options = option;
+  options.body += `&iFlowId=${$.read(`zsfc_iFlowId`) * 1 + 1}`;
   let totalSignInDays;
-  const options = {
-    url: $.read(`zsfc_url`), headers: $.toObj($.read(`zsfc_headers`)),
-    body: `${$.read(`zsfc_param`)}&iFlowId=${$.read(`zsfc_iFlowId`) * 1 +1}`
-  };
   $.log(`🧑‍💻 开始获取累签天数`);
   return new Promise(resolve => {
     $.post(options, (err, resp, data) => {
@@ -249,12 +259,9 @@ async function getTotalSignInDays() {
  * @param {string} giftId 礼物 ID
  * @param {string} giftName 礼物名称
  */
-async function claimGift(giftId, giftName) {
-  const options = {
-    url: $.read(`zsfc_url`), headers: $.toObj($.read(`zsfc_headers`)),
-    body: `${$.read(`zsfc_param`)}&iFlowId=${giftId}`
-  };
-  $.log(`🧑‍💻 开始领取${giftName}`);
+async function claimGift(option, giftId, giftName) {
+  const options = option;
+  options.body += `&iFlowId=${giftId}`;
   return new Promise(resolve => {
     $.post(options, (err, resp, data) => {
       if (data) {
@@ -335,6 +342,13 @@ function Env(name) {
   // 定义 toStr 方法，用于将对象转为字符串
   const toStr = (obj) => JSON.stringify(obj);
 
+  // 定义 queryStr 方法，用于将对象转为可以请求的字符串
+  const queryStr = (obj) => {
+    return Object.keys(obj)
+      .map(key => `${key}=${obj[key]}`)
+      .join('&');
+  };
+
   // 定义 log 方法，用于输出日志
   const log = (message) => console.log(message);
 
@@ -342,5 +356,5 @@ function Env(name) {
   const done = (value = {}) => $done(value);
 
   // 返回包含所有方法的对象
-  return { name, read, write, notice, get, post, put, toObj, toStr, log, done };
+  return { name, read, write, notice, get, post, put, toObj, toStr, queryStr, log, done };
 }
