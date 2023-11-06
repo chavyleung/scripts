@@ -27,7 +27,6 @@
  * 0 10 0,21 * * * https://raw.githubusercontent.com/chavyleung/scripts/master/zsfc/zsfc.js, tag=掌上飞车, enabled=true
  *
 */
-
 /**
  * 创建一个名为 $ 的环境变量实例，用于处理掌上飞车相关操作
  */
@@ -36,58 +35,92 @@ const $ = new Env(`🏎️ 掌上飞车`)
 /**
  * 检查是否为请求阶段
  */
-const isreq = typeof $request !== 'undefined';
+const isRequest = typeof $request !== 'undefined';
 
 /**
- * 主函数，用于执行打卡操作或设置请求数据
+ * 构建请求的部分参数
+ */
+const option = {
+  url: `https://comm.ams.game.qq.com/ams/ame/amesvr?iActivityId=${$.read(`zsfc_iActivityId`)}`,
+  headers: {
+    "Cookie": `access_token=${$.read(`zsfc_accessToken`)}; acctype=qc; appid=1105330667; openid=${$.read(`zsfc_openid`)}`
+  }
+};
+
+/**
+ * 主函数，用于执行签到操作或设置请求数据
  */
 (async () => {
-  if (isreq) {
+  if (isRequest) {
     /**
      * 以下获取签到数据
      */
-
-    // 设置触发脚本的间隔时间, 单位为秒
-    const interval = 120;
-    // 不能触发 requests 脚本，程序终止
-    if (Date.now() - $.read(`zsfc_timestamp`) <= interval * 1000) return;
-
-    // 配置错误，弹窗警告并程序终止
-    if (!$request.url || !$request.headers || !$request.body) {
-      $.notice($.name, '⭕ 无法读取数据', '无法读取掌上飞车请求数据，请检查配置是否正确');
-      return;
-    }
 
     // 提取请求数据
     const cookie = $request.headers.cookie;
     const body = $request.body;
 
-    // 定义 params 数组
-    const params = ['appid', 'iActivityId', 'g_tk', 'e_code', 'g_code', 'eas_url', 'eas_refer', 'sServiceDepartment', 'sServiceType'];
-    // 数组有空返回则程序终止
-    if (params.find(param => !matchParam(body, param))) return;
+    // 提取请求体中的 iActivityId 和 iFlowId 作为检验使用
+    $.iActivityId = matchParam(body, 'iActivityId');
+    $.iFlowId = matchParam(body, 'iFlowId') - 1;
+
+    // 初始化 cookieToWrite 词典，填充待写入内存的键值对
+    const cookieToWrite = {
+      'zsfc_accessToken': matchParam(cookie, 'accessToken'),
+      'zsfc_openid': matchParam(cookie, 'openId')
+    };
+
+    // 将请求数据写入内存
+    Object.entries(cookieToWrite).forEach(([key, value]) => $.write(value, key));
+
+    // 发起请求检验 iActivityId 和 iFlowId 是否为需要的值，如果返回的对象中不存在任何一个键值对则立即终止程序
+    if (!Object.keys(await getSignInGifts()).length) return;
 
     // 初始化 dataToWrite 词典，填充待写入内存的键值对
     const dataToWrite = {
-      'zsfc_iActivityId': (matchParam(body, 'iActivityId')).toString(),
-      'zsfc_iFlowId': (matchParam(body, 'iFlowId') - 1).toString(),
-      'zsfc_accessToken': matchParam(cookie, 'accessToken'),
-      'zsfc_openid': matchParam(cookie, 'openId'),
-      'zsfc_timestamp': Date.now().toString(),
-      'zsfc_time': new Date().toLocaleString().toString(),
+      'zsfc_iActivityId': ($.iActivityId).toString(),
+      'zsfc_iFlowId': ($.iFlowId).toString(),
       'zsfc_month': (new Date().getMonth() + 1).toString()
-    };
-    // 将请求数据写入内存
-    Object.entries(dataToWrite).forEach(([key, value]) => $.write(value, key));
+    }
 
-    // 输出到日志只输出特定的键值对
-    // const { zsfc_iActivityId, zsfc_iFlowId, zsfc_accessToken, zsfc_openid } = dataToWrite;
-    // $.log({ zsfc_iActivityId, zsfc_iFlowId, zsfc_accessToken, zsfc_openid });
+    // 如果所有键值都与内存中的值相同，则立即终止程序
+    if (Object.keys(dataToWrite).every(key => dataToWrite[key] === $.read(key))) return;
+
+    // 将请求数据写入内存，并输出到日志中
+    Object.entries(dataToWrite).forEach(([key, value]) => $.write(value, key));
     $.log(dataToWrite)
 
-    // 显示签到结果通知
-    $.notice($.name, `✅ 获取签到数据成功（${dataToWrite.zsfc_iFlowId}/${dataToWrite.zsfc_iActivityId}）`, `${interval}秒后请不要再点击本页面中的任何按钮，否则脚本会失效！`);
+    // 显示获取结果通知
+    $.notice($.name, `✅ 获取签到数据成功`, `流水ID：${$.iFlowId}，活动ID：${$.iActivityId}`);
 
+    // 检查并设置青龙相关变量
+    if ($.read(`ql_url`) && $.read(`ql_client_id`) && $.read(`ql_client_secret`) && $.toObj($.read(`zsfc_upload_id`))) {
+      const qlUrlCache = $.read(`ql_url`);
+      $.qlUrl = qlUrlCache.charAt(qlUrlCache.length - 1) === '/' ? qlUrlCache.slice(0, -1) : qlUrlCache;
+      $.qlId = $.read(`ql_client_id`);
+      $.qlSecret = $.read(`ql_client_secret`);
+      $.qlToken = await qlToken();
+
+      const qlEnvsName = `ZSFC_iFlowdId`;
+      const qlEnvsValue = `${$.iFlowId}/${$.iActivityId}`;
+      const qlEnvsRemarks = `掌飞签到`;
+
+      // 获取青龙面板令牌，若成功则执行后续操作
+      if ($.qlToken) {
+        const qlEnvsNewBody = await qlEnvsSearch(qlEnvsName, qlEnvsValue, qlEnvsRemarks);
+        if (!qlEnvsNewBody) return;  // 环境变量的值没有发生变化，不需要进行操作
+
+        // 检查并处理环境变量的返回值类型
+        if (Array.isArray(qlEnvsNewBody)) {
+          // 暂时无法完成新增操作，后续再修改
+          $.log(`⭕ 手动添加名为 ${qlEnvsName} 变量`);
+        } else {
+          await qlEnvsEdit(qlEnvsNewBody);
+        }
+      } else {
+        $.log("❌ 无法获取 token，请检查青龙相关配置");
+      }
+    }
   } else {
     /**
      * 以下进行签到阶段，但是没有做 cookie 有效性验证
@@ -95,26 +128,13 @@ const isreq = typeof $request !== 'undefined';
 
     // 检查用户本月是否打开过签到页面
     const month = (new Date().getMonth() + 1).toString();
-    if (!$.read(`zsfc_month`)) $.write(month, `zsfc_month`);
     if (month != $.read(`zsfc_month`)) {
       $.notice($.name, `❌ 本月未打开过掌上飞车APP`, `每月需打开一次掌上飞车APP并进到签到页面`);
       return;
     }
 
-    const option = {
-      url: `https://comm.ams.game.qq.com/ams/ame/amesvr?iActivityId=${$.read(`zsfc_iActivityId`)}`,
-      headers: {
-        "Cookie": `access_token=${$.read(`zsfc_accessToken`)}; acctype=qc; appid=1105330667; openid=${$.read(`zsfc_openid`)}`
-    },
-      body: $.queryStr({
-        "iActivityId": $.read(`zsfc_iActivityId`),
-        "g_tk": "1842395457",
-        "sServiceType": "speed"
-      })
-    };
-
     // 获取本月签到礼物列表
-    const signInGifts = await getSignInGifts(option);
+    const signInGifts = await getSignInGifts();
 
     // 进行每日签到
     await dailyCheckin(option, signInGifts['每日签到']);
@@ -148,7 +168,6 @@ const isreq = typeof $request !== 'undefined';
 
     // 显示签到结果通知
     if ($.message) $.notice($.name, $.subtitle, $.message, ``);
-    $.write(month, `zsfc_month`);
   }
 })()
   .catch((e) => $.notice($.name, '❌ 未知错误无法打卡', e, ''))
@@ -158,7 +177,7 @@ const isreq = typeof $request !== 'undefined';
  * @description 匹配 BODY 参数
  * @param {string} body - BODY 字符串
  * @param {string} key - 参数名
- * @returns {string}
+ * @returns {string} 返回匹配到的字符串或空值
  */
 function matchParam(input, key) {
   const separator = input.includes("&") ? "&" : ";";
@@ -171,10 +190,20 @@ function matchParam(input, key) {
  * @description 获取签到信息，并返回签到礼物列表
  * @returns {Promise<Array>} 返回一个包含本月礼物的数组的 Promise。
  */
-async function getSignInGifts(option) {
-  const options = option;
-  options.body += `&iFlowId=${$.read(`zsfc_iFlowId`)}`;
-  $.log(`🧑‍💻 开始获取本月礼物列表`);
+async function getSignInGifts() {
+  const options = {
+    url: `https://comm.ams.game.qq.com/ams/ame/amesvr?iActivityId=${isRequest ? $.iActivityId : $.read(`zsfc_iActivityId`)}`,
+    headers: {
+      "Cookie": `access_token=${$.read(`zsfc_accessToken`)}; acctype=qc; appid=1105330667; openid=${$.read(`zsfc_openid`)}`
+    },
+    body: $.queryStr({
+      "iActivityId": isRequest ? $.iActivityId : $.read(`zsfc_iActivityId`),
+      "g_tk": "1842395457",
+      "sServiceType": "speed",
+      "iFlowId": isRequest ? $.iFlowId : $.read(`zsfc_iFlowId`)
+    })
+  };
+  if (!isRequest) $.log(`🧑‍💻 开始获取本月礼物列表`)
   let giftsDictionary = {};
   return new Promise(resolve => {
     $.post(options, (err, resp, data) => {
@@ -187,7 +216,9 @@ async function getSignInGifts(option) {
           const flowName = match[3].replace(/累计签到|领取/g, '');
           giftsDictionary[flowName] = flowId;
         }
-        $.log(`✅ 本月共有 ${Object.keys(giftsDictionary).length} 个礼包`);
+        if (!isRequest) {
+          $.log(`✅ 本月共有 ${Object.keys(giftsDictionary).length} 个礼包`);
+        }
       } else {
         $.log(`❌ 获取本月礼物列表时发生错误`);
         $.log($.toStr(err));
@@ -199,12 +230,17 @@ async function getSignInGifts(option) {
 
 /**
  * @description 每日签到函数
+ * @param {object} option - 部分请求对象
  * @param {string} iFlowId - 每日签到礼包的 iFlowId
- * @returns {Promise<Array>} 返回一个包含本月礼物的数组的 Promise。
  */
 async function dailyCheckin(option, iFlowId) {
   const options = option;
-  options.body += `&iFlowId=${iFlowId}`;
+  options.body = $.queryStr({
+    "iActivityId": $.read(`zsfc_iActivityId`),
+    "g_tk": "1842395457",
+    "sServiceType": "speed",
+    "iFlowId": iFlowId
+  });
   $.log(`🧑‍💻 开始进行每日签到`);
   return new Promise(resolve => {
     $.post(options, (err, resp, data) => {
@@ -230,11 +266,17 @@ async function dailyCheckin(option, iFlowId) {
 
 /**
  * @description 获取累签天数的情况
+ * @param {object} option - 部分请求对象
  * @returns {Promise<string>} 返回累签天数
  */
 async function getTotalSignInDays(option) {
   const options = option;
-  options.body += `&iFlowId=${$.read(`zsfc_iFlowId`) * 1 + 1}`;
+  options.body = $.queryStr({
+    "iActivityId": $.read(`zsfc_iActivityId`),
+    "g_tk": "1842395457",
+    "sServiceType": "speed",
+    "iFlowId": $.read(`zsfc_iFlowId`) * 1 + 1
+  });
   let totalSignInDays;
   $.log(`🧑‍💻 开始获取累签天数`);
   return new Promise(resolve => {
@@ -256,6 +298,7 @@ async function getTotalSignInDays(option) {
 
 /**
  * @description 领取礼物函数
+ * @param {object} option - 部分请求对象
  * @param {string} giftId 礼物 ID
  * @param {string} giftName 礼物名称
  */
@@ -283,6 +326,100 @@ async function claimGift(option, giftId, giftName) {
         $.log($.toStr(err));
       }
       resolve();
+    });
+  });
+}
+
+/**
+ * @description 获取青龙面板令牌
+ * @returns {Promise<string|boolean>} 返回一个包含青龙面板令牌或布尔值的 Promise。
+ */
+async function qlToken() {
+  let accessToken; // 更具体的变量名，表示访问令牌
+  const options = {
+    url: `${$.qlUrl}/open/auth/token?client_id=${$.qlId}&client_secret=${$.qlSecret}`
+  };
+  return new Promise(resolve => {
+    $.get(options, (err, resp, data) => {
+      if (data) {
+        const responseBody = $.toObj(data);
+        if (responseBody.code === 200) {
+          accessToken = responseBody.data.token;
+        } else {
+          accessToken = false;
+        }
+      }
+      resolve(accessToken);
+    });
+  });
+}
+
+/**
+ * @description 搜索环境变量并生成新的请求体部分参数
+ * @param {string} envsName - 新环境变量的名称
+ * @param {string} envsValue - 新环境变量的具体值
+ * @param {string} envsRemarks - 新环境变量的备注名
+ * @returns {Promise<object|Array|boolean>} 返回一个请求体对象或列表或布尔值的 Promise。
+ */
+async function qlEnvsSearch(envsName, envsValue, envsRemarks) {
+  let requestPayload; // 代表请求体的变量名更具体
+  const options = {
+    url: `${$.qlUrl}/open/envs?searchValue=${envsName}`,
+    headers: { "Authorization": `Bearer ${$.qlToken}` }
+  };
+  return new Promise(resolve => {
+    $.get(options, (err, resp, data) => {
+      if (data) {
+        const responseBody = $.toObj(data).data;
+        if (responseBody.length === 1) {
+          // 找到匹配的环境变量，生成单个请求体对象
+          const matchingEnv = responseBody[0];
+          if (matchingEnv.value === envsValue) {
+            requestPayload = false;
+          } else {
+            requestPayload = {
+              'id': matchingEnv.id,
+              'name': envsName,
+              'value': envsValue,
+              'remarks': envsRemarks
+            };
+          }
+        } else {
+          // 未找到匹配的环境变量，生成包含一个对象的数组
+          requestPayload = [{
+            'name': envsName,
+            'value': envsValue,
+            'remarks': envsRemarks
+          }];
+        }
+      }
+      resolve(requestPayload);
+    });
+  });
+}
+
+/**
+ * @description 编辑青龙面板的环境变量
+ * @param {object} data - 请求参数
+ */
+async function qlEnvsEdit(data) {
+  const options = {
+    url: `${$.qlUrl}/open/envs`,
+    headers: { "Authorization": `Bearer ${$.qlToken}` },
+    body: data
+  };
+  return new Promise(resolve => {
+    // 判断请求方法（post还是put）
+    const requestMethod = Array.isArray(data) ? $.post : $.put;
+    requestMethod(options, (err, resp, responseData) => {
+      if (responseData) {
+        let body = $.toObj(responseData);
+        // 根据返回的状态码处理结果
+        if (body.code !== 200) {
+          $.log(`❌ 上传青龙面板失败`);
+        }
+      }
+      resolve(); // 完成Promise
     });
   });
 }
