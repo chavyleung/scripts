@@ -47,7 +47,7 @@ const isreq = typeof $request !== 'undefined';
 
     // 提取请求的URL和其他数据
     const url = $request.url;
-    const cookie = $request.headers.cookie;
+    const cookie = $request.headers.cookie || $request.headers.Cookie;  // QX、Loon都是用的Cookie
 
     // 对比 token 是否发生变化
     if ($.read(`zsfc_token`) == matchStr(url, "token")) return;

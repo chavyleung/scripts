@@ -53,7 +53,7 @@ const isRequest = typeof $request !== 'undefined';
        */
 
       // 提取请求数据
-      const cookie = $request.headers.cookie;
+      const cookie = $request.headers.cookie || $request.headers.Cookie;  // QX、Loon都是用的Cookie
       const body = $request.body;
 
       // 提取请求体中的 iActivityId 和 iFlowId 作为检验使用
@@ -124,7 +124,7 @@ const isRequest = typeof $request !== 'undefined';
 
       // 提取请求的URL并去除引号
       const url = $.toStr($request.url).replace(/^"|"$/g, '');
-      const cookie = $request.headers.cookie;
+      const cookie = $request.headers.cookie || $request.headers.Cookie;  // QX、Loon都是用的Cookie
 
       // 对比 token 是否发生变化
       if ($.read(`zsfc_token`) == matchParam(url, "token")) return;
@@ -491,9 +491,6 @@ async function getTotalSignInDays() {
   // 初始化总签到天数
   let totalSignInDays;
 
-  // 根据请求方式获取 iFlowId 具体值
-  let iFlowId = Number(isRequest ? $.iFlowId : $.read(`zsfc_iFlowId`));
-
   // 构建请求体
   const options = {
     url: `https://comm.ams.game.qq.com/ams/ame/amesvr?iActivityId=${isRequest ? $.iActivityId : $.read(`zsfc_iActivityId`)}`,
@@ -501,10 +498,10 @@ async function getTotalSignInDays() {
       "Cookie": `access_token=${$.read(`zsfc_accessToken`)}; acctype=qc; appid=1105330667; openid=${$.read(`zsfc_openid`)}`
     },
     body: $.queryStr({
-      "iActivityId": $.read(`zsfc_iActivityId`),
+      "iActivityId": isRequest ? $.iActivityId : $.read(`zsfc_iActivityId`),
       "g_tk": "1842395457",
       "sServiceType": "speed",
-      "iFlowId": iFlowId + 1
+      "iFlowId": Number(isRequest ? $.iFlowId : $.read(`zsfc_iFlowId`)) + 1
     })
   };
 
@@ -518,8 +515,10 @@ async function getTotalSignInDays() {
           const missedDays = new Date().getDate() - totalSignInDays;
           const missedDaysText = missedDays !== 0 ? `(漏签 ${missedDays} 天)` : ``;
 
-          $.subtitle = `✅ 累计签到 ${totalSignInDays} 天${missedDaysText}`;
-          $.log($.subtitle);
+          if (!isRequest) {
+            $.subtitle = `✅ 累计签到 ${totalSignInDays} 天${missedDaysText}`;
+            $.log($.subtitle);
+          }
         } catch {}
       } else {
         $.log(`❌ 获取累签天数时发生错误`);
