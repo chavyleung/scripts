@@ -127,7 +127,7 @@ const isRequest = typeof $request !== 'undefined';
       const cookie = $request.headers.cookie || $request.headers.Cookie;  // QX、Loon都是用的Cookie
 
       // 对比 token 是否发生变化
-      if ($.read(`zsfc_token`) == matchParam(url, "token")) return;
+      if ($.read(`zsfc_token`) === matchParam(url, "token")) return;
 
       // 初始化 dataToWrite 词典，填充待写入内存的键值对
       const dataToWrite = {
@@ -197,7 +197,7 @@ const isRequest = typeof $request !== 'undefined';
     }
 
     // 显示签到结果通知
-    if ($.checkInMsg) $.notice(`🏎️ 掌上飞车`, $.subtitle, $.checkInMsg, ``);
+    if ($.checkInMsg && $.toObj($.read(`zsfc_treasure_log`) || `true`)) $.notice(`🏎️ 掌上飞车`, $.subtitle, $.checkInMsg, ``);
 
 
     /**
@@ -272,7 +272,7 @@ const isRequest = typeof $request !== 'undefined';
     }
 
     // 显示购物结果通知
-    if ($.shopMsg) $.notice(`🏎️ 掌飞购物`, $.subtitle, $.shopMsg, ``);
+    if ($.shopMsg && $.toObj($.read(`zsfc_treasure_log`) || `true`)) $.notice(`🏎️ 掌飞购物`, $.subtitle, $.shopMsg, ``);
 
   }
 })()
@@ -318,16 +318,16 @@ function autoGetGameItem() {
  * @returns {[array, number, str]} - 返回购买的物品数组、总数和单位信息的数组
  */
 function getShopItems(shopInfo, overage) {
-  // 获取今天的日期和本月剩余天数是否小于等于3天
+  // 获取今天的日期和本月剩余天数是否小于3天（月底3天的计算方式不可以为小于等于3）
   const today = new Date();
   const day = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
-  const lastDay = (day - today.getDate()) <= 3;
+  const lastDay = (day - today.getDate()) < 3;
 
   // 创建一个包含商店信息和物品数据的对象
   const info = {"Id": shopInfo.iId, "data": []};
 
   // 判断商店类型并获取相应的物品数值
-  const shopType = shopInfo.szItems[0].ItemNum !== "";
+  const shopType = shopInfo.szItems[0].ItemNum !== "";  // 表示购买的商品是按数量购买
   const values = shopType ? shopInfo.szItems[0].ItemNum : shopInfo.szItems[0].ItemAvailPeriod;
 
   // 将物品数值转换成数组
@@ -346,15 +346,16 @@ function getShopItems(shopInfo, overage) {
     info.data.push({ count, price, idx });
   });
 
-  // 初始化总数、物品数组和剩余金钱
+  // 初始化购买总数、物品数组和投入金额
   let totalCount = 0;
   let items = [];
-  let remMoney = lastDay ? overage.money + overage.coupons : overage.coupons;
+   let remMoney = lastDay ? overage.money + overage.coupons : overage.coupons;
 
   const data = info.data;
-  const amount = data.length - 1;
+  const lastOne = data.length - 1;
 
   for (let m = 0; m < data.length; m++) {
+    let pushCounts = 0;
     let itemIndex = data[m].idx;
 
     // 判断是否购买永久物品
@@ -367,23 +368,49 @@ function getShopItems(shopInfo, overage) {
 
     // 计算最大可购买的物品数量并更新总数和剩余金钱
     const maxPurchasableItems = Math.floor(remMoney / data[m].price);  // 这是一个计算出的整数，表示根据当前余额和道具价格，最多可以购买的道具数量。
+    thisTimeCost = maxPurchasableItems * data[m].price;  // 这是一个累加的变量，用于跟踪本轮循环购买道具的总花费。
     totalCount += maxPurchasableItems * data[m].count; // 这是一个累加的变量，用于跟踪购买的总道具数量。
     remMoney -= maxPurchasableItems * data[m].price; // 这是当前可用的余额。在每次购买道具后，余额会根据购买的道具数量和价格进行更新，以反映购买后的余额。
 
     // 将购买的物品加入数组
     for (let n = 0; n < maxPurchasableItems; n++) {
-      items.push({"count": data[m].count, "id": info.Id, "idx": itemIndex});
+      items.push({"count": data[m].count, "id": info.Id, "idx": itemIndex, "cost": data[m].price});
+      pushCounts += 1;
     }
 
-    // 非月尾判断是否可以购买最后一个物品
-    if (remMoney < data[amount].price && !lastDay) {
-      const meetsThreshold = remMoney > data[amount].price / Number($.read(`zsfc_shop_threshold`));
-      const canAffordLastItem = remMoney + overage.money >= data[amount].price;
+    // 在购买数量道具情况下，非月尾判断是否可以购买最后一个物品
+    if (remMoney < data[lastOne].price && !lastDay && shopType) {
+      const meetsThreshold = remMoney > data[lastOne].price / Number(`1000000`);
+      const canAffordLastItem = remMoney + overage.money >= data[lastOne].price;
 
+      // 如果满足阈值条件，且消费券加点券的和大于最便宜一个道具的价格
       if (meetsThreshold && canAffordLastItem) {
-        items.push({"count": data[amount].count, "id": info.Id, "idx": data[amount].idx});
-        totalCount += data[amount].count;
+        items.push({"count": data[lastOne].count, "id": info.Id, "idx": data[lastOne].idx, "cost": data[lastOne].price});
+        pushCounts += 1;
+        totalCount += data[lastOne].count;
+        thisTimeCost += data[lastOne].price;
       }
+
+      // 本轮花费大于0且本轮消费等于倒数第二阶梯的消费价格时，清空本轮添加的购买包
+      if (thisTimeCost !== 0 && thisTimeCost === data[m - 1].price) {
+        // 计算需要保留的元素数量
+        const itemsToKeep = items.length - pushCounts;
+
+        // 计算新的元素序列
+        const newIndex = lastOne - 1;
+
+        // 使用 slice 创建一个新数组，仅保留需要的元素
+        items = items.slice(0, itemsToKeep);
+
+        // 添加新元素到数组末尾
+        items.push({
+          "count": data[newIndex].count,
+          "id": info.Id,
+          "idx": data[newIndex].idx,
+          "cost": data[newIndex].price
+        });
+      }
+
       break;
     }
   }

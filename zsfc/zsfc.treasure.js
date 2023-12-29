@@ -50,7 +50,7 @@ const isreq = typeof $request !== 'undefined';
     const cookie = $request.headers.cookie || $request.headers.Cookie;  // QX、Loon都是用的Cookie
 
     // 对比 token 是否发生变化
-    if ($.read(`zsfc_token`) == matchStr(url, "token")) return;
+    // if ($.read(`zsfc_token`) === matchStr(url, "token")) return;
 
     // 初始化 dataToWrite 词典，填充待写入内存的键值对
     const dataToWrite = {
@@ -62,7 +62,7 @@ const isreq = typeof $request !== 'undefined';
       "zsfc_userId": matchStr(url, "userId"),
       "zsfc_areaId": matchStr(url, "areaId"),
       'zsfc_uin': matchStr(url, "uin"),
-      'zsfc_day': (new Date().getDate()).toString()
+      // 'zsfc_day': (new Date().getDate()).toString()
     };
 
     // 将请求数据写入内存
@@ -106,13 +106,17 @@ const isreq = typeof $request !== 'undefined';
   } else {
     // 处理非请求时的逻辑
 
+    /**
+     * 2023.12.15 发现iOS端重开掌飞不会使token过期，因此无需检测
+     */
     // 检查用户今天是否打开过寻宝页面
-    const date = (new Date().getDate()).toString();
-    if (date != $.read(`zsfc_day`)) return $.log(`❌ 今天未进过寻宝页面`);
+    // const date = (new Date().getDate()).toString();
+    // if (date != $.read(`zsfc_day`)) return $.log(`❌ 今天未进过寻宝页面`);
 
     // 获取地图数据
     $.mapData = await fetchMapData();
     if (!Object.keys($.mapData).length) return $.log(`❌ 无法获取地图信息`);
+    if (!$.mapData.remainingTimes) return $.log(`⭕ 当天的寻宝次数已用完`);
 
     // 尊贵的紫钻用户
     if ($.mapData.isVip) $.log(`💎 尊贵的紫钻用户`);
@@ -202,38 +206,47 @@ async function fetchMapData() {
     $.get(url, (error, response, data) => {
       if (data) {
         // 提取userInfo和mapInfo的数据
-        const [userInfoData, mapInfoData] = [
+        const [userInfoData, mapInfoData, todaycanTimes, todayTimes] = [
           data.match(/window\.userInfo\s*=\s*eval\('([^']+)'\);/)?.[1],
-          data.match(/window\.mapInfo\s*=\s*eval\('([^']+)'\);/)?.[1]
+          data.match(/window\.mapInfo\s*=\s*eval\('([^']+)'\);/)?.[1],
+          data.match(/"todaycanTimes":(\d+)/)?.[1],
+          data.match(/"todayTimes":"(\d+)"/)?.[1]
         ].map(match => match && eval(`(${match})`));
 
-        // 固定 iFlowId 列表
-        const iFlowIdArray = {
-          "1": ["856152", "856155"],  // 1星
-          "2": ["856156", "856157"],  // 2星，100次
-          "3": ["856158", "856159"],  // 3星，300次
-          "4": ["856160", "856161"],  // 4星，500次
-          "5": ["856162", "856163"],  // 5星，紫钻地图
-          "6": ["856164", "856165"]   // 6星，皇族地图
-        };
+        // 判断今日可寻宝次数是否用完
+        if ((todaycanTimes - todayTimes)) {
+          mapData = {
+            remainingTimes: false
+          };
+        } else {
+          // 固定 iFlowId 列表
+          const iFlowIdArray = {
+            "1": ["856152", "856155"],  // 1星
+            "2": ["856156", "856157"],  // 2星，100次
+            "3": ["856158", "856159"],  // 3星，300次
+            "4": ["856160", "856161"],  // 4星，500次
+            "5": ["856162", "856163"],  // 5星，紫钻地图
+            "6": ["856164", "856165"]   // 6星，皇族地图
+          };
 
-        // 获取地图最高解锁星级
-        const highestUnlockedStarId = Math.max(
-          ...Object.keys(userInfoData.starInfo)  // 转化为数组
-          .filter(starId => userInfoData.starInfo[starId] === 1)
-        );
+          // 获取地图最高解锁星级
+          const highestUnlockedStarId = Math.max(
+            ...Object.keys(userInfoData.starInfo)  // 转化为数组
+            .filter(starId => userInfoData.starInfo[starId] === 1)
+          );
 
-        // 获取大吉地图信息
-        const luckyMap = mapInfoData[highestUnlockedStarId]
-          .find(map => map.isdaji === 1);
+          // 获取大吉地图信息
+          const luckyMap = mapInfoData[highestUnlockedStarId]
+            .find(map => map.isdaji === 1);
 
-        mapData = {
-          starId: highestUnlockedStarId,
-          mapId: luckyMap.id,
-          isVip: userInfoData.vip_flag,
-          mapName: luckyMap.name,
-          iFlowId: iFlowIdArray[highestUnlockedStarId]
-        };
+          mapData = {
+            starId: highestUnlockedStarId,
+            mapId: luckyMap.id,
+            isVip: userInfoData.vip_flag,
+            mapName: luckyMap.name,
+            iFlowId: iFlowIdArray[highestUnlockedStarId]
+          };
+        }
       } else {
         $.log(`❌ 获取地图数据时发生错误`);
         $.log($.toStr(error));
