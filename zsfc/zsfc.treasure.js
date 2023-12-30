@@ -210,15 +210,11 @@ async function fetchMapData() {
           data.match(/window\.userInfo\s*=\s*eval\('([^']+)'\);/)?.[1],
           data.match(/window\.mapInfo\s*=\s*eval\('([^']+)'\);/)?.[1],
           data.match(/"todaycanTimes":(\d+)/)?.[1],
-          data.match(/"todayTimes":"(\d+)"/)?.[1]
+          data.match(/"todayTimes":(\d+)/)?.[1]
         ].map(match => match && eval(`(${match})`));
 
         // 判断今日可寻宝次数是否用完
-        if ((todaycanTimes - todayTimes)) {
-          mapData = {
-            remainingTimes: false
-          };
-        } else {
+        if ((todaycanTimes - todayTimes)) { // 次数没有用完
           // 固定 iFlowId 列表
           const iFlowIdArray = {
             "1": ["856152", "856155"],  // 1星
@@ -240,11 +236,16 @@ async function fetchMapData() {
             .find(map => map.isdaji === 1);
 
           mapData = {
+            remainingTimes: true,
             starId: highestUnlockedStarId,
             mapId: luckyMap.id,
             isVip: userInfoData.vip_flag,
             mapName: luckyMap.name,
             iFlowId: iFlowIdArray[highestUnlockedStarId]
+          };
+        } else { // 次数已经用完
+          mapData = {
+            remainingTimes: false
           };
         }
       } else {
