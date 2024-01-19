@@ -1,6 +1,22 @@
 {
   "releases": [
     {
+      "version": "0.12.13",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "msg": "fix(boxjs): 编辑会话时数据显示 [object Object] 问题",
+      "notes": [
+        {
+          "name": "修复",
+          "descs": ["编辑会话时数据显示 [object Object] 问题"]
+        },
+        {
+          "name": "感谢",
+          "descs": ["@VirgilClyne 反馈"]
+        }
+      ]
+    },
+    {
       "version": "0.12.12",
       "tags": ["beta"],
       "author": "@chavyleung",

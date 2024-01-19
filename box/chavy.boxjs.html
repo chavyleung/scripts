@@ -1159,12 +1159,14 @@
                         <v-divider></v-divider>
                         <v-card-text>
                           <v-text-field class="mt-4" :label="$t('appDetail.sessionEditor.name')" v-model="session.name"></v-text-field>
-                          <v-text-field
-                            v-for="(data, dataIdx) in session.datas"
-                            :key="dataIdx"
-                            v-model="data.val"
-                            :label="data.key"
-                          ></v-text-field>
+                          <template v-for="(data, dataIdx) in session.datas">
+                            <template v-if="typeof(data.val)=='string'">
+                              <v-text-field :key="dataIdx" v-model="data.val" :label="data.key"></v-text-field>
+                            </template>
+                            <template v-else>
+                              <v-text-field disabled :key="dataIdx" :value="JSON.stringify(data.val)" :label="data.key"></v-text-field>
+                            </template>
+                          </template>
                         </v-card-text>
                         <v-divider></v-divider>
                         <v-card-actions>
@@ -2700,7 +2702,8 @@
           updateAppSession(session) {
             session.datas.forEach((dat) => {
               // 如果属性值是 undefined 或 null, 则修改为 ``, 否则转为字符串
-              dat.val = !_.isNil(dat.val) ? _.toString(dat.val) : ''
+              // dat.val 有可能是个 object
+              dat.val = !_.isNil(dat.val) ? dat.val : ''
             })
             const key = 'chavy_boxjs_sessions'
             const val = JSON.stringify(this.box.sessions)
