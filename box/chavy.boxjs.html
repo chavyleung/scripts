@@ -2902,7 +2902,7 @@
               if (!resp) return
               resp.data.forEach((contributor) => {
                 const { login: id, login, html_url: repo, avatar_url: icon } = contributor
-                if ([29748519, 39037656, 9592236].includes(contributor.id)) {
+                if ([29748519, 39037656, 9592236, 1210282, 65508083].includes(contributor.id)) {
                   this.ui.collaborators.push({ id, login, repo, icon })
                 } else {
                   this.ui.contributors.push({ id, login, repo, icon })

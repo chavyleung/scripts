@@ -3,7 +3,7 @@ const $ = new Env('BoxJs')
 // 为 eval 准备的上下文环境
 const $eval_env = {}
 
-$.version = '0.12.13'
+$.version = '0.12.14'
 $.versionType = 'beta'
 
 // 发出的请求需要需要 Surge、QuanX 的 rewrite
@@ -731,7 +731,7 @@ async function apiRunScript() {
       (resp) => ($.json = JSON.parse(resp))
     )
   } else {
-    await new Promise((resolve) => {
+    const result = await new Promise((resolve) => {
       $eval_env.resolve = resolve
       // 避免被执行脚本误认为是 rewrite 环境
       // 所以需要 `$request = undefined`
@@ -760,7 +760,7 @@ async function apiRunScript() {
     $request = $eval_env.request
     // 返回数据
     $.json = {
-      result: '',
+      result,
       output: $eval_env.cached_logs.join('\n')
     }
   }
@@ -961,7 +961,7 @@ function getHtmlDoneHeaders() {
 }
 function getJsonDoneHeaders() {
   return getBaseDoneHeaders({
-    'Content-Type': 'text/json; charset=utf-8'
+    'Content-Type': 'application/json; charset=utf-8'
   })
 }
 
