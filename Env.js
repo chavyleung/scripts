@@ -322,6 +322,11 @@ function Env(name, opts) {
       if (request.params) {
         request.url += '?' + this.queryStr(request.params)
       }
+      // followRedirect 禁止重定向
+      if (typeof request.followRedirect !== 'undefined' && !request['followRedirect']) {
+        if (this.isSurge() || this.isLoon()) request['auto-redirect'] = false  // Surge & Loon
+        if (this.isQuanX()) request.opts ? request['opts']['redirection'] = false : request.opts = { redirection: false }  // Quantumult X
+      }
       switch (this.getEnv()) {
         case 'Surge':
         case 'Loon':
@@ -432,6 +437,11 @@ function Env(name, opts) {
       if (request.headers) {
         delete request.headers['Content-Length']
         delete request.headers['content-length']
+      }
+      // followRedirect 禁止重定向
+      if (typeof request.followRedirect !== 'undefined' && !request['followRedirect']) {
+        if (this.isSurge() || this.isLoon()) request['auto-redirect'] = false  // Surge & Loon
+        if (this.isQuanX()) request.opts ? request['opts']['redirection'] = false : request.opts = { redirection: false }  // Quantumult X
       }
       switch (this.getEnv()) {
         case 'Surge':
