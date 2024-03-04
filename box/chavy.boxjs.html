@@ -876,15 +876,20 @@
                 <v-text-field
                   :hint="$t('viewer.dataKeyDesc')"
                   :label="$t('viewer.dataKey')"
+                  clearable
                   persistent-hint
                   placeholder="boxjs_host"
                   v-model="ui.viewer.key"
                 >
                 </v-text-field>
               </v-card-text>
+              <template v-for="(key, keyIdx) in viewkeys">
+                <v-chip small class="ml-1 mb-1" close @click="viewkey(key)" @click:close="delviewkey(key)">
+                  {{ key }}
+                </v-chip>
+              </template>
               <v-divider></v-divider>
               <v-card-actions>
-                <!-- TODO 列出最近查询过的 key -->
                 <v-spacer></v-spacer>
                 <v-btn small text color="primary" @click="queryData">{{ $t('base.dialog.view') }}</v-btn>
               </v-card-actions>
@@ -896,12 +901,16 @@
                 <v-btn color="primary" small @click="copy(ui.viewer.val)"> {{ $t('base.cmd.cp') }} </v-btn>
               </v-subheader>
               <v-card-text>
-                <v-textarea v-model="ui.viewer.val" :row="3" :label="$t('viewer.dataVal')"> </v-textarea>
+                <v-textarea v-if="typeof(ui.viewer.val) != 'string'" :value="JSON.stringify(ui.viewer.val)"
+                  :label="$t('viewer.dataVal')" :row="3" :hint="$t('viewer.dataEditable')" persistent-hint readonly>
+                </v-textarea>
+                <v-textarea v-else v-model="ui.viewer.val" :row="3" :label="$t('viewer.dataVal')"> </v-textarea>
               </v-card-text>
               <v-divider></v-divider>
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn small text color="primary" @click="saveData">{{ $t('base.dialog.save') }}</v-btn>
+                <v-btn small text color="primary" :disabled="typeof(ui.viewer.val) != 'string'" @click="saveData">{{
+                  $t('base.dialog.save') }}</v-btn>
               </v-card-actions>
             </v-card>
           </v-container>
@@ -1238,7 +1247,7 @@
               <v-select v-model="licenseType" :items="licenseTypes" label="设备授权数"></v-select>
               <v-btn @click="calculateCost">计算费用</v-btn>
               <p class="mt-2">费用：{{ cost.toFixed(2) }}</p>
-            </div>       
+            </div>
           </v-container>
         </v-main>
         <!-- 底部 -->
@@ -1550,7 +1559,8 @@
                 dataKey: 'Data Key',
                 dataKeyDesc: 'Input the data key',
                 dataEditor: 'Data Editor',
-                dataVal: 'Data Value'
+                dataVal: 'Data Value',
+                dataEditable: 'This data is not editable',
               },
               reloadDialog: {
                 title: 'Next',
@@ -1702,7 +1712,8 @@
                 dataKey: '数据键 (Key)',
                 dataKeyDesc: '输入要查询的数据键, 如: boxjs_host',
                 dataEditor: '数据编辑器',
-                dataVal: '数据内容'
+                dataVal: '数据内容',
+                dataEditable: '该数据不可编辑',
               },
               reloadDialog: {
                 title: '接下来',
@@ -2175,6 +2186,9 @@
               const bak = this.baks.find((bak) => bak.id === bakId)
               return bak
             }
+          },
+          viewkeys() {
+            return Array.from(new Set(this.box.usercfgs.viewkeys)).filter((k) => k)
           }
         },
         watch: {
@@ -2921,13 +2935,25 @@
               }
             })
           },
+          viewkey(key) {
+            this.ui.viewer.key = key
+            this.queryData()
+          },
+
+          delviewkey(key) {
+            if (this.ui.viewer.key == key) {
+              this.ui.viewer.key = ''
+            }
+            this.box.usercfgs.viewkeys = this.box.usercfgs.viewkeys.filter((k) => k != key)
+          },
           // 查询数据
           queryData() {
             const key = this.ui.viewer.key
             this.ui.viewer.key = key ? key : 'boxjs_host'
             axios.get(`/query/data/${this.ui.viewer.key}`).then((resp) => {
               this.ui.viewer.val = resp.data.val
-              this.box.usercfgs.viewkeys.unshift(this.ui.viewer.key)
+              const newkeys = [this.ui.viewer.key, ...this.box.usercfgs.viewkeys]
+              this.box.usercfgs.viewkeys = Array.from(new Set(newkeys)).filter((k) => k)
             })
           },
           saveData() {
