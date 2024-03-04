@@ -901,7 +901,7 @@
                 <v-btn color="primary" small @click="copy(ui.viewer.val)"> {{ $t('base.cmd.cp') }} </v-btn>
               </v-subheader>
               <v-card-text>
-                <v-textarea v-if="typeof(ui.viewer.val) != 'string'" :value="JSON.stringify(ui.viewer.val)"
+                <v-textarea v-if="ui.viewer.val && typeof(ui.viewer.val) != 'string'" :value="JSON.stringify(ui.viewer.val)"
                   :label="$t('viewer.dataVal')" :row="3" :hint="$t('viewer.dataEditable')" persistent-hint readonly>
                 </v-textarea>
                 <v-textarea v-else v-model="ui.viewer.val" :row="3" :label="$t('viewer.dataVal')"> </v-textarea>

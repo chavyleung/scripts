@@ -1,6 +1,22 @@
 {
   "releases": [
     {
+      "version": "0.13.1",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "msg": "fix(boxjs): 数据查看器无法对空数据进行编辑问题",
+      "notes": [
+        {
+          "name": "修复",
+          "descs": ["数据查看器无法对空数据进行编辑问题"]
+        },
+        {
+          "name": "感谢",
+          "descs": ["@xream 反馈"]
+        }
+      ]
+    },
+    {
       "version": "0.13.0",
       "tags": ["beta"],
       "author": "@chavyleung",
