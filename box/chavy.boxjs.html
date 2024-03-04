@@ -402,6 +402,21 @@
             </v-list-item>
             <v-list-item class="mt-4">
               <v-switch
+                :hint="$t('prefs.muteQueryAlertDesc')"
+                :label="$t('prefs.muteQueryAlert')"
+                @change="saveUserCfgs"
+                class="mt-0"
+                dense
+                persistent-hint
+                v-model="box.usercfgs.isMuteQueryAlert"
+              ></v-switch>
+              <v-spacer></v-spacer>
+              <v-btn fab small text>
+                <v-avatar size="32"><v-icon>mdi-volume-off</v-icon></v-avatar>
+              </v-btn>
+            </v-list-item>
+            <v-list-item class="mt-4">
+              <v-switch
                 :hint="$t('prefs.hideHelpDesc')"
                 :label="$t('prefs.hideHelp')"
                 @change="saveUserCfgs"
@@ -1506,6 +1521,8 @@
                 autoBottomBarDesc: 'Hides when scrolling',
                 muteMode: 'Do Not Disturb',
                 muteModeDesc: 'Disable notifications',
+                muteQueryAlert: 'Do not display query warnings',
+                muteQueryAlertDesc: 'Disable notifications',
                 hideHelp: 'Hide Help',
                 hideHelpDesc: 'Hides help button',
                 hideBoxJs: 'Hide BoxJs',
@@ -1660,6 +1677,8 @@
                 autoBottomBarDesc: '滚动时自动隐藏',
                 muteMode: '勿扰模式',
                 muteModeDesc: '不发出通知 (仍记日志)',
+                muteQueryAlert: '不显示查询警告',
+                muteQueryAlertDesc: '不发出警告 (仍记日志)',
                 hideHelp: '隐藏帮助按钮',
                 hideHelpDesc: '隐藏帮助按钮',
                 hideBoxJs: '隐藏悬浮按钮',
