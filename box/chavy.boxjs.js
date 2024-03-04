@@ -3,7 +3,7 @@ const $ = new Env('BoxJs')
 // 为 eval 准备的上下文环境
 const $eval_env = {}
 
-$.version = '0.14.0'
+$.version = '0.14.1'
 $.versionType = 'beta'
 
 // 发出的请求需要需要 Surge、QuanX 的 rewrite
@@ -219,7 +219,8 @@ async function handlePage() {
  * 处理`查询`请求
  */
 async function handleQuery() {
-  if (!/^https?:\/\/(.+\.)?boxjs\.(com|net)\//.test($request.headers.referer)) {
+  const referer = $request.headers.referer || $request.headers.Referer
+  if (!/^https?:\/\/(.+\.)?boxjs\.(com|net)\//.test(referer)) {
     const isMuteQueryAlert = [true, 'true'].includes(
       $.getdata('@chavy_boxjs_userCfgs.isMuteQueryAlert')
     )

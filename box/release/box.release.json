@@ -1,6 +1,25 @@
 {
   "releases": [
     {
+      "version": "0.14.1",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "msg": "fix(boxjs): boxjs 自身的请求仍发出警告问题",
+      "notes": [
+        {
+          "name": "数据查询警告",
+          "descs": [
+            "为保护用户数据，当发现不是 boxjs 自身发起的数据查询时，会发出警告 (默认开启)",
+            "可以在 boxjs 页面侧栏中关闭警告 (但仍会记录日志)"
+          ]
+        },
+        {
+          "name": "感谢",
+          "descs": ["@xream 反馈"]
+        }
+      ]
+    },
+    {
       "version": "0.14.0",
       "tags": ["beta"],
       "author": "@chavyleung",
