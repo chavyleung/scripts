@@ -3,7 +3,7 @@ const $ = new Env('BoxJs')
 // 为 eval 准备的上下文环境
 const $eval_env = {}
 
-$.version = '0.14.1'
+$.version = '0.14.2'
 $.versionType = 'beta'
 
 // 发出的请求需要需要 Surge、QuanX 的 rewrite
@@ -226,6 +226,10 @@ async function handleQuery() {
     )
 
     if (!isMuteQueryAlert) {
+      // 关闭静默状态
+      const _isMute = $.isMute
+      $.isMute = false
+
       $.msg(
         $.name,
         '❗️发现有脚本或人正在读取你的数据',
@@ -235,6 +239,9 @@ async function handleQuery() {
           '2. 在 BoxJs 的页面 (侧栏) 中 "不显示查询警告"'
         ].join('\n')
       )
+
+      // 还原静默状态
+      $.isMute = _isMute
     }
 
     $.log(

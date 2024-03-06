@@ -1,6 +1,22 @@
 {
   "releases": [
     {
+      "version": "0.14.2",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "msg": "fix(boxjs): 全局静默状态下没有发出查询警告",
+      "notes": [
+        {
+          "name": "修复",
+          "descs": ["全局静默状态下没有发出查询警告"]
+        },
+        {
+          "name": "感谢",
+          "descs": ["@MuTu888 反馈"]
+        }
+      ]
+    },
+    {
       "version": "0.14.1",
       "tags": ["beta"],
       "author": "@chavyleung",
