@@ -1,5 +1,11 @@
-name: BoxJs
-desc: http://boxjs.com
+name: "BoxJs"
+desc: "http://boxjs.com"
+openUrl: "http://boxjs.com"
+author: "ChavyLeung"
+homepage: "https://docs.boxjs.app/"
+manual: "https://docs.boxjs.app/"
+icon: "https://raw.githubusercontent.com/chavyleung/scripts/master/box/icons/BoxJs.png"
+category: "BoxJs"
 
 http:
   force-http-engine:
