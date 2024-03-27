@@ -30,6 +30,12 @@ function Env(name, opts) {
   return new (class {
     constructor(name, opts) {
       this.logLevels = { debug: 0, info: 1, warn: 2, error: 3 }
+      this.logLevelPrefixs = {
+        debug: '[DEBUG] ',
+        info: '[INFO] ',
+        warn: '[WARN] ',
+        error: '[ERROR] '
+      }
       this.logLevel = 'info'
       this.name = name
       this.http = new Http(this)
@@ -684,25 +690,45 @@ function Env(name, opts) {
 
     debug(...logs) {
       if (this.logLevels[this.logLevel] <= this.logLevels.debug) {
-        this.log('[DEBUG]', ...logs)
+        if (logs.length > 0) {
+          this.logs = [...this.logs, ...logs]
+        }
+        console.log(
+          `${this.logLevelPrefixs.debug}${logs.join(this.logSeparator)}`
+        )
       }
     }
 
     info(...logs) {
       if (this.logLevels[this.logLevel] <= this.logLevels.info) {
-        this.log('[INFO]', ...logs)
+        if (logs.length > 0) {
+          this.logs = [...this.logs, ...logs]
+        }
+        console.log(
+          `${this.logLevelPrefixs.info}${logs.join(this.logSeparator)}`
+        )
       }
     }
 
     warn(...logs) {
       if (this.logLevels[this.logLevel] <= this.logLevels.warn) {
-        this.log('[WARN]', ...logs)
+        if (logs.length > 0) {
+          this.logs = [...this.logs, ...logs]
+        }
+        console.log(
+          `${this.logLevelPrefixs.warn}${logs.join(this.logSeparator)}`
+        )
       }
     }
 
     error(...logs) {
       if (this.logLevels[this.logLevel] <= this.logLevels.error) {
-        this.log('[ERROR]', ...logs)
+        if (logs.length > 0) {
+          this.logs = [...this.logs, ...logs]
+        }
+        console.log(
+          `${this.logLevelPrefixs.error}${logs.join(this.logSeparator)}`
+        )
       }
     }
 
