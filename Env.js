@@ -29,6 +29,8 @@ function Env(name, opts) {
 
   return new (class {
     constructor(name, opts) {
+      this.logLevels = { debug: 0, info: 1, warn: 2, error: 3 }
+      this.logLevel = 'info'
       this.name = name
       this.http = new Http(this)
       this.data = null
@@ -677,6 +679,30 @@ function Env(name, opts) {
         desc ? logs.push(desc) : ''
         console.log(logs.join('\n'))
         this.logs = this.logs.concat(logs)
+      }
+    }
+
+    debug(...logs) {
+      if (this.logLevels[this.logLevel] <= this.logLevels.debug) {
+        this.log('[DEBUG]', ...logs)
+      }
+    }
+
+    info(...logs) {
+      if (this.logLevels[this.logLevel] <= this.logLevels.info) {
+        this.log('[INFO]', ...logs)
+      }
+    }
+
+    warn(...logs) {
+      if (this.logLevels[this.logLevel] <= this.logLevels.warn) {
+        this.log('[WARN]', ...logs)
+      }
+    }
+
+    error(...logs) {
+      if (this.logLevels[this.logLevel] <= this.logLevels.error) {
+        this.log('[ERROR]', ...logs)
       }
     }
 
