@@ -86,9 +86,9 @@ function Env(name, opts) {
       }
     }
 
-    toStr(obj, defaultValue = null) {
+    toStr(obj, defaultValue = null, ...args) {
       try {
-        return JSON.stringify(obj)
+        return JSON.stringify(obj, ...args)
       } catch {
         return defaultValue
       }
@@ -323,9 +323,15 @@ function Env(name, opts) {
         request.url += '?' + this.queryStr(request.params)
       }
       // followRedirect 禁止重定向
-      if (typeof request.followRedirect !== 'undefined' && !request['followRedirect']) {
-        if (this.isSurge() || this.isLoon()) request['auto-redirect'] = false  // Surge & Loon
-        if (this.isQuanX()) request.opts ? request['opts']['redirection'] = false : request.opts = { redirection: false }  // Quantumult X
+      if (
+        typeof request.followRedirect !== 'undefined' &&
+        !request['followRedirect']
+      ) {
+        if (this.isSurge() || this.isLoon()) request['auto-redirect'] = false // Surge & Loon
+        if (this.isQuanX())
+          request.opts
+            ? (request['opts']['redirection'] = false)
+            : (request.opts = { redirection: false }) // Quantumult X
       }
       switch (this.getEnv()) {
         case 'Surge':
@@ -439,9 +445,15 @@ function Env(name, opts) {
         delete request.headers['content-length']
       }
       // followRedirect 禁止重定向
-      if (typeof request.followRedirect !== 'undefined' && !request['followRedirect']) {
-        if (this.isSurge() || this.isLoon()) request['auto-redirect'] = false  // Surge & Loon
-        if (this.isQuanX()) request.opts ? request['opts']['redirection'] = false : request.opts = { redirection: false }  // Quantumult X
+      if (
+        typeof request.followRedirect !== 'undefined' &&
+        !request['followRedirect']
+      ) {
+        if (this.isSurge() || this.isLoon()) request['auto-redirect'] = false // Surge & Loon
+        if (this.isQuanX())
+          request.opts
+            ? (request['opts']['redirection'] = false)
+            : (request.opts = { redirection: false }) // Quantumult X
       }
       switch (this.getEnv()) {
         case 'Surge':
@@ -683,10 +695,16 @@ function Env(name, opts) {
         case 'Shadowrocket':
         case 'Quantumult X':
         default:
-          this.log('', `❗️${this.name}, 错误!`, err)
+          this.log('', `❗️${this.name}, 错误!`, msg, err)
           break
         case 'Node.js':
-          this.log('', `❗️${this.name}, 错误!`, err.stack)
+          this.log(
+            '',
+            `❗️${this.name}, 错误!`,
+            msg,
+            typeof err.message !== 'undefined' ? err.message : err,
+            err.stack
+          )
           break
       }
     }
