@@ -312,8 +312,15 @@ function Env(name, opts) {
       this.ckjar = this.ckjar ? this.ckjar : new this.cktough.CookieJar()
       if (opts) {
         opts.headers = opts.headers ? opts.headers : {}
-        if (undefined === opts.headers.Cookie && undefined === opts.cookieJar) {
-          opts.cookieJar = this.ckjar
+        if (opts) {
+          opts.headers = opts.headers ? opts.headers : {}
+          if (
+            undefined === opts.headers.cookie &&
+            undefined === opts.headers.Cookie &&
+            undefined === opts.cookieJar
+          ) {
+            opts.cookieJar = this.ckjar
+          }
         }
       }
     }
