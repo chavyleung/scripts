@@ -654,8 +654,9 @@ function Env(name, opts) {
                   rawopts['update-pasteboard'] ||
                   rawopts.updatePasteboard ||
                   $copy
-                if (copy)
+                if (copy) {
                   Object.assign(options, { action: 'clipboard', text: copy })
+                }
 
                 if ($media) {
                   let mediaUrl = undefined
@@ -699,16 +700,14 @@ function Env(name, opts) {
                   Object.assign(options, {
                     'media-url': mediaUrl,
                     'media-base64': media,
-                    'media-base64-mime': $mediaMime ?? mime
+                    'media-base64-mime': $mediaMime || mime
                   })
                 }
 
-                // 未处理属性, 直接转发
                 Object.assign(options, {
                   'auto-dismiss': rawopts['auto-dismiss'],
                   'sound': rawopts['sound']
                 })
-
                 return options
               }
               case 'Loon': {
