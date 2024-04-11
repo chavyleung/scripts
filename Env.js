@@ -700,7 +700,7 @@ function Env(name, opts) {
                   Object.assign(options, {
                     'media-url': mediaUrl,
                     'media-base64': media,
-                    'media-base64-mime': $mediaMime || mime
+                    'media-base64-mime': $mediaMime ?? mime
                   })
                 }
 
