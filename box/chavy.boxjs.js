@@ -312,6 +312,14 @@ async function handleOptions() {}
 
 function getBoxData() {
   const datas = {}
+  
+  const extraDatas =
+    $.getdata(`${$.KEY_usercfgs.replace('#', '@')}.gist_cache_key`) || []
+
+  extraDatas.forEach((key) => {
+    datas[key] = $.getdata(key)
+  })
+
   const usercfgs = getUserCfgs()
   const sessions = getAppSessions()
   const curSessions = getCurSessions()
