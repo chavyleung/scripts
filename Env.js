@@ -617,7 +617,7 @@ function Env(name, opts) {
      */
     msg(title = name, subt = '', desc = '', opts) {
       const toEnvOpts = (rawopts) => {
-        const { $open, $copy } = rawopts
+        const { $open, $copy, $media, $mediaMime } = rawopts
         switch (typeof rawopts) {
           case undefined:
             return rawopts
@@ -657,7 +657,59 @@ function Env(name, opts) {
                 if (copy)
                   Object.assign(options, { action: 'clipboard', text: copy })
 
-                return Object.assign(options, rawopts)
+                if ($media) {
+                  let mediaUrl = undefined
+                  let media = undefined
+                  let mime = undefined
+                  // http 开头的网络地址
+                  if ($media.startsWith('http')) {
+                    mediaUrl = $media
+                  }
+                  // 带标识的 Base64 字符串
+                  // data:image/png;base64,iVBORw0KGgo...
+                  else if ($media.startsWith('data:')) {
+                    const [data] = $media.split(';')
+                    const [, base64str] = $media.split(',')
+                    media = base64str
+                    mime = data.replace('data:', '')
+                  }
+                  // 没有标识的 Base64 字符串
+                  // iVBORw0KGgo...
+                  else {
+                    // https://stackoverflow.com/questions/57976898/how-to-get-mime-type-from-base-64-string
+                    const getMimeFromBase64 = (encoded) => {
+                      const signatures = {
+                        'JVBERi0': 'application/pdf',
+                        'R0lGODdh': 'image/gif',
+                        'R0lGODlh': 'image/gif',
+                        'iVBORw0KGgo': 'image/png',
+                        '/9j/': 'image/jpg'
+                      }
+                      for (var s in signatures) {
+                        if (encoded.indexOf(s) === 0) {
+                          return signatures[s]
+                        }
+                      }
+                      return null
+                    }
+                    media = $media
+                    mime = getMimeFromBase64($media)
+                  }
+
+                  Object.assign(options, {
+                    'media-url': mediaUrl,
+                    'media-base64': media,
+                    'media-base64-mime': $mediaMime ?? mime
+                  })
+                }
+
+                // 未处理属性, 直接转发
+                Object.assign(options, {
+                  'auto-dismiss': rawopts['auto-dismiss'],
+                  'sound': rawopts['sound']
+                })
+
+                return options
               }
               case 'Loon': {
                 const options = {}
