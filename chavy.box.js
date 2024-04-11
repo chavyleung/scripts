@@ -3,7 +3,7 @@ const $ = new Env('BoxJs')
 // 为 eval 准备的上下文环境
 const $eval_env = {}
 
-$.version = '0.14.2'
+$.version = '0.15.0'
 $.versionType = 'beta'
 
 // 发出的请求需要需要 Surge、QuanX 的 rewrite
@@ -312,6 +312,14 @@ async function handleOptions() {}
 
 function getBoxData() {
   const datas = {}
+  
+  const extraDatas =
+    $.getdata(`${$.KEY_usercfgs.replace('#', '@')}.gist_cache_key`) || []
+
+  extraDatas.forEach((key) => {
+    datas[key] = $.getdata(key)
+  })
+
   const usercfgs = getUserCfgs()
   const sessions = getAppSessions()
   const curSessions = getCurSessions()

@@ -1,6 +1,22 @@
 {
   "releases": [
     {
+      "version": "0.15.0",
+      "tags": ["beta"],
+      "author": "@dompling",
+      "msg": "feat(boxjs): 通过数据查看器查询过的数据，会加入全局备份的名单中",
+      "notes": [
+        {
+          "name": "新增",
+          "descs": ["通过数据查看器查询过的数据，会加入全局备份的名单中"]
+        },
+        {
+          "name": "感谢",
+          "descs": ["@dompling PR"]
+        }
+      ]
+    },
+    {
       "version": "0.14.2",
       "tags": ["beta"],
       "author": "@chavyleung",
