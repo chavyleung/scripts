@@ -617,6 +617,7 @@ function Env(name, opts) {
      */
     msg(title = name, subt = '', desc = '', opts) {
       const toEnvOpts = (rawopts) => {
+        const { $open, $copy } = rawopts
         switch (typeof rawopts) {
           case undefined:
             return rawopts
@@ -640,27 +641,53 @@ function Env(name, opts) {
               case 'Stash':
               case 'Shadowrocket':
               default: {
+                const options = {}
+
+                // 打开URL
                 let openUrl =
-                  rawopts.url || rawopts.openUrl || rawopts['open-url']
-                return { url: openUrl }
+                  rawopts.openUrl || rawopts.url || rawopts['open-url'] || $open
+                if (openUrl)
+                  Object.assign(options, { action: 'open-url', url: openUrl })
+
+                // 粘贴板
+                let copy =
+                  rawopts['update-pasteboard'] ||
+                  rawopts.updatePasteboard ||
+                  $copy
+                if (copy)
+                  Object.assign(options, { action: 'clipboard', text: copy })
+
+                return Object.assign(options, rawopts)
               }
               case 'Loon': {
+                const options = {}
+
                 let openUrl =
-                  rawopts.openUrl || rawopts.url || rawopts['open-url']
+                  rawopts.openUrl || rawopts.url || rawopts['open-url'] || $open
+                if (openUrl) Object.assign(options, { openUrl })
+
                 let mediaUrl = rawopts.mediaUrl || rawopts['media-url']
-                return { openUrl, mediaUrl }
+                if (mediaUrl) Object.assign(options, { mediaUrl })
+
+                return options
               }
               case 'Quantumult X': {
+                const options = {}
+
                 let openUrl =
-                  rawopts['open-url'] || rawopts.url || rawopts.openUrl
+                  rawopts['open-url'] || rawopts.url || rawopts.openUrl || $open
+                if (openUrl) Object.assign(options, { 'open-url': openUrl })
+
                 let mediaUrl = rawopts['media-url'] || rawopts.mediaUrl
-                let updatePasteboard =
-                  rawopts['update-pasteboard'] || rawopts.updatePasteboard
-                return {
-                  'open-url': openUrl,
-                  'media-url': mediaUrl,
-                  'update-pasteboard': updatePasteboard
-                }
+                if (mediaUrl) Object.assign(options, { 'media-url': mediaUrl })
+
+                let copy =
+                  rawopts['update-pasteboard'] ||
+                  rawopts.updatePasteboard ||
+                  $copy
+                if (copy) Object.assign(options, { 'update-pasteboard': copy })
+
+                return options
               }
               case 'Node.js':
                 return undefined
