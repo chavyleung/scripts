@@ -779,7 +779,7 @@ function Env(name, opts) {
           this.logs = [...this.logs, ...logs]
         }
         console.log(
-          `${this.logLevelPrefixs.debug}${logs.join(this.logSeparator)}`
+          `${this.logLevelPrefixs.debug}${logs.map((l) => l ?? String(l)).join(this.logSeparator)}`
         )
       }
     }
@@ -790,7 +790,7 @@ function Env(name, opts) {
           this.logs = [...this.logs, ...logs]
         }
         console.log(
-          `${this.logLevelPrefixs.info}${logs.join(this.logSeparator)}`
+          `${this.logLevelPrefixs.info}${logs.map((l) => l ?? String(l)).join(this.logSeparator)}`
         )
       }
     }
@@ -801,7 +801,7 @@ function Env(name, opts) {
           this.logs = [...this.logs, ...logs]
         }
         console.log(
-          `${this.logLevelPrefixs.warn}${logs.join(this.logSeparator)}`
+          `${this.logLevelPrefixs.warn}${logs.map((l) => l ?? String(l)).join(this.logSeparator)}`
         )
       }
     }
@@ -812,7 +812,7 @@ function Env(name, opts) {
           this.logs = [...this.logs, ...logs]
         }
         console.log(
-          `${this.logLevelPrefixs.error}${logs.join(this.logSeparator)}`
+          `${this.logLevelPrefixs.error}${logs.map((l) => l ?? String(l)).join(this.logSeparator)}`
         )
       }
     }
@@ -821,7 +821,7 @@ function Env(name, opts) {
       if (logs.length > 0) {
         this.logs = [...this.logs, ...logs]
       }
-      console.log(logs.join(this.logSeparator))
+      console.log(logs.map((l) => l ?? String(l)).join(this.logSeparator))
     }
 
     logErr(err, msg) {
