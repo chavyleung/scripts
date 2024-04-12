@@ -615,7 +615,7 @@ function Env(name, opts) {
      * @param {*} opts 通知参数
      *
      */
-    msg(title = name, subt = '', desc = '', opts) {
+    msg(title = name, subt = '', desc = '', opts = {}) {
       const toEnvOpts = (rawopts) => {
         const { $open, $copy, $media, $mediaMime } = rawopts
         switch (typeof rawopts) {
