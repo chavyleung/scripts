@@ -718,8 +718,10 @@ function Env(name, opts) {
                 if (openUrl) Object.assign(options, { openUrl })
 
                 let mediaUrl = rawopts.mediaUrl || rawopts['media-url']
+                if ($media?.startsWith('http')) mediaUrl = $media
                 if (mediaUrl) Object.assign(options, { mediaUrl })
 
+                console.log(JSON.stringify(options))
                 return options
               }
               case 'Quantumult X': {
@@ -730,6 +732,7 @@ function Env(name, opts) {
                 if (openUrl) Object.assign(options, { 'open-url': openUrl })
 
                 let mediaUrl = rawopts['media-url'] || rawopts.mediaUrl
+                if ($media?.startsWith('http')) mediaUrl = $media
                 if (mediaUrl) Object.assign(options, { 'media-url': mediaUrl })
 
                 let copy =
@@ -738,6 +741,7 @@ function Env(name, opts) {
                   $copy
                 if (copy) Object.assign(options, { 'update-pasteboard': copy })
 
+                console.log(JSON.stringify(options))
                 return options
               }
               case 'Node.js':
