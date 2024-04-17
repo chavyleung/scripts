@@ -1067,7 +1067,7 @@
                         :hint="setting.desc"
                       ></v-text-field>
                     </div>
-                    <div class="mt-4" v-else-if="setting.type === 'selects'">
+                    <div class="mt-4" v-else-if="setting.type === 'selects' || setting.type === 'modalSelects'">
                       <v-select
                         v-model="setting.val"
                         v-bind="setting"
@@ -1075,7 +1075,7 @@
                         type="number"
                         item-text="label"
                         item-value="key"
-                        :items="setting.items"
+                        :items="getItems(setting.items)"
                         :label="setting.name"
                         :hint="setting.desc"
                       ></v-select>
@@ -2604,6 +2604,12 @@
             } else {
               this.box.usercfgs.favapps.splice(favAppIdx, 1)
             }
+          },
+          getItems(items){
+            if(typeof items==="string"){
+             return this.datas[items] || [];
+            }
+            return items;
           },
           // 加载应用信息
           loadAppBaseInfo(app) {
