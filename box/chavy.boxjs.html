@@ -1042,7 +1042,7 @@
                         :hint="setting.desc"
                       ></v-text-field>
                     </div>
-                    <div class="mt-4" v-else-if="setting.type === 'selects'">
+                    <div class="mt-4" v-else-if="setting.type === 'selects' || setting.type === 'modalSelects'">
                       <v-select
                         v-model="setting.val"
                         v-bind="setting"
@@ -1050,7 +1050,7 @@
                         type="number"
                         item-text="label"
                         item-value="key"
-                        :items="setting.items"
+                        :items="getItems(setting.items)"
                         :label="setting.name"
                         :hint="setting.desc"
                       ></v-select>
@@ -1235,7 +1235,7 @@
               <v-select v-model="licenseType" :items="licenseTypes" label="设备授权数"></v-select>
               <v-btn @click="calculateCost">计算费用</v-btn>
               <p class="mt-2">费用：{{ cost.toFixed(2) }}</p>
-            </div>       
+            </div>
           </v-container>
         </v-main>
         <!-- 底部 -->
@@ -2568,6 +2568,12 @@
             } else {
               this.box.usercfgs.favapps.splice(favAppIdx, 1)
             }
+          },
+          getItems(items){
+            if(typeof items==="string"){
+             return this.datas[items] || [];
+            }
+            return items;
           },
           // 加载应用信息
           loadAppBaseInfo(app) {
