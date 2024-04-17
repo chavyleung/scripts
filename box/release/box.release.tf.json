@@ -1,6 +1,25 @@
 {
   "releases": [
     {
+      "version": "0.16.0",
+      "tags": ["beta"],
+      "author": "@dompling",
+      "msg": "feat(boxjs): 下拉框的选项可以动态从持久化数据中读取",
+      "notes": [
+        {
+          "name": "本次更新面向开发者",
+          "descs": [
+            "下拉框的选项可以动态从持久化数据中读取",
+            "{..., \"type\": \"select\", \"items\": \"@gist.revision_options\", ...}"
+          ]
+        },
+        {
+          "name": "感谢",
+          "descs": ["@dompling PR"]
+        }
+      ]
+    },
+    {
       "version": "0.15.0",
       "tags": ["beta"],
       "author": "@dompling",
