@@ -1006,108 +1006,7 @@
                 <v-subheader> {{ $t('appDetail.settings') }} ({{curapp.settings.length}}) </v-subheader>
                 <v-form class="pl-4 pr-4 pb-4">
                   <template v-for="(setting, settingIdx) in curapp.settings">
-                    <v-slider
-                      v-model="setting.val"
-                      v-bind="setting"
-                      class="mt-4"
-                      dense
-                      persistent-hint
-                      :label="setting.name"
-                      :hint="setting.desc"
-                      thumb-label="always"
-                      v-if="setting.type === 'slider'"
-                    ></v-slider>
-                    <v-switch
-                      v-model="setting.val"
-                      class="mt-2"
-                      persistent-hint
-                      dense
-                      :label="setting.name"
-                      :hint="setting.desc"
-                      v-else-if="setting.type === 'boolean'"
-                    ></v-switch>
-                    <v-textarea
-                      v-model="setting.val"
-                      v-bind="setting"
-                      class="mt-4"
-                      :row="3"
-                      :label="setting.name"
-                      :hint="setting.desc"
-                      v-else-if="setting.type === 'textarea'"
-                    ></v-textarea>
-                    <v-radio-group
-                      v-model="setting.val"
-                      v-bind="setting"
-                      persistent-hint
-                      class="mt-0"
-                      :hint="setting.desc"
-                      v-else-if="setting.type === 'radios'"
-                    >
-                      <v-subheader class="mb-n4 pa-0">{{setting.name}}</v-subheader>
-                      <v-radio
-                        :class="itemIdx === 0 ? 'mt-2' : ''"
-                        v-for="(item, itemIdx) in setting.items"
-                        :label="item.label"
-                        :value="item.key"
-                        :key="item.key"
-                      ></v-radio>
-                    </v-radio-group>
-                    <template v-else-if="setting.type === 'checkboxes'">
-                      <v-subheader class="mb-n8 pa-0">{{setting.name}}</v-subheader>
-                      <v-item-group class="mt-4 pt-1">
-                        <v-checkbox
-                          v-model="setting.val"
-                          class="mt-0"
-                          persistent-hint
-                          :hide-details="itemIdx + 1 !== setting.items.length"
-                          :hint="setting.desc"
-                          :label="item.label"
-                          :value="item.key"
-                          v-for="(item, itemIdx) in setting.items"
-                          :key="item.key"
-                          multiple
-                        ></v-checkbox>
-                      </v-item-group>
-                    </template>
-                    <template v-else-if="setting.type === 'colorpicker'">
-                      <v-subheader class="mb-n2 pa-0">{{setting.name}}</v-subheader>
-                      <v-color-picker
-                        v-model="setting.val"
-                        v-bind="setting"
-                        class="mt-2 mb-4"
-                        persistent-hint
-                        :hint="setting.desc"
-                        :hide-canvas="!setting.canvas"
-                        :dot-size="30"
-                        mode="hexa"
-                        light
-                      ></v-color-picker>
-                    </template>
-                    <div class="mt-4" v-else-if="setting.type === 'number'">
-                      <v-text-field
-                        v-model="setting.val"
-                        v-bind="setting"
-                        type="number"
-                        :label="setting.name"
-                        :hint="setting.desc"
-                      ></v-text-field>
-                    </div>
-                    <div class="mt-4" v-else-if="setting.type === 'selects' || setting.type === 'modalSelects'">
-                      <v-select
-                        v-model="setting.val"
-                        v-bind="setting"
-                        persistent-hint
-                        type="number"
-                        item-text="label"
-                        item-value="key"
-                        :items="getItems(setting.items)"
-                        :label="setting.name"
-                        :hint="setting.desc"
-                      ></v-select>
-                    </div>
-                    <div class="mt-4" v-else>
-                      <v-text-field v-model="setting.val" v-bind="setting" :label="setting.name" :hint="setting.desc"></v-text-field>
-                    </div>
+                    <v-form-item v-bind:data="setting"></v-form-item>
                   </template>
                 </v-form>
                 <v-divider></v-divider>
@@ -1434,6 +1333,187 @@
         </v-bottom-sheet>
       </v-app>
     </div>
+
+    <template id="form-item">
+      <div>
+        <v-slider
+          v-model="setting.val"
+          v-bind="setting"
+          class="mt-4"
+          dense
+          persistent-hint
+          :label="setting.name"
+          :hint="setting.desc"
+          thumb-label="always"
+          v-if="setting.type === 'slider'"
+        ></v-slider>
+        <v-switch
+          v-model="setting.val"
+          class="mt-2"
+          persistent-hint
+          dense
+          :label="setting.name"
+          :hint="setting.desc"
+          v-else-if="setting.type === 'boolean'"
+        ></v-switch>
+        <v-textarea
+          v-model="setting.val"
+          v-bind="setting"
+          class="mt-4"
+          :row="3"
+          :label="setting.name"
+          :hint="setting.desc"
+          v-else-if="setting.type === 'textarea' && !setting.child"
+        ></v-textarea>
+
+        <div v-else-if="setting.type === 'textarea' && setting.child">
+          <v-subheader class="pa-0">{{setting.name}}</v-subheader>
+          <v-form-list :setting="setting" v-model="setting.val"></v-form-list>
+        </div>
+
+        <v-radio-group
+          v-model="setting.val"
+          v-bind="setting"
+          persistent-hint
+          class="mt-0"
+          :hint="setting.desc"
+          v-else-if="setting.type === 'radios'"
+        >
+          <v-subheader class="mb-n4 pa-0">{{setting.name}}</v-subheader>
+          <v-radio
+            :class="itemIdx === 0 ? 'mt-2' : ''"
+            v-for="(item, itemIdx) in setting.items"
+            :label="item.label"
+            :value="item.key"
+            :key="item.key"
+          ></v-radio>
+        </v-radio-group>
+        <template v-else-if="setting.type === 'checkboxes'">
+          <v-subheader class="mb-n8 pa-0">{{setting.name}}</v-subheader>
+          <v-item-group class="mt-4 pt-1">
+            <v-checkbox
+              v-model="setting.val"
+              class="mt-0"
+              persistent-hint
+              :hide-details="itemIdx + 1 !== setting.items.length"
+              :hint="setting.desc"
+              :label="item.label"
+              :value="item.key"
+              v-for="(item, itemIdx) in setting.items"
+              :key="item.key"
+              multiple
+            ></v-checkbox>
+          </v-item-group>
+        </template>
+
+        <div v-else-if="setting.type === 'textarea' && setting.child">
+          <v-subheader class="pa-0">{{setting.name}}</v-subheader>
+          <v-form-list :setting="setting" v-model="setting.val"></v-form-list>
+        </div>
+
+        <template v-else-if="setting.type === 'colorpicker'">
+          <v-subheader class="mb-n2 pa-0">{{setting.name}}</v-subheader>
+          <v-color-picker
+            v-model="setting.val"
+            v-bind="setting"
+            class="mt-2 mb-4"
+            persistent-hint
+            :hint="setting.desc"
+            :hide-canvas="!setting.canvas"
+            :dot-size="30"
+            mode="hexa"
+            light
+          ></v-color-picker>
+        </template>
+        <div class="mt-4" v-else-if="setting.type === 'number'">
+          <v-text-field
+            v-model="setting.val"
+            v-bind="setting"
+            type="number"
+            :label="setting.name"
+            :hint="setting.desc"
+          ></v-text-field>
+        </div>
+        <div class="mt-4" v-else-if="setting.type === 'selects' || setting.type === 'modalSelects'">
+          <v-select
+            v-model="setting.val"
+            v-bind="setting"
+            persistent-hint
+            type="number"
+            item-text="label"
+            item-value="key"
+            :items="setting.items"
+            :label="setting.name"
+            :hint="setting.desc"
+          ></v-select>
+        </div>
+        <div class="mt-4" v-else>
+          <v-text-field v-model="setting.val" v-bind="setting" :label="setting.name" :hint="setting.desc"></v-text-field>
+        </div>
+      </div>
+    </template>
+
+
+    <template id="form-list">
+      <div>
+        <v-expansion-panels>
+          <v-expansion-panel v-for="(item,i) in settings" :key="i">
+            <v-expansion-panel-header>{{setting.primary?renderTitle(item,setting.primary,i):`${setting.name}-${i+1}`}}</v-expansion-panel-header>
+            <v-expansion-panel-content>
+              <template v-for="(childSetting, settingIdx) in item">
+                <v-form-item :data="childSetting" @change="(value)=>onChange(i,settingIdx,value)"></v-form-item>
+              </template>
+              <v-btn block color="error" @click="deleteRow(i)">
+                {{$t('base.list.del')}}
+              </v-btn>
+            </v-expansion-panel-content>
+          </v-expansion-panel>
+          <v-expansion-panel>
+            <v-expansion-panel-header><v-spacer></v-spacer>{{$t('base.list.action')}}<v-spacer></v-spacer></v-expansion-panel-header>
+            <v-expansion-panel-content>
+              <v-row no-gutters>
+                <v-col class="d-flex justify-center" cols="4" sm="4">
+                  <v-btn text color="error" @click="clearAll()">
+                    {{$t('base.list.clear')}}
+                  </v-btn>
+                </v-col>
+                <v-col class="d-flex justify-center" cols="4" sm="4">
+                  <v-btn text color="primary" @click="addRow()">
+                    {{$t('base.list.add')}}
+                  </v-btn>
+                </v-col>
+                <v-col class="d-flex justify-center" cols="4" sm="4">
+                  <v-btn text color="secondary" @click="copy()">
+                    {{$t('base.cmd.cp')}}
+                  </v-btn>
+                </v-col>
+              </v-row>
+            </v-expansion-panel-content>
+          </v-expansion-panel>
+        </v-expansion-panels>
+
+        <v-dialog persistent v-model="listDialog.show">
+          <v-card>
+            <v-card-title>{{$t('base.list.add')}}-{{setting.name}}</v-card-title>
+            <v-card-text>
+              <div>
+                <template v-for="(childSetting, settingIdx) in settingChild">
+                  <v-form-item :data="childSetting" @change="formItemChange"></v-form-item>
+                </template>
+              </div>
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn text small color="grey" @click="listDialog={show:false,data:null};">{{ $t('base.dialog.close')
+                }}</v-btn>
+              <v-btn text small color="primary" @click="saveItem()">{{ $t('base.dialog.save')
+                }}</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+      </div>
+    </template>
+
     <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue-i18n@8.x/dist/vue-i18n.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vuetify@2.4.x/dist/vuetify.min.js"></script>
@@ -1447,6 +1527,125 @@
     <script>
       Vue.prototype.timeago = timeago
       Vue.prototype.dayjs = dayjs
+
+      Vue.component("v-form-item", {
+        props: ["data"],
+        template: "#form-item",
+        data() {
+          return { setting: this.$props.data }
+        },
+        watch: {
+          setting: {
+            deep: true,
+            handler(newState) {
+              this.$emit('change', newState)
+            }
+          }
+        }
+      })
+
+      Vue.component('v-form-list', {
+        template: "#form-list",
+        props: ['modelValue', "setting"],
+        model: {
+          event: 'change',
+          prop: 'modelValue',
+        },
+        data() {
+          const modelValue = JSON.parse(this.$props.modelValue || "[]");
+          let datas = {};
+          Object.keys(modelValue[0] || {}).forEach(key => {
+            datas[key] = { id: key, name: key }
+          })
+          this.$props.setting.child.forEach(item => {
+            datas[item.id] = item;
+          })
+          return { data: modelValue, listDialog: { show: false }, settingChild: datas }
+        },
+        computed: {
+          addData() {
+            let datas = {};
+            Object.keys(this.data[0] || {}).forEach(key => {
+              datas[key] = { id: key, name: key }
+            })
+            this.$props.setting.child.forEach(item => {
+              datas[item.id] = item;
+            })
+            return datas;
+          },
+          settings() {
+            const childSettings = {};
+            this.$props.setting.child.forEach(item => {
+              childSettings[item.id] = item;
+            });
+            const app = this.data.map(item => {
+              const settingKeys = Object.keys(childSettings);
+              const dataKeys = Object.keys(item);
+              const itemKeys = this.uniqueData([...settingKeys, ...dataKeys])
+              return itemKeys.map(key => {
+                return { id: key, name: key, type: "text", ...childSettings[key], val: item[key] }
+              })
+            })
+            return app
+          },
+        },
+        methods: {
+          uniqueData(arr) {
+            return Array.from(new Set(arr))
+          },
+          updateData() {
+            const changeValue = [];
+            this.settings.forEach(item => {
+              const value = {};
+              item.forEach(child => {
+                value[child.id] = child.val
+              });
+              changeValue.push(value);
+            })
+            this.data = [...changeValue];
+            this.$emit('change', JSON.stringify(changeValue, null, `\t`));
+          },
+          formItemChange(value) {
+            if (this.addData[value.id]) this.addData[value.id] = value;
+          },
+          addRow() {
+            this.listDialog.show = true;
+          },
+          saveItem() {
+            const formData = [];
+            Object.keys(this.addData).forEach(key => {
+              formData.push(this.addData[key]);
+            })
+            this.settings[this.settings.length] = formData;
+            this.updateData();
+            this.listDialog.show = false;
+          },
+          deleteRow(index) {
+            delete this.settings[index];
+            this.updateData();
+          },
+          clearAll() {
+            this.data = [];
+            this.updateData();
+          },
+          renderTitle(data, keys) {
+            let title = [];
+            keys.forEach(item => {
+              const titleItem = data.find(setting => setting.id === item);
+              if (titleItem && titleItem.val)
+                title.push(titleItem.val);
+            })
+            return title.join("-");
+          },
+          onChange(settingIndex, key, value) {
+            this.settings[settingIndex][key] = value;
+            this.updateData();
+          }
+        },
+        emits: ['change:modelValue'],
+      })
+
+
       new Vue({
         el: '#app',
         vuetify: new Vuetify(),
@@ -1455,6 +1654,12 @@
           messages: {
             'en-US': {
               base: {
+                list: {
+                  add: "New",
+                  del: "Delete",
+                  clear: "Clear All",
+                  action: "Data operation",
+                },
                 dialog: {
                   apply: 'Apply',
                   save: 'Save',
@@ -1618,6 +1823,12 @@
             },
             'zh-CN': {
               base: {
+                list: {
+                  add: "新增",
+                  del: "删除",
+                  clear: "清空",
+                  action: "数据操作",
+                },
                 dialog: {
                   apply: '应用',
                   save: '保存',
@@ -2678,12 +2889,6 @@
             } else {
               this.box.usercfgs.favapps.splice(favAppIdx, 1)
             }
-          },
-          getItems(items){
-            if(typeof items==="string"){
-             return this.datas[items] || [];
-            }
-            return items;
           },
           // 加载应用信息
           loadAppBaseInfo(app) {
