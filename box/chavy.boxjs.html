@@ -1075,7 +1075,7 @@
                         type="number"
                         item-text="label"
                         item-value="key"
-                        :items="getItems(setting.items)"
+                        :items="setting.items"
                         :label="setting.name"
                         :hint="setting.desc"
                       ></v-select>
@@ -2195,6 +2195,12 @@
               const appId = decodeURIComponent(decodeURIComponent(this.subview))
               const app = this.apps.find((app) => app.id === appId)
               this.loadAppDataInfo(app)
+              app.settings = app.settings.map(setting=>{
+                if(setting.items && typeof setting.items === "string"){
+                  return {...setting,items:this.box.datas[setting.items] || []};
+                }
+                return {...setting}
+              })
               return app
             }
           },
@@ -2604,12 +2610,6 @@
             } else {
               this.box.usercfgs.favapps.splice(favAppIdx, 1)
             }
-          },
-          getItems(items){
-            if(typeof items==="string"){
-             return this.datas[items] || [];
-            }
-            return items;
           },
           // 加载应用信息
           loadAppBaseInfo(app) {
