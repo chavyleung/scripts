@@ -3,6 +3,10 @@ $.KEY_sessions = 'chavy_boxjs_sessions'
 $.KEY_curSessions = 'chavy_boxjs_cur_sessions'
 $.CFG_isSilent = $.getdata('CFG_BoxSwitcher_isSilent')
 
+$.appIds = (globalThis.$intent?.parameter ?? globalThis.$argument ?? '').split(
+  ','
+)
+
 !(async () => {
   await execSwitch()
   await showmsg()
@@ -11,20 +15,30 @@ $.CFG_isSilent = $.getdata('CFG_BoxSwitcher_isSilent')
   .finally(() => $.done())
 
 function execSwitch() {
+  if (Array.isArray($.appIds) && $.appIds.length) {
+    $.log(`指定切换: ${$.appIds.join(',')}`)
+  }
   $.subt = ''
   $.desc = []
   return new Promise((resove) => {
     const sessions = getSessions()
     const curSessions = getCurSessions()
     // 会话排序: `创建时间`升序
-    sessions.sort((a, b) => a.createTime.replace(/-|:| /g, '') - b.createTime.replace(/-|:| /g, ''))
+    sessions.sort(
+      (a, b) =>
+        a.createTime.replace(/-|:| /g, '') - b.createTime.replace(/-|:| /g, '')
+    )
     const apps = {}
     sessions.forEach((session) => {
       const appId = session.appId
-      const appName = session.appName
-      apps[appId] = apps[appId] ? apps[appId] : { id: appId, name: appName, sessions: [] }
-      const app = apps[appId]
-      app.sessions.push(session)
+      if ($.appIds.includes(appId)) {
+        const appName = session.appName
+        apps[appId] = apps[appId]
+          ? apps[appId]
+          : { id: appId, name: appName, sessions: [] }
+        const app = apps[appId]
+        app.sessions.push(session)
+      }
     })
     const switchkeys = {}
     Object.keys(apps).forEach((appId) => {
@@ -33,7 +47,9 @@ function execSwitch() {
         $.desc.push(`${app.name}: 跳过! 原因: 只有 1 个会话?`)
         return true
       }
-      let curSessionIdx = app.sessions.findIndex((session) => session.id === curSessions[appId])
+      let curSessionIdx = app.sessions.findIndex(
+        (session) => session.id === curSessions[appId]
+      )
       if (curSessionIdx === -1) {
         curSessionIdx = app.sessions.length - 1
       }
@@ -43,13 +59,21 @@ function execSwitch() {
       const nextSession = app.sessions[nextSessionIdx]
       nextSession.datas.forEach((_data) => {
         const key = _data.key
-        const val = [undefined, null, 'undefined', 'null', ''].includes(_data.val) ? '' : _data.val
+        const val = [undefined, null, 'undefined', 'null', ''].includes(
+          _data.val
+        )
+          ? ''
+          : _data.val
         if (switchkeys[key]) {
           const swData = switchkeys[key]
           const isClash = swData.val !== val ? true : false
           if (isClash) {
             nextSession.isClash = true
-            $.log('', `⚠️【${key}】冲突: `, `   ${nextSession.appName}.${nextSession.name} => ${swData.session.appName}.${swData.session.name}`)
+            $.log(
+              '',
+              `⚠️【${key}】冲突: `,
+              `   ${nextSession.appName}.${nextSession.name} => ${swData.session.appName}.${swData.session.name}`
+            )
           }
         } else {
           switchkeys[key] = {}
@@ -61,7 +85,9 @@ function execSwitch() {
       })
       curSessions[appId] = nextSession.id
       const clashstr = nextSession.isClash === true ? ' (冲突)' : ''
-      $.desc.push(`${curSession.appName}: ${curSession.name} => #${nextSessionIdx + 1} ${nextSession.name}${clashstr} ${isNewRound ? '(新一轮)' : ''}`)
+      $.desc.push(
+        `${curSession.appName}: ${curSession.name} => #${nextSessionIdx + 1} ${nextSession.name}${clashstr} ${isNewRound ? '(新一轮)' : ''}`
+      )
     })
     $.setdata(JSON.stringify(curSessions), $.KEY_curSessions)
     resove()
