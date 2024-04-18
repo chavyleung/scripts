@@ -1,16 +1,16 @@
 {
   "releases": [
     {
-      "version": "0.17.0",
+      "version": "0.18.0",
       "tags": ["beta"],
       "author": "@dompling",
-      "msg": "feat(viewer): 数据查看器",
+      "msg": "fix(boxjs): appid 重复",
       "notes": [
         {
-          "name": "数据查看器",
+          "name": "appid重复问题",
           "descs": [
-            "近期查看样式调整",
-            "非订阅数据查看和保存"
+            "修复无法正常跳转问题",
+            "修复无法正常收藏"
           ]
         }
       ]
