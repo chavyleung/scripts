@@ -3,7 +3,7 @@ const $ = new Env('BoxJs')
 // 为 eval 准备的上下文环境
 const $eval_env = {}
 
-$.version = '0.14.2'
+$.version = '0.17.0'
 $.versionType = 'beta'
 
 // 发出的请求需要需要 Surge、QuanX 的 rewrite
@@ -312,6 +312,14 @@ async function handleOptions() {}
 
 function getBoxData() {
   const datas = {}
+  
+  const extraDatas =
+    $.getdata(`${$.KEY_usercfgs.replace('#', '@')}.gist_cache_key`) || []
+
+  extraDatas.forEach((key) => {
+    datas[key] = $.getdata(key)
+  })
+
   const usercfgs = getUserCfgs()
   const sessions = getAppSessions()
   const curSessions = getCurSessions()
@@ -446,23 +454,32 @@ function getSystemApps() {
     {
       "id": "BoxGist",
       "name": "Gist备份",
-      "keys": ["@gist.token", "@gist.username"],
+      "keys": [
+        "@gist.token",
+        "@gist.username",
+        "@gist.split",
+        "@gist.revision_options",
+        "@gist.backup_type"
+      ],
       "author": "@dompling",
-      "repo": "https://github.com/dompling/Script/tree/master/gist",
       "icons": [
         "https://raw.githubusercontent.com/Former-Years/icon/master/github-bf.png",
         "https://raw.githubusercontent.com/Former-Years/icon/master/github-bf.png"
       ],
       "descs_html": [
-        "脚本由 <a href='https://github.com/dompling' target='_blank'>@dompling</a> 提供, 感谢!",
-        "<br />",
-        "<b>Token</b> 获取方式:",
-        "<span style='margin-left: 40px'>头像菜单 -></span>",
-        "<span style='margin-left: 40px'>Settings -></span>",
-        "<span style='margin-left: 40px'>Developer settings -></span>",
-        "<span style='margin-left: 40px'>Personal access tokens -></span>",
-        "<span style='margin-left: 40px'>Generate new token -></span>",
-        "<span style='margin-left: 40px'>在里面找到 gist 勾选提交</span>"
+        "<h2>Token的获取方式</h2>",
+        "<ol>头像菜单 -></ol>",
+        "<ol>Settings -></ol>",
+        "<ol>Developer settings -></ol>",
+        "<ol>Personal access tokens -></ol>",
+        "<ol>Generate new token -></ol>",
+        "<ol>在里面找到 gist 勾选提交</ol>",
+        "<h2>Gist Revision Id</h2>",
+        "<ol>打开Gist项目</ol>",
+        "<ol>默认为Code，选择Revisions</ol>",
+        "<ol>找到需要恢复的版本文件</ol>",
+        "<ol>点击右上角【...】>【View file】</ol>",
+        "<ol>浏览器地址最后一串为 RevisionId</ol>"
       ],
       "scripts": [
         {
@@ -472,9 +489,60 @@ function getSystemApps() {
         {
           "name": "从 Gist 恢复",
           "script": "https://raw.githubusercontent.com/dompling/Script/master/gist/restore.js"
+        },
+        {
+          "name": "更新历史版本",
+          "script": "https://raw.githubusercontent.com/dompling/Script/master/gist/commit.js"
         }
       ],
       "settings": [
+        {
+          "id": "@gist.split",
+          "name": "用户数据分段",
+          "val": null,
+          "type": "number",
+          "placeholder": "用户数据过大时，请进行拆分防止内存警告⚠️",
+          "desc": "值为数字，拆分段数比如 2 就拆分成两个 datas."
+        },
+        {
+          "id": "@gist.revision_id",
+          "type": "modalSelects",
+          "name": "历史版本RevisionId",
+          "desc": "不填写时，默认获取最新，恢复后会自动清空。选择无内容时，请运行上方更新历史版本",
+          "items": "@gist.revision_options"
+        },
+        {
+          "id": "@gist.backup_type",
+          "name": "备份/恢复内容",
+          "val": "usercfgs,datas,sessions,curSessions,backups,appSubCaches",
+          "type": "checkboxes",
+          "items": [
+            {
+              "key": "usercfgs",
+              "label": "用户偏好"
+            },
+            {
+              "key": "datas",
+              "label": "用户数据"
+            },
+            {
+              "key": "sessions",
+              "label": "应用会话"
+            },
+            {
+              "key": "curSessions",
+              "label": "当前会话"
+            },
+            {
+              "key": "backups",
+              "label": "备份索引"
+            },
+            {
+              "key": "appSubCaches",
+              "label": "应用订阅缓存"
+            }
+          ]
+        },
         {
           "id": "@gist.username",
           "name": "用户名",
@@ -492,7 +560,7 @@ function getSystemApps() {
           "desc": "必填"
         }
       ]
-    }
+    },
   ]
   return sysapps
 }

@@ -615,8 +615,9 @@ function Env(name, opts) {
      * @param {*} opts 通知参数
      *
      */
-    msg(title = name, subt = '', desc = '', opts) {
+    msg(title = name, subt = '', desc = '', opts = {}) {
       const toEnvOpts = (rawopts) => {
+        const { $open, $copy, $media, $mediaMime } = rawopts
         switch (typeof rawopts) {
           case undefined:
             return rawopts
@@ -640,27 +641,108 @@ function Env(name, opts) {
               case 'Stash':
               case 'Shadowrocket':
               default: {
+                const options = {}
+
+                // 打开URL
                 let openUrl =
-                  rawopts.url || rawopts.openUrl || rawopts['open-url']
-                return { url: openUrl }
+                  rawopts.openUrl || rawopts.url || rawopts['open-url'] || $open
+                if (openUrl)
+                  Object.assign(options, { action: 'open-url', url: openUrl })
+
+                // 粘贴板
+                let copy =
+                  rawopts['update-pasteboard'] ||
+                  rawopts.updatePasteboard ||
+                  $copy
+                if (copy) {
+                  Object.assign(options, { action: 'clipboard', text: copy })
+                }
+
+                if ($media) {
+                  let mediaUrl = undefined
+                  let media = undefined
+                  let mime = undefined
+                  // http 开头的网络地址
+                  if ($media.startsWith('http')) {
+                    mediaUrl = $media
+                  }
+                  // 带标识的 Base64 字符串
+                  // data:image/png;base64,iVBORw0KGgo...
+                  else if ($media.startsWith('data:')) {
+                    const [data] = $media.split(';')
+                    const [, base64str] = $media.split(',')
+                    media = base64str
+                    mime = data.replace('data:', '')
+                  }
+                  // 没有标识的 Base64 字符串
+                  // iVBORw0KGgo...
+                  else {
+                    // https://stackoverflow.com/questions/57976898/how-to-get-mime-type-from-base-64-string
+                    const getMimeFromBase64 = (encoded) => {
+                      const signatures = {
+                        'JVBERi0': 'application/pdf',
+                        'R0lGODdh': 'image/gif',
+                        'R0lGODlh': 'image/gif',
+                        'iVBORw0KGgo': 'image/png',
+                        '/9j/': 'image/jpg'
+                      }
+                      for (var s in signatures) {
+                        if (encoded.indexOf(s) === 0) {
+                          return signatures[s]
+                        }
+                      }
+                      return null
+                    }
+                    media = $media
+                    mime = getMimeFromBase64($media)
+                  }
+
+                  Object.assign(options, {
+                    'media-url': mediaUrl,
+                    'media-base64': media,
+                    'media-base64-mime': $mediaMime ?? mime
+                  })
+                }
+
+                Object.assign(options, {
+                  'auto-dismiss': rawopts['auto-dismiss'],
+                  'sound': rawopts['sound']
+                })
+                return options
               }
               case 'Loon': {
+                const options = {}
+
                 let openUrl =
-                  rawopts.openUrl || rawopts.url || rawopts['open-url']
+                  rawopts.openUrl || rawopts.url || rawopts['open-url'] || $open
+                if (openUrl) Object.assign(options, { openUrl })
+
                 let mediaUrl = rawopts.mediaUrl || rawopts['media-url']
-                return { openUrl, mediaUrl }
+                if ($media?.startsWith('http')) mediaUrl = $media
+                if (mediaUrl) Object.assign(options, { mediaUrl })
+
+                console.log(JSON.stringify(options))
+                return options
               }
               case 'Quantumult X': {
+                const options = {}
+
                 let openUrl =
-                  rawopts['open-url'] || rawopts.url || rawopts.openUrl
+                  rawopts['open-url'] || rawopts.url || rawopts.openUrl || $open
+                if (openUrl) Object.assign(options, { 'open-url': openUrl })
+
                 let mediaUrl = rawopts['media-url'] || rawopts.mediaUrl
-                let updatePasteboard =
-                  rawopts['update-pasteboard'] || rawopts.updatePasteboard
-                return {
-                  'open-url': openUrl,
-                  'media-url': mediaUrl,
-                  'update-pasteboard': updatePasteboard
-                }
+                if ($media?.startsWith('http')) mediaUrl = $media
+                if (mediaUrl) Object.assign(options, { 'media-url': mediaUrl })
+
+                let copy =
+                  rawopts['update-pasteboard'] ||
+                  rawopts.updatePasteboard ||
+                  $copy
+                if (copy) Object.assign(options, { 'update-pasteboard': copy })
+
+                console.log(JSON.stringify(options))
+                return options
               }
               case 'Node.js':
                 return undefined
@@ -701,7 +783,7 @@ function Env(name, opts) {
           this.logs = [...this.logs, ...logs]
         }
         console.log(
-          `${this.logLevelPrefixs.debug}${logs.join(this.logSeparator)}`
+          `${this.logLevelPrefixs.debug}${logs.map((l) => l ?? String(l)).join(this.logSeparator)}`
         )
       }
     }
@@ -712,7 +794,7 @@ function Env(name, opts) {
           this.logs = [...this.logs, ...logs]
         }
         console.log(
-          `${this.logLevelPrefixs.info}${logs.join(this.logSeparator)}`
+          `${this.logLevelPrefixs.info}${logs.map((l) => l ?? String(l)).join(this.logSeparator)}`
         )
       }
     }
@@ -723,7 +805,7 @@ function Env(name, opts) {
           this.logs = [...this.logs, ...logs]
         }
         console.log(
-          `${this.logLevelPrefixs.warn}${logs.join(this.logSeparator)}`
+          `${this.logLevelPrefixs.warn}${logs.map((l) => l ?? String(l)).join(this.logSeparator)}`
         )
       }
     }
@@ -734,7 +816,7 @@ function Env(name, opts) {
           this.logs = [...this.logs, ...logs]
         }
         console.log(
-          `${this.logLevelPrefixs.error}${logs.join(this.logSeparator)}`
+          `${this.logLevelPrefixs.error}${logs.map((l) => l ?? String(l)).join(this.logSeparator)}`
         )
       }
     }
@@ -743,7 +825,7 @@ function Env(name, opts) {
       if (logs.length > 0) {
         this.logs = [...this.logs, ...logs]
       }
-      console.log(logs.join(this.logSeparator))
+      console.log(logs.map((l) => l ?? String(l)).join(this.logSeparator))
     }
 
     logErr(err, msg) {
