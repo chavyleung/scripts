@@ -1,6 +1,21 @@
 {
   "releases": [
     {
+      "version": "0.18.0",
+      "tags": ["beta"],
+      "author": "@dompling",
+      "msg": "fix(boxjs): appid 重复",
+      "notes": [
+        {
+          "name": "appid重复问题",
+          "descs": [
+            "修复无法正常跳转问题",
+            "修复无法正常收藏"
+          ]
+        }
+      ]
+    },
+    {
       "version": "0.17.0",
       "tags": ["beta"],
       "author": "@dompling",
