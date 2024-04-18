@@ -534,7 +534,7 @@
                   :label="$t('prefs.debugPages')"
                   item-text="name"
                   item-value="url"
-                  @change="saveUserCfgs"
+                  @change="saveUserCfgs(true)"
                 >
                 </v-select>
               </v-list-item-content>
@@ -2998,11 +2998,14 @@
             })
           },
           // 保存用户偏好
-          saveUserCfgs() {
+          saveUserCfgs(isReload) {
             const key = 'chavy_boxjs_userCfgs'
             const val = JSON.stringify(this.box.usercfgs)
             axios.post('/api/save', [{ key, val }]).then((resp) => {
               this.loadTheme()
+              if(isReload){
+                this.reload()
+              }
             })
           },
           // 保存应用设置
