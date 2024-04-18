@@ -525,12 +525,13 @@
               </v-list-item-content>
             </v-list-item>
 
-            <v-list-item class="mt-4" v-if="box.usercfgs.isDebugWeb" v-show="box.usercfgs.debugger_webs">
+            <v-list-item v-if="box.usercfgs.isDebugWeb" v-show="box.usercfgs.debugger_webs">
               <v-list-item-content>
                 <v-select
                   hide-details
                   v-model="box.usercfgs.debugger_web"
                   :items="debuggerWebs"
+                  :label="$t('prefs.debugPages')"
                   item-text="name"
                   item-value="url"
                   @change="saveUserCfgs"
@@ -1781,6 +1782,7 @@
                 debugMode: 'Debug Mode',
                 debugModeDesc: 'No page caches',
                 debugPage: 'Debug Page Addr',
+                debugPages: 'Debug Page caches',
                 debugPageDesc: 'Load page from...'
               },
               profile: {
@@ -1945,6 +1947,7 @@
                 debugMode: '调试模式',
                 debugModeDesc: '每次请求都获取最新的页面',
                 debugPage: '调试页面地址',
+                debugPages:'调试页面缓存',
                 debugPageDesc: '页面源码的获取地址'
               },
               profile: {
