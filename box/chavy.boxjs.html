@@ -524,6 +524,22 @@
                 </v-text-field>
               </v-list-item-content>
             </v-list-item>
+
+            <v-list-item v-if="box.usercfgs.isDebugWeb" v-show="box.usercfgs.debugger_webs">
+              <v-list-item-content>
+                <v-select
+                  hide-details
+                  v-model="box.usercfgs.debugger_web"
+                  :items="debuggerWebs"
+                  :label="$t('prefs.debugPages')"
+                  item-text="name"
+                  item-value="url"
+                  @change="saveUserCfgs(true)"
+                >
+                </v-select>
+              </v-list-item-content>
+            </v-list-item>
+
             <v-list-item class="mt-4"></v-list-item>
           </v-list>
         </v-navigation-drawer>
@@ -1561,6 +1577,7 @@
                 debugMode: 'Debug Mode',
                 debugModeDesc: 'No page caches',
                 debugPage: 'Debug Page Addr',
+                debugPages: 'Debug Page caches',
                 debugPageDesc: 'Load page from...'
               },
               profile: {
@@ -1719,6 +1736,7 @@
                 debugMode: '调试模式',
                 debugModeDesc: '每次请求都获取最新的页面',
                 debugPage: '调试页面地址',
+                debugPages:'调试页面缓存',
                 debugPageDesc: '页面源码的获取地址'
               },
               profile: {
@@ -2282,6 +2300,17 @@
           },
           gistkeys() {
             return Array.from(new Set(this.box.usercfgs.gist_cache_key)).filter((k) => k)
+          },
+          debuggerWebs() {
+            const items = []
+            const debuggerWebs = this.box.usercfgs.debugger_webs
+            if (debuggerWebs) {
+              debuggerWebs.split('\n').forEach((debuggerWeb) => {
+                const [name, url] = debuggerWeb.split(',')
+                items.push({ name, url })
+              })
+            }
+            return items
           }
         },
         watch: {
@@ -2764,11 +2793,14 @@
             })
           },
           // 保存用户偏好
-          saveUserCfgs() {
+          saveUserCfgs(isReload) {
             const key = 'chavy_boxjs_userCfgs'
             const val = JSON.stringify(this.box.usercfgs)
             axios.post('/api/save', [{ key, val }]).then((resp) => {
               this.loadTheme()
+              if(isReload){
+                this.reload()
+              }
             })
           },
           // 保存应用设置
