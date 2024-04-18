@@ -524,6 +524,21 @@
                 </v-text-field>
               </v-list-item-content>
             </v-list-item>
+
+            <v-list-item class="mt-4" v-if="box.usercfgs.isDebugWeb" v-show="box.usercfgs.debugger_webs">
+              <v-list-item-content>
+                <v-select
+                  hide-details
+                  v-model="box.usercfgs.debugger_web"
+                  :items="debuggerWebs"
+                  item-text="name"
+                  item-value="url"
+                  @change="saveUserCfgs"
+                >
+                </v-select>
+              </v-list-item-content>
+            </v-list-item>
+
             <v-list-item class="mt-4"></v-list-item>
           </v-list>
         </v-navigation-drawer>
@@ -2493,6 +2508,17 @@
           },
           gistkeys() {
             return Array.from(new Set(this.box.usercfgs.gist_cache_key)).filter((k) => k)
+          },
+          debuggerWebs() {
+            const items = []
+            const debuggerWebs = this.box.usercfgs.debugger_webs
+            if (debuggerWebs) {
+              debuggerWebs.split('\n').forEach((debuggerWeb) => {
+                const [name, url] = debuggerWeb.split(',')
+                items.push({ name, url })
+              })
+            }
+            return items
           }
         },
         watch: {
