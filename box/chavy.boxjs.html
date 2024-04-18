@@ -2202,6 +2202,31 @@
           },
           // 获取`订阅`缓存
           appSubCaches() {
+            const ids = [];
+            this.box.usercfgs.appsubs.forEach((appsub) => {
+              const sub = this.box.appSubCaches[appsub.url]
+              if (sub && sub.apps && Array.isArray(sub.apps) && !appsub.isErr) {
+                sub.apps.forEach((app) => {
+                  ids.push(app.id)
+                })
+              }
+            })
+
+            const replyIds = _.filter(ids, (val, i, iteratee) =>
+              _.includes(iteratee, val, i + 1)
+            );
+
+            this.box.usercfgs.appsubs.forEach((appsub) => {
+              const sub = this.box.appSubCaches[appsub.url];
+              if (sub && sub.apps && Array.isArray(sub.apps) && !appsub.isErr) {
+                sub.apps = sub.apps.map((app) => {
+                  if (replyIds.includes(app.id)) {
+                    return { ...app, id: `${app.author}_${app.id}` };
+                  }
+                  return app;
+                })
+              }
+            });
             return this.box.appSubCaches
           },
           // 获取所有应用`内置应用`+`订阅应用`
