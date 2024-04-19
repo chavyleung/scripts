@@ -3,9 +3,8 @@ $.KEY_sessions = 'chavy_boxjs_sessions'
 $.KEY_curSessions = 'chavy_boxjs_cur_sessions'
 $.CFG_isSilent = $.getdata('CFG_BoxSwitcher_isSilent')
 
-$.appIds = (globalThis.$intent?.parameter ?? globalThis.$argument ?? '').split(
-  ','
-)
+$.appIds =
+  (globalThis.$intent?.parameter ?? globalThis.$argument)?.split(',') ?? []
 
 !(async () => {
   await execSwitch()
