@@ -30,7 +30,7 @@ function execSwitch() {
     const apps = {}
     sessions.forEach((session) => {
       const appId = session.appId
-      if ($.appIds.includes(appId)) {
+      if ($.appIds.length == 0 || $.appIds.includes(appId)) {
         const appName = session.appName
         apps[appId] = apps[appId]
           ? apps[appId]
