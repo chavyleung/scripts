@@ -3,9 +3,8 @@ $.KEY_sessions = 'chavy_boxjs_sessions'
 $.KEY_curSessions = 'chavy_boxjs_cur_sessions'
 $.CFG_isSilent = $.getdata('CFG_BoxSwitcher_isSilent')
 
-$.appIds = (globalThis.$intent?.parameter ?? globalThis.$argument ?? '').split(
-  ','
-)
+$.appIds =
+  (globalThis.$intent?.parameter ?? globalThis.$argument)?.split(',') ?? []
 
 !(async () => {
   await execSwitch()
@@ -31,7 +30,7 @@ function execSwitch() {
     const apps = {}
     sessions.forEach((session) => {
       const appId = session.appId
-      if ($.appIds.includes(appId)) {
+      if ($.appIds.length == 0 || $.appIds.includes(appId)) {
         const appName = session.appName
         apps[appId] = apps[appId]
           ? apps[appId]

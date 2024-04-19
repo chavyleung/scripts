@@ -3,7 +3,7 @@ const $ = new Env('BoxJs')
 // 为 eval 准备的上下文环境
 const $eval_env = {}
 
-$.version = '0.18.0'
+$.version = '0.18.1'
 $.versionType = 'beta'
 
 // 发出的请求需要需要 Surge、QuanX 的 rewrite
@@ -61,10 +61,10 @@ $.ver = `https://raw.githubusercontent.com/chavyleung/scripts/master/box/release
   const [, query] = $.path.split('?')
   $.queries = query
     ? query.split('&').reduce((obj, cur) => {
-      const [key, val] = cur.split('=')
-      obj[key] = val
-      return obj
-    }, {})
+        const [key, val] = cur.split('=')
+        obj[key] = val
+        return obj
+      }, {})
     : {}
 
   // 请求类型: GET
@@ -571,6 +571,8 @@ function getSystemApps() {
  */
 function getUserCfgs() {
   const defcfgs = {
+    gist_cache_key: [],
+
     favapps: [],
     appsubs: [],
     viewkeys: [],
