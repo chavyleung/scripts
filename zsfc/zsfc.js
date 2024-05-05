@@ -1,14 +1,14 @@
 /**
  *
  * 特别提醒: 仍然处于测试阶段, 更新频率可能比较高
- *
+ * 
  * 使用方法：打开掌上飞车APP, 点击咨询栏的签到（每日福利）即可，无需点击签到，然后点击下方游戏栏，最后点击掌飞商城即可获取所需商城数据。
  * 注意事项：1、每月需手动打开一次掌上飞车APP并进入签到页面，以重新抓包更新礼包数据，为此需要每日运行两次脚本；2、如果账号信息没有发生根本性变化的话，抓取 Cookie 等信息的脚本就不会被执行；3、如需购买掌飞商店中的指定商品，请订阅boxjs链接，并在掌上飞车应用中填写在售商品的完整名称
  *
  * boxjs订阅地址：https://raw.githubusercontent.com/chiupam/surge/main/boxjs/chiupam.boxjs.json
  *
  *
- * hostname: comm.ams.game.qq.com
+ * hostname: comm.ams.game.qq.com, bang.qq.com
  *
  * type: http-request
  * regex: ^https?://(comm\.ams\.game\.qq\.com/ams/ame/amesvr*|bang\.qq\.com/app/speed/mall/main2\?*)
@@ -67,12 +67,12 @@ const isRequest = typeof $request !== 'undefined';
         'zsfc_accessToken': matchParam(cookie, 'accessToken'),
         'zsfc_openid': matchParam(cookie, 'openId')
       };
-
+ 
       // 将请求数据写入内存
       Object.entries(cookieToWrite).forEach(([key, value]) => $.write(value, key));
 
       // 发起请求检验 iActivityId 和 iFlowId 是否为需要的值
-      if (!(await getTotalSignInDays())) return;
+      if (await getTotalSignInDays() === -1) return;
 
       // 解码 tokenParams 端内容
       const decodeTokenParams = decodeURIComponent(matchParam(cookie, 'tokenParams'));
@@ -84,7 +84,6 @@ const isRequest = typeof $request !== 'undefined';
         'zsfc_areaId': matchParam(decodeTokenParams, 'areaId'),
         'zsfc_iActivityId': ($.iActivityId).toString(),
         'zsfc_iFlowId': ($.iFlowId).toString(),
-        // 'zsfc_month': (new Date().getMonth() + 1).toString()  // 5月改版后不清楚是否需要删除
       }
 
       // 如果所有键值都与内存中的值相同，则立即终止程序
@@ -96,7 +95,7 @@ const isRequest = typeof $request !== 'undefined';
 
       // 显示获取结果通知
       $.notice(`🏎️ 掌上飞车`, `✅ 获取签到数据成功！`, `流水ID：${$.iFlowId}，活动ID：${$.iActivityId}`);
-
+      
       // 检查并设置青龙相关变量
       if ($.read(`ql_url`) && $.read(`ql_client_id`) && $.read(`ql_client_secret`) && $.toObj($.read(`zsfc_upload_id`))) {
         const qlUrlCache = $.read(`ql_url`);
@@ -167,22 +166,14 @@ const isRequest = typeof $request !== 'undefined';
      * ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ 以下进行签到阶段 ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
      */
 
-    // todo 检查用户本月是否打开过签到页面, 5月改版后不清楚是否需要删除
-    // const month = (new Date().getMonth() + 1).toString();
-    // if (month != $.read(`zsfc_month`)) return $.notice(`🏎️ 掌上飞车`, `❌ 本月未打开过掌上飞车APP`, `每月需打开一次掌上飞车APP并进到签到页面`);
-
     // 获取会员状态
     $.isVip = await checkIsVip();
     if ($.isVip) $.log(`💎 尊贵的会员用户`);
-
-    /**
-     * todo 每日签到需要抓包去解决, 但是需要测试几天
-     */
-
-    // 定义流水ID词典, 不清楚是否是周周更新或者月月更新
+    
+    // todo 定义流水ID词典, 不清楚是否是周周更新或者月月更新
     idItems = {
       dailyReward: {
-        7: {iFlowId: "1028286", IdName: "周日签到"},  // 周日签到
+        0: {iFlowId: "1028286", IdName: "周日签到"},  // 周日签到
         1: {iFlowId: "1028292", IdName: "周一签到"},  // 周一签到
         2: {iFlowId: "1028291", IdName: "周二签到"},  // 周二签到
         3: {iFlowId: "1028290", IdName: "周三签到"},  // 周三签到
@@ -200,17 +191,18 @@ const isRequest = typeof $request !== 'undefined';
       },
       dailyTask: {
         1: {iFlowId: "1028557", IdName: "查看动态"},  // 任务1
-        2: {iFlowId: "1028556", IdName: "浏览背包"},  // 任务2
+        2: {iFlowId: "1028556", IdName: "浏览背包"},  // 任务2, 只有浏览背包可以完成
         3: {iFlowId: "1028555", IdName: "游戏活跃"}  // 任务3
       },
-      matchTask: {iFlowId: "1028554", IdName: "进行游戏"},  // 任务4
-      consumptionTask: {iFlowId: "1028553", IdName: "花费点券"} // 任务5
-    }
+      weeklyTask: {
+        1: {iFlowId: "1028554", IdName: "进行游戏"},  // 任务4
+        2: {iFlowId: "1028553", IdName: "花费点券"} // 任务5
+      }
+    };
 
-    // 获取当天星期数并签到
-    const today = new Date().getDay();
-    var { iFlowId, IdName } = idItems.dailyReward[today];
-    await claimGift(iFlowId, IdName)
+    // 每日签到
+    var { iFlowId, IdName } = idItems.dailyReward[new Date().getDay()];
+    await claimGift(iFlowId, IdName);
 
     // 获取本月累签天数并判断是否有累签奖励
     const totalSignInDay = await getTotalSignInDays();
@@ -218,6 +210,9 @@ const isRequest = typeof $request !== 'undefined';
       var { iFlowId, IdName } = idItems.accumulative[totalSignInDay];
       await claimGift(iFlowId, IdName);
     }
+    
+    // 浏览背包
+    await openBackpack();
 
     // 领取每日任务奖励
     for (var key in idItems.dailyTask) {
@@ -226,16 +221,19 @@ const isRequest = typeof $request !== 'undefined';
     }
 
     // 判断为周末时领取每周对局任务奖励
-    if (today === 6) {
-      var { iFlowId, IdName } = idItems.matchTask;
-      await claimGift(iFlowId, IdName);
+    if (new Date().getDay() === 6 || new Date().getDay() === 7) {
+      for (var key in idItems.weeklyTask) {
+        var { iFlowId, IdName } = idItems.weeklyTask[key];
+        await claimGift(iFlowId, IdName);
+      }
     }
+
+    // 显示签到结果通知
+    if ($.checkInMsg && $.toObj($.read(`zsfc_treasure_log`) || `true`)) $.notice(`🏎️ 掌上飞车`, $.subtitle, $.checkInMsg, ``);
 
     /**
      * ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ 以下进行购物阶段 ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
      */
-
-    if (new Date().getHours() < 16) return $.log(`⭕ 每天16点后再执行购物操作`);
 
     // 读取到设置不进行购物
     if (!$.toObj($.read(`zsfc_shop`))) return $.log(`⭕ 设置为不执行购物`);
@@ -249,6 +247,12 @@ const isRequest = typeof $request !== 'undefined';
     // Cookie 已过期，程序终止
     if (!packBefore) return $.log(`❌ Cookie 已过期，请重新获取`), $.notice(`🏎️ 掌飞购物`, `❌ Cookie 已过期`, `打开掌上飞车，点击游戏并进入掌上商城`);
 
+    // 获取当前余额
+    const beforeLog = `✅ 当前共有${packBefore.money}点券，${packBefore.coupons}消费券`;
+    $.log(beforeLog);
+    if (new Date().getHours() < 16) return $.log(`🕒 每天16点后再执行购物操作`);
+    $.subtitle = beforeLog;
+
     // 判断当天是否为本月月尾2天以内
     $.lastDayOfMonth = checkLastDayOfMonth(2);
 
@@ -258,11 +262,6 @@ const isRequest = typeof $request !== 'undefined';
 
     // 无法在掌上商城中搜索到相关商品时终止程序
     if (!Object.keys(shopIdArray).length) return $.notice(`🏎️ 掌飞购物`, `❌ ${shopName} 未在商店中售卖`, `请在掌上商城中认真核对商品名称`);
-
-    // 获取当前余额
-    const beforeLog = `✅ 当前共有${packBefore.money}点券，${packBefore.coupons}消费券`;
-    $.log(beforeLog);
-    $.subtitle = beforeLog;
 
     // 获取购物包
     const [shopArray, totalCount, unit] = getShopItems(shopIdArray, packBefore);
@@ -283,21 +282,6 @@ const isRequest = typeof $request !== 'undefined';
         let { count, id, idx } = buyInfo;
         successBuyCounts += await purchaseItem(shopName, count, id, idx);
       }
-
-      /**
-       * ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ 每周消费任务在这里执行 ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
-       */
-
-      // 判断领取消费任务奖励, $.successfulForcedConsumption 在 getShopItems 函数里面写
-      if ($.successfulForcedConsumption || checkLastDayOfMonth(2)) {
-        var { iFlowId, IdName } = idItems.consumptionTask;
-        await claimGift(iFlowId, IdName);
-        $.write(`0`, `zsfc_weeklyConsumptionAmount`);  // 重置每周消费点券为 0 点券
-      }
-
-      /**
-       * ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑ 每周消费任务在这里执行 ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
-       */
 
       if (successBuyCounts > 0) {
         // 购买永久道具后为避免重复购买自动禁用购买脚本并重置道具名称
@@ -344,7 +328,7 @@ function checkLastDayOfMonth(N) {
 
   // 获取当前月份的最后一天的日期
   let day = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
-
+  
   return (day - today.getDate()) < N; // 月底最后3天的计算方式是小于N而不能有等于
 }
 
@@ -404,7 +388,7 @@ function getShopItems(shopInfo, overage) {
 
   // 根据价格排序道具数据
   const sortedData = shopInfo.szPrices.map((price, index) => ({
-    price: parseInt(price.SuperMoneyPrice) * iMemeberRebate,
+    price: parseInt(price.SuperMoneyPrice) * iMemeberRebate, 
     count: numArray[index], idx: index
   })).sort((a, b) => b.count - a.count);
 
@@ -416,20 +400,7 @@ function getShopItems(shopInfo, overage) {
   // 初始化购买总数、物品数组和投入金额
   let totalCount = 0;
   let purchasedItemsList = [];
-  // todo 这里要改一下, 如果开启了强制消费就是另一种计算方式了
-  if ($.lastDayOfMonth) {
-    var remMoney = overage.money + overage.coupons;
-  } else if (
-    new Date().getDay() === 6 &&  // 周六
-    Number($.read(`zsfc_weeklyConsumptionAmount`)) < 5000 &&   // 本周点券消费小于5000
-    $.toObj($.read(`zsfc_forcedConsumption`)) &&   // 开启了强制消费
-    overage.money >= 5000 - Number($.read(`zsfc_weeklyConsumptionAmount`))  // 当前点券余额大于等于需要补充消费点券的部分
-  ) {
-    var remMoney = 5000 - Number($.read(`zsfc_weeklyConsumptionAmount`)) + overage.coupons;
-    $.successfulForcedConsumption = true;
-  } else {
-    var remMoney = overage.coupons;
-  }
+  let remMoney = $.lastDayOfMonth ? overage.money + overage.coupons : overage.coupons;y = overage.coupons;
 
   // 定义商品数据、最便宜商品序列（最便宜商品序列一定是列表最后一个）
   const itemData = info.data;
@@ -456,9 +427,9 @@ function getShopItems(shopInfo, overage) {
     // 将购买的物品加入数组
     for (let n = 0; n < maxPurchasableItems; n++) {
       purchasedItemsList.push({
-        "count": itemData[m].count,
-        "id": info.Id,
-        "idx": itemData[m].idx,
+        "count": itemData[m].count, 
+        "id": info.Id, 
+        "idx": itemData[m].idx, 
       });
       pushCounts += 1;
     }
@@ -471,23 +442,21 @@ function getShopItems(shopInfo, overage) {
       // 如果满足阈值条件，且消费券加点券的和大于最便宜一个道具的价格
       if (meetsThreshold && canAffordLastItem) {
         purchasedItemsList.push({
-          "count": itemData[cheapestItemIndex].count,
-          "id": info.Id,
-          "idx": itemData[cheapestItemIndex].idx,
+          "count": itemData[cheapestItemIndex].count, 
+          "id": info.Id, 
+          "idx": itemData[cheapestItemIndex].idx, 
         });
-        moneyCost = itemData[cheapestItemIndex].price - remMoney;  // 这个应该是强制消费的点券数量
-        $.write((Number($.read(`zsfc_weeklyConsumptionAmount`)) + moneyCost).toString(), `zsfc_weeklyConsumptionAmount`);  // 更新本周消费点券数据
         thisTimeCost += itemData[cheapestItemIndex].price;
         totalCount += itemData[cheapestItemIndex].count;
         pushCounts += 1;
       }
-
+      
       // 本轮花费大于0且本轮消费等于倒数第二阶梯的消费价格时，清空本轮添加的购买包
       if (thisTimeCost && thisTimeCost === itemData[cheapestItemIndex - 1].price) {
         // 计算需要保留的元素数量、新的元素序列
         const itemsToKeep = purchasedItemsList.length - pushCounts;
         const newIndex = cheapestItemIndex - 1;
-
+      
         // 使用 slice 创建一个新数组，仅保留需要的元素，并添加新元素到数组末尾
         purchasedItemsList = purchasedItemsList.slice(0, itemsToKeep);
         purchasedItemsList.push({
@@ -528,8 +497,7 @@ async function getTotalSignInDays() {
     },
     body: $.queryStr({
       "iActivityId": isRequest ? $.iActivityId : $.read(`zsfc_iActivityId`),
-      // "sServiceType": "speed",  // 这个数据不需要传
-      "iFlowId": Number(isRequest ? $.iFlowId : $.read(`zsfc_iFlowId`)),
+      "iFlowId": isRequest ? $.iFlowId : $.read(`zsfc_iFlowId`), 
       "g_tk": "1842395457",
       "witchDay": "1",  // 不知道为什么需要传一个 witchDay 参数, 键值 1 也不清楚是什么意思
     })
@@ -541,8 +509,7 @@ async function getTotalSignInDays() {
     $.post(options, (err, resp, data) => {
       if (data) {
         try {
-          // todo 目前暂定为 sOutValue5 因为猜测 sOutValue4 是本周签到天数
-          // todo 可能还需要分析 sOutValue2 漏签的情况, 以及 sOutValue7 是否可补签
+          // todo 目前暂定为 sOutValue5 因为猜测 sOutValue4 是本周签到天数, 可能还需要分析 sOutValue2 漏签的情况, 以及 sOutValue7 是否可补签
           totalSignInDays = $.toObj(data).modRet.sOutValue5;
 
           if (!isRequest) {
@@ -554,7 +521,7 @@ async function getTotalSignInDays() {
         $.log(`❌ 获取累签天数时发生错误`);
         $.log($.toStr(err));
       }
-      resolve(!isNaN(totalSignInDays) ? Number(totalSignInDays) : false);
+      resolve(!isNaN(totalSignInDays) ? Number(totalSignInDays) : -1);
     });
   });
 }
@@ -581,13 +548,10 @@ async function claimGift(giftId, giftName) {
     },
     body: $.queryStr({
       "iActivityId": $.read(`zsfc_iActivityId`),
-      // "sServiceType": "speed",  // 这个数据不需要传
-      "iFlowId": giftId,
+      "iFlowId": giftId, 
       "g_tk": "1842395457"
     })
   };
-
-  $.log(`🧑‍💻 准备领取${giftName}奖励`);
 
   // 返回一个 Promise 对象，用于异步操作
   return new Promise(resolve => {
@@ -596,13 +560,13 @@ async function claimGift(giftId, giftName) {
       if (data) {
         let body = $.toObj(data.replace(/\r|\n/ig, ``));
         if (body.msg.includes(`已经`)) {
-          $.log(`✅ 领取结果: 已经领取`);
+          $.log(`✅ ${giftName}: 已经领取`);
           // $.checkInMsg += `, ${giftName}`;
         } else if (body.msg.includes(`不满足`)) {
-          $.log(`⭕ 领取失败: ${body.flowRet.sMsg}`);
+          $.log(`⭕ ${giftName}: ${body.flowRet.sMsg}`);
         } else {
           const sPackageName = body.modRet.sPackageName.replace(/[，,]/g, ", ");
-          $.log(`✅ 领取结果: 获得${sPackageName}`);
+          $.log(`✅ ${giftName}: ${sPackageName}`);
           if ($.checkInMsg) {
             $.checkInMsg += `，${sPackageName}`;
           } else {
@@ -610,7 +574,7 @@ async function claimGift(giftId, giftName) {
           }
         }
       } else {
-        $.log(`❌ 领取 ${giftName} 时发生错误`);
+        $.log(`❌ ${giftName}: 发生错误`);
         $.log($.toStr(err));
       }
       resolve();
@@ -618,17 +582,33 @@ async function claimGift(giftId, giftName) {
   });
 }
 
-// todo 查看动态的请求, 不过好像需要用到 base64, 可能无法完成
-/**
- * @description 掌飞签到相关函数，查看动态
- * @returns {Promise<object>} 包含会员状态的 Promise 对象。
- */
-
-// todo 浏览背包的请求, 不过好像需要用到 base64, 可能无法完成
 /**
  * @description 掌飞签到相关函数，浏览背包
- * @returns {Promise<object>} 包含会员状态的 Promise 对象。
+ * @returns {Promise<object>} 返回空的 Promise 对象。
  */
+async function openBackpack() {
+  // 构建请求体
+  const options = {
+    url: `https://mwegame.qq.com/yoyo/dnf/phpgameproxypass`,
+    body: $.queryStr({
+      uin: $.read(`zsfc_uin`),
+      areaId: $.read(`zsfc_areaId`),
+      userId: $.read(`zsfc_userId`),
+      token: $.read(`zsfc_token`),
+      service: `dnf_getspeedknapsack`,
+      cGameId: `1003`  // 必须传入这个参数才可以完成任务
+    })
+  };
+
+  // 返回一个 Promise 对象，用于异步操作
+  return new Promise(resolve => {
+    // 发送 POST 请求
+    $.post(options, (error, response, data) => {
+      // 只需要发送请求即可, 不进行任何处理
+      resolve();
+    });
+  });
+}
 
 /**
  * @description 掌飞购物相关函数，判断用户是否为会员用户。
