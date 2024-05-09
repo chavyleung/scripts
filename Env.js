@@ -10,12 +10,26 @@ function Env(name, opts) {
       if (method === 'POST') {
         sender = this.post
       }
-      return new Promise((resolve, reject) => {
+
+      const delayPromise = (promise, delay = 1000) => {
+        return Promise.race([
+          promise,
+          new Promise((resolve, reject) => {
+            setTimeout(() => {
+              reject(new Error('请求超时'))
+            }, delay)
+          })
+        ])
+      }
+
+      const call = new Promise((resolve, reject) => {
         sender.call(this, opts, (err, resp, body) => {
           if (err) reject(err)
           else resolve(resp)
         })
       })
+
+      return opts.timeout ? delayPromise(call, opts.timeout) : call
     }
 
     get(opts) {
@@ -145,7 +159,11 @@ function Env(name, opts) {
             mock_type: 'cron',
             timeout: httpapi_timeout
           },
-          headers: { 'X-Key': key, 'Accept': '*/*' },
+          headers: {
+            'X-Key': key,
+            'X-Surge-Policy': 'DIRECT',
+            'Accept': '*/*'
+          },
           timeout: httpapi_timeout
         }
         this.post(opts, (err, resp, body) => resolve(body))

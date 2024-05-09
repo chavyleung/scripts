@@ -1,6 +1,22 @@
 {
   "releases": [
     {
+      "version": "0.19.2",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "msg": "fix(boxjs): 127.0.0.1 被代理时, boxjs 无法运行脚本",
+      "notes": [
+        {
+          "name": "修复",
+          "descs": ["127.0.0.1 走代理时, 无法运行脚本"]
+        },
+        {
+          "name": "感谢",
+          "descs": ["@mieqq", "@xream"]
+        }
+      ]
+    },
+    {
       "version": "0.19.1",
       "tags": ["beta"],
       "author": "@chavyleung",
