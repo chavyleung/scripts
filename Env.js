@@ -161,9 +161,9 @@ function Env(name, opts) {
           },
           headers: {
             'X-Key': key,
-            'X-Surge-Policy': 'DIRECT',
             'Accept': '*/*'
           },
+          policy: 'DIRECT',
           timeout: httpapi_timeout
         }
         this.post(opts, (err, resp, body) => resolve(body))
