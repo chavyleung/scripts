@@ -1,17 +1,17 @@
 /**
  *
- * hostname = my.ruanmei.com
+ * hostname = napi.ithome.com
  *
  * # Surge
- * Rewrite: ithome = type=http-request,pattern=^https:\/\/my\.ruanmei\.com\/api\/usersign\/getsigninfo?,script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/ithome/ithome.cookie.js,debug=true
+ * Rewrite: ithome = type=http-request,pattern=^https:\/\/napi\.ithome\.com\/api\/usersign\/getsigninfo?,script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/ithome/ithome.cookie.js,debug=true
  * Tasks: ithome-签到 = type=cron,cronexp=10 0 * * *,script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/ithome/ithome.js,wake-system=true
  *
  * # QuanX
- * ^https:\/\/my\.ruanmei\.com\/api\/usersign\/getsigninfo? url script-request-header https://raw.githubusercontent.com/chavyleung/scripts/master/ithome/ithome.cookie.js
+ * ^https:\/\/napi\.ithome\.com\/api\/usersign\/getsigninfo? url script-request-header https://raw.githubusercontent.com/chavyleung/scripts/master/ithome/ithome.cookie.js
  * 10 0 * * * https://raw.githubusercontent.com/chavyleung/scripts/master/ithome/ithome.js, tag=ithome-签到
  *
  * # Loon
- * http-response ^https:\/\/my\.ruanmei\.com\/api\/usersign\/getsigninfo? script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/ithome/ithome.cookie.js
+ * http-response ^https:\/\/napi\.ithome\.com\/api\/usersign\/getsigninfo? script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/ithome/ithome.cookie.js
  * cron "10 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/ithome/ithome.js
  * 
  * # 获取方式:app进入签到页面获取
@@ -24,7 +24,7 @@ const $ = new Env('IT之家')
 $.userHash = 'senku_ithome_userHash'
 
 !(async () => {
-  const userHash = $request.url.match(/=[0-9a-zA-z]+/)[0].substr(1)
+  const userHash = $request.url.match(/userHash=([^&]+)/)?.[1]
   if (userHash&&$.setdata(userHash, $.userHash)) {
     $.subt = `获取会话: 成功! (${$.userHash})`
   } else {
