@@ -42,7 +42,7 @@ function sign() {
     const url = {
       url: getUrl(),
       headers: {
-        Host: "my.ruanmei.com",
+        Host: "napi.ithome.com",
         "User-Agent":
           "Mozilla/5.0 (iPhone; CPU iPhone OS 14_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 ithome/rmsdklevel2/day/7.63",
       },
@@ -71,7 +71,7 @@ function signinfo() {
   return new Promise((resolve) => {
     const userHash = $.getdata($.userHash);
     const url = {
-      url: `https://my.ruanmei.com/api/usersign/getsigninfo?userHash=${userHash}&type=0`,
+      url: `https://napi.ithome.com/api/usersign/getsigninfo?userHash=${userHash}`,
       headers: {},
     };
     url.headers["User-Agent"] =
@@ -167,7 +167,7 @@ function geKsk() {
 
 function getUrl() {
   const userHash = $.getdata($.userHash);
-  return `https://my.ruanmei.com/api/usersign/sign?userHash=${userHash}&type=0&timestamp=${now}&${gnekk()}=${geKsk()}`;
+  return `https://napi.ithome.com/api/usersign/sign?userHash=${userHash}&type=0&timestamp=${now}&${gnekk()}=${geKsk()}`;
 }
 
 // prettier-ignore
