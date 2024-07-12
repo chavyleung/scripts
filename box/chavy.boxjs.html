@@ -2508,6 +2508,7 @@
           const moveItem = favApps[oldIdx]
           favApps.splice(oldIdx, 1)
           favApps.splice(newIdx, 0, moveItem)
+          _this.box.usercfgs.favapps = favApps.filter(e => !!e)
         }
       })
 
