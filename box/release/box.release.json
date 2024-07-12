@@ -1,6 +1,18 @@
 {
   "releases": [
     {
+      "version": "0.19.3",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "msg": "fix(boxjs): 首页拖拽数据问题",
+      "notes": [
+        {
+          "name": "修复",
+          "descs": ["首页拖拽数组数据中会出现 null"]
+        }
+      ]
+    },
+    {
       "version": "0.19.2",
       "tags": ["beta"],
       "author": "@chavyleung",
