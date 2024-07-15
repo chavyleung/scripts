@@ -3,7 +3,7 @@ const $ = new Env('BoxJs')
 // 为 eval 准备的上下文环境
 const $eval_env = {}
 
-$.version = '0.19.3'
+$.version = '0.19.4'
 $.versionType = 'beta'
 
 // 发出的请求需要需要 Surge、QuanX 的 rewrite
@@ -926,7 +926,8 @@ function reloadAppSubCache(url) {
       const subcaches = getAppSubCaches()
       subcaches[url] = $.toObj(resp.body)
       subcaches[url].updateTime = new Date()
-      $.setjson(subcaches, $.KEY_app_subCaches)
+      // 仅缓存存在 id 的订阅
+      $.setjson(subcaches.filter(e => !!e.id), $.KEY_app_subCaches)
       $.log(`更新订阅, 成功! ${url}`)
     } catch (e) {
       $.logErr(e)
