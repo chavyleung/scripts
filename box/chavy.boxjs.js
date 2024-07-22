@@ -3,7 +3,7 @@ const $ = new Env('BoxJs')
 // 为 eval 准备的上下文环境
 const $eval_env = {}
 
-$.version = '0.19.8'
+$.version = '0.19.9'
 $.versionType = 'beta'
 
 // 发出的请求需要需要 Surge、QuanX 的 rewrite
@@ -711,20 +711,19 @@ async function apiSave() {
 
 async function apiUpdate() {
   const data = $.toObj($request.body)
-  const path = data.path
+  const path = data.path.split('.')
   const val = data.val
-  const key = path.split('.')[0]
+  const key = path.shift()
 
   switch (key) {
     case 'usercfgs':
       const usercfgs = getUserCfgs()
-      update(usercfgs, path, val)
+      update(usercfgs, path.join('.'), val)
       $.setjson(usercfgs, $.KEY_usercfgs)
       break
     default:
       break
   }
-
   $.json = getBoxData()
 }
 
@@ -960,7 +959,7 @@ function update(obj, path, value) {
 
   for (let i = 0; i < keys.length - 1; i++) {
     if (!current[keys[i]]) {
-      current[keys[i]] = null
+      current[keys[i]] = {}
     }
     current = current[keys[i]]
   }
