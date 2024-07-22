@@ -3,7 +3,7 @@ const $ = new Env('BoxJs')
 // 为 eval 准备的上下文环境
 const $eval_env = {}
 
-$.version = '0.19.7'
+$.version = '0.19.8'
 $.versionType = 'beta'
 
 // 发出的请求需要需要 Surge、QuanX 的 rewrite
@@ -713,7 +713,7 @@ async function apiUpdate() {
   const data = $.toObj($request.body)
   const path = data.path
   const val = data.val
-  const key = key.split('.')[0]
+  const key = path.split('.')[0]
 
   switch (key) {
     case 'usercfgs':
