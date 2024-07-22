@@ -1,6 +1,18 @@
 {
   "releases": [
     {
+      "version": "0.19.7",
+      "tags": ["beta"],
+      "author": "@GideonSenku",
+      "msg": "feat(boxjs): 新增 /api/update 进行局部数据更新",
+      "notes": [
+        {
+          "name": "新增接口",
+          "descs": ["本次更新主要面向开发者"]
+        }
+      ]
+    },
+    {
       "version": "0.19.6",
       "tags": ["beta"],
       "author": "@GideonSenku",

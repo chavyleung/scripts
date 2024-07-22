@@ -3,7 +3,7 @@ const $ = new Env('BoxJs')
 // 为 eval 准备的上下文环境
 const $eval_env = {}
 
-$.version = '0.19.6'
+$.version = '0.19.7'
 $.versionType = 'beta'
 
 // 发出的请求需要需要 Surge、QuanX 的 rewrite
@@ -299,6 +299,8 @@ async function handleApi() {
     await apiSaveData()
   } else if (api === '/surge') {
     await apiSurge()
+  } else if (api === '/update') {
+    await apiUpdate()
   }
 }
 
@@ -631,14 +633,6 @@ function getVersions() {
 }
 
 /**
- * 获取用户应用
- */
-function getUserApps() {
-  // TODO 用户可在 BoxJs 中自定义应用, 格式与应用订阅一致
-  return []
-}
-
-/**
  * 获取应用会话
  */
 function getAppSessions() {
@@ -710,6 +704,25 @@ async function apiSave() {
   const appId = $.queries['appid']
   if (appId) {
     updateCurSesssions(appId, data)
+  }
+
+  $.json = getBoxData()
+}
+
+async function apiUpdate() {
+  const data = $.toObj($request.body)
+  const path = data.path
+  const val = data.val
+  const key = key.split('.')[0]
+
+  switch (key) {
+    case 'usercfgs':
+      const usercfgs = getUserCfgs()
+      update(usercfgs, path, val)
+      $.setjson(usercfgs, $.KEY_usercfgs)
+      break
+    default:
+      break
   }
 
   $.json = getBoxData()
@@ -941,6 +954,20 @@ function reloadAppSubCache(url) {
   })
 }
 
+function update(obj, path, value) {
+  const keys = path.split('.')
+  let current = obj
+
+  for (let i = 0; i < keys.length - 1; i++) {
+    if (!current[keys[i]]) {
+      current[keys[i]] = null
+    }
+    current = current[keys[i]]
+  }
+
+  current[keys[keys.length - 1]] = value
+}
+
 async function reloadAppSubCaches() {
   $.msg($.name, '更新订阅: 开始!')
   const reloadActs = []
@@ -1105,12 +1132,6 @@ function doneApi() {
   if ($.isQuanX()) $.done({ status: 'HTTP/1.1 200', headers, body: $.json })
   else $.done({ response: { status: 200, headers, body: $.json } })
 }
-
-/**
- * GistBox by https://github.com/Peng-YM
- */
-// prettier-ignore
-function GistBox(e){const t=function(e,t={}){const{isQX:s,isLoon:n,isSurge:o}=function(){const e="undefined"!=typeof $task,t="undefined"!=typeof $loon,s="undefined"!=typeof $httpClient&&!this.isLoon,n="function"==typeof require&&"undefined"!=typeof $jsbox;return{isQX:e,isLoon:t,isSurge:s,isNode:"function"==typeof require&&!n,isJSBox:n}}(),r={};return["GET","POST","PUT","DELETE","HEAD","OPTIONS","PATCH"].forEach(i=>r[i.toLowerCase()]=(r=>(function(r,i){(i="string"==typeof i?{url:i}:i).url=e?e+i.url:i.url;const a=(i={...t,...i}).timeout,u={onRequest:()=>{},onResponse:e=>e,onTimeout:()=>{},...i.events};let c,d;u.onRequest(r,i),c=s?$task.fetch({method:r,...i}):new Promise((e,t)=>{(o||n?$httpClient:require("request"))[r.toLowerCase()](i,(s,n,o)=>{s?t(s):e({statusCode:n.status||n.statusCode,headers:n.headers,body:o})})});const f=a?new Promise((e,t)=>{d=setTimeout(()=>(u.onTimeout(),t(`${r} URL: ${i.url} exceeds the timeout ${a} ms`)),a)}):null;return(f?Promise.race([f,c]).then(e=>(clearTimeout(d),e)):c).then(e=>u.onResponse(e))})(i,r))),r}("https://api.github.com",{headers:{Authorization:`token ${e}`,"User-Agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.141 Safari/537.36"},events:{onResponse:e=>String(e.statusCode).startsWith("4")?Promise.reject(`ERROR: ${JSON.parse(e.body).message}`):e}}),s=e=>`boxjs.bak.${e}.json`,n=e=>e.match(/boxjs\.bak\.(\d+)\.json/)[1];return new class{async findDatabase(){return t.get("/gists").then(e=>{const t=JSON.parse(e.body);for(let e of t)if("BoxJs Gist"===e.description)return e.id;return-1})}async createDatabase(e){e instanceof Array||(e=[e]);const n={};return e.forEach(e=>{n[s(e.time)]={content:e.content}}),t.post({url:"/gists",body:JSON.stringify({description:"BoxJs Gist",public:!1,files:n})}).then(e=>JSON.parse(e.body).id)}async deleteDatabase(e){return t.delete(`/gists/${e}`)}async getBackups(e){const s=await t.get(`/gists/${e}`).then(e=>JSON.parse(e.body)),{files:o}=s,r=[];for(let e of Object.keys(o))r.push({time:n(e),url:o[e].raw_url});return r}async addBackups(e,t){t instanceof Array||(t=[t]);const n={};return t.forEach(e=>n[s(e.time)]={content:e.content}),this.updateBackups(e,n)}async deleteBackups(e,t){t instanceof Array||(t=[t]);const n={};return t.forEach(e=>n[s(e)]={}),this.updateBackups(e,n)}async updateBackups(e,s){return t.patch({url:`/gists/${e}`,body:JSON.stringify({files:s})})}}}
 
 /**
  * EnvJs
