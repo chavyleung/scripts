@@ -3,7 +3,7 @@ const $ = new Env('BoxJs')
 // 为 eval 准备的上下文环境
 const $eval_env = {}
 
-$.version = '0.19.10'
+$.version = '0.19.11'
 $.versionType = 'beta'
 
 // 发出的请求需要需要 Surge、QuanX 的 rewrite
@@ -277,30 +277,27 @@ async function handleQuery() {
 async function handleApi() {
   const [, api] = $.path.split('/api')
 
-  if (api === '/save' || api.startsWith('/save?')) {
-    await apiSave()
-  } else if (api === '/addAppSub') {
-    await apiAddAppSub()
-  } else if (api === '/reloadAppSub') {
-    await apiReloadAppSub()
-  } else if (api === '/delGlobalBak') {
-    await apiDelGlobalBak()
-  } else if (api === '/updateGlobalBak') {
-    await apiUpdateGlobalBak()
-  } else if (api === '/saveGlobalBak') {
-    await apiSaveGlobalBak()
-  } else if (api === '/impGlobalBak') {
-    await apiImpGlobalBak()
-  } else if (api === '/revertGlobalBak') {
-    await apiRevertGlobalBak()
-  } else if (api === '/runScript') {
-    await apiRunScript()
-  } else if (api === '/saveData') {
-    await apiSaveData()
-  } else if (api === '/surge') {
-    await apiSurge()
-  } else if (api === '/update') {
-    await apiUpdate()
+  const apiHandlers = {
+    '/save': apiSave,
+    '/addAppSub': apiAddAppSub,
+    '/deleteAppSub': apiDeleteAppSub,
+    '/reloadAppSub': apiReloadAppSub,
+    '/delGlobalBak': apiDelGlobalBak,
+    '/updateGlobalBak': apiUpdateGlobalBak,
+    '/saveGlobalBak': apiSaveGlobalBak,
+    '/impGlobalBak': apiImpGlobalBak,
+    '/revertGlobalBak': apiRevertGlobalBak,
+    '/runScript': apiRunScript,
+    '/saveData': apiSaveData,
+    '/surge': apiSurge,
+    '/update': apiUpdate,
+  }
+
+  for (const [key, handler] of Object.entries(apiHandlers)) {
+    if (api === key || api.startsWith(`${key}?`)) {
+      await handler()
+      break
+    }
   }
 }
 
@@ -736,6 +733,15 @@ async function apiAddAppSub() {
   $.setjson(usercfgs, $.KEY_usercfgs)
   // 加载订阅缓存
   await reloadAppSubCache(sub.url)
+  $.json = getBoxData()
+}
+
+async function apiDeleteAppSub() {
+  const sub = $.toObj($request.body)
+  // 添加订阅
+  const usercfgs = getUserCfgs()
+  usercfgs.appsubs = usercfgs.appsubs.filter(e => e.url !== sub.url)
+  $.setjson(usercfgs, $.KEY_usercfgs)
   $.json = getBoxData()
 }
 

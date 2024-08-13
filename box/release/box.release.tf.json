@@ -1,6 +1,18 @@
 {
   "releases": [
     {
+      "version": "0.19.11",
+      "tags": ["beta"],
+      "author": "@GideonSenku",
+      "msg": "feat(boxjs): 新增 /api/deleteAppSub 删除订阅",
+      "notes": [
+        {
+          "name": "新增 API",
+          "descs": ["本次更新主要面向开发者"]
+        }
+      ]
+    },
+    {
       "version": "0.19.10",
       "tags": ["beta"],
       "author": "@GideonSenku",
