@@ -3,7 +3,7 @@ const $ = new Env('BoxJs')
 // 为 eval 准备的上下文环境
 const $eval_env = {}
 
-$.version = '0.19.12'
+$.version = '0.19.13'
 $.versionType = 'beta'
 
 // 发出的请求需要需要 Surge、QuanX 的 rewrite
@@ -329,15 +329,15 @@ function getBoxData() {
 
   // 把 `内置应用`和`订阅应用` 里需要持久化属性放到`datas`
   sysapps.forEach((app) => {
-    const datas = getAppDatas(app)
-    Object.assign(datas, datas)
+    const newDatas = getAppDatas(app)
+    Object.assign(datas, newDatas)
   })
   usercfgs.appsubs.forEach((sub) => {
     const subcache = appSubCaches[sub.url]
     if (subcache && subcache.apps && Array.isArray(subcache.apps)) {
       subcache.apps.forEach((app) => {
-        const datas = getAppDatas(app)
-        Object.assign(datas, datas)
+        const newDatas = getAppDatas(app)
+        Object.assign(datas, newDatas)
       })
     }
   })

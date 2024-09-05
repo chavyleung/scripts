@@ -1,6 +1,18 @@
 {
   "releases": [
     {
+      "version": "0.19.13",
+      "tags": ["beta"],
+      "author": "@GideonSenku",
+      "msg": "fix(boxjs): 会话数据不展示",
+      "notes": [
+        {
+          "name": "修复",
+          "descs": ["代码逻辑问题导致会话数据不展示"]
+        }
+      ]
+    },
+    {
       "version": "0.19.12",
       "tags": ["beta"],
       "author": "@GideonSenku",
