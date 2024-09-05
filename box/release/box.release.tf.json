@@ -1,6 +1,18 @@
 {
   "releases": [
     {
+      "version": "0.19.12",
+      "tags": ["beta"],
+      "author": "@GideonSenku",
+      "msg": "fix(boxjs): 优化数据载入",
+      "notes": [
+        {
+          "name": "优化",
+          "descs": ["对数据载入优化，以适配 app 版本"]
+        }
+      ]
+    },
+    {
       "version": "0.19.11",
       "tags": ["beta"],
       "author": "@GideonSenku",

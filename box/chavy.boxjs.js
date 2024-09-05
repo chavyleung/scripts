@@ -3,7 +3,7 @@ const $ = new Env('BoxJs')
 // 为 eval 准备的上下文环境
 const $eval_env = {}
 
-$.version = '0.19.11'
+$.version = '0.19.12'
 $.versionType = 'beta'
 
 // 发出的请求需要需要 Surge、QuanX 的 rewrite
@@ -328,11 +328,17 @@ function getBoxData() {
   const globalbaks = getGlobalBaks()
 
   // 把 `内置应用`和`订阅应用` 里需要持久化属性放到`datas`
-  sysapps.forEach((app) => Object.assign(datas, getAppDatas(app)))
+  sysapps.forEach((app) => {
+    const datas = getAppDatas(app)
+    Object.assign(datas, datas)
+  })
   usercfgs.appsubs.forEach((sub) => {
     const subcache = appSubCaches[sub.url]
     if (subcache && subcache.apps && Array.isArray(subcache.apps)) {
-      subcache.apps.forEach((app) => Object.assign(datas, getAppDatas(app)))
+      subcache.apps.forEach((app) => {
+        const datas = getAppDatas(app)
+        Object.assign(datas, datas)
+      })
     }
   })
 
@@ -661,8 +667,26 @@ function getAppDatas(app) {
   if (app.settings && Array.isArray(app.settings)) {
     app.settings.forEach((setting) => {
       const key = setting.id
-      const val = $.getdata(key)
-      datas[key] = nulls.includes(val) ? null : val
+      const dataval = $.getdata(key)
+      datas[key] = nulls.includes(dataval) ? null : dataval
+
+      if (setting.type === 'boolean') {
+        setting.val = nulls.includes(dataval) ? setting.val : (dataval === 'true' || dataval === true)
+      } else if (setting.type === 'int') {
+        setting.val = dataval * 1 || setting.val
+      } else if (setting.type === 'checkboxes') {
+        if (!nulls.includes(dataval)) {
+          setting.val = dataval ? dataval.split(',') : []
+        } else {
+          setting.val = Array.isArray(setting.val) ? setting.val : setting.val.split(',')
+        }
+      } else {
+        setting.val = dataval || setting.val
+      }
+
+      if (setting.type === 'modalSelects') {
+        setting.items = datas?.[setting.items] || []
+      }
     })
   }
   return datas

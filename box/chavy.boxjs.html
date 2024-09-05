@@ -651,7 +651,6 @@
                       </v-btn>
                     </v-list-item-action>
                   </v-list-item>
-                  <!-- <v-divider inset v-if="sub.apps.length !== appIdx + 1"></v-divider> -->
                 </template>
               </v-list>
             </v-expansion-panel-content>
@@ -758,7 +757,6 @@
                   </v-menu>
                 </v-list-item-action>
               </v-list-item>
-              <!-- <v-divider inset v-if="appSubs.length !== subIdx + 1"></v-divider> -->
             </template>
           </v-list>
         </v-card>
@@ -996,9 +994,9 @@
           <v-card-subtitle>
             <p v-if="curapp.desc" v-text="curapp.desc" class="text-pre-wrap"></p>
             <p
-                    v-for="(desc, descIdx) in curapp.descs"
-                    v-text="desc"
-                    :class="curapp.descs.length === descIdx + 1 ? 'text-pre-wrap' : 'mb-0 text-pre-wrap'"
+              v-for="(desc, descIdx) in curapp.descs"
+              v-text="desc"
+              :class="curapp.descs.length === descIdx + 1 ? 'text-pre-wrap' : 'mb-0 text-pre-wrap'"
             ></p>
             <p v-if="curapp.desc_html" v-html="curapp.desc_html"></p>
             <div v-for="(desc_html, desc_htmlIdx) in curapp.descs_html" v-html="desc_html"></div>
@@ -1840,8 +1838,8 @@
           addAppSubDialog: { show: false, url: '' },
           installConfirmDialog: { show: false, title: '安装确认', message: '是否自动安装外部资源?' },
           defaultIcons: [
-            'https://raw.githubusercontent.com/Orz-3/mini/master/appstore.png',
-            'https://raw.githubusercontent.com/Orz-3/task/master/appstore.png'
+            'https://raw.githubusercontent.com/Orz-3/mini/master/Alpha/appstore.png',
+            'https://raw.githubusercontent.com/Orz-3/mini/master/Color/appstore.png'
           ]
         },
         boxServerData: null,
@@ -2278,14 +2276,6 @@
           const appId = decodeURIComponent(decodeURIComponent(this.subview))
           const app = this.apps.find((app) => app.id === appId)
           this.loadAppDataInfo(app)
-          if(app.settings){
-            app.settings = app.settings.map(setting=>{
-              if(setting.items && typeof setting.items === "string"){
-                return {...setting,items:this.box.datas[setting.items] || []};
-              }
-              return {...setting}
-            })
-          }
           return app
         }
       },
@@ -2736,26 +2726,7 @@
       // 加载应用数据
       loadAppDataInfo(app) {
         if (app.isLoaded) return
-        // 加载应用设置
-        if (app.settings) {
-          app.settings.forEach((setting) => {
-            const key = setting.id
-            const datval = this.datas[key]
-            if (setting.type === 'boolean') {
-              setting.val = _.isEmpty(datval) ? setting.val : (datval === 'true' || datval === true)
-            } else if (setting.type === 'int') {
-              setting.val = datval * 1 || setting.val
-            } else if (setting.type === 'checkboxes') {
-              if (!_.isEmpty(datval)) {
-                setting.val = datval ? datval.split(',') : []
-              } else {
-                setting.val = Array.isArray(setting.val) ? setting.val : setting.val.split(',')
-              }
-            } else {
-              setting.val = datval || setting.val
-            }
-          })
-        }
+
         // 加载当前会话数据
         if (app.keys) {
           app.datas = []
