@@ -1,0 +1,12 @@
+#!name=迅雷
+#!desc=http://boxjs.com
+#!author=ChavyLeung
+#!homepage=https://docs.boxjs.app/
+#!icon=https://raw.githubusercontent.com/chavyleung/scripts/master/box/icons/BoxJs.png
+#!category=BoxJs
+
+[MITM]
+hostname = %INSERT% api-pan.xunlei.com
+
+[Script]
+迅雷 = type=http-response,pattern=^https:\/\/api-pan.xunlei.com\/drive\/v1\/files,requires-body=1,max-size=0,script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/xunlei/xunlei.js
