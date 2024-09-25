@@ -89,7 +89,7 @@
       "id": "bcz",
       "name": "百词斩",
       "keys": ["senku_cookie_bcz", "senku_key_bcz"],
-      "author": "@GideonSenku",
+      "author": "@gideonsenku",
       "repo": "https://github.com/chavyleung/scripts/tree/master/bcz",
       "script": "https://raw.githubusercontent.com/chavyleung/scripts/master/bcz/bcz.js",
       "icons": [
@@ -159,7 +159,7 @@
         "senku_signheader_dbsj",
         "senku_signbody_dbsj"
       ],
-      "author": "@GideonSenku",
+      "author": "@gideonsenku",
       "repo": "https://github.com/chavyleung/scripts/tree/master/dbsj",
       "script": "https://raw.githubusercontent.com/chavyleung/scripts/master/dbsj/dbsj.js",
       "icons": [
@@ -175,7 +175,7 @@
         "senku_signheader_pandeng",
         "senku_signbody_pandeng"
       ],
-      "author": "@GideonSenku",
+      "author": "@gideonsenku",
       "repo": "https://github.com/chavyleung/scripts/tree/master/fandeng",
       "script": "https://raw.githubusercontent.com/chavyleung/scripts/master/fandeng/fandeng.js",
       "icons": [
@@ -193,7 +193,7 @@
         "senku_signDailyKey_fenqile",
         "senku_signDailyUrlKey_fenqile"
       ],
-      "author": "@GideonSenku",
+      "author": "@gideonsenku",
       "repo": "https://github.com/chavyleung/scripts/tree/master/fenqile",
       "script": "https://raw.githubusercontent.com/chavyleung/scripts/master/fenqile/fenqile.js",
       "icons": [
@@ -307,7 +307,7 @@
         "senku_signheader_qmkg",
         "senku_signbody_qmkg"
       ],
-      "author": "@GideonSenku",
+      "author": "@gideonsenku",
       "repo": "https://github.com/chavyleung/scripts/tree/master/qmkg",
       "script": "https://raw.githubusercontent.com/chavyleung/scripts/master/qmkg/qmkg.js",
       "icons": [
@@ -407,7 +407,7 @@
       "id": "wanda",
       "name": "万达电影",
       "keys": ["senku_wanda_mi_"],
-      "author": "@GideonSenku",
+      "author": "@gideonsenku",
       "repo": "https://github.com/chavyleung/scripts/tree/master/wanda",
       "script": "https://raw.githubusercontent.com/chavyleung/scripts/master/wanda/wanda.js",
       "icons": [
@@ -419,7 +419,7 @@
       "id": "ithome",
       "name": "IT之家",
       "keys": ["senku_ithome_userHash"],
-      "author": "@GideonSenku",
+      "author": "@gideonsenku",
       "repo": "https://github.com/chavyleung/scripts/tree/master/ithome",
       "script": "https://raw.githubusercontent.com/chavyleung/scripts/master/ithome/ithome.js",
       "icons": [
@@ -431,7 +431,7 @@
       "id": "nfzm",
       "name": "南方周末",
       "keys": ["senku_nfzm_url"],
-      "author": "@GideonSenku",
+      "author": "@gideonsenku",
       "repo": "https://github.com/chavyleung/scripts/tree/master/nfzm",
       "script": "https://raw.githubusercontent.com/chavyleung/scripts/master/nfzm/nfzm.js",
       "icons": [
@@ -525,7 +525,7 @@
         "senku_signheader_zxhc",
         "senku_signbody_zxhc"
       ],
-      "author": "@GideonSenku",
+      "author": "@gideonsenku",
       "repo": "https://github.com/chavyleung/scripts/tree/master/zxhc",
       "script": "https://raw.githubusercontent.com/chavyleung/scripts/master/zxhc/zxhc.js",
       "icons": [
@@ -682,6 +682,34 @@
       "icons": [
         "https://raw.githubusercontent.com/githubdulong/Script/master/Images/testflight.png",
         "https://raw.githubusercontent.com/githubdulong/Script/master/Images/testflight.png"
+      ]
+    },
+    {
+      "id": "follow",
+      "name": "follow",
+      "keys": ["follow_csrfToken", "follow_cookie"],
+      "settings": [
+        {
+          "id": "follow_csrfToken",
+          "name": "csrfToken",
+          "val": "",
+          "type": "text",
+          "desc": "请输入follow的csrfToken"
+        },
+        {
+          "id": "follow_cookie",
+          "name": "cookie",
+          "val": "",
+          "type": "text",
+          "desc": "请输入follow的cookie"
+        }
+      ],
+      "author": "@gideonsenku",
+      "repo": "https://github.com/chavyleung/scripts/tree/master/follow",
+      "script": "https://raw.githubusercontent.com/chavyleung/scripts/master/follow/follow.js",
+      "icons": [
+        "https://raw.githubusercontent.com/Orz-3/mini/master/Alpha/follow.png",
+        "https://raw.githubusercontent.com/Orz-3/mini/master/Color/follow.png"
       ]
     }
   ]

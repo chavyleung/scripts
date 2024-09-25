@@ -4,6 +4,7 @@ node_modules/*
 .vscode
 .idea
 
+test/*
 tncj/*
 */unblock/*
 *.private.*
