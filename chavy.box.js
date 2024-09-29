@@ -3,7 +3,7 @@ const $ = new Env('BoxJs')
 // 为 eval 准备的上下文环境
 const $eval_env = {}
 
-$.version = '0.19.13'
+$.version = '0.19.14'
 $.versionType = 'beta'
 
 // 发出的请求需要需要 Surge、QuanX 的 rewrite
@@ -675,7 +675,7 @@ function getAppDatas(app) {
       } else if (setting.type === 'int') {
         setting.val = dataval * 1 || setting.val
       } else if (setting.type === 'checkboxes') {
-        if (!nulls.includes(dataval)) {
+        if (!nulls.includes(dataval) && typeof dataval === 'string') {
           setting.val = dataval ? dataval.split(',') : []
         } else {
           setting.val = Array.isArray(setting.val) ? setting.val : setting.val.split(',')

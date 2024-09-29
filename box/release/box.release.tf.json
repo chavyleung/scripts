@@ -1,6 +1,18 @@
 {
   "releases": [
     {
+      "version": "0.19.14",
+      "tags": ["beta"],
+      "author": "@GideonSenku",
+      "msg": "fix(boxjs): 白屏问题",
+      "notes": [
+        {
+          "name": "修复",
+          "descs": ["部分场景下白屏"]
+        }
+      ]
+    },
+    {
       "version": "0.19.13",
       "tags": ["beta"],
       "author": "@GideonSenku",
