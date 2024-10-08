@@ -153,7 +153,7 @@ function Env(name, opts) {
           runOpts && runOpts.timeout ? runOpts.timeout : httpapi_timeout
         const [key, addr] = httpapi.split('@')
         const opts = {
-          url: `http://${addr}/v1/scripting/evaluate`,
+          url: `https://${addr}/v1/scripting/evaluate`,
           body: {
             script_text: script,
             mock_type: 'cron',

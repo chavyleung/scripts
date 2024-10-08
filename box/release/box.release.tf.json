@@ -1,6 +1,18 @@
 {
   "releases": [
     {
+      "version": "0.19.15",
+      "tags": ["beta"],
+      "author": "@GideonSenku",
+      "msg": "chore(boxjs): update EnvJs",
+      "notes": [
+        {
+          "name": "更新",
+          "descs": ["EnvJs 更新至最新版本"]
+        }
+      ]
+    },
+    {
       "version": "0.19.14",
       "tags": ["beta"],
       "author": "@GideonSenku",
