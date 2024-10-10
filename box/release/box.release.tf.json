@@ -1,6 +1,18 @@
 {
   "releases": [
     {
+      "version": "0.19.16",
+      "tags": ["beta"],
+      "author": "@GideonSenku",
+      "msg": "fix(env): console.log 问题",
+      "notes": [
+        {
+          "name": "修复",
+          "descs": ["EnvJs console.log 问题"]
+        }
+      ]
+    },
+    {
       "version": "0.19.15",
       "tags": ["beta"],
       "author": "@GideonSenku",
