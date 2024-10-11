@@ -1,6 +1,21 @@
 {
   "releases": [
     {
+      "version": "0.19.17",
+      "tags": ["beta"],
+      "author": "@chavyleung",
+      "msg": "fix(env): 撤回 Surge 强制使用 https 执行脚本逻辑",
+      "notes": [
+        {
+          "name": "撤回",
+          "descs": [
+            "撤回 Surge 强制使用 https 执行脚本逻辑",
+            "后续增加配置方式来支持 https"
+          ]
+        }
+      ]
+    },
+    {
       "version": "0.19.16",
       "tags": ["beta"],
       "author": "@GideonSenku",
