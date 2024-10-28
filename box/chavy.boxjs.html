@@ -372,22 +372,6 @@
             <v-avatar size="32"><v-icon>mdi-format-align-bottom</v-icon></v-avatar>
           </v-btn>
         </v-list-item>
-        <!-- <v-list-item class="mt-4">
-              <v-switch
-                dense
-                class="mt-0"
-                label="透明主题"
-                v-model="box.usercfgs.isTransparent"
-                @change="saveUserCfgs"
-                :persistent-hint="true"
-                hint="使界面更多元素透明 (beta)"
-              >
-              </v-switch>
-              <v-spacer></v-spacer>
-              <v-btn fab small text>
-                <v-avatar size="32"><v-icon>mdi-invert-colors</v-icon></v-avatar>
-              </v-btn>
-            </v-list-item> -->
         <v-list-item class="mt-4">
           <v-switch
                   :hint="$t('prefs.muteModeDesc')"
@@ -570,7 +554,8 @@
       >
         <v-row no-gutters v-show="!isHidedAppIcons" class="align-self-start" id="appList">
           <v-col cols="3" md="2" v-for="(app, appIdx) in favApps" :key="app.id" class="d-flex justify-space-around">
-            <div class="ma-2 appicon" @click="switchAppView(app.id)">
+            <div class="ma-2 appicon" style="position: relative;" @click="switchAppView(app.id)">
+              <v-icon style="position: absolute; right: -10px; top: -10px; z-index: 100;" v-if="box.usercfgs.isEditFavApp" @click="favApp(app.id)">mdi-close-circle-outline</v-icon>
               <v-card v-if="isDarkMode" style="border-radius: 12px">
                 <v-img style="border-radius: 12px" :aspect-ratio="1" width="54" height="54" contain v-ripple :src="app.icon"></v-img>
               </v-card>
@@ -1295,17 +1280,6 @@
           </v-subheader>
         </v-card>
       </v-container>
-      <!-- 计算器 -->
-      <v-container fluid v-else-if="view === 'calculator'">
-        <h3>Surge 费用计算器(open AI 编写)</h3>
-        <div class="text-body-2 grey--text text--darken-2">仅供参考,最终价格以实际为准</div>
-        <div class="mt-4">
-          <v-text-field v-model="purchaseDate" label="购买日期" type="date"></v-text-field>
-          <v-select v-model="licenseType" :items="licenseTypes" label="设备授权数"></v-select>
-          <v-btn @click="calculateCost">计算费用</v-btn>
-          <p class="mt-2">费用：{{ cost.toFixed(2) }}</p>
-        </div>
-      </v-container>
     </v-main>
     <!-- 底部 -->
     <v-bottom-navigation ref="naviBar" v-bind="naviBarBind" v-touch="{ down: () => isHidedNaviBottom = true }">
@@ -1355,14 +1329,14 @@
             <v-avatar><img :src="box.syscfgs.boxjs.icons[iconThemeIdx]" /></v-avatar>
           </v-btn>
         </template>
+        <v-btn dark fab small color="blue" @click="box.usercfgs.isEditFavApp = !box.usercfgs.isEditFavApp">
+          <v-icon>mdi-delete-circle-outline</v-icon>
+        </v-btn>
         <v-btn dark v-if="!box.usercfgs.isHideHelp" fab small color="grey" @click="open('https://chavyleung.gitbook.io/boxjs')">
           <v-icon>mdi-help</v-icon>
         </v-btn>
         <v-btn dark v-if="!box.usercfgs.isHideHelp" fab small color="purple" @click="ui.versionSheet.show = true">
           <v-icon>mdi-new-box</v-icon>
-        </v-btn>
-        <v-btn dark v-if="!box.usercfgs.isCalculator" fab small color="yellow" @click="switchView('calculator')">
-          <v-icon>mdi-calculator-variant-outline</v-icon>
         </v-btn>
         <v-btn dark fab small color="pink" @click="box.usercfgs.isLeftBoxIcon = !box.usercfgs.isLeftBoxIcon">
           <v-icon> {{box.usercfgs.isLeftBoxIcon ? 'mdi-format-horizontal-align-right' : 'mdi-format-horizontal-align-left'}} </v-icon>
@@ -1847,10 +1821,6 @@
         },
         boxServerData: null,
         box: null,
-        purchaseDate: null,
-        cost: 0,
-        licenseTypes: ["1 Device License", "3 Devices License", "5 Devices License"],
-        licenseType: ''
       }
     },
     computed: {
@@ -3101,42 +3071,6 @@
             axios.defaults.baseURL = ''
           }
         }
-      },
-      calculateUpgradePrice(purchaseDate, licenseType) {
-        const licensePrices = {
-          '1 Device License': 34.99,
-          '3 Devices License': 48.99,
-          '5 Devices License': 69.99,
-        }
-
-        const upgradePrice = licensePrices[licenseType]
-        if (!upgradePrice) {
-          throw new Error(`Invalid license type: ${licenseType}`)
-        }
-
-        const discountEndDate = dayjs('2022-04-15')
-        const freeDate = dayjs('2022-10-15')
-
-        if (dayjs(purchaseDate).isBefore(discountEndDate)) {
-          return licensePrices[licenseType]
-        }
-
-        const equivalentPurchaseDate = dayjs(purchaseDate)
-
-        const diffDays = freeDate.diff(discountEndDate, 'day')
-        const daysFromDiscountEndDate = equivalentPurchaseDate.diff(discountEndDate, 'day')
-
-        if (daysFromDiscountEndDate >= diffDays) {
-          // After free upgrade date
-          return 0
-        } else {
-          const ratio = 1 - daysFromDiscountEndDate / diffDays
-          const price = Math.ceil(ratio * upgradePrice * 100) / 100 - 0.01
-          return price < 1.99 ? 1.99 : price
-        }
-      },
-      calculateCost() {
-        this.cost = this.calculateUpgradePrice(this.purchaseDate, this.licenseType)
       },
     }
   })

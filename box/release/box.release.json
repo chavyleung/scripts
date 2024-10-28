@@ -1,6 +1,20 @@
 {
   "releases": [
     {
+      "version": "0.19.19",
+      "tags": ["beta"],
+      "author": "@GideonSenku",
+      "msg": "feat(ui): 支持首页删除收藏应用",
+      "notes": [
+        {
+          "name": "UI 更新",
+          "descs": [
+            "支持首页删除收藏应用，开启方式在悬浮按钮上"
+          ]
+        }
+      ]
+    },
+    {
       "version": "0.19.17",
       "tags": ["beta"],
       "author": "@chavyleung",
