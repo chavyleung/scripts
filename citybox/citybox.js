@@ -7,9 +7,8 @@ const drawRes = []
   const har = $.getjson(KEY_har)
   const headers = har?.headers
   await sign(headers)
-  await getDrawList(headers)
-  await draw(headers, $.drawIndex0)
-  await draw(headers, $.drawIndex1)
+  await draw(headers)
+  await draw(headers)
   if ($.sign?.signnum) {
     $.msg($.name, `第${$.sign.signnum}天 签到成功`, drawRes.join('\n'))
   } else if ($.sign?.message) {
@@ -39,31 +38,17 @@ function sign(headers) {
   })
 }
 
-function getDrawList(headers) {
+function draw(headers) {
   return new Promise((resolve) => {
+    const index = Math.floor(Math.random() * 10)
     const url = {
-      url: hostApi + '/roulette_draw/index',
-      headers,
-    }
-    $.get(url, (err, resp, data) => {
-      const res = JSON.parse(data)
-      $.drawIndex0 = res.data.draw_list.findIndex(item => item.task_name === '5元无门槛优惠券')
-      $.drawIndex1 = res.data.draw_list.findIndex(item => item.tag_modou === '500')
-    })
-  })
-}
-
-function draw(headers, index) {
-  return new Promise((resolve) => {
-    const path = index ? 'draw_results?click_num=' + index : 'draw_results'
-    const url = {
-      url: hostApi + '/' + path,
+      url: hostApi + '/roulette_draw/draw_results?click_num=' + index,
       headers,
     }
     $.post(url, (err, resp, data) => {
       try {
-        const res = JSON.parse(data)
-        drawRes.push(res.winning_desc)
+        const data = JSON.parse(data)
+        drawRes.push(data.winning_desc)
       } catch (e) {
         $.logErr(e, resp)
       } finally {
