@@ -1,6 +1,18 @@
 {
   "releases": [
     {
+      "version": "0.19.21",
+      "tags": ["beta"],
+      "author": "@GideonSenku",
+      "msg": "fix(boxjs): 订阅更新问题",
+      "notes": [
+        {
+          "name": "修复",
+          "descs": ["订阅更新问题"]
+        }
+      ]
+    },
+    {
       "version": "0.19.20",
       "tags": ["beta"],
       "author": "@GideonSenku",
