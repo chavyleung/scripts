@@ -1,6 +1,18 @@
 {
   "releases": [
     {
+      "version": "0.19.23",
+      "tags": ["beta"],
+      "author": "@id77",
+      "msg": "feat(boxjs): 添加应用设置固定保存按钮",
+      "notes": [
+        {
+          "name": "功能",
+          "descs": ["应用设置表单数据过多时，滚动到应用设置底部才能保存，添加应用设置固定保存按钮方便保存"]
+        }
+      ]
+    },
+    {
       "version": "0.19.22",
       "tags": ["beta"],
       "author": "@id77",

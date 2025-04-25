@@ -1280,6 +1280,22 @@
           </v-subheader>
         </v-card>
       </v-container>
+      <v-fab-transition>
+        <v-btn
+          v-show="view === 'app' && !!curapp && curapp.settings && curapp.settings.length > 0"
+          fab
+          fixed
+          bottom
+          right
+          left
+          small
+          color="primary"
+          style="margin: 0 auto 60px auto; z-index: 5"
+          @click="saveAppSettings"
+        >
+          <v-icon>mdi-content-save</v-icon>
+        </v-btn>
+      </v-fab-transition>
     </v-main>
     <!-- 底部 -->
     <v-bottom-navigation ref="naviBar" v-bind="naviBarBind" v-touch="{ down: () => isHidedNaviBottom = true }">
