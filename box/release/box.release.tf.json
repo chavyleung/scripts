@@ -1,6 +1,18 @@
 {
   "releases": [
     {
+      "version": "0.19.24",
+      "tags": ["beta"],
+      "author": "@id77",
+      "msg": "feat(boxjs): isEditFavApp 只在主页才显示",
+      "notes": [
+        {
+          "name": "优化",
+          "descs": ["悬浮按钮的收藏编辑功能只在主页才显示"]
+        }
+      ]
+    },
+    {
       "version": "0.19.23",
       "tags": ["beta"],
       "author": "@id77",

@@ -1345,7 +1345,7 @@
             <v-avatar><img :src="box.syscfgs.boxjs.icons[iconThemeIdx]" /></v-avatar>
           </v-btn>
         </template>
-        <v-btn dark fab small color="blue" @click="box.usercfgs.isEditFavApp = !box.usercfgs.isEditFavApp">
+        <v-btn dark v-if="view === ''" fab small color="blue" @click="box.usercfgs.isEditFavApp = !box.usercfgs.isEditFavApp">
           <v-icon>mdi-delete-circle-outline</v-icon>
         </v-btn>
         <v-btn dark v-if="!box.usercfgs.isHideHelp" fab small color="grey" @click="open('https://chavyleung.gitbook.io/boxjs')">
