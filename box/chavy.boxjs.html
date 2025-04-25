@@ -1200,7 +1200,7 @@
                 <v-btn icon v-on="on"><v-icon>mdi-dots-vertical</v-icon></v-btn>
               </template>
               <v-list dense>
-                <v-dialog v-model="ui.modSessionDialog.show">
+                <v-dialog v-model="ui.modSessionDialog[session.id]" :key="`dialog-${session.id}`">
                   <template #activator="{ on }">
                     <v-list-item v-on="on">
                       <v-list-item-title>{{ $t('base.cmd.mod') }}</v-list-item-title>
@@ -1223,7 +1223,7 @@
                     <v-divider></v-divider>
                     <v-card-actions>
                       <v-spacer></v-spacer>
-                      <v-btn text small color="grey" text @click="ui.modSessionDialog.show = false"
+                      <v-btn text small color="grey" text @click="ui.modSessionDialog[session.id] = false"
                       >{{ $t('base.dialog.close') }}</v-btn
                       >
                       <v-btn text small color="primary" text @click="updateAppSession(session)" :loading="isLoading"
@@ -1808,7 +1808,7 @@
           exeScriptSheet: { show: false, resp: null },
           naviDrawer: { show: false },
           reloadDialog: { show: false },
-          modSessionDialog: { show: false },
+          modSessionDialog: {},
           editProfileDialog: { show: false },
           impGlobalBakDialog: { show: false, impval: '' },
           impAppDatasDialog: { show: false, impval: '' },
@@ -2800,13 +2800,15 @@
         })
         const key = 'chavy_boxjs_sessions'
         const val = JSON.stringify(this.box.sessions)
-        axios
-                .post('/api/save', [{ key, val }])
-                .then((resp) => {
-                  delete resp.data.usercfgs
-                  Object.assign(this.box, resp.data)
-                })
-                .finally(() => (this.ui.modSessionDialog.show = false))
+        axios.post('/api/save', [{ key, val }])
+          .then((resp) => {
+            delete resp.data.usercfgs
+            Object.assign(this.box, resp.data)
+          })
+          .finally(() => {
+            // 修改这里，关闭当前会话的对话框
+            this.$set(this.ui.modSessionDialog, session.id, false)
+          })
       },
       // 删除应用会话
       delAppSession(sessionId) {

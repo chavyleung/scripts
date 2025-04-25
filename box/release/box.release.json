@@ -1,6 +1,18 @@
 {
   "releases": [
     {
+      "version": "0.19.22",
+      "tags": ["beta"],
+      "author": "@id77",
+      "msg": "fix(boxjs): 会话对话框修改&关闭功能",
+      "notes": [
+        {
+          "name": "修复",
+          "descs": ["修复点修改A会话显示会话B的情况，每一个会话修改表单都应该有独立的控制key"]
+        }
+      ]
+    },
+    {
       "version": "0.19.21",
       "tags": ["beta"],
       "author": "@GideonSenku",
