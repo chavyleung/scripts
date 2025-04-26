@@ -1249,7 +1249,8 @@
           <v-card-actions>
             <v-btn small text color="grey">{{dayjs(session.createTime).format('YYYY-MM-DD HH:mm:ss')}}</v-btn>
             <v-spacer></v-spacer>
-            <v-btn small text color="primary" @click="useAppSession(session.id)">{{ $t('base.dialog.apply') }}</v-btn>
+            <v-btn small text color="primary" @click="useAppSession(session.id)" >{{ $t('base.dialog.use') }}</v-btn>
+            <v-btn small text color="primary" @click="linkAppSession(session.id)" >{{ $t('base.dialog.link') }}</v-btn>
           </v-card-actions>
         </v-card>
       </v-container>
@@ -1467,7 +1468,9 @@
               save: 'Save',
               view: 'View',
               close: 'Close',
-              ok: 'OK'
+              ok: 'OK',
+              use: 'Use',
+              link: 'Link'
             },
             sort: {
               up: 'Up',
@@ -1630,7 +1633,9 @@
               apply: '应用',
               save: '保存',
               close: '关闭',
-              ok: '好'
+              ok: '好',
+              use: '使用',
+              link: '关联'
             },
             sort: {
               up: '上移',
@@ -2840,20 +2845,53 @@
       },
       // 使用应用会话
       useAppSession(sessionId) {
-        const sessions = this.box.sessions
-        const session = sessions.find((session) => session.id === sessionId)
-        this.box.curSessions[session.appId] = sessionId
+        const sessions = JSON.parse(JSON.stringify(this.box.sessions));
+        const session = sessions.find(
+          (session) => session.id === sessionId
+        );
 
-        const key = 'chavy_boxjs_cur_sessions'
-        const val = JSON.stringify(this.box.curSessions)
-        const curSessions = [{ key, val }]
-        const datas = [...session.datas, ...curSessions]
+        const datas = session.datas;
+        delete this.box.curSessions[session.appId];
+        const key = 'chavy_boxjs_cur_sessions';
+        const val = JSON.stringify({});
+        datas.push({ key, val });
 
-        this.clearAppDatas()
+        if (session) {
+          axios
+            .post(`/api/save?appid=${this.curapp.id}`, datas)
+            .then((resp) => {
+              if (this.curapp.id === 'BoxSetting') {
+                this.isSaveUserCfgs = false;
+              } else {
+                delete resp.data.usercfgs;
+              }
+              Object.assign(this.box, resp.data);
+
+              if (this.curapp.id === 'BoxSetting') {
+                this.setHttpBackend();
+              }
+            });
+        }
+      },
+      // 关联应用会话
+      linkAppSession(sessionId) {
+        const sessions = JSON.parse(JSON.stringify(this.box.sessions));
+        const session = sessions.find(
+          (session) => session.id === sessionId
+        );
+
+        const datas = session.datas;
+        // 记录当前应用正在使用的会话ID
+        this.box.curSessions[session.appId] = sessionId;
+        const key = 'chavy_boxjs_cur_sessions';
+        const val = JSON.stringify(this.box.curSessions);
+        datas.push({ key, val });
+
+        // 发送单个合并请求，避免竞争条件
         axios.post('/api/save', datas).then((resp) => {
-          delete resp.data.usercfgs
-          Object.assign(this.box, resp.data)
-        })
+          delete resp.data.usercfgs;
+          Object.assign(this.box, resp.data);
+        });
       },
       // 复制应用数据为对象数据
       copyData(curdata) {

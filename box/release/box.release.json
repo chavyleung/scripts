@@ -1,6 +1,18 @@
 {
   "releases": [
     {
+      "version": "0.19.25",
+      "tags": ["beta"],
+      "author": "@id77",
+      "msg": "feat(boxjs): 会话支持仅使用和关联使用",
+      "notes": [
+        {
+          "name": "优化",
+          "descs": ["仅使用会话数据，应用设置修改保存不更新原会话；关联使用会话数据，应用设置修改保存会更新原会话"]
+        }
+      ]
+    },
+    {
       "version": "0.19.24",
       "tags": ["beta"],
       "author": "@id77",
