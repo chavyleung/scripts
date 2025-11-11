@@ -1,5 +1,5 @@
 const $ = new Env('魔盒')
-const hostApi = 'https://api.icitybox.cn/index.php/api'
+const hostApi = 'https://api.icitybox.cn/api'
 const drawRes = []
 
 !(async () => {

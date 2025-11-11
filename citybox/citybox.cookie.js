@@ -3,15 +3,15 @@
  * hostname = api.icitybox.cn
  *
  * # Surge
- * Rewrite: citybox = type=http-request,pattern=^https:\/\/api\.icitybox\.cn\/index.php\/api\/user\/get_user_info,script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/citybox/citybox.cookie.js,debug=true
+ * Rewrite: citybox = type=http-request,pattern=^https:\/\/api\.icitybox\/api\/user\/get_user_info,script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/citybox/citybox.cookie.js,debug=true
  * Tasks: citybox-签到 = type=cron,cronexp=10 0 * * *,script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/citybox/citybox.js,wake-system=true
  *
  * # QuanX
- * ^https:\/\/api\.icitybox\.cn\/index.php\/api\/user\/get_user_info url script-request-header https://raw.githubusercontent.com/chavyleung/scripts/master/citybox/citybox.cookie.js
+ * ^https:\/\/api\.icitybox\/api\/user\/get_user_info url script-request-header https://raw.githubusercontent.com/chavyleung/scripts/master/citybox/citybox.cookie.js
  * 10 0 * * * https://raw.githubusercontent.com/chavyleung/scripts/master/citybox/citybox.js, tag=citybox-签到
  *
  * # Loon
- * http-request ^https:\/\/api\.icitybox\.cn\/index.php\/api\/user\/get_user_infoscript-path=https://raw.githubusercontent.com/chavyleung/scripts/master/citybox/citybox.cookie.js, tag=citybox
+ * http-request ^https:\/\/api\.icitybox\/api\/user\/get_user_infoscript-path=https://raw.githubusercontent.com/chavyleung/scripts/master/citybox/citybox.cookie.js, tag=citybox
  * cron "10 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/citybox/citybox.js
  * 
  * # 获取方式:进入签到页面获取，进入citybox小程序即可
