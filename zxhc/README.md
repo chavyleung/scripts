@@ -10,10 +10,10 @@
 
 ```properties
 [MITM]
-m.ctrip.com
+m.suanya.cn
 
 [Script]
-http-request ^https:\/\/m\.ctrip\.com/restapi/soa2/14593/json/attendanceDay? script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/zxhc/zxhc.cookie.js, requires-body=true
+http-request ^https:\/\/m\.suanya\.cn/restapi/soa2/\d+/attendanceDay script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/zxhc/zxhc.cookie.js, requires-body=true
 
 cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/zxhc/zxhc.js
 ```
@@ -22,13 +22,13 @@ cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scr
 
 ```properties
 [MITM]
-m.ctrip.com
+m.suanya.cn
 
 [rewrite_local]
 #&QuanX
-^https:\/\/m\.ctrip\.com/restapi/soa2/14593/json/attendanceDay? url script-request-body chavyleung/zxhc/zxhc.cookie.js
+^https:\/\/m\.suanya\.cn/restapi/soa2/\d+/attendanceDay url script-request-body chavyleung/zxhc/zxhc.cookie.js
 # QuanTF
-^https:\/\/m\.ctrip\.com/restapi/soa2/14593/json/attendanceDay? url script-request-body https://raw.githubusercontent.com/chavyleung/scripts/master/zxhc/zxhc.cookie.js
+^https:\/\/m\.suanya\.cn/restapi/soa2/\d+/attendanceDay url script-request-body https://raw.githubusercontent.com/chavyleung/scripts/master/zxhc/zxhc.cookie.js
 
 [task_local]
 1 0 * * * zxhc.js
@@ -39,7 +39,7 @@ m.ctrip.com
 
 ## 说明
 
-1. 先把`m.ctrip.com`加到`[MITM]`
+1. 先把`m.suanya.cn`加到`[MITM]`
 2. 再配置重写规则:
    - Surge: 把两条远程脚本放到`[Script]`
    - QuanX: 把`zxhc.cookie.js`和`zxhc.js`传到`On My iPhone - Quantumult X - Scripts` (传到 iCloud 相同目录也可, 注意要打开 quanx 的 iCloud 开关)
