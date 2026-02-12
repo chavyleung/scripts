@@ -6,13 +6,9 @@ const signURL = 'https://m.suanya.cn/restapi/soa2/18903/attendanceDay'
 const creditURL = 'https://m.suanya.cn/restapi/soa2/17679/get2020ZtripIntergrationDailyAttendanceInfo'
 
 !(async () => {
-  const signResult = await sign()
-  if (signResult === null) {
-    showmsg(null, null)
-    return
-  }
-  const creditInfo = await getCreditInfo()
-  showmsg(signResult, creditInfo)
+  await sign()
+  await getCreditInfo()
+  showmsg()
 })()
   .catch((e) => $.logErr(e))
   .finally(() => $.done())
@@ -32,13 +28,14 @@ function sign() {
     $.post(opts, (err, resp, data) => {
       try {
         $.log(`${$.name}, sign data: ${data}`)
-        const res = $.toObj(data, {})
-        const ok = res.resultCode === 1 || res.resultCode === 0
-        const message = res.resultMessage || res.message || (ok ? '成功' : '失败')
-        resolve({ ok, message })
+        const res = JSON.parse(data)
+        $.sign = res
+        resolve()
       } catch (e) {
         $.logErr(e, data)
-        resolve({ ok: false, message: '解析失败' })
+        reject(e)
+      } finally {
+        resolve()
       }
     })
   })
@@ -60,30 +57,30 @@ function getCreditInfo() {
       try {
         if (err || !data) return resolve({ credit: null, coupon: null })
         $.log(`${$.name}, credit data: ${data}`)
-        const res = $.toObj(data, {})
-        const credit = res.credit ?? res.point ?? res.integral ?? null
-        const coupon = res.coupon ?? res.couponCount ?? null
-        resolve({ credit, coupon })
+        const res = JSON.parse(data)
+        $.credit = res
+        resolve()
       } catch (e) {
         $.logErr(e, data)
-        resolve({ credit: null, coupon: null })
+      } finally {
+        resolve()
       }
     })
   })
 }
 
-function showmsg(signResult, creditInfo) {
+function showmsg() {
   let subTitle = ''
   let detail = ''
-  if (signResult === null) {
-    subTitle = ''
+  if (!$.sign) {
+    subTitle = '签到: 失败'
     detail = '请先获取 Cookie'
   } else {
-    subTitle = `签到结果: ${signResult.resultMessage}`
-    if (creditInfo && (creditInfo.credit != null || creditInfo.coupon != null)) {
+    subTitle = `签到: ${$.sign.resultMessage}`
+    if ($.credit && ($.credit.credit != null || $.credit.coupon != null)) {
       const parts = []
-      if (creditInfo.credit != null) parts.push(`积分: ${creditInfo.credit}`)
-      if (creditInfo.coupon != null) parts.push(`优惠券: ${creditInfo.coupon}`)
+      if ($.credit.credit != null) parts.push(`积分: ${$.credit.credit}`)
+      if ($.credit.coupon != null) parts.push(`优惠券: ${$.credit.coupon}`)
       detail = parts.join(' ')
     }
   }
