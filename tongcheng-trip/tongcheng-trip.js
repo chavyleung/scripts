@@ -185,16 +185,15 @@ async function runSignIn() {
 }
 
 // 入口：MiTM 时保存 Cookie，否则执行签到
-const isMitm =
-  typeof $request !== 'undefined' &&
-  $request &&
-  $request.url &&
-  $request.method !== 'OPTIONS'
-
-if (isMitm) {
-  $.setdata(JSON.stringify($request.headers), KEY_SIGNHEADER)
-  $.msg($.name, '获取同程旅行账户成功', '请运行签到脚本')
-  $.done()
+if (typeof $request !== 'undefined') {
+  if ($request.method !== 'OPTIONS') {
+    $.setdata(JSON.stringify($request.headers), KEY_SIGNHEADER)
+    $.msg($.name, '获取同程旅行账户成功', '请运行签到脚本')
+    $.done()
+  } else {
+    $.log('获取同程旅行账户失败')
+    $.done()
+  }
 } else {
   !(async () => {
     await runSignIn()
