@@ -4,7 +4,7 @@
  *
  * # Surge
  * http-request ^https:\/\/app\.17u\.cn\/welfarecenter\/index\/signIndex script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/tongcheng-trip/tongcheng-trip.js, tag=同程旅行
- * cron "5 12 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/tongcheng-trip/tongcheng-trip.js, tag=同程旅行-签到
+ * cron "5 12 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/tongcheng-trip/tongcheng-trip.js, timeout=300, tag=同程旅行-签到
  *
  * # QuanX
  * ^https:\/\/app\.17u\.cn\/welfarecenter\/index\/signIndex url script-request-header https://raw.githubusercontent.com/chavyleung/scripts/master/tongcheng-trip/tongcheng-trip.js
@@ -12,15 +12,15 @@
  *
  * # Loon
  * http-request ^https:\/\/app\.17u\.cn\/welfarecenter\/index\/signIndex script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/tongcheng-trip/tongcheng-trip.js, tag=同程旅行
- * cron "5 12 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/tongcheng-trip/tongcheng-trip.js, tag=同程旅行-签到
+ * cron "5 12 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/tongcheng-trip/tongcheng-trip.js, timeout=300, tag=同程旅行-签到
  *
- * # 获取方式: 打开同程旅行 APP → 领福利 → 点击签到，命中 signIndex 请求后自动保存请求头（含 phone、apptoken、device）
+ * # 获取方式: 打开同程旅行 APP → 领福利，命中 signIndex 请求后自动保存请求头（含 phone、apptoken、device）
  */
 
 
 const $ = new Env('同程旅行')
 const BASE_URL = 'https://app.17u.cn/welfarecenter'
-const KEY_SIGNHEADER = 'tc_tongcheng_signheader'
+const KEY_SIGNHEADER = 'tongcheng_trip_signheader'
 
 function getTodayDate() {
   return $.time('yyyy-MM-dd')
