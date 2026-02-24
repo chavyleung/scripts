@@ -31,7 +31,6 @@ Rewrite: 美团外卖 = type=http-request,pattern=^https:\/\/promotion.waimai.me
 Rewrite: 芒果TV = type=http-request,pattern=^https:\/\/credits.bz.mgtv.com\/user\/creditsTake,script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/mgtv/mgtv.cookie.js
 Rewrite: 全民K歌 = type=http-request,pattern=^https://node\.kg\.qq\.com/webapp/proxy?,script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/qmkg/qmkg.cookie.js,requires-body=true
 Rewrite: 去哪儿 = type=http-request,pattern=^https:\/\/user.qunar.com\/webapi\/member\/signIndexV2.htm,script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/qunar/qunar.cookie.js
-Rewrite: 人人视频 = type=http-request,pattern=^https:\/\/api\.rr\.tv\/user\/profile,script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/rrtv/rrtv.cookie.js
 Rewrite: 什么值得买 = type=http-request,pattern=^https:\/\/www\.smzdm\.com\/?.?,script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/smzdm/smzdm.cookie.js
 Rewrite: 时光相册 = type=http-request,pattern=^https:\/\/api.everphoto.cn\/users\/self\/checkin\/v2,script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/everphoto/everphoto.cookie.js
 Rewrite: 苏宁易购 = type=http-request,pattern=^https:\/\/gameapi.suning.com\/sngame-web\/(api\/signin\/private\/customerSignOperation.do|gateway\/api\/queryPrize.do),script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/suning/suning.cookie.js
@@ -45,8 +44,6 @@ Rewrite: 网易新闻 = type=http-request,pattern=^https:\/\/(.*?)c\.m\.163\.com
 Rewrite: 网易考拉 = type=http-request,pattern=^https:\/\/m-bean\.kaola\.com/m/point/sign\.html,script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/wykl/wykl.cookie.js,requires-body=true
 Rewrite: 蔚来 = type=http-request,pattern=^https:\/\/app\.nio\.com\/api\/1\/app\/daily_checkin,script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/nio/nio.cookie.js
 Rewrite: 喜马拉雅 = type=http-request,pattern=^https?:\/\/.*\/mobile\-user\/(v1\/)?homePage\/.*,script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/ximalaya/ximalaya.cookie.js
-Rewrite: 字幕组 = type=http-request,pattern=^http:\/\/ios.zmzapi.com\/index.php.*a=(mobile_)?login,script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/zimuzu/zimuzu.cookie.js
-Rewrite: 字幕组 = type=http-request,pattern=^https?:\/\/(www\.)?rrys2020\.com\/?.?,script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/zimuzu/zimuzu.cookie.js
 Rewrite: 智行火车 = type=http-request,pattern=^https:\/\/m\.suanya\.cn/restapi/soa2/\d+/attendanceDay,script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/zxhc/zxhc.cookie.js,requires-body=true
 Rewrite: citybox = type=http-request,pattern=^https:\/\/api\.icitybox\.cn\/index.php\/api\/user\/get_user_info,script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/citybox/citybox.cookie.js,debug=true
 

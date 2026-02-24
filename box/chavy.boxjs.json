@@ -638,15 +638,15 @@
     },
     {
       "id": "rrtv",
-      "name": "人人视频",
+      "name": "人人视频 [archived]",
       "keys": ["chavy_cookie_rrtv"],
       "author": "@chavyleung",
-      "repo": "https://github.com/chavyleung/scripts/tree/master/rrtv",
+      "repo": "https://github.com/chavyleung/scripts/tree/master/achived/rrtv",
       "icons": [
         "https://raw.githubusercontent.com/Orz-3/mini/master/Alpha/rrtv.png",
         "https://raw.githubusercontent.com/Orz-3/mini/master/Color/rrtv.png"
       ],
-      "script": "https://raw.githubusercontent.com/chavyleung/scripts/master/rrtv/rrtv.js"
+      "script": "https://raw.githubusercontent.com/chavyleung/scripts/master/achived/rrtv/rrtv.js"
     },
     {
       "id": "everphoto",
