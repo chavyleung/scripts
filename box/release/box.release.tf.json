@@ -1,6 +1,18 @@
 {
   "releases": [
     {
+      "version": "0.19.26",
+      "tags": ["beta"],
+      "author": "@GideonSenku",
+      "msg": "fix(boxjs): 保存设置时 val 为 false 仍应写入",
+      "notes": [
+        {
+          "name": "修复",
+          "descs": ["保存路径数据时用 hasOwnProperty 判断 val，避免 false 被当作未传值而跳过更新"]
+        }
+      ]
+    },
+    {
       "version": "0.19.25",
       "tags": ["beta"],
       "author": "@id77",

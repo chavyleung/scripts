@@ -67,37 +67,6 @@
       ]
     },
     {
-      "id": "chavyleung.10086",
-      "name": "10086",
-      "keys": [
-        "chavy_autologin_cmcc",
-        "chavy_getfee_cmcc",
-        "chavy_tokenurl_10086",
-        "chavy_tokenheader_10086",
-        "chavy_signurl_10086",
-        "chavy_signheader_10086"
-      ],
-      "author": "@wangfei021325, @chavyleung",
-      "repo": "https://github.com/chavyleung/scripts/blob/master/10086/10086.js",
-      "script": "https://raw.githubusercontent.com/chavyleung/scripts/master/10086/10086.js",
-      "icons": [
-        "https://raw.githubusercontent.com/Orz-3/mini/master/Alpha/10086.png",
-        "https://raw.githubusercontent.com/Orz-3/mini/master/Color/10086.png"
-      ]
-    },
-    {
-      "id": "bcz",
-      "name": "百词斩",
-      "keys": ["senku_cookie_bcz", "senku_key_bcz"],
-      "author": "@gideonsenku",
-      "repo": "https://github.com/chavyleung/scripts/tree/master/bcz",
-      "script": "https://raw.githubusercontent.com/chavyleung/scripts/master/bcz/bcz.js",
-      "icons": [
-        "https://raw.githubusercontent.com/Orz-3/mini/master/Alpha/bcz.png",
-        "https://raw.githubusercontent.com/Orz-3/mini/master/Color/bcz.png"
-      ]
-    },
-    {
       "id": "BAIDU",
       "name": "百度签到",
       "keys": ["chavy_cookie_tieba"],
@@ -152,22 +121,6 @@
       ]
     },
     {
-      "id": "dbsj",
-      "name": "豆瓣时间",
-      "keys": [
-        "senku_signurl_dbsj",
-        "senku_signheader_dbsj",
-        "senku_signbody_dbsj"
-      ],
-      "author": "@gideonsenku",
-      "repo": "https://github.com/chavyleung/scripts/tree/master/dbsj",
-      "script": "https://raw.githubusercontent.com/chavyleung/scripts/master/dbsj/dbsj.js",
-      "icons": [
-        "https://raw.githubusercontent.com/Orz-3/mini/master/Alpha/dbsj.png",
-        "https://raw.githubusercontent.com/Orz-3/mini/master/Color/dbsj.png"
-      ]
-    },
-    {
       "id": "fandeng",
       "name": "樊登读书",
       "keys": [
@@ -181,24 +134,6 @@
       "icons": [
         "https://raw.githubusercontent.com/Orz-3/mini/master/Alpha/fandeng.png",
         "https://raw.githubusercontent.com/Orz-3/mini/master/Color/fandeng.png"
-      ]
-    },
-    {
-      "id": "fenqile",
-      "name": "分期乐",
-      "keys": [
-        "senku_signurl_fenqile",
-        "senku_signheader_fenqile",
-        "senku_signbody_fenqile",
-        "senku_signDailyKey_fenqile",
-        "senku_signDailyUrlKey_fenqile"
-      ],
-      "author": "@gideonsenku",
-      "repo": "https://github.com/chavyleung/scripts/tree/master/fenqile",
-      "script": "https://raw.githubusercontent.com/chavyleung/scripts/master/fenqile/fenqile.js",
-      "icons": [
-        "https://raw.githubusercontent.com/Orz-3/mini/master/Alpha/fenqile.png",
-        "https://raw.githubusercontent.com/Orz-3/mini/master/Color/fenqile.png"
       ]
     },
     {
@@ -534,18 +469,6 @@
       ]
     },
     {
-      "id": "zimuzu",
-      "name": "字幕组",
-      "keys": ["chavy_cookie_zimuzu", "chavy_auth_url_zimuzu_app"],
-      "author": "@chavyleung",
-      "repo": "https://github.com/chavyleung/scripts/tree/master/zimuzu",
-      "script": "https://raw.githubusercontent.com/chavyleung/scripts/master/zimuzu/zimuzu.js",
-      "icons": [
-        "https://raw.githubusercontent.com/Orz-3/mini/master/Alpha/zimuzu.png",
-        "https://raw.githubusercontent.com/Orz-3/mini/master/Color/zimuzu.png"
-      ]
-    },
-    {
       "id": "AcFun",
       "name": "AcFun",
       "keys": ["chavy_cookie_acfun", "chavy_token_acfun"],
@@ -635,18 +558,6 @@
         "https://raw.githubusercontent.com/Orz-3/mini/master/Color/ximalaya.png"
       ],
       "script": "https://raw.githubusercontent.com/chavyleung/scripts/master/ximalaya/ximalaya.js"
-    },
-    {
-      "id": "rrtv",
-      "name": "人人视频 [archived]",
-      "keys": ["chavy_cookie_rrtv"],
-      "author": "@chavyleung",
-      "repo": "https://github.com/chavyleung/scripts/tree/master/achived/rrtv",
-      "icons": [
-        "https://raw.githubusercontent.com/Orz-3/mini/master/Alpha/rrtv.png",
-        "https://raw.githubusercontent.com/Orz-3/mini/master/Color/rrtv.png"
-      ],
-      "script": "https://raw.githubusercontent.com/chavyleung/scripts/master/achived/rrtv/rrtv.js"
     },
     {
       "id": "everphoto",
