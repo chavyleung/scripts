@@ -1,6 +1,18 @@
 {
   "releases": [
     {
+      "version": "0.19.27",
+      "tags": ["beta"],
+      "author": "@GideonSenku",
+      "msg": "feat(boxjs): 适配 Egern 代理工具",
+      "notes": [
+        {
+          "name": "功能",
+          "descs": ["Env.js 新增 Egern 代理工具适配，支持持久化存储、HTTP 请求、系统通知等完整功能"]
+        }
+      ]
+    },
+    {
       "version": "0.19.26",
       "tags": ["beta"],
       "author": "@GideonSenku",

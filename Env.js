@@ -66,6 +66,7 @@ function Env(name, opts) {
     }
 
     getEnv() {
+      if ('undefined' !== typeof Egern) return 'Egern'
       if ('undefined' !== typeof $environment && $environment['surge-version'])
         return 'Surge'
       if ('undefined' !== typeof $environment && $environment['stash-version'])
@@ -98,6 +99,10 @@ function Env(name, opts) {
 
     isStash() {
       return 'Stash' === this.getEnv()
+    }
+
+    isEgern() {
+      return 'Egern' === this.getEnv()
     }
 
     toObj(str, defaultValue = null) {
@@ -294,6 +299,7 @@ function Env(name, opts) {
         case 'Loon':
         case 'Stash':
         case 'Shadowrocket':
+        case 'Egern':
           return $persistentStore.read(key)
         case 'Quantumult X':
           return $prefs.valueForKey(key)
@@ -311,6 +317,7 @@ function Env(name, opts) {
         case 'Loon':
         case 'Stash':
         case 'Shadowrocket':
+        case 'Egern':
           return $persistentStore.write(val, key)
         case 'Quantumult X':
           return $prefs.setValueForKey(val, key)
@@ -371,6 +378,7 @@ function Env(name, opts) {
         case 'Loon':
         case 'Stash':
         case 'Shadowrocket':
+        case 'Egern':
         default:
           if (this.isSurge() && this.isNeedRewrite) {
             request.headers = request.headers || {}
@@ -493,6 +501,7 @@ function Env(name, opts) {
         case 'Loon':
         case 'Stash':
         case 'Shadowrocket':
+        case 'Egern':
         default:
           if (this.isSurge() && this.isNeedRewrite) {
             request.headers = request.headers || {}
@@ -643,6 +652,7 @@ function Env(name, opts) {
             switch (this.getEnv()) {
               case 'Surge':
               case 'Stash':
+              case 'Egern':
               default:
                 return { url: rawopts }
               case 'Loon':
@@ -658,6 +668,7 @@ function Env(name, opts) {
               case 'Surge':
               case 'Stash':
               case 'Shadowrocket':
+              case 'Egern':
               default: {
                 const options = {}
 
@@ -677,7 +688,8 @@ function Env(name, opts) {
                 }
 
                 // 图片通知
-                let mediaUrl = rawopts.mediaUrl || rawopts['media-url'] || $media
+                let mediaUrl =
+                  rawopts.mediaUrl || rawopts['media-url'] || $media
                 if (mediaUrl) {
                   let media = undefined
                   let mime = undefined
@@ -736,7 +748,8 @@ function Env(name, opts) {
                   rawopts.openUrl || rawopts.url || rawopts['open-url'] || $open
                 if (openUrl) Object.assign(options, { openUrl })
 
-                let mediaUrl = rawopts.mediaUrl || rawopts['media-url'] || $media
+                let mediaUrl =
+                  rawopts.mediaUrl || rawopts['media-url'] || $media
                 if (mediaUrl) Object.assign(options, { mediaUrl })
 
                 console.log(JSON.stringify(options))
@@ -749,7 +762,8 @@ function Env(name, opts) {
                   rawopts['open-url'] || rawopts.url || rawopts.openUrl || $open
                 if (openUrl) Object.assign(options, { 'open-url': openUrl })
 
-                let mediaUrl = rawopts.mediaUrl || rawopts['media-url'] || $media
+                let mediaUrl =
+                  rawopts.mediaUrl || rawopts['media-url'] || $media
                 if (mediaUrl) Object.assign(options, { 'media-url': mediaUrl })
 
                 let copy =
@@ -774,6 +788,7 @@ function Env(name, opts) {
           case 'Loon':
           case 'Stash':
           case 'Shadowrocket':
+          case 'Egern':
           default:
             $notification.post(title, subt, desc, toEnvOpts(opts))
             break
@@ -851,6 +866,7 @@ function Env(name, opts) {
         case 'Loon':
         case 'Stash':
         case 'Shadowrocket':
+        case 'Egern':
         case 'Quantumult X':
         default:
           this.log('', `❗️${this.name}, 错误!`, msg, err)
@@ -881,6 +897,7 @@ function Env(name, opts) {
         case 'Loon':
         case 'Stash':
         case 'Shadowrocket':
+        case 'Egern':
         case 'Quantumult X':
         default:
           $done(val)
