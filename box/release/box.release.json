@@ -1,6 +1,18 @@
 {
   "releases": [
     {
+      "version": "0.19.28",
+      "tags": ["beta"],
+      "author": "@GideonSenku",
+      "msg": "fix(boxjs): 同步 chavy.boxjs.js 内嵌 Env 至最新版本",
+      "notes": [
+        {
+          "name": "修复",
+          "descs": ["同步 chavy.boxjs.js 内嵌 Env 函数，补全 Egern 环境检测及所有相关分支"]
+        }
+      ]
+    },
+    {
       "version": "0.19.27",
       "tags": ["beta"],
       "author": "@GideonSenku",
