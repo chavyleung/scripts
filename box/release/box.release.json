@@ -1,6 +1,18 @@
 {
   "releases": [
     {
+      "version": "0.19.29",
+      "tags": ["beta"],
+      "author": "@GideonSenku",
+      "msg": "feat(boxjs): 顶部提示 iOS 客户端 Relay",
+      "notes": [
+        {
+          "name": "功能",
+          "descs": ["主页顶部新增可关闭提示条，引导使用 iOS 原生客户端 Relay (TestFlight: https://testflight.apple.com/join/2yES8TuF)"]
+        }
+      ]
+    },
+    {
       "version": "0.19.28",
       "tags": ["beta"],
       "author": "@GideonSenku",

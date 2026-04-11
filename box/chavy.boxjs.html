@@ -533,6 +533,25 @@
     <!-- 主页 -->
     <v-main class="appBarBind.app ? 'safe' : ''" v-scroll="onScroll">
       <v-snackbar top app v-model="ui.snackbar.show" v-bind="ui.snackbar">{{ui.snackbar.msg}}</v-snackbar>
+      <!-- Relay iOS 客户端提示 -->
+      <v-alert
+              v-if="ui.showRelayTip"
+              dismissible
+              dense
+              prominent
+              border="left"
+              colored-border
+              elevation="1"
+              color="primary"
+              class="ma-2"
+              @input="dismissRelayTip"
+      >
+        <div class="text-subtitle-2 font-weight-bold mb-1">🎉 BoxJS 已有 iOS 客户端啦</div>
+        <div class="text-caption">
+          推荐使用原生 iOS 客户端 <strong>Relay</strong>,体验更流畅。TestFlight 加入地址:
+          <a href="https://testflight.apple.com/join/2yES8TuF" target="_blank" rel="noopener">https://testflight.apple.com/join/2yES8TuF</a>
+        </div>
+      </v-alert>
       <!-- 主页 -->
       <v-container
               fluid
@@ -1809,6 +1828,7 @@
           scrollY: {}, //记录每个界面的滚动值
           overlay: { show: false, val: 60 },
           snackbar: { show: false, color: 'primary', msg: '' },
+          showRelayTip: localStorage.getItem('boxjs_relay_tip_dismissed') !== '1',
           searchBar: {
             isActive: true,
             color: 'primary',
@@ -2516,6 +2536,10 @@
       reload() {
         this.isLoading = true
         window.location.reload()
+      },
+      dismissRelayTip() {
+        this.ui.showRelayTip = false
+        localStorage.setItem('boxjs_relay_tip_dismissed', '1')
       },
       open(url) {
         window.open(url)
