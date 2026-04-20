@@ -423,15 +423,25 @@ function Env(name, opts) {
           this.got(request)
             .on('redirect', (resp, nextOpts) => {
               try {
-                if (resp.headers['set-cookie']) {
-                  const ck = resp.headers['set-cookie']
-                    .map(this.cktough.Cookie.parse)
-                    .toString()
-                  if (ck) {
-                    this.ckjar.setCookieSync(ck, null)
+                const currentUrl =
+                  resp.url ||
+                  resp.request?.requestUrl ||
+                  resp.request?.options?.url ||
+                  nextOpts.url
+                const setCookie = resp.headers?.['set-cookie']
+                const cookieList = Array.isArray(setCookie)
+                  ? setCookie
+                  : [setCookie]
+                for (const ck of cookieList) {
+                  try {
+                    if (ck && currentUrl) {
+                      this.ckjar.setCookieSync(ck, String(currentUrl))
+                    }
+                  } catch (e) {
+                    this.logErr(e)
                   }
-                  nextOpts.cookieJar = this.ckjar
                 }
+                nextOpts.cookieJar = this.ckjar
               } catch (e) {
                 this.logErr(e)
               }
