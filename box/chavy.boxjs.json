@@ -469,6 +469,18 @@
       ]
     },
     {
+      "id": "tongcheng-trip",
+      "name": "同程旅行",
+      "keys": ["tongcheng_trip_signheader"],
+      "author": "@gideonsenku",
+      "repo": "https://github.com/chavyleung/scripts/tree/master/tongcheng-trip",
+      "script": "https://raw.githubusercontent.com/chavyleung/scripts/master/tongcheng-trip/tongcheng-trip.js",
+      "icons": [
+        "https://raw.githubusercontent.com/Orz-3/mini/master/Alpha/tongcheng.png",
+        "https://raw.githubusercontent.com/Orz-3/mini/master/Color/tongcheng.png"
+      ]
+    },
+    {
       "id": "AcFun",
       "name": "AcFun",
       "keys": ["chavy_cookie_acfun", "chavy_token_acfun"],

@@ -101,9 +101,7 @@ async function runSignIn() {
     $.log(`用户【${$.phone}】 - token 失效了，请重新在 APP 领福利页点击签到以更新`)
     $.tokenInvalid = true
     $.accountResult = `📱 账号：${$.phone}\n❌ token 失效，请重新抓包获取\n\n`
-    if (($.getdata('tc_push_switch') || $.getval('tc_push_switch') || '1') === '1' || $.tokenInvalid) {
-      $.msg('✈️ 同程旅行签到结果\n⚠️ Token 失效', '', $.accountResult)
-    }
+    $.msg('✈️ 同程旅行签到结果\n⚠️ Token 失效', '', $.accountResult)
     return
   }
 
@@ -174,18 +172,19 @@ async function runSignIn() {
     else $.accountResult += '❌ 签到失败且获取里程信息失败\n\n'
   }
 
-  const pushSwitch = ($.getdata('tc_push_switch') || $.getval('tc_push_switch') || '1').toString()
-  if (pushSwitch === '1' || $.tokenInvalid) {
-    let title = '✈️ 同程旅行签到结果\n'
-    if ($.tokenInvalid) title += ' ⚠️ Token 失效'
-    $.msg(title, '', $.accountResult.trim())
-  } else {
-    $.log('✅ 推送已关闭，不发送推送通知')
-  }
+  let title = '✈️ 同程旅行签到结果\n'
+  if ($.tokenInvalid) title += ' ⚠️ Token 失效'
+  $.msg(title, '', $.accountResult.trim())
 }
 
 // 入口：MiTM 时保存 Cookie，否则执行签到
-if (typeof $request !== 'undefined') {
+const isMitmRequest =
+  typeof $request !== 'undefined' &&
+  $request &&
+  typeof $request.url === 'string' &&
+  /\/welfarecenter\/index\/signIndex/.test($request.url) &&
+  $request.headers
+if (isMitmRequest) {
   if ($request.method !== 'OPTIONS') {
     $.setdata(JSON.stringify($request.headers), KEY_SIGNHEADER)
     $.msg($.name, '获取同程旅行账户成功', '请运行签到脚本')
