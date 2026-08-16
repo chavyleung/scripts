@@ -1,6 +1,8 @@
 const $ = new Env('魔盒')
 const hostApi = 'https://api.icitybox.cn/api'
 const drawRes = []
+const activeDrawEnd = '2026-09-20'
+const activeDrawTimes = 5
 
 !(async () => {
   const KEY_har = 'boxapp_citybox_har'
@@ -9,6 +11,13 @@ const drawRes = []
   await sign(headers)
   await draw(headers)
   await draw(headers)
+  if ($.time('yyyy-MM-dd') <= activeDrawEnd) {
+    for (let i = 0; i < activeDrawTimes; i++) {
+      const stop = await triggerDraw(headers)
+      if (stop) break
+      await $.wait(800)
+    }
+  }
   if ($.sign?.signnum) {
     $.msg($.name, `第${$.sign.signnum}天 签到成功`, drawRes.join('\n'))
   } else if ($.sign?.message) {
@@ -53,6 +62,35 @@ function draw(headers) {
         $.logErr(e, resp)
       } finally {
         resolve()
+      }
+    })
+  })
+}
+
+function triggerDraw(headers) {
+  return new Promise((resolve) => {
+    let stop = true
+    const url = {
+      url: hostApi + '/active/trigger_draw',
+      headers,
+    }
+    $.post(url, (err, resp, data) => {
+      try {
+        const res = JSON.parse(data)
+        $.log(`活动抽奖: ${data}`)
+        const prize =
+          res.winning_desc ||
+          res.prize_name ||
+          res.data?.winning_desc ||
+          res.data?.prize_name ||
+          res.data?.prize?.name ||
+          res.message
+        if (prize) drawRes.push(`活动: ${prize}`)
+        stop = res.status !== true
+      } catch (e) {
+        $.logErr(e, resp)
+      } finally {
+        resolve(stop)
       }
     })
   })
