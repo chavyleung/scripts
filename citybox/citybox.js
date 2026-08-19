@@ -1,24 +1,70 @@
 const $ = new Env('魔盒')
 const hostApi = 'https://api.icitybox.cn/api'
 const drawRes = []
+const activeDrawEnd = '2026-09-20'
+const activeDrawTimes = 5
+const activeDrawGap = 800
+const activeDrawRetry = 4
+const warmupGap = 800
+
+// 抓包 headers 只需剔除会导致请求体长度不符的字段。
+// 注意: 「请勿重复提交」经日志确认是服务端限流(首次 trigger_draw 即被拒且 gift_num 仍为 5),
+// 并非签名重放, 因此关键在于请求间隔而不是删请求头。
+const replayHeaders = ['content-length']
+
 
 !(async () => {
   const KEY_har = 'boxapp_citybox_har'
   const har = $.getjson(KEY_har)
-  const headers = har?.headers
+  const headers = cleanHeaders(har?.headers)
+  if (!headers) throw new Error('未获取到 CityBox 账户, 请先进入小程序签到页抓取')
   await sign(headers)
-  await draw(headers)
-  await draw(headers)
-  if ($.sign?.signnum) {
-    $.msg($.name, `第${$.sign.signnum}天 签到成功`, drawRes.join('\n'))
-  } else if ($.sign?.message) {
-    $.msg($.name, $.sign?.message)
-  } else {
-    $.msg($.name, '签到失败')
+  if ($.time('yyyy-MM-dd') <= activeDrawEnd) {
+    // 签到已占用限流额度, 进活动抽奖前先冷却
+    await $.wait(warmupGap)
+    // 先确认今天还剩几次
+    await getActiveList(headers)
+    const total = $.active?.gift_num ?? activeDrawTimes
+    let done = 0
+    let retry = 0
+    while (done < total) {
+      await $.wait(done === 0 ? warmupGap : activeDrawGap)
+      const res = await triggerDraw(headers)
+      if (res.ok) {
+        // 成功一次才计数, 抽满即停
+        done++
+        retry = 0
+        continue
+      }
+      if (res.retryable && ++retry <= activeDrawRetry) {
+        // 限流(「请勿重复提交」): 指数退避后重试, 不消耗次数
+        const backoff = Math.min(activeDrawGap * Math.pow(2, retry - 1), 6400)
+        $.log(`限流, ${backoff / 1000}s 后重试 (${retry}/${activeDrawRetry})`)
+        await $.wait(backoff)
+        continue
+      }
+      break
+    }
+    $.log(`活动抽奖完成 ${done}/${total} 次`)
   }
+  const subTitle = $.sign?.signnum
+    ? `第${$.sign.signnum}天 签到成功`
+    : $.sign?.message || '签到失败'
+  $.msg($.name, subTitle, drawRes.join('\n'))
 })()
-.catch((e) => $.logErr(e))
-.finally(() => $.done())
+  .catch((e) => $.logErr(e))
+  .finally(() => $.done())
+
+function cleanHeaders(raw) {
+  if (!raw) return null
+  const headers = {}
+  Object.keys(raw).forEach((k) => {
+    if (replayHeaders.includes(k.toLowerCase())) return
+    headers[k] = raw[k]
+  })
+  $.log(`请求头字段: ${Object.keys(headers).join(', ')}`)
+  return headers
+}
 
 function sign(headers) {
   return new Promise((resolve) => {
@@ -38,17 +84,16 @@ function sign(headers) {
   })
 }
 
-function draw(headers) {
+function getActiveList(headers) {
   return new Promise((resolve) => {
-    const index = Math.floor(Math.random() * 10)
     const url = {
-      url: hostApi + '/roulette_draw/draw_results?click_num=' + index,
+      url: hostApi + '/active/trigger_active_list',
       headers,
     }
-    $.post(url, (err, resp, data) => {
+    $.get(url, (err, resp, data) => {
       try {
-        const data = JSON.parse(data)
-        drawRes.push(data.winning_desc)
+        $.active = JSON.parse(data)
+        $.log(`活动列表: ${data}`)
       } catch (e) {
         $.logErr(e, resp)
       } finally {
@@ -57,5 +102,37 @@ function draw(headers) {
     })
   })
 }
-// prettier-ignore
-function Env(t,e){class s{constructor(t){this.env=t}send(t,e="GET"){t="string"==typeof t?{url:t}:t;let s=this.get;return"POST"===e&&(s=this.post),new Promise((e,i)=>{s.call(this,t,(t,s,r)=>{t?i(t):e(s)})})}get(t){return this.send.call(this.env,t)}post(t){return this.send.call(this.env,t,"POST")}}return new class{constructor(t,e){this.name=t,this.http=new s(this),this.data=null,this.dataFile="box.dat",this.logs=[],this.isMute=!1,this.isNeedRewrite=!1,this.logSeparator="\n",this.encoding="utf-8",this.startTime=(new Date).getTime(),Object.assign(this,e),this.log("",`🔔${this.name}, 开始!`)}isNode(){return"undefined"!=typeof module&&!!module.exports}isQuanX(){return"undefined"!=typeof $task}isSurge(){return"undefined"!=typeof $httpClient&&"undefined"==typeof $loon}isLoon(){return"undefined"!=typeof $loon}isShadowrocket(){return"undefined"!=typeof $rocket}isStash(){return"undefined"!=typeof $environment&&$environment["stash-version"]}toObj(t,e=null){try{return JSON.parse(t)}catch{return e}}toStr(t,e=null){try{return JSON.stringify(t)}catch{return e}}getjson(t,e){let s=e;const i=this.getdata(t);if(i)try{s=JSON.parse(this.getdata(t))}catch{}return s}setjson(t,e){try{return this.setdata(JSON.stringify(t),e)}catch{return!1}}getScript(t){return new Promise(e=>{this.get({url:t},(t,s,i)=>e(i))})}runScript(t,e){return new Promise(s=>{let i=this.getdata("@chavy_boxjs_userCfgs.httpapi");i=i?i.replace(/\n/g,"").trim():i;let r=this.getdata("@chavy_boxjs_userCfgs.httpapi_timeout");r=r?1*r:20,r=e&&e.timeout?e.timeout:r;const[o,n]=i.split("@"),a={url:`http://${n}/v1/scripting/evaluate`,body:{script_text:t,mock_type:"cron",timeout:r},headers:{"X-Key":o,Accept:"*/*"}};this.post(a,(t,e,i)=>s(i))}).catch(t=>this.logErr(t))}loaddata(){if(!this.isNode())return{};{this.fs=this.fs?this.fs:require("fs"),this.path=this.path?this.path:require("path");const t=this.path.resolve(this.dataFile),e=this.path.resolve(process.cwd(),this.dataFile),s=this.fs.existsSync(t),i=!s&&this.fs.existsSync(e);if(!s&&!i)return{};{const i=s?t:e;try{return JSON.parse(this.fs.readFileSync(i))}catch(t){return{}}}}}writedata(){if(this.isNode()){this.fs=this.fs?this.fs:require("fs"),this.path=this.path?this.path:require("path");const t=this.path.resolve(this.dataFile),e=this.path.resolve(process.cwd(),this.dataFile),s=this.fs.existsSync(t),i=!s&&this.fs.existsSync(e),r=JSON.stringify(this.data);s?this.fs.writeFileSync(t,r):i?this.fs.writeFileSync(e,r):this.fs.writeFileSync(t,r)}}lodash_get(t,e,s){const i=e.replace(/\[(\d+)\]/g,".$1").split(".");let r=t;for(const t of i)if(r=Object(r)[t],void 0===r)return s;return r}lodash_set(t,e,s){return Object(t)!==t?t:(Array.isArray(e)||(e=e.toString().match(/[^.[\]]+/g)||[]),e.slice(0,-1).reduce((t,s,i)=>Object(t[s])===t[s]?t[s]:t[s]=Math.abs(e[i+1])>>0==+e[i+1]?[]:{},t)[e[e.length-1]]=s,t)}getdata(t){let e=this.getval(t);if(/^@/.test(t)){const[,s,i]=/^@(.*?)\.(.*?)$/.exec(t),r=s?this.getval(s):"";if(r)try{const t=JSON.parse(r);e=t?this.lodash_get(t,i,""):e}catch(t){e=""}}return e}setdata(t,e){let s=!1;if(/^@/.test(e)){const[,i,r]=/^@(.*?)\.(.*?)$/.exec(e),o=this.getval(i),n=i?"null"===o?null:o||"{}":"{}";try{const e=JSON.parse(n);this.lodash_set(e,r,t),s=this.setval(JSON.stringify(e),i)}catch(e){const o={};this.lodash_set(o,r,t),s=this.setval(JSON.stringify(o),i)}}else s=this.setval(t,e);return s}getval(t){return this.isSurge()||this.isLoon()?$persistentStore.read(t):this.isQuanX()?$prefs.valueForKey(t):this.isNode()?(this.data=this.loaddata(),this.data[t]):this.data&&this.data[t]||null}setval(t,e){return this.isSurge()||this.isLoon()?$persistentStore.write(t,e):this.isQuanX()?$prefs.setValueForKey(t,e):this.isNode()?(this.data=this.loaddata(),this.data[e]=t,this.writedata(),!0):this.data&&this.data[e]||null}initGotEnv(t){this.got=this.got?this.got:require("got"),this.cktough=this.cktough?this.cktough:require("tough-cookie"),this.ckjar=this.ckjar?this.ckjar:new this.cktough.CookieJar,t&&(t.headers=t.headers?t.headers:{},void 0===t.headers.Cookie&&void 0===t.cookieJar&&(t.cookieJar=this.ckjar))}get(t,e=(()=>{})){if(t.headers&&(delete t.headers["Content-Type"],delete t.headers["Content-Length"]),this.isSurge()||this.isLoon())this.isSurge()&&this.isNeedRewrite&&(t.headers=t.headers||{},Object.assign(t.headers,{"X-Surge-Skip-Scripting":!1})),$httpClient.get(t,(t,s,i)=>{!t&&s&&(s.body=i,s.statusCode=s.status?s.status:s.statusCode,s.status=s.statusCode),e(t,s,i)});else if(this.isQuanX())this.isNeedRewrite&&(t.opts=t.opts||{},Object.assign(t.opts,{hints:!1})),$task.fetch(t).then(t=>{const{statusCode:s,statusCode:i,headers:r,body:o}=t;e(null,{status:s,statusCode:i,headers:r,body:o},o)},t=>e(t&&t.error||"UndefinedError"));else if(this.isNode()){let s=require("iconv-lite");this.initGotEnv(t),this.got(t).on("redirect",(t,e)=>{try{if(t.headers["set-cookie"]){const s=t.headers["set-cookie"].map(this.cktough.Cookie.parse).toString();s&&this.ckjar.setCookieSync(s,null),e.cookieJar=this.ckjar}}catch(t){this.logErr(t)}}).then(t=>{const{statusCode:i,statusCode:r,headers:o,rawBody:n}=t,a=s.decode(n,this.encoding);e(null,{status:i,statusCode:r,headers:o,rawBody:n,body:a},a)},t=>{const{message:i,response:r}=t;e(i,r,r&&s.decode(r.rawBody,this.encoding))})}}post(t,e=(()=>{})){const s=t.method?t.method.toLocaleLowerCase():"post";if(t.body&&t.headers&&!t.headers["Content-Type"]&&(t.headers["Content-Type"]="application/x-www-form-urlencoded"),t.headers&&delete t.headers["Content-Length"],this.isSurge()||this.isLoon())this.isSurge()&&this.isNeedRewrite&&(t.headers=t.headers||{},Object.assign(t.headers,{"X-Surge-Skip-Scripting":!1})),$httpClient[s](t,(t,s,i)=>{!t&&s&&(s.body=i,s.statusCode=s.status?s.status:s.statusCode,s.status=s.statusCode),e(t,s,i)});else if(this.isQuanX())t.method=s,this.isNeedRewrite&&(t.opts=t.opts||{},Object.assign(t.opts,{hints:!1})),$task.fetch(t).then(t=>{const{statusCode:s,statusCode:i,headers:r,body:o}=t;e(null,{status:s,statusCode:i,headers:r,body:o},o)},t=>e(t&&t.error||"UndefinedError"));else if(this.isNode()){let i=require("iconv-lite");this.initGotEnv(t);const{url:r,...o}=t;this.got[s](r,o).then(t=>{const{statusCode:s,statusCode:r,headers:o,rawBody:n}=t,a=i.decode(n,this.encoding);e(null,{status:s,statusCode:r,headers:o,rawBody:n,body:a},a)},t=>{const{message:s,response:r}=t;e(s,r,r&&i.decode(r.rawBody,this.encoding))})}}time(t,e=null){const s=e?new Date(e):new Date;let i={"M+":s.getMonth()+1,"d+":s.getDate(),"H+":s.getHours(),"m+":s.getMinutes(),"s+":s.getSeconds(),"q+":Math.floor((s.getMonth()+3)/3),S:s.getMilliseconds()};/(y+)/.test(t)&&(t=t.replace(RegExp.$1,(s.getFullYear()+"").substr(4-RegExp.$1.length)));for(let e in i)new RegExp("("+e+")").test(t)&&(t=t.replace(RegExp.$1,1==RegExp.$1.length?i[e]:("00"+i[e]).substr((""+i[e]).length)));return t}queryStr(t){let e="";for(const s in t){let i=t[s];null!=i&&""!==i&&("object"==typeof i&&(i=JSON.stringify(i)),e+=`${s}=${i}&`)}return e=e.substring(0,e.length-1),e}msg(e=t,s="",i="",r){const o=t=>{if(!t)return t;if("string"==typeof t)return this.isLoon()?t:this.isQuanX()?{"open-url":t}:this.isSurge()?{url:t}:void 0;if("object"==typeof t){if(this.isLoon()){let e=t.openUrl||t.url||t["open-url"],s=t.mediaUrl||t["media-url"];return{openUrl:e,mediaUrl:s}}if(this.isQuanX()){let e=t["open-url"]||t.url||t.openUrl,s=t["media-url"]||t.mediaUrl,i=t["update-pasteboard"]||t.updatePasteboard;return{"open-url":e,"media-url":s,"update-pasteboard":i}}if(this.isSurge()){let e=t.url||t.openUrl||t["open-url"];return{url:e}}}};if(this.isMute||(this.isSurge()||this.isLoon()?$notification.post(e,s,i,o(r)):this.isQuanX()&&$notify(e,s,i,o(r))),!this.isMuteLog){let t=["","==============📣系统通知📣=============="];t.push(e),s&&t.push(s),i&&t.push(i),console.log(t.join("\n")),this.logs=this.logs.concat(t)}}log(...t){t.length>0&&(this.logs=[...this.logs,...t]),console.log(t.join(this.logSeparator))}logErr(t,e){const s=!this.isSurge()&&!this.isQuanX()&&!this.isLoon();s?this.log("",`❗️${this.name}, 错误!`,t.stack):this.log("",`❗️${this.name}, 错误!`,t)}wait(t){return new Promise(e=>setTimeout(e,t))}done(t={}){const e=(new Date).getTime(),s=(e-this.startTime)/1e3;this.log("",`🔔${this.name}, 结束! 🕛 ${s} 秒`),this.log(),this.isSurge()||this.isQuanX()||this.isLoon()?$done(t):this.isNode()&&process.exit(1)}}(t,e)}
+
+function triggerDraw(headers) {
+  return new Promise((resolve) => {
+    let result = { ok: false, retryable: false }
+    const url = {
+      url: hostApi + '/active/trigger_draw',
+      headers,
+    }
+    $.post(url, (err, resp, data) => {
+      try {
+        const res = JSON.parse(data)
+        $.log(`活动抽奖: ${data}`)
+        if (res.status === false) {
+          const msg = res.message || ''
+          // 限流类可重试; 次数用尽/活动结束则直接停止
+          result.retryable = /重复提交|频繁|稍后|请稍候|超时/.test(msg)
+          if (!result.retryable && msg) drawRes.push(`活动: ${msg}`)
+        } else {
+          const prize = res.is_win
+            ? res.reward?.detail?.open_door_remarks || res.reward?.detail?.card_name || res.reward?.name
+            : res.reels
+              ? `未中奖 ${res.reels.join('')}`
+              : res.message
+          if (prize) drawRes.push(`活动: ${prize}`)
+          result.ok = true
+        }
+      } catch (e) {
+        $.logErr(e, resp)
+      } finally {
+        resolve(result)
+      }
+    })
+  })
+}
