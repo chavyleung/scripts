@@ -913,7 +913,14 @@ function Env(name, opts) {
           $done(val)
           break
         case 'Node.js':
-          process.exit(1)
+          process.exit(
+            this.logs.some(function (e) {
+              return e instanceof Error
+            })
+              ? 1
+              : 0
+          )
+          break
       }
     }
   })(name, opts)
