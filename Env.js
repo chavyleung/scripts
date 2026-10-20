@@ -347,7 +347,64 @@ function Env(name, opts) {
             opts.cookieJar = this.ckjar
           }
         }
+        if (undefined === opts.agent) {
+          const agent = this.getProxyAgent(opts.url)
+          if (agent) opts.agent = agent
+        }
       }
+    }
+
+    // 读取 HTTP_PROXY / HTTPS_PROXY / NO_PROXY 环境变量, 依赖 hpagent
+    getProxyAgent(url) {
+      const env = process.env
+      if (undefined === this.proxyAgent) {
+        this.proxyAgent = null
+        const httpProxy = env.http_proxy || env.HTTP_PROXY
+        const httpsProxy = env.https_proxy || env.HTTPS_PROXY
+        if (httpProxy || httpsProxy) {
+          try {
+            const { HttpProxyAgent, HttpsProxyAgent } = require('hpagent')
+            this.proxyAgent = {}
+            if (httpProxy)
+              this.proxyAgent.http = new HttpProxyAgent({ proxy: httpProxy })
+            if (httpsProxy)
+              this.proxyAgent.https = new HttpsProxyAgent({ proxy: httpsProxy })
+          } catch (e) {
+            this.proxyAgent = null
+            this.log(
+              '',
+              `❗️${this.name}, 代理未生效!`,
+              e.code === 'MODULE_NOT_FOUND'
+                ? '请先安装依赖: npm i hpagent'
+                : e.message
+            )
+          }
+        }
+      }
+      if (!this.proxyAgent) return
+      const noProxy = env.no_proxy || env.NO_PROXY
+      if (noProxy) {
+        let hostname, port
+        try {
+          const u = new URL(String(url))
+          hostname = u.hostname
+          port = u.port || (u.protocol === 'https:' ? '443' : '80')
+        } catch {
+          return this.proxyAgent
+        }
+        const isBypass = noProxy
+          .split(/[\s,]+/)
+          .filter(Boolean)
+          .some((rule) => {
+            if (rule === '*') return true
+            const [ruleHost, rulePort] = rule.split(':')
+            if (rulePort && rulePort !== port) return false
+            const domain = ruleHost.replace(/^\*?\./, '')
+            return hostname === domain || hostname.endsWith(`.${domain}`)
+          })
+        if (isBypass) return
+      }
+      return this.proxyAgent
     }
 
     get(request, callback = () => {}) {
